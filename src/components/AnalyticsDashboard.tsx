@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
@@ -66,7 +66,7 @@ const AnalyticsDashboard = () => {
   const [inventorySummary, setInventorySummary] = useState<InventorySummary | null>(null);
   const [financialLoading, setFinancialLoading] = useState(true);
   const [inventoryLoading, setInventoryLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [, setError] = useState('');
   const [dateFilter, setDateFilter] = useState<'today' | 'yesterday' | 'week' | 'month' | 'customMonth' | 'customYear' | 'allTime'>('month');
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());

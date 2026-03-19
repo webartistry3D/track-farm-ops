@@ -148,7 +148,7 @@ const Reports = () => {
   const [allTransactions, setAllTransactions] = useState<any[]>([]);
   const [viewMode, setViewMode] = useState<'single' | 'all'>('all');
   const [reportTab, setReportTab] = useState<'allTransactions' | 'incomeByCategory' | 'expenseByCategory'>('allTransactions');
-  const [filterType, setFilterType] = useState<'all' | 'income' | 'expense'>('all');
+  const [filterType] = useState<'all' | 'income' | 'expense'>('all');
   const [dateFilter, setDateFilter] = useState<'today' | 'yesterday' | 'last7days' | 'last30days' | 'custom' | 'allTime'>('last30days');
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());

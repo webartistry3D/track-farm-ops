@@ -61,7 +61,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
     }
   };
 
-  const { icon, iconBg, iconColor, buttonBg } = getIconAndColors();
+  const { icon, iconBg, buttonBg } = getIconAndColors();
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

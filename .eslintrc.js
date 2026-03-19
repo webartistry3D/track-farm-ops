@@ -1,29 +1,49 @@
 module.exports = {
+  env: {
+    browser: true,
+    es2022: true,
+    node: true,
+  },
   extends: [
-    'eslint:recommended'
+    'eslint:recommended',
+    '@typescript-eslint/recommended',
+  ],
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    project: './tsconfig.json',
+  },
+  plugins: [
+    '@typescript-eslint',
   ],
   rules: {
-    // Relax key uniqueness rules for this specific use case
-    'react-hooks/exhaustive-deps': 'off',
-    'react-hooks/rules-of-hooks': 'off',
-    'react/no-unstable-nested-components': 'off',
-    
-    // Keep other important rules
-    'react/jsx-uses-react': 'error',
-    'react/react-in-jsx-scope': 'error',
-    'react/no-children-prop': 'error',
-    'react/no-unescaped-entities': 'error',
-    'react/no-unknown-property': 'error',
-    'react/no-typos': 'error',
-    'react/no-void-dom-elements': 'error',
-    'react/no-string-refs': 'error',
-    'react/no-unused-state': 'error',
-    'react/no-array-index-key': 'warn', // Keep as warn, not error
-    'react/jsx-key': 'warn' // Keep as warn, not error
+    '@typescript-eslint/no-unused-vars': ['error', {
+      argsIgnorePattern: '^_',
+      varsIgnorePattern: '^_',
+      caughtErrorsIgnorePattern: '^_',
+      ignoreRestSiblings: true,
+    }],
+    'no-unused-vars': 'off', // Disable base rule to avoid conflicts
   },
-  settings: {
-    react: {
-      version: 'detect'
-    }
-  }
+  overrides: [
+    {
+      files: ['*.ts', '*.tsx'],
+      rules: {
+        '@typescript-eslint/no-unused-vars': ['error', {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+          ignoreRestSiblings: true,
+        }],
+      },
+    },
+  ],
+  ignorePatterns: [
+    'dist',
+    'node_modules',
+    'test-*.js',
+    '*.config.js',
+    'vite.config.ts',
+  ],
 };

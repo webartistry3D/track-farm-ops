@@ -9,7 +9,7 @@ interface RestrictedPageMessageProps {
 }
 
 const RestrictedPageMessage = ({ feature, title, description, icon }: RestrictedPageMessageProps) => {
-  const { getUpgradeMessage, getCurrentPlan } = useSubscriptionRestrictions();
+  const { getUpgradeMessage } = useSubscriptionRestrictions();
   
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900 p-2">

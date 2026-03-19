@@ -287,7 +287,8 @@ const Assets = () => {
     setShowDetailsModal(false);
   };
 
-  const handleDeleteAsset = async (id: string) => {
+  const handleDeleteAsset = async (asset: Asset) => {
+    setSelectedAsset(asset);
     setShowDeleteModal(true);
   };
 
@@ -614,7 +615,7 @@ const Assets = () => {
                               <Edit2 className="w-4 h-4" />
                             </button>
                             <button 
-                              onClick={() => handleDeleteAsset(asset.id)}
+                              onClick={() => handleDeleteAsset(asset)}
                               className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 p-1"
                             >
                               <Trash2 className="w-4 h-4" />
@@ -1509,7 +1510,7 @@ const Assets = () => {
                 </button>
                 {user?.role !== 'WORKER' && (
                   <button
-                    onClick={() => handleDeleteAsset(selectedAsset.id)}
+                    onClick={() => selectedAsset && handleDeleteAsset(selectedAsset)}
                     className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center"
                   >
                     <Trash2 className="w-4 h-4 mr-2" />

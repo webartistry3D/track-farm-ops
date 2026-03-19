@@ -48,20 +48,5 @@
     "typescript-eslint": "^8.46.4",
     "vite": "^7.2.4",
     "vitest": "^4.0.18"
-  },
-  "eslintConfig": {
-    "extends": [
-      "eslint:recommended"
-    ],
-    "rules": {
-      "react/no-array-index-key": "off",
-      "react/jsx-key": "off",
-      "react-hooks/exhaustive-deps": "off",
-      "react-hooks/rules-of-hooks": "off",
-      "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-unused-vars": "off",
-      "react-refresh/only-export-components": "off",
-      "react-hooks/set-state-in-effect": "off"
-    }
   }
 }
