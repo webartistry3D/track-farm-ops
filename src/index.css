@@ -1,0 +1,163 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom CSS Variables */
+:root {
+  --font-inter: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-poppins: 'Poppins', system-ui, -apple-system, sans-serif;
+}
+
+/* Base Styles */
+body {
+  font-family: var(--font-inter);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Placeholder Fix - Remove all placeholder text from number inputs */
+input[type="number"]::placeholder {
+  color: transparent !important;
+  opacity: 0 !important;
+}
+
+input[type="number"]::-webkit-input-placeholder {
+  color: transparent !important;
+  opacity: 0 !important;
+}
+
+input[type="number"]::-moz-placeholder {
+  color: transparent !important;
+  opacity: 0 !important;
+}
+
+input[type="number"]::-ms-input-placeholder {
+  color: transparent !important;
+  opacity: 0 !important;
+}
+
+/* Alternative: Hide placeholder completely */
+input[type="number"]::placeholder {
+  display: none !important;
+}
+
+/* Force remove any placeholder content */
+input[type="number"]::placeholder::before {
+  content: none !important;
+}
+
+/* Reduce padding in Create Invoice sections to match Record Income */
+form.space-y-4 > div.bg-gray-50,
+form.space-y-4 > div.dark\:bg-gray-800 {
+  padding: 1rem !important; /* Reduce from p-6 (1.5rem) to p-4 (1rem) */
+}
+
+/* Further reduce padding for closer spacing to Record Income */
+form.space-y-4 > div.bg-gray-50 h3,
+form.space-y-4 > div.dark\:bg-gray-800 h3 {
+  margin-bottom: 0.5rem !important; /* Reduce from mb-4 (1rem) to mb-2 (0.5rem) */
+}
+
+/* Ensure Invoice Details section has consistent visual styling */
+form.space-y-4 > div.bg-gray-50,
+form.space-y-4 > div.dark\:bg-gray-800 {
+  border-radius: 0.5rem !important;
+  border: 1px solid rgba(229, 231, 235, 0.5) !important;
+}
+
+.dark form.space-y-4 > div.bg-gray-50,
+.dark form.space-y-4 > div.dark\:bg-gray-800 {
+  border-color: rgba(75, 85, 99, 0.5) !important;
+}
+
+/* Add subtle shadow for depth */
+form.space-y-4 > div.bg-gray-50,
+form.space-y-4 > div.dark\:bg-gray-800 {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Heading Styles */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-poppins);
+  font-weight: 600;
+}
+
+/* Custom Components */
+@layer components {
+  .btn {
+    @apply font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
+    font-family: var(--font-inter);
+  }
+  
+  .btn-primary {
+    @apply bg-green-600 text-white hover:bg-green-700 focus:ring-green-500;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:focus:ring-gray-500;
+  }
+  
+  .form-input {
+    @apply block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400;
+    font-family: var(--font-inter);
+  }
+  
+  .form-label {
+    @apply block text-sm font-medium text-gray-700 dark:text-gray-300;
+    font-family: var(--font-inter);
+  }
+  
+  .text-display {
+    font-family: var(--font-poppins);
+    font-weight: 700;
+  }
+  
+  .text-heading {
+    font-family: var(--font-poppins);
+    font-weight: 600;
+  }
+  
+  .text-subheading {
+    font-family: var(--font-poppins);
+    font-weight: 500;
+  }
+  
+  .kpi-number {
+    font-family: var(--font-poppins);
+    font-weight: 700;
+  }
+  
+  .kpi-label {
+    font-family: var(--font-inter);
+    font-weight: 500;
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-gray-50 text-gray-900 min-h-screen;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+  
+  .btn-primary {
+    @apply bg-green-600 text-white hover:bg-green-700 focus:ring-green-500;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:focus:ring-gray-500;
+  }
+  
+  .form-input {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white;
+  }
+  
+  .card {
+    @apply bg-white rounded-lg shadow-md p-6 dark:bg-gray-800;
+  }
+}

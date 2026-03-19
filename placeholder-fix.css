@@ -1,0 +1,39 @@
+/* Placeholder Fix - Remove all placeholder text */
+input[type="number"]::placeholder {
+  color: transparent !important;
+  opacity: 0 !important;
+}
+
+input[type="number"]::-webkit-input-placeholder {
+  color: transparent !important;
+  opacity: 0 !important;
+}
+
+input[type="number"]::-moz-placeholder {
+  color: transparent !important;
+  opacity: 0 !important;
+}
+
+input[type="number"]::-ms-input-placeholder {
+  color: transparent !important;
+  opacity: 0 !important;
+}
+
+/* Alternative: Hide placeholder completely */
+input[type="number"]::placeholder {
+  display: none !important;
+}
+
+/* Force remove any placeholder content */
+input[type="number"]::placeholder::before {
+  content: none !important;
+}
+
+/* Target specific quantity and unit price inputs */
+input[aria-label*="quantity"]::placeholder,
+input[aria-label*="Quantity"]::placeholder,
+input[aria-label*="unit price"]::placeholder,
+input[aria-label*="Unit Price"]::placeholder {
+  color: transparent !important;
+  opacity: 0 !important;
+}

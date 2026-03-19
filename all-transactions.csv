@@ -1,0 +1,5 @@
+Date,Type,Description,Amount,Recorded By,Email
+3/12/2026,Expense,"Veterinary",100000,"Kelechi Manager","kelechi@manager.com"
+3/12/2026,Income,"Payment for invoice #KEL-12347 - Kelechi Client 1",3225000,"Kelechi Worker","kelechi@worker.com"
+3/12/2026,Income,"Payment for invoice #KEL-13456 - Kelechi Client 2",241875,"Kelechi Manager","kelechi@manager.com"
+3/12/2026,Income,"Payment for invoice #KEL-12345 - Kelechi Client",3225000,"Kelechi Owner","keechi@owner.com"
