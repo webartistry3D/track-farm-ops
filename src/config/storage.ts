@@ -48,7 +48,7 @@ export const storageConfigs: Record<string, StorageConfig> = {
   },
   production: {
     type: 's3',
-    bucket: import.meta.env.VITE_AWS_S3_BUCKET || 'trackfarmops-documents',
+    bucket: import.meta.env.VITE_AWS_S3_BUCKET || 'trackfarmops',
     region: import.meta.env.VITE_AWS_REGION || 'us-east-1',
     accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID || '',
     secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY || '',
@@ -70,7 +70,7 @@ export const storageConfigs: Record<string, StorageConfig> = {
   },
   staging: {
     type: 's3',
-    bucket: import.meta.env.VITE_AWS_S3_BUCKET || 'trackfarmops-staging-documents',
+    bucket: import.meta.env.VITE_AWS_S3_BUCKET || 'trackfarmops-staging',
     region: import.meta.env.VITE_AWS_REGION || 'us-east-1',
     accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID || '',
     secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY || '',
