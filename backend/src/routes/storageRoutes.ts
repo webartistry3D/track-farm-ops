@@ -20,7 +20,7 @@ router.use((req, res, next) => {
  * Upload file (general endpoint)
  * POST /api/storage/upload
  */
-router.post('/upload', authenticate, storageService.getUploadMiddleware().single('file'), async (req: AuthRequest, res) => {
+router.post('/upload', authenticate, storageService.getUploadMiddleware().single('file'), async (req: any, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({
@@ -64,7 +64,7 @@ router.post('/upload', authenticate, storageService.getUploadMiddleware().single
  * Upload file to local storage
  * POST /api/storage/upload-local
  */
-router.post('/upload-local', storageService.getUploadMiddleware().single('file'), async (req, res) => {
+router.post('/upload-local', storageService.getUploadMiddleware().single('file'), async (req: any, res) => {
   console.log('📤 Received upload-local request');
   console.log('📁 Request body:', req.body);
   console.log('📄 File info:', req.file ? {
@@ -173,7 +173,7 @@ router.get('/file/:key', async (req, res) => {
  * Delete file
  * DELETE /api/storage/file/:key
  */
-router.delete('/file/:key', authenticate, async (req: AuthRequest, res) => {
+router.delete('/file/:key', authenticate, async (req: any, res) => {
   try {
     const key = req.params.key as string;
     
@@ -212,7 +212,7 @@ router.delete('/file/:key', authenticate, async (req: AuthRequest, res) => {
  * Get file URL
  * GET /api/storage/url/:key
  */
-router.get('/url/:key', authenticate, async (req: AuthRequest, res) => {
+router.get('/url/:key', authenticate, async (req: any, res) => {
   try {
     const key = req.params.key as string;
     
@@ -243,7 +243,7 @@ router.get('/url/:key', authenticate, async (req: AuthRequest, res) => {
  * Get storage statistics
  * GET /api/storage/stats
  */
-router.get('/stats', authenticate, async (req: AuthRequest, res) => {
+router.get('/stats', authenticate, async (req: any, res) => {
   try {
     console.log(`📊 User ${req.user!.name} getting storage stats`);
 
@@ -266,7 +266,7 @@ router.get('/stats', authenticate, async (req: AuthRequest, res) => {
  * Clear storage (development only)
  * POST /api/storage/clear
  */
-router.post('/clear', authenticate, async (req: AuthRequest, res) => {
+router.post('/clear', authenticate, async (req: any, res) => {
   try {
     // Only allow in development
     if (process.env.NODE_ENV === 'production') {
