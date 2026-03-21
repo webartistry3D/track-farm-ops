@@ -239,13 +239,31 @@ process.on('SIGINT', () => {
 // Start server
 const PORT = process.env.PORT || 3001;  // Use Render's PORT or fallback to 3001
 
-app.listen(PORT, () => {
-  console.log(`🚀 TrackFarmOps API server running on port ${PORT}`);
-  console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🏥 Health check: http://localhost:${PORT}/api/health`);
-  
-  if (process.env.NODE_ENV === 'production') {
-    console.log('🔒 Production mode enabled');
-    console.log(`📝 Logs: ${process.env.LOG_FILE || 'logs/app.log'}`);
-  }
-});
+console.log('🔧 Server Configuration:');
+console.log(`- PORT: ${PORT}`);
+console.log(`- NODE_ENV: ${process.env.NODE_ENV}`);
+console.log(`- Process ID: ${process.pid}`);
+
+try {
+  const server = app.listen(PORT, () => {
+    console.log(`🚀 TrackFarmOps API server running on port ${PORT}`);
+    console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`🏥 Health check: http://localhost:${PORT}/api/health`);
+    
+    if (process.env.NODE_ENV === 'production') {
+      console.log('🔒 Production mode enabled');
+      console.log(`📝 Logs: ${process.env.LOG_FILE || 'logs/app.log'}`);
+    }
+  });
+
+  server.on('error', (error: any) => {
+    console.error('❌ Server error:', error);
+    if (error.code === 'EADDRINUSE') {
+      console.error(`Port ${PORT} is already in use`);
+    }
+  });
+
+} catch (error) {
+  console.error('❌ Failed to start server:', error);
+  process.exit(1);
+}
