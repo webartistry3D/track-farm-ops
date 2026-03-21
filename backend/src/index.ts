@@ -35,6 +35,9 @@ if (process.env.NODE_ENV === 'production') {
 
 const app = express();
 
+// Trust proxy for Render
+app.set('trust proxy', 1);
+
 // Production middleware
 if (process.env.NODE_ENV === 'production') {
   // Enhanced security headers
@@ -250,12 +253,28 @@ console.log('🔧 Server Configuration:');
 console.log(`- PORT: ${PORT}`);
 console.log(`- NODE_ENV: ${process.env.NODE_ENV}`);
 console.log(`- Process ID: ${process.pid}`);
+console.log(`- Platform: ${process.platform}`);
+console.log(`- Node version: ${process.version}`);
+
+// Test basic Express app setup
+console.log('🔧 Testing Express app setup...');
+try {
+  const testReq = { headers: {}, body: {}, query: {}, params: {} };
+  console.log('✅ Express app initialized');
+  console.log('✅ Middleware loaded');
+  console.log('✅ Routes configured');
+} catch (error) {
+  console.error('❌ Express app setup error:', error);
+}
 
 try {
+  console.log('🚀 Starting server binding...');
   const server = app.listen(PORT, () => {
     console.log(`🚀 TrackFarmOps API server running on port ${PORT}`);
     console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
     console.log(`🏥 Health check: http://localhost:${PORT}/api/health`);
+    console.log(`🌐 Server address: ${server.address()}`);
+    console.log(`🔗 Server listening: ${server.listening}`);
     
     if (process.env.NODE_ENV === 'production') {
       console.log('🔒 Production mode enabled');
@@ -265,12 +284,23 @@ try {
 
   server.on('error', (error: any) => {
     console.error('❌ Server error:', error);
+    console.error('❌ Error code:', error.code);
+    console.error('❌ Error message:', error.message);
     if (error.code === 'EADDRINUSE') {
       console.error(`Port ${PORT} is already in use`);
+    } else if (error.code === 'EACCES') {
+      console.error(`Permission denied for port ${PORT}`);
+    } else if (error.code === 'EADDRNOTAVAIL') {
+      console.error(`Port ${PORT} is not available`);
     }
+  });
+
+  server.on('listening', () => {
+    console.log('🎉 Server is now listening for connections');
   });
 
 } catch (error) {
   console.error('❌ Failed to start server:', error);
+  console.error('❌ Error stack:', error.stack);
   process.exit(1);
 }

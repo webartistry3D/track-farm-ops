@@ -9,7 +9,7 @@
     "dev": "nodemon src/index.ts",
     "build": "npm install && npm run build:types",
     "build:types": "tsc --project ./tsconfig.json",
-    "build:render": "npm install && npx prisma generate && echo 'Prisma client generated - TypeScript build skipped - using ts-node directly'",
+    "build:render": "npm install && npx prisma generate && node scripts/migrate-production.js && echo 'Database migrated and Prisma client generated - TypeScript build skipped - using ts-node directly'",
     "start": "ts-node src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed-inventory": "ts-node prisma/seed-inventory.ts",
