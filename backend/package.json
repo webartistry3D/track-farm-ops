@@ -7,11 +7,11 @@
   },
   "scripts": {
     "dev": "nodemon src/index.ts",
-    "build": "npm install && npm run build:types",
+    "build": "node scripts/build-production.js",
     "build:types": "tsc --project ./tsconfig.json",
-    "build:render": "npm install && npx prisma generate && node scripts/migrate-production.js && node scripts/seed-production.js && echo 'Database migrated, seeded, and Prisma client generated - TypeScript build skipped - using ts-node directly'",
+    "build:render": "node scripts/build-production.js",
     "start": "ts-node src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node scripts/test.js",
     "seed-inventory": "ts-node prisma/seed-inventory.ts",
     "reset-inventory": "ts-node prisma/reset-inventory.ts",
     "check-transactions": "ts-node prisma/check-transactions.ts"
