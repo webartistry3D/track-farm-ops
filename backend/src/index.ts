@@ -238,12 +238,11 @@ process.on('SIGINT', () => {
 
 // Start server
 const PORT = process.env.PORT || 3001;  // Use Render's PORT or fallback to 3001
-const HOST = process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost';
 
-app.listen({ port: PORT, host: HOST }, () => {
-  console.log(`🚀 TrackFarmOps API server running on ${HOST}:${PORT}`);
+app.listen(PORT, () => {
+  console.log(`🚀 TrackFarmOps API server running on port ${PORT}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🏥 Health check: http://${HOST}:${PORT}/api/health`);
+  console.log(`🏥 Health check: http://localhost:${PORT}/api/health`);
   
   if (process.env.NODE_ENV === 'production') {
     console.log('🔒 Production mode enabled');
