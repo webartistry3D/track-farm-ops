@@ -24,7 +24,14 @@ import { prisma } from './lib/prisma';
 // import { logAccess, logAuth } from './utils/auditLogger';
 
 // Load environment variables
-dotenv.config({ path: `.env.${process.env.NODE_ENV || 'development'}` });
+if (process.env.NODE_ENV === 'production') {
+  // In production (Render), env vars come from dashboard
+  // Still load dotenv for local development fallbacks
+  dotenv.config();
+} else {
+  // In development, load from .env.development
+  dotenv.config({ path: '.env.development' });
+}
 
 const app = express();
 
