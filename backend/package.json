@@ -9,8 +9,9 @@
     "dev": "nodemon src/index.ts",
     "build": "npm install && npm run build:types",
     "build:types": "tsc --project ./tsconfig.json",
-    "build:render": "rm -rf node_modules dist package-lock.json && npm install && npm run build:types",
+    "build:render": "npm install && echo 'Skipping TypeScript build for Render'",
     "start": "node dist/index.js",
+    "start:render": "node src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed-inventory": "ts-node prisma/seed-inventory.ts",
     "reset-inventory": "ts-node prisma/reset-inventory.ts",
@@ -22,6 +23,7 @@
   "description": "",
   "dependencies": {
     "@prisma/client": "^5.19.0",
+    "@types/express": "^5.0.6",
     "@types/node": "^20.19.37",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.3",
@@ -36,18 +38,17 @@
     "multer": "^2.1.1",
     "node-cache": "^5.1.2",
     "sharp": "^0.34.5",
-    "tesseract.js": "^7.0.0"
+    "tesseract.js": "^7.0.0",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/morgan": "^1.9.10",
     "@types/multer": "^2.1.0",
     "nodemon": "^3.1.11",
     "prisma": "^5.19.0",
-    "ts-node": "^10.9.2",
-    "typescript": "5.9.3"
+    "typescript": "^5.9.3"
   }
 }
