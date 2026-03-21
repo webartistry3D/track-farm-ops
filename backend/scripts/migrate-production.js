@@ -74,7 +74,7 @@ async function migrateDatabase() {
     const expenseTable = await prisma.$queryRaw`
       SELECT table_name 
       FROM information_schema.tables 
-      WHERE table_name = 'expense_entries"
+      WHERE table_name = 'expense_entries'
     `;
     
     if (expenseTable.length === 0) {
@@ -98,7 +98,7 @@ async function migrateDatabase() {
     const incomeTable = await prisma.$queryRaw`
       SELECT table_name 
       FROM information_schema.tables 
-      WHERE table_name = 'income_entries"
+      WHERE table_name = 'income_entries'
     `;
     
     if (incomeTable.length === 0) {
@@ -122,7 +122,7 @@ async function migrateDatabase() {
     const inventoryTable = await prisma.$queryRaw`
       SELECT table_name 
       FROM information_schema.tables 
-      WHERE table_name = 'inventory_items"
+      WHERE table_name = 'inventory_items'
     `;
     
     if (inventoryTable.length === 0) {
