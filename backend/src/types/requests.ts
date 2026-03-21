@@ -7,7 +7,8 @@ import { Request } from 'express';
 import { AuthRequest } from '../middleware/auth';
 
 // Import Prisma types for proper enum typing
-import { User } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 
 // Common request body types
 export interface LoginRequestBody {
@@ -19,7 +20,7 @@ export interface CreateUserBody {
   name: string;
   email: string;
   password: string;
-  role?: User['role']; // Use Prisma enum type
+  role?: string; // Keep as string for now
   organizationId?: number;
   farmName?: string;
 }

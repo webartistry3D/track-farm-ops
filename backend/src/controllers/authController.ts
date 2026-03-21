@@ -142,7 +142,7 @@ export const createUser = async (req: AuthRequest, res: Response) => {
         name,
         email,
         password: hashedPassword,
-        role,
+        role: role as any, // Type assertion for UserRole enum
         organizationId: currentUserOrg.organizationId,
         createdBy: currentUser.id
       }

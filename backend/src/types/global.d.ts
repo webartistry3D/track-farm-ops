@@ -1,6 +1,6 @@
 /**
  * Global TypeScript Declaration
- * Bypasses strict type checking for Express Request properties
+ * Disables strict checking for Express Request properties
  */
 
 declare global {
@@ -17,6 +17,7 @@ declare global {
       connection: any;
       socket: any;
       get(header: string): string | string[] | undefined;
+      file?: any;
     }
   }
 }
