@@ -1,12 +1,11 @@
 import { Request, Response } from 'express';
 import { prisma } from '../lib/prisma';
 import { generateToken, hashPassword, comparePassword } from '../utils/auth';
-import { AuthRequest, getRequestBody } from '../middleware/auth';
-import { LoginRequestBody, CreateUserBody } from '../types/requests';
+import { AuthRequest, getReqBody } from '../middleware/auth';
 
 export const signup = async (req: Request, res: Response) => {
   try {
-    const body = getRequestBody<CreateUserBody>(req);
+    const body = getReqBody(req);
     const { name, email, password, role, farmName } = body;
 
     if (!name || !email || !password) {
@@ -80,7 +79,7 @@ export const signup = async (req: Request, res: Response) => {
 
 export const createUser = async (req: AuthRequest, res: Response) => {
   try {
-    const body = getRequestBody<CreateUserBody>(req);
+    const body = getReqBody(req);
     const { name, email, password, role } = body;
     const currentUser = req.user!;
 

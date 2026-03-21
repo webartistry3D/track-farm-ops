@@ -14,26 +14,19 @@ export interface AuthRequest extends Request {
   user?: AuthUser;
 }
 
-// Generic helper functions for Express Request properties
-export function getRequestBody<T = any>(req: Request): T {
-  return req.body as T;
-}
-
-export function getRequestQuery<T = any>(req: Request): T {
-  return req.query as T;
-}
-
-export function getRequestParams<T = any>(req: Request): T {
-  return req.params as T;
-}
-
-export function getRequestHeaders<T = any>(req: Request): T {
-  return req.headers as T;
-}
-
-export function getRequestHeader(req: Request, header: string): string | undefined {
-  return req.get(header);
-}
+// Simple type assertion helpers for Express Request properties
+export const getReqBody = (req: Request): any => (req as any).body;
+export const getReqQuery = (req: Request): any => (req as any).query;
+export const getReqParams = (req: Request): any => (req as any).params;
+export const getReqHeaders = (req: Request): any => (req as any).headers;
+export const getReqMethod = (req: Request): string => (req as any).method;
+export const getReqUrl = (req: Request): string => (req as any).url;
+export const getReqPath = (req: Request): string => (req as any).path;
+export const getReqIp = (req: Request): string => (req as any).ip;
+export const getReqConnection = (req: Request): any => (req as any).connection;
+export const getReqSocket = (req: Request): any => (req as any).socket;
+export const getReqHeader = (req: Request, header: string): string | undefined => (req as any).get(header);
+export const getReqFile = (req: Request): any => (req as any).file;
 
 export const authenticate = async (req: AuthRequest, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
