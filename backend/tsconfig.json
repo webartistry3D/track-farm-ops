@@ -30,7 +30,7 @@
     "noUncheckedIndexedAccess": false,
     "noErrorTruncation": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "src/types/**/*.d.ts"],
   "exclude": ["node_modules", "dist", "../src", "../node_modules", "../dist"],
   "ts-node": {
     "esm": false,

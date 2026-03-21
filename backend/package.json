@@ -2,11 +2,14 @@
   "name": "track-farm-ops-backend",
   "version": "1.0.0",
   "main": "index.js",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
     "dev": "nodemon src/index.ts",
     "build": "npm install && npm run build:types",
     "build:types": "tsc --project ./tsconfig.json",
-    "build:render": "npm install @types/node && npm run build",
+    "build:render": "rm -rf node_modules dist package-lock.json && npm install && npm run build:types",
     "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed-inventory": "ts-node prisma/seed-inventory.ts",
@@ -45,6 +48,6 @@
     "nodemon": "^3.1.11",
     "prisma": "^5.19.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "5.9.3"
   }
 }
