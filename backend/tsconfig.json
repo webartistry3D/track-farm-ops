@@ -23,7 +23,7 @@
     "noUnusedParameters": false,
     "exactOptionalPropertyTypes": false,
     "noLib": false,
-    "types": ["node"],
+    "types": ["node", "express"],
     "suppressImplicitAnyIndexErrors": false,
     "noImplicitOverride": false,
     "noPropertyAccessFromIndexSignature": false,
