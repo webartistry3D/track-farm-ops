@@ -23,7 +23,7 @@
     "noUnusedParameters": false,
     "exactOptionalPropertyTypes": false,
     "noLib": false,
-    "types": []
+    "types": ["node"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "../src", "../node_modules", "../dist"],
