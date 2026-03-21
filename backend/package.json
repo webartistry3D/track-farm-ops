@@ -4,8 +4,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.ts",
-    "build": "tsc --project ./tsconfig.json",
-    "build:render": "npm install && npm run build",
+    "build": "npm install && tsc --project ./tsconfig.json",
+    "build:render": "npm install --save-dev @types/node @types/express @types/jsonwebtoken && npm run build",
     "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed-inventory": "ts-node prisma/seed-inventory.ts",
