@@ -17,8 +17,8 @@ async function buildProduction() {
     try {
       execSync('npx prisma migrate deploy', { stdio: 'inherit' });
     } catch (error) {
-      console.log('⚠️ Prisma migrate deploy failed, trying safe migration...');
-      execSync('node scripts/safe-migrate-production.js', { stdio: 'inherit' });
+      console.log('⚠️ Prisma migrate deploy failed, running baseline...');
+      execSync('node scripts/baseline-production.js', { stdio: 'inherit' });
     }
     
     // Step 4: Seed database
