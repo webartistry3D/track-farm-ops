@@ -27,7 +27,6 @@ import { prisma } from './lib/prisma';
 dotenv.config({ path: `.env.${process.env.NODE_ENV || 'development'}` });
 
 const app = express();
-const PORT = process.env.PORT || 3001;
 
 // Production middleware
 if (process.env.NODE_ENV === 'production') {
@@ -238,6 +237,8 @@ process.on('SIGINT', () => {
 });
 
 // Start server
+const PORT = process.env.PORT || 3001;  // Use Render's PORT or fallback to 3001
+
 app.listen(PORT, () => {
   console.log(`🚀 TrackFarmOps API server running on port ${PORT}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
