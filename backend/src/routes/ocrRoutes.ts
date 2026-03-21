@@ -17,7 +17,7 @@ const ocrRateLimit = rateLimit({
 });
 
 // OCR processing endpoint
-router.post('/process-receipt', ocrRateLimit, ocrService.getUploadMiddleware().single('receipt'), async (req, res) => {
+router.post('/process-receipt', ocrRateLimit, ocrService.getUploadMiddleware().single('receipt'), async (req: any, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({
