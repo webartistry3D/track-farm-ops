@@ -12,18 +12,9 @@ async function buildProduction() {
     console.log('🗄️ Generating Prisma client...');
     execSync('npx prisma generate', { stdio: 'inherit' });
     
-    // Step 3: Deploy Prisma migrations (creates all tables)
-    console.log('🔄 Deploying Prisma migrations...');
-    try {
-      execSync('npx prisma migrate deploy', { stdio: 'inherit' });
-    } catch (error) {
-      console.log('⚠️ Prisma migrate deploy failed, running baseline...');
-      execSync('node scripts/baseline-production.js', { stdio: 'inherit' });
-    }
-    
-    // Step 4: Seed database
-    console.log('🌱 Seeding database...');
-    execSync('node scripts/seed-production.js', { stdio: 'inherit' });
+    // Step 3: Reset and migrate production database
+    console.log('🔄 Resetting and migrating production database...');
+    execSync('node scripts/reset-production.js', { stdio: 'inherit' });
     
     console.log('✅ Production build completed successfully!');
     
