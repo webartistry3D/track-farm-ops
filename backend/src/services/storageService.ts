@@ -93,7 +93,7 @@ class StorageService {
   /**
    * Upload file to storage
    */
-  async uploadFile(file: Express.Multer.File, key: string): Promise<{ url: string; key: string }> {
+  async uploadFile(file: any, key: string): Promise<{ url: string; key: string }> {
     try {
       console.log(`📤 Uploading file: ${file.originalname} → ${key} (${this.config.type} storage)`);
 
@@ -111,7 +111,7 @@ class StorageService {
   /**
    * Upload file to S3
    */
-  private async uploadToS3(file: Express.Multer.File, key: string): Promise<{ url: string; key: string }> {
+  private async uploadToS3(file: any, key: string): Promise<{ url: string; key: string }> {
     try {
       // For now, simulate S3 upload with local storage
       // In production, you would use AWS SDK here
@@ -134,7 +134,7 @@ class StorageService {
   /**
    * Upload file to local storage
    */
-  private async uploadToLocal(file: Express.Multer.File, key: string): Promise<{ url: string; key: string }> {
+  private async uploadToLocal(file: any, key: string): Promise<{ url: string; key: string }> {
     try {
       const filePath = path.join(this.uploadDir, key);
       const dir = path.dirname(filePath);

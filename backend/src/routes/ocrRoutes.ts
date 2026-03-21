@@ -19,17 +19,17 @@ const ocrRateLimit = rateLimit({
 // OCR processing endpoint
 router.post('/process-receipt', ocrRateLimit, ocrService.getUploadMiddleware().single('receipt'), async (req, res) => {
   try {
-    if (!req.file) {
+    if (!(req as any).file) {
       return res.status(400).json({
         success: false,
         error: 'No receipt image provided'
       });
     }
 
-    console.log(`📸 Processing receipt: ${req.file.originalname}, Size: ${req.file.size} bytes`);
+    console.log(`📸 Processing receipt: ${(req as any).file.originalname}, Size: ${(req as any).file.size} bytes`);
 
     // Process with OCR
-    const ocrResult = await ocrService.processReceiptOCR(req.file.buffer);
+    const ocrResult = await ocrService.processReceiptOCR((req as any).file.buffer);
     
     if (!ocrResult.success) {
       throw new Error(ocrResult.error || 'OCR processing failed');
