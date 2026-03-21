@@ -94,10 +94,21 @@ export const storageConfigs: Record<string, StorageConfig> = {
 export function getStorageConfig(): StorageConfig {
   const env = import.meta.env.MODE || 'development';
   
-  // Default to development if environment not found
-  const config = storageConfigs[env] || storageConfigs.development;
+  // Check if S3 environment variables are available (production setup)
+  const hasS3Config = import.meta.env.VITE_AWS_S3_BUCKET && 
+                     import.meta.env.VITE_AWS_REGION && 
+                     import.meta.env.VITE_AWS_ACCESS_KEY_ID && 
+                     import.meta.env.VITE_AWS_SECRET_ACCESS_KEY;
   
-  console.log(`🗄️ Storage Config: Using ${config.type} storage for ${env} environment`);
+  // Use S3 if environment variables are available, otherwise fall back to environment-specific config
+  let config: StorageConfig;
+  if (hasS3Config) {
+    config = storageConfigs.production;
+    console.log(`🗄️ Storage Config: Using S3 storage (environment variables detected)`);
+  } else {
+    config = storageConfigs[env] || storageConfigs.development;
+    console.log(`🗄️ Storage Config: Using ${config.type} storage for ${env} environment`);
+  }
   
   return config;
 }
