@@ -4,8 +4,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.ts",
-    "build": "npm install && tsc --project ./tsconfig.json",
-    "build:render": "npm install --save-dev @types/node @types/express @types/jsonwebtoken && npm run build",
+    "build": "npm install && npm run build:types",
+    "build:types": "tsc --project ./tsconfig.json",
+    "build:render": "npm install @types/node && npm run build",
     "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed-inventory": "ts-node prisma/seed-inventory.ts",
@@ -18,6 +19,7 @@
   "description": "",
   "dependencies": {
     "@prisma/client": "^5.19.0",
+    "@types/node": "^20.19.37",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
@@ -40,7 +42,6 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/morgan": "^1.9.10",
     "@types/multer": "^2.1.0",
-    "@types/node": "^20.19.37",
     "nodemon": "^3.1.11",
     "prisma": "^5.19.0",
     "ts-node": "^10.9.2",
