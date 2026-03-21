@@ -12,9 +12,14 @@ async function buildProduction() {
     console.log('🗄️ Generating Prisma client...');
     execSync('npx prisma generate', { stdio: 'inherit' });
     
-    // Step 3: Run safe migration
-    console.log('🔄 Running database migration...');
-    execSync('node scripts/safe-migrate-production.js', { stdio: 'inherit' });
+    // Step 3: Deploy Prisma migrations (creates all tables)
+    console.log('🔄 Deploying Prisma migrations...');
+    try {
+      execSync('npx prisma migrate deploy', { stdio: 'inherit' });
+    } catch (error) {
+      console.log('⚠️ Prisma migrate deploy failed, trying safe migration...');
+      execSync('node scripts/safe-migrate-production.js', { stdio: 'inherit' });
+    }
     
     // Step 4: Seed database
     console.log('🌱 Seeding database...');
