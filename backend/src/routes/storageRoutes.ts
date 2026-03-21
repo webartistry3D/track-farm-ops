@@ -22,7 +22,7 @@ router.use((req, res, next) => {
  */
 router.post('/upload', authenticate, storageService.getUploadMiddleware().single('file'), async (req: AuthRequest, res) => {
   try {
-    if (!(req as any).file) {
+    if (!req.file) {
       return res.status(400).json({
         success: false,
         error: 'No file provided'
@@ -37,17 +37,17 @@ router.post('/upload', authenticate, storageService.getUploadMiddleware().single
       });
     }
 
-    console.log(`📤 User ${req.user!.name} uploading file: ${(req as any).file.originalname}`);
+    console.log(`📤 User ${req.user!.name} uploading file: ${req.file.originalname}`);
 
-    const result = await storageService.uploadFile((req as any).file, key);
+    const result = await storageService.uploadFile(req.file, key);
 
     res.json({
       success: true,
       ...result,
       metadata: {
-        originalName: (req as any).file.originalname,
-        size: (req as any).file.size,
-        mimeType: (req as any).file.mimetype,
+        originalName: req.file.originalname,
+        size: req.file.size,
+        mimeType: req.file.mimetype,
         uploadedAt: new Date().toISOString()
       }
     });
@@ -67,14 +67,14 @@ router.post('/upload', authenticate, storageService.getUploadMiddleware().single
 router.post('/upload-local', storageService.getUploadMiddleware().single('file'), async (req, res) => {
   console.log('📤 Received upload-local request');
   console.log('📁 Request body:', req.body);
-  console.log('📄 File info:', (req as any).file ? {
-    originalname: (req as any).file.originalname,
-    mimetype: (req as any).file.mimetype,
-    size: (req as any).file.size
+  console.log('📄 File info:', req.file ? {
+    originalname: req.file.originalname,
+    mimetype: req.file.mimetype,
+    size: req.file.size
   } : 'No file received');
   
   try {
-    if (!(req as any).file) {
+    if (!req.file) {
       console.log('❌ No file provided in request');
       return res.status(400).json({
         success: false,
@@ -91,9 +91,9 @@ router.post('/upload-local', storageService.getUploadMiddleware().single('file')
       });
     }
 
-    console.log(`📤 Local upload: ${(req as any).file.originalname} -> ${key}`);
+    console.log(`📤 Local upload: ${req.file.originalname} -> ${key}`);
 
-    const result = await storageService.uploadFile((req as any).file, key);
+    const result = await storageService.uploadFile(req.file, key);
 
     console.log('✅ Upload result:', result);
 
@@ -101,9 +101,9 @@ router.post('/upload-local', storageService.getUploadMiddleware().single('file')
       success: true,
       ...result,
       metadata: {
-        originalName: (req as any).file.originalname,
-        size: (req as any).file.size,
-        mimeType: (req as any).file.mimetype,
+        originalName: req.file.originalname,
+        size: req.file.size,
+        mimeType: req.file.mimetype,
         uploadedAt: new Date().toISOString()
       }
     });
