@@ -2,14 +2,37 @@ import { Request, Response, NextFunction } from 'express';
 import { verifyToken } from '../utils/auth';
 import { prisma } from '../lib/prisma';
 
+export interface AuthUser {
+  id: number;
+  email: string;
+  role: string;
+  name: string;
+  organizationId?: number;
+}
+
 export interface AuthRequest extends Request {
-  user?: {
-    id: number;
-    email: string;
-    role: string;
-    name: string;
-    organizationId?: number;
-  };
+  user?: AuthUser;
+}
+
+// Generic helper functions for Express Request properties
+export function getRequestBody<T = any>(req: Request): T {
+  return req.body as T;
+}
+
+export function getRequestQuery<T = any>(req: Request): T {
+  return req.query as T;
+}
+
+export function getRequestParams<T = any>(req: Request): T {
+  return req.params as T;
+}
+
+export function getRequestHeaders<T = any>(req: Request): T {
+  return req.headers as T;
+}
+
+export function getRequestHeader(req: Request, header: string): string | undefined {
+  return req.get(header);
 }
 
 export const authenticate = async (req: AuthRequest, res: Response, next: NextFunction) => {

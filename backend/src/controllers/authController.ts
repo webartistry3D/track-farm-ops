@@ -1,11 +1,13 @@
 import { Request, Response } from 'express';
 import { prisma } from '../lib/prisma';
 import { generateToken, hashPassword, comparePassword } from '../utils/auth';
-import { AuthRequest } from '../middleware/auth';
+import { AuthRequest, getRequestBody } from '../middleware/auth';
+import { LoginRequestBody, CreateUserBody } from '../types/requests';
 
 export const signup = async (req: Request, res: Response) => {
   try {
-    const { name, email, password, role, farmName } = req.body;
+    const body = getRequestBody<CreateUserBody>(req);
+    const { name, email, password, role, farmName } = body;
 
     if (!name || !email || !password) {
       return res.status(400).json({ error: 'Name, email, and password are required' });
@@ -78,7 +80,8 @@ export const signup = async (req: Request, res: Response) => {
 
 export const createUser = async (req: AuthRequest, res: Response) => {
   try {
-    const { name, email, password, role } = req.body;
+    const body = getRequestBody<CreateUserBody>(req);
+    const { name, email, password, role } = body;
     const currentUser = req.user!;
 
     // Get current user's organization
