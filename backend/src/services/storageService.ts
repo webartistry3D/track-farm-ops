@@ -69,7 +69,7 @@ class StorageService {
     return multer({
       storage,
       limits: { fileSize: 20 * 1024 * 1024 }, // 20MB limit
-      fileFilter: (req: Request, file: any, cb: (error: Error | null, acceptFile: boolean) => void) => {
+      fileFilter: (req: Request, file: any, cb: any) => {
         const allowedMimeTypes = [
           'image/jpeg',
           'image/jpg',
