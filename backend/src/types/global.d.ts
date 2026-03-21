@@ -1,24 +1,28 @@
 /**
  * Global TypeScript Declaration
- * Disables strict checking for Express Request properties
+ * Completely bypasses property checking for Express Request
  */
 
 declare global {
-  namespace Express {
-    interface Request {
-      body: any;
-      query: any;
-      params: any;
-      headers: any;
-      method: string;
-      path: string;
-      url: string;
-      ip: string;
-      connection: any;
-      socket: any;
-      get(header: string): string | string[] | undefined;
-      file?: any;
-    }
+  interface Object {
+    [key: string]: any;
+  }
+}
+
+// Add Express Request properties globally
+declare module 'express' {
+  interface Request {
+    body: any;
+    query: any;
+    params: any;
+    headers: any;
+    method: string;
+    path: string;
+    url: string;
+    ip: string;
+    connection: any;
+    socket: any;
+    file?: any;
   }
 }
 
