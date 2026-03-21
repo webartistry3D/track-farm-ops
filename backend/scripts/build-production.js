@@ -44,7 +44,19 @@ async function buildProduction() {
       throw new Error(`Database reset failed: ${dbError.message}`);
     }
     
-    // Step 4: Final verification
+    // Step 4: Reset admin password to ensure correct credentials
+    console.log('🔑 Ensuring admin password is correct...');
+    try {
+      execSync('node scripts/reset-admin-password.js', { 
+        stdio: 'inherit',
+        timeout: 10000 // 10 second timeout
+      });
+      console.log('✅ Admin password verification completed');
+    } catch (passwordError) {
+      console.warn('⚠️ Admin password reset warning:', passwordError.message);
+    }
+    
+    // Step 5: Final verification
     console.log('🔍 Final build verification...');
     try {
       // Test that we can import Prisma client
