@@ -27,7 +27,8 @@
     "suppressImplicitAnyIndexErrors": false,
     "noImplicitOverride": false,
     "noPropertyAccessFromIndexSignature": false,
-    "noUncheckedIndexedAccess": false
+    "noUncheckedIndexedAccess": false,
+    "noErrorTruncation": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "../src", "../node_modules", "../dist"],
