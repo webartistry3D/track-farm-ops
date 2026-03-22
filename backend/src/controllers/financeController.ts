@@ -388,8 +388,10 @@ export const getFinancialSummary = async (req: AuthRequest, res: Response) => {
     const currentUser = req.user!;
 
     const dateFilter: any = {};
-    if (startDate && endDate) {
+    if (startDate) {
       dateFilter.gte = new Date(startDate as string);
+    }
+    if (endDate) {
       dateFilter.lte = new Date(endDate as string);
     }
 
