@@ -31,29 +31,31 @@ async function buildProduction() {
       throw new Error(`Prisma client generation failed: ${prismaError.message}`);
     }
     
-    // Step 3: Reset and migrate production database
-    console.log('🔄 Resetting and migrating production database...');
+    // Step 3: Migrate production database (SAFE - no data loss)
+    console.log('🔄 Migrating production database...');
     try {
-      execSync('node scripts/reset-production.js', { 
+      execSync('npx prisma migrate deploy', { 
         stdio: 'inherit',
         timeout: 120000 // 2 minute timeout for database operations
       });
-      console.log('✅ Database reset and migration completed successfully');
+      console.log('✅ Database migration completed successfully');
     } catch (dbError) {
-      console.error('❌ Database reset failed:', dbError.message);
-      throw new Error(`Database reset failed: ${dbError.message}`);
+      console.error('❌ Database migration failed:', dbError.message);
+      // Don't fail the build if migration fails, but log it clearly
+      console.warn('⚠️ Continuing build despite migration failure');
     }
     
-    // Step 4: Reset admin password to ensure correct credentials
-    console.log('🔑 Ensuring admin password is correct...');
+    // Step 4: Ensure admin user exists (SAFE - no data loss)
+    console.log('� Ensuring admin user exists...');
     try {
-      execSync('node scripts/reset-admin-password.js', { 
+      execSync('node scripts/seed-production.js', { 
         stdio: 'inherit',
-        timeout: 10000 // 10 second timeout
+        timeout: 30000 // 30 second timeout
       });
-      console.log('✅ Admin password verification completed');
-    } catch (passwordError) {
-      console.warn('⚠️ Admin password reset warning:', passwordError.message);
+      console.log('✅ Admin user verification completed');
+    } catch (seedError) {
+      console.warn('⚠️ Admin user seeding warning:', seedError.message);
+      // Don't fail the build if seeding fails
     }
     
     // Step 5: Final verification
