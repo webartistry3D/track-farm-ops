@@ -52,7 +52,7 @@ const EnhancedIncomePage = () => {
   });
   
   // VAT Records State - using reports page date filter pattern
-  const [vatDateFilter, setVatDateFilter] = useState<'today' | 'yesterday' | 'last7days' | 'last30days' | 'custom' | 'allTime'>('last30days');
+  const [vatDateFilter, setVatDateFilter] = useState<'today' | 'yesterday' | 'last7days' | 'last30days' | 'custom' | 'allTime'>('today');
   const [vatSelectedMonth, setVatSelectedMonth] = useState(new Date().getMonth());
   const [vatSelectedYear, setVatSelectedYear] = useState(new Date().getFullYear());
   const [selectedVatRecord, setSelectedVatRecord] = useState<any>(null);
