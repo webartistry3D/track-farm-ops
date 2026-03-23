@@ -27,13 +27,13 @@ import { prisma } from './lib/prisma';
 // import { logAccess, logAuth } from './utils/auditLogger';
 
 // Load environment variables
-if (process.env.NODE_ENV === 'production') {
-  // In production (Render), env vars come from dashboard
-  // Still load dotenv for local development fallbacks
-  dotenv.config();
-} else {
+if (process.env.NODE_ENV !== 'production') {
   // In development, load from .env.development
   dotenv.config({ path: '.env.development' });
+} else {
+  // In production (Render), env vars come from dashboard
+  // Don't load dotenv file - trust Render's environment variables
+  console.log('🏭 Production mode: Using Render environment variables');
 }
 
 const app = express();
@@ -273,40 +273,64 @@ try {
   console.error('❌ Express app setup error:', error);
 }
 
-try {
-  console.log('🚀 Starting server binding...');
-  const server = app.listen(PORT, () => {
-    console.log(`🚀 TrackFarmOps API server running on port ${PORT}`);
-    console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`🏥 Health check: http://localhost:${PORT}/api/health`);
-    console.log(`🌐 Server address: ${server.address()}`);
-    console.log(`🔗 Server listening: ${server.listening}`);
+// Start server with enhanced error handling
+async function startServer() {
+  try {
+    console.log('🚀 Starting server binding...');
+    console.log(`🔧 Attempting to bind to PORT: ${process.env.PORT || 3001}`);
+    console.log(`🔧 PORT type: ${typeof (process.env.PORT || 3001)}`);
+    console.log(`🔧 PORT value: ${process.env.PORT || 3001}`);
     
-    if (process.env.NODE_ENV === 'production') {
-      console.log('🔒 Production mode enabled');
-      console.log(`📝 Logs: ${process.env.LOG_FILE || 'logs/app.log'}`);
+    // Test database connection before starting server
+    console.log('🔍 Testing database connection...');
+    try {
+      await prisma.$connect();
+      console.log('✅ Database connection successful');
+    } catch (dbError) {
+      console.error('❌ Database connection failed:', dbError);
+      console.error('❌ Server cannot start without database');
+      process.exit(1);
     }
-  });
+    
+    const server = app.listen(process.env.PORT || 3001, () => {
+      console.log(`🚀 TrackFarmOps API server running on port ${process.env.PORT || 3001}`);
+      console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`🏥 Health check: http://localhost:${process.env.PORT || 3001}/api/health`);
+      console.log(`🌐 Server address: ${server.address()}`);
+      console.log(`🔗 Server listening: ${server.listening}`);
+      
+      if (process.env.NODE_ENV === 'production') {
+        console.log('🔒 Production mode enabled');
+        console.log(`📝 Logs: ${process.env.LOG_FILE || 'logs/app.log'}`);
+      }
+    });
 
-  server.on('error', (error: any) => {
-    console.error('❌ Server error:', error);
-    console.error('❌ Error code:', error.code);
-    console.error('❌ Error message:', error.message);
-    if (error.code === 'EADDRINUSE') {
-      console.error(`Port ${PORT} is already in use`);
-    } else if (error.code === 'EACCES') {
-      console.error(`Permission denied for port ${PORT}`);
-    } else if (error.code === 'EADDRNOTAVAIL') {
-      console.error(`Port ${PORT} is not available`);
-    }
-  });
+    server.on('error', (error: any) => {
+      console.error('❌ Server error:', error);
+      console.error('❌ Error code:', error.code);
+      console.error('❌ Error message:', error.message);
+      if (error.code === 'EADDRINUSE') {
+        console.error(`Port ${process.env.PORT || 3001} is already in use`);
+      } else if (error.code === 'EACCES') {
+        console.error(`Permission denied for port ${process.env.PORT || 3001}`);
+      } else if (error.code === 'EADDRNOTAVAIL') {
+        console.error(`Port ${process.env.PORT || 3001} is not available`);
+      } else {
+        console.error('❌ Unknown server error:', error);
+      }
+      process.exit(1);
+    });
 
-  server.on('listening', () => {
-    console.log('🎉 Server is now listening for connections');
-  });
+    server.on('listening', () => {
+      console.log('🎉 Server is now listening for connections');
+    });
 
-} catch (error) {
-  console.error('❌ Failed to start server:', error);
-  console.error('❌ Error stack:', error.stack);
-  process.exit(1);
+  } catch (error) {
+    console.error('❌ Failed to start server:', error);
+    console.error('❌ Error stack:', error.stack);
+    process.exit(1);
+  }
 }
+
+// Start the server
+startServer();
