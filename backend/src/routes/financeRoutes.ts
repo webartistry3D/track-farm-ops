@@ -782,15 +782,7 @@ router.get('/vat/records', authenticate, async (req: AuthRequest, res) => {
       userId: currentUser.id
     });
     
-    // Additional debugging for yesterday filter
-    if (startDate && endDate) {
-      const start = new Date(startDate as string);
-      const end = new Date(endDate as string);
-      const daysDiff = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
-      console.log(`📊 Date range analysis: start=${start.toISOString()}, end=${end.toISOString()}, daysDiff=${daysDiff}`);
-    }
-
-    // Build date filter based on startDate and endDate (from reports page pattern)
+    // Build date filter based on startDate and endDate
     let dateFilter = {};
     
     if (startDate && endDate) {
@@ -802,13 +794,11 @@ router.get('/vat/records', authenticate, async (req: AuthRequest, res) => {
     
     console.log(`📅 Date filter applied:`, dateFilter);
 
-    // Fetch income entries with invoice VAT data
+    // Fetch income entries with VAT data ONLY (not invoices)
     const incomeEntries = await prisma.incomeEntry.findMany({
       where: {
         userId: currentUser.id,
-        description: {
-          contains: 'Payment for invoice #'
-        },
+        enableVAT: true, // Only get entries with VAT enabled
         date: dateFilter
       },
       orderBy: {
@@ -818,9 +808,9 @@ router.get('/vat/records', authenticate, async (req: AuthRequest, res) => {
       skip: Number(offset)
     });
     
-    console.log(`🔍 Found ${incomeEntries.length} income entries with invoice payments for user ${currentUser.id}`);
+    console.log(`🔍 Found ${incomeEntries.length} income entries with VAT for user ${currentUser.id}`);
     
-    // Get organization-level invoices directly (like invoice records API)
+    // Get user organization for role-based access
     const currentUserOrg = await prisma.user.findUnique({
       where: { id: currentUser.id },
       select: { 
@@ -828,10 +818,9 @@ router.get('/vat/records', authenticate, async (req: AuthRequest, res) => {
       }
     });
     
-    let finalInvoices: any[] = [];
+    // Get user IDs that current user should see within their organization
+    let userIds: number[];
     if (currentUserOrg?.organizationId) {
-      // Get user IDs that the current user should see within their organization
-      let userIds: number[];
       if (currentUser.role === 'OWNER') {
         const orgUsers = await prisma.user.findMany({
           where: { organizationId: currentUserOrg.organizationId },
@@ -848,7 +837,7 @@ router.get('/vat/records', authenticate, async (req: AuthRequest, res) => {
         });
         userIds = orgUsers.map(u => u.id);
       } else if (currentUser.role === 'WORKER') {
-        // WORKER can see records by OWNER, MANAGER, and WORKER within their organization
+        // WORKER can see records by OWNER, MANAGER and WORKER within their organization
         const orgUsers = await prisma.user.findMany({
           where: { 
             organizationId: currentUserOrg.organizationId,
@@ -862,110 +851,24 @@ router.get('/vat/records', authenticate, async (req: AuthRequest, res) => {
         userIds = [currentUser.id];
       }
       
-      finalInvoices = await prisma.invoice.findMany({
-        where: {
-          userId: { in: userIds },
-          ...(startDate && endDate && {
-            createdAt: {
-              gte: new Date(startDate + 'T00:00:00.000Z'),
-              lte: new Date(endDate + 'T23:59:59.999Z')
-            }
-          })
-        },
-        orderBy: {
-          createdAt: 'desc'
-        }
-      });
-      
-      console.log(`🏢 Found ${finalInvoices.length} organization invoices for VAT calculation`);
+      // Filter income entries by organization users
+      incomeEntries.filter(entry => userIds.includes(entry.userId));
     } else {
       console.log(`❌ User ${currentUser.id} has no organizationId`);
     }
     
-    if (finalInvoices.length > 0) {
-      console.log('📝 Sample invoices with VAT:', finalInvoices.slice(0, 3).map(invoice => ({
-        id: invoice.id,
-        invoiceNumber: invoice.invoiceNumber,
-        tax: invoice.tax,
-        total: invoice.total,
-        status: invoice.status,
-        createdAt: invoice.createdAt
-      })));
-    }
-
-    // Process and group VAT data from invoices (where VAT actually exists)
-    const vatRecords = [];
-    const dailyVatMap = new Map();
-    const weeklyVatMap = new Map();
-    const monthlyVatMap = new Map();
-    const yearlyVatMap = new Map();
-
-    // Use invoices directly (where tax/VAT data actually exists)
-    for (const invoice of finalInvoices) {
-      // Check if this invoice has VAT/tax
-      if (invoice.tax && Number(invoice.tax) > 0) {
-        const vatAmount = Number(invoice.tax);
-        const invoiceDate = new Date(invoice.createdAt);
-        
-        console.log(`💰 Found VAT amount ₦${vatAmount} in invoice #${invoice.invoiceNumber}`);
-        
-        // Create period keys
-        const dailyKey = invoiceDate.toISOString().split('T')[0];
-        const weeklyKey = `${invoiceDate.getFullYear()}-W${Math.ceil(invoiceDate.getDate() / 7)}`;
-        const monthlyKey = `${invoiceDate.getFullYear()}-${invoiceDate.getMonth() + 1}`;
-        const yearlyKey = invoiceDate.getFullYear().toString();
-        
-        // Aggregate VAT by period
-        if (!dailyVatMap.has(dailyKey)) {
-          dailyVatMap.set(dailyKey, { vatAmount: 0, transactionCount: 0, date: invoiceDate });
-        }
-        if (!weeklyVatMap.has(weeklyKey)) {
-          weeklyVatMap.set(weeklyKey, { vatAmount: 0, transactionCount: 0, date: invoiceDate });
-        }
-        if (!monthlyVatMap.has(monthlyKey)) {
-          monthlyVatMap.set(monthlyKey, { vatAmount: 0, transactionCount: 0, date: invoiceDate });
-        }
-        if (!yearlyVatMap.has(yearlyKey)) {
-          yearlyVatMap.set(yearlyKey, { vatAmount: 0, transactionCount: 0, date: invoiceDate });
-        }
-        
-        // Update aggregates
-        const dailyRecord = dailyVatMap.get(dailyKey);
-        dailyRecord.vatAmount += vatAmount;
-        dailyRecord.transactionCount += 1;
-        
-        const weeklyRecord = weeklyVatMap.get(weeklyKey);
-        weeklyRecord.vatAmount += vatAmount;
-        weeklyRecord.transactionCount += 1;
-        
-        const monthlyRecord = monthlyVatMap.get(monthlyKey);
-        monthlyRecord.vatAmount += vatAmount;
-        monthlyRecord.transactionCount += 1;
-        
-        const yearlyRecord = yearlyVatMap.get(yearlyKey);
-        yearlyRecord.vatAmount += vatAmount;
-        yearlyRecord.transactionCount += 1;
-      }
-    }
-
-    // Convert maps to arrays and return all records (no period filtering needed)
-    let records = [];
-    
-    // Return individual invoice records with proper period calculations
-    records = finalInvoices.map((invoice, index) => {
-      const invoiceDate = new Date(invoice.createdAt);
-      const vatAmount = Number(invoice.tax) || 0;
+    // Process income entries into VAT records
+    const vatRecords = incomeEntries.map((entry, index) => {
+      const entryDate = new Date(entry.date);
       
-      // Determine period based on the date filter being used
+      // Determine period based on date filter being used
       let period = 'daily'; // default
       
-      // Check what date range is being applied to determine the aggregation period
+      // Check what date range is being applied to determine aggregation period
       if (startDate && endDate) {
         const start = new Date(startDate as string);
         const end = new Date(endDate as string);
         const daysInRange = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
-        
-        console.log(`📅 Period calculation: startDate=${startDate}, endDate=${endDate}, daysInRange=${daysInRange}`);
         
         if (daysInRange <= 2) {
           period = 'daily';
@@ -978,25 +881,25 @@ router.get('/vat/records', authenticate, async (req: AuthRequest, res) => {
         } else {
           period = 'yearly';
         }
-        
-        console.log(`📊 Assigned period: ${period}`);
       }
       
       return {
-        id: invoice.id,
+        id: entry.id,
         period,
-        date: invoice.createdAt,
-        vatAmount,
-        transactionCount: 1, // Each invoice is one transaction
-        status: invoice.status === 'PAID' ? 'pending' : 'pending',
-        source: 'invoices',
-        invoiceNumber: invoice.invoiceNumber
+        date: entry.date,
+        vatAmount: entry.vatAmount || 0, // VAT amount from income entry
+        transactionCount: 1, // Each income entry is one transaction
+        status: 'pending', // All VAT entries start as pending
+        source: 'income_entries', // Source is income entries table
+        invoiceNumber: entry.description?.includes('Payment for invoice #') 
+          ? entry.description.match(/Payment for invoice #(.+?)\s*\[/)?.[1] || 'N/A'
+          : 'N/A'
       };
     });
 
     // Apply pagination
-    const totalCount = records.length;
-    const paginatedRecords = records.slice(Number(offset), Number(offset) + Number(limit));
+    const totalCount = vatRecords.length;
+    const paginatedRecords = vatRecords.slice(Number(offset), Number(offset) + Number(limit));
     
     console.log(`📊 Final VAT Records Summary:`, {
       totalRecords: totalCount,
@@ -1004,11 +907,11 @@ router.get('/vat/records', authenticate, async (req: AuthRequest, res) => {
       sampleRecords: paginatedRecords.slice(0, 3)
     });
     
-    // Calculate summary for debugging
-    const totalVat = records.reduce((sum: number, record: any) => sum + (record.vatAmount || 0), 0);
-    const totalTransactions = records.reduce((sum: number, record: any) => sum + (record.transactionCount || 0), 0);
+    // Calculate summary
+    const totalVat = vatRecords.reduce((sum: number, record: any) => sum + (record.vatAmount || 0), 0);
+    const totalTransactions = vatRecords.reduce((sum: number, record: any) => sum + (record.transactionCount || 0), 0);
     const averageVat = totalTransactions > 0 ? totalVat / totalTransactions : 0;
-    const highestVat = records.length > 0 ? Math.max(...records.map((r: any) => r.vatAmount || 0)) : 0;
+    const highestVat = vatRecords.length > 0 ? Math.max(...vatRecords.map((r: any) => r.vatAmount || 0)) : 0;
     
     console.log(`💰 VAT Summary:`, {
       totalVat,
