@@ -16,13 +16,8 @@ const ocrRateLimit = rateLimit({
   legacyHeaders: false,
 });
 
-// Extend Request type to include file property
-interface AuthenticatedRequest extends Request {
-  file?: Express.Multer.File;
-}
-
 // OCR processing endpoint
-router.post('/process-receipt', ocrRateLimit, ocrService.getUploadMiddleware().single('receipt'), async (req: AuthenticatedRequest, res) => {
+router.post('/process-receipt', ocrRateLimit, ocrService.getUploadMiddleware().single('receipt'), async (req: Request, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({
