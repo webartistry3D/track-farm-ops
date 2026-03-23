@@ -1,4 +1,4 @@
-import { Router, Request } from 'express';
+import { Router } from 'express';
 import ocrService from '../services/ocrService';
 import { rateLimit } from 'express-rate-limit';
 
@@ -16,13 +16,8 @@ const ocrRateLimit = rateLimit({
   legacyHeaders: false,
 });
 
-// Type definition for multer request
-interface MulterRequest extends Request {
-  file?: Express.Multer.File;
-}
-
 // OCR processing endpoint
-router.post('/process-receipt', ocrRateLimit, ocrService.getUploadMiddleware().single('receipt'), async (req: MulterRequest, res) => {
+router.post('/process-receipt', ocrRateLimit, ocrService.getUploadMiddleware().single('receipt'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({
