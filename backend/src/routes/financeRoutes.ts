@@ -125,11 +125,20 @@ router.get('/income', authenticate, async (req: AuthRequest, res) => {
     if (startDate || endDate) {
       whereClause.date = {};
       if (startDate) {
-        whereClause.date.gte = new Date(startDate as string);
+        // Set start date to beginning of day (00:00:00.000)
+        const startDateTime = new Date(startDate as string);
+        startDateTime.setHours(0, 0, 0, 0);
+        whereClause.date.gte = startDateTime;
       }
       if (endDate) {
-        whereClause.date.lte = new Date(endDate as string);
+        // Set end date to end of day (23:59:59.999)
+        const endDateTime = new Date(endDate as string);
+        endDateTime.setHours(23, 59, 59, 999);
+        whereClause.date.lte = endDateTime;
       }
+      
+      console.log(`📅 Date filter applied: startDate=${startDate}, endDate=${endDate}`);
+      console.log(`📅 Actual date range: ${whereClause.date.gte?.toISOString()} to ${whereClause.date.lte?.toISOString()}`);
     }
     
     // Add organization filtering
@@ -316,11 +325,20 @@ router.get('/expenses', authenticate, async (req: AuthRequest, res) => {
     if (startDate || endDate) {
       whereClause.date = {};
       if (startDate) {
-        whereClause.date.gte = new Date(startDate as string);
+        // Set start date to beginning of day (00:00:00.000)
+        const startDateTime = new Date(startDate as string);
+        startDateTime.setHours(0, 0, 0, 0);
+        whereClause.date.gte = startDateTime;
       }
       if (endDate) {
-        whereClause.date.lte = new Date(endDate as string);
+        // Set end date to end of day (23:59:59.999)
+        const endDateTime = new Date(endDate as string);
+        endDateTime.setHours(23, 59, 59, 999);
+        whereClause.date.lte = endDateTime;
       }
+      
+      console.log(`📅 Expense date filter applied: startDate=${startDate}, endDate=${endDate}`);
+      console.log(`📅 Actual expense date range: ${whereClause.date.gte?.toISOString()} to ${whereClause.date.lte?.toISOString()}`);
     }
     
     // Add organization filtering
