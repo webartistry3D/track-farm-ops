@@ -11,7 +11,6 @@
     "build:types": "tsc --project ./tsconfig.json",
     "build:render": "node scripts/build-production.js",
     "start": "ts-node src/index.ts",
-    "test": "node scripts/test.js",
     "seed-inventory": "ts-node prisma/seed-inventory.ts",
     "reset-inventory": "ts-node prisma/reset-inventory.ts",
     "check-transactions": "ts-node prisma/check-transactions.ts"
