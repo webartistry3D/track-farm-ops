@@ -11,7 +11,7 @@ export const formatCurrency = (
 ): string => {
   // Handle null/undefined values
   if (value === null || value === undefined) {
-    return options.includeSymbol ? `${options.symbol || '₦'}0.00` : '0.00';
+    return options.includeSymbol !== false ? `${options.symbol || '₦'}0.00` : '0.00';
   }
   
   // Convert to number for calculation
@@ -19,7 +19,7 @@ export const formatCurrency = (
   
   // Handle invalid numbers
   if (isNaN(numValue)) {
-    return options.includeSymbol ? `${options.symbol || '₦'}0.00` : '0.00';
+    return options.includeSymbol !== false ? `${options.symbol || '₦'}0.00` : '0.00';
   }
   
   // Format with proper locale and digit handling
@@ -32,11 +32,11 @@ export const formatCurrency = (
     maximumFractionDigits
   });
   
-  return options.includeSymbol ? `${options.symbol || '₦'}${formattedValue}` : formattedValue;
+  return options.includeSymbol !== false ? `${options.symbol || '₦'}${formattedValue}` : formattedValue;
 };
 
 export const formatCurrencyDisplay = (value: number | string | null | undefined): string => {
-  return formatCurrency(value, { includeSymbol: true });
+  return formatCurrency(value);
 };
 
 export const formatNumber = (value: number | string | null | undefined): string => {
