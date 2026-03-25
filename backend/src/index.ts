@@ -10,7 +10,6 @@ import path from 'path';
 import authRoutes from './routes/auth';
 import inventoryRoutes from './routes/inventory';
 import inventoryTransactionRoutes from './routes/inventoryTransactions';
-import seedRoutes from './routes/seedRoutes';
 import assetsRoutes from './routes/assets';
 import invoiceRoutes from './routes/invoice';
 import analyticsRoutes from './routes/analyticsRoutes';
@@ -162,7 +161,6 @@ app.get('/api', (req, res) => {
       finance: '/api/finance',
       inventory: '/api/inventory',
       inventoryTransactions: '/api/inventory-transactions',
-      seed: '/api/seed',
       invoice: '/api/invoices',
       storage: '/api/storage',
       ocr: '/api/ocr',
@@ -197,7 +195,6 @@ if (process.env.NODE_ENV === 'development') {
 app.use('/api/auth', authRoutes);
 app.use('/api/inventory', inventoryRoutes);
 app.use('/api/inventory-transactions', inventoryTransactionRoutes);
-app.use('/api/seed', seedRoutes);
 app.use('/api/assets', assetsRoutes);
 app.use('/api/invoices', invoiceRoutes);
 app.use('/api/analytics', analyticsRoutes);
