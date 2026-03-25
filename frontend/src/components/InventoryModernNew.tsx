@@ -25,7 +25,7 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [stockStatusFilter, setStockStatusFilter] = useState('all');
   const [sortBy, setSortBy] = useState('name');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc'); // eslint-disable-line @typescript-eslint/no-unused-vars -- setSortOrder used for future sorting UI
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   
   // Tab state management
@@ -536,6 +536,25 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
               <option value="date">Sort by Date</option>
               <option value="status">Sort by Status</option>
             </select>
+
+            {/* Sort Order Toggle */}
+            <button
+              onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+              className="p-2 bg-gray-100 dark:bg-gray-700 text-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors"
+              title={`Currently: ${sortOrder === 'asc' ? 'Ascending' : 'Descending'} (Click to reverse)`}
+            >
+              {sortOrder === 'asc' ? (
+                <div className="flex items-center space-x-1">
+                  <span className="text-xs">A-Z</span>
+                  <span className="text-xs">↑</span>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-1">
+                  <span className="text-xs">Z-A</span>
+                  <span className="text-xs">↓</span>
+                </div>
+              )}
+            </button>
 
             {/* View Mode */}
             <div className="flex items-center space-x-2">

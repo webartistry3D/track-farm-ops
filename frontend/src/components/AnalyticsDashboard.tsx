@@ -228,14 +228,7 @@ const AnalyticsDashboard = () => {
     }
   };
 
-  const getProfitColor = (profit: number) => {
-    return profit >= 0 ? 'text-green-600' : 'text-red-600';
-  };
-
-  const getProfitIcon = (profit: number) => {
-    return profit >= 0 ? '' : '📉';
-  };
-
+  
   // Skeleton components for individual sections
   const FinancialOverviewSkeleton = () => (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -364,8 +357,8 @@ const AnalyticsDashboard = () => {
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-medium text-gray-900 dark:text-white">Net Profit</h3>
-                <p className={`text-3xl font-bold mt-2 ${getProfitColor(financialSummary?.netProfit || 0)}`}>
-                  {formatCurrency(financialSummary?.netProfit || 0)} {getProfitIcon(financialSummary?.netProfit || 0)}
+                <p className={`text-3xl font-bold mt-2 ${(financialSummary?.netProfit || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {formatCurrency(financialSummary?.netProfit || 0)} {(financialSummary?.netProfit || 0) >= 0 ? '' : '📉'}
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                   {dateFilter === 'today' ? 'Today' : 
