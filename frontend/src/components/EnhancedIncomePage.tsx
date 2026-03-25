@@ -1464,7 +1464,7 @@ Generated on: ${new Date().toLocaleString()}
           {/* Tab Navigation */}
           <div className="border-b border-gray-200 dark:border-gray-700 mb-6">
             <nav 
-              className="-mb-px flex space-x-2 overflow-x-auto"
+              className="-mb-px flex space-x-12 overflow-x-auto"
               style={{
                 msOverflowStyle: 'none',
                 scrollbarWidth: 'none',

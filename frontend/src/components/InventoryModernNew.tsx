@@ -657,7 +657,7 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
       
       <div className="w-full px-4 sm:px-0 lg:px-0 py-6">
         {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -858,7 +858,7 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
         <div className="bg-gray-100 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 mb-6">
           <div className="w-full px-4 sm:px-6 lg:px-8">
             <div className="flex overflow-x-auto justify-between">
-              <div className="flex overflow-x-auto">
+              <div className="flex overflow-x-auto space-x-10">
                 {['items', 'categories'].map((tab) => (
                   <button
                     key={tab}
@@ -866,7 +866,7 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
                     className={`py-4 px-4 sm:px-6 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap flex-shrink-0 ${
                       activeTab === tab
                         ? 'border-green-500 text-green-600 dark:text-green-400'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
                     }`}
                   >
                     {tab.charAt(0).toUpperCase() + tab.slice(1)}
