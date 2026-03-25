@@ -1453,18 +1453,18 @@ Generated on: ${new Date().toLocaleString()}
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg">
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+    <div className="max-w-6xl mx-auto p-0">
+      <div className="rounded-lg shadow-lg bg-white dark:bg-gray-900 p-2">
+        <div className="p-0">
+          {/*<h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
             <TrendingUp className="h-6 w-6 text-green-600" />
             Farm Income
-          </h2>
+          </h2>*/}
 
           {/* Tab Navigation */}
           <div className="border-b border-gray-200 dark:border-gray-700 mb-6">
             <nav 
-              className="-mb-px flex space-x-8 overflow-x-auto"
+              className="-mb-px flex space-x-2 overflow-x-auto"
               style={{
                 msOverflowStyle: 'none',
                 scrollbarWidth: 'none',
@@ -1584,7 +1584,7 @@ Generated on: ${new Date().toLocaleString()}
                 </div>
 
                 {/* VAT Option */}
-                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                <div className="p-4 rounded-lg">
                   <div className="flex items-center justify-between mb-3">
                     <label htmlFor="enableVAT" className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center cursor-pointer">
                       <input
@@ -1620,7 +1620,7 @@ Generated on: ${new Date().toLocaleString()}
                 </div>
 
                 {/* Calculated Amount Display */}
-                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                <div className="p-4 rounded-lg">
                   {(() => {
                     const quantity = parseFloat((formData.quantity || '0').replace(/,/g, ''));
                     const unitPrice = parseFloat((formData.unitPrice || '0').replace(/,/g, ''));
@@ -1810,7 +1810,7 @@ Generated on: ${new Date().toLocaleString()}
                     </div>
 
                   {/* Invoice Details */}
-                  <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <div className="p-4 rounded-lg">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
                       <Calendar className="h-5 w-5" />
                       Invoice Details
@@ -1854,7 +1854,7 @@ Generated on: ${new Date().toLocaleString()}
                   </div>
 
                   {/* Invoice Items */}
-                  <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                  <div className="p-4 rounded-lg">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                       <Package className="h-5 w-5" />
                       Invoice Items
@@ -1956,7 +1956,7 @@ Generated on: ${new Date().toLocaleString()}
                   </div>
 
                   {/* Payment Method */}
-                  <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+                  <div className="p-6 rounded-lg">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Payment Method</h3>
                     <select
                       value={invoiceData.paymentMethod}
@@ -1969,7 +1969,7 @@ Generated on: ${new Date().toLocaleString()}
                   </div>
 
                   {/* Notes */}
-                  <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+                  <div className="p-6 rounded-lg">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Notes</h3>
                     <textarea
                       rows={3}
@@ -1981,7 +1981,7 @@ Generated on: ${new Date().toLocaleString()}
                   </div>
 
                   {/* Summary */}
-                  <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+                  <div className="p-6 rounded-lg">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Invoice Summary</h3>
                     <div className="space-y-2">
                       <div className="flex justify-between">
@@ -2076,7 +2076,7 @@ Generated on: ${new Date().toLocaleString()}
               ) : (
                 <div className="overflow-x-auto relative">
                   <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                    <thead className="bg-gray-50 dark:bg-gray-800">
+                    <thead>
                       <tr>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                           Invoice #
@@ -2932,7 +2932,7 @@ Thank you for your prompt payment.`;
               ) : (
                 <div className="overflow-x-auto">
                   <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                    <thead className="bg-gray-50 dark:bg-gray-800">
+                    <thead>
                       <tr>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                           Date

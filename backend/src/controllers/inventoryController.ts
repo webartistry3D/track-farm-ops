@@ -150,11 +150,13 @@ export const getInventoryCategories = async (req: AuthRequest, res: Response) =>
     
     console.log(`📂 Fetching inventory categories for ${currentUser.role} ${currentUser.name} (ID: ${currentUser.id})`);
 
-    // Build where clause - if user has organizationId, filter by it, otherwise return all (for backward compatibility)
-    let whereClause: any = {};
-    if (currentUser.organizationId) {
-      whereClause.organizationId = currentUser.organizationId;
-    }
+    // Get both universal categories (organizationId: null) and organization-specific categories
+    let whereClause: any = {
+      OR: [
+        { organizationId: null }, // Universal categories available to all
+        ...(currentUser.organizationId ? [{ organizationId: currentUser.organizationId }] : []) // Organization-specific categories
+      ]
+    };
 
     const categories = await prisma.inventoryCategory.findMany({
       where: whereClause,
@@ -242,39 +244,36 @@ export const getInventoryItems = async (req: AuthRequest, res: Response) => {
     console.log(`🏢 User belongs to organization: ${currentUserOrg.organization?.name || 'Unknown'} (ID: ${currentUserOrg.organizationId})`);
     
     // Build where clause based on organizational hierarchy and role
-    let whereClause: any = {};
+    let whereClause: any = {
+      OR: [
+        { organizationId: null }, // Universal item templates available to all
+        ...(currentUserOrg.organizationId ? [{ organizationId: currentUserOrg.organizationId }] : []) // Organization-specific items
+      ]
+    };
     
-    // Apply organizational filter
-    whereClause.organizationId = currentUserOrg.organizationId;
-    
-    // Role-based access control WITHIN organization
-    if (currentUser.role === 'OWNER') {
-      // OWNER can see ALL records within their organization
-      console.log('👑 OWNER: Fetching all inventory records in organization');
-    } else if (currentUser.role === 'MANAGER') {
-      // MANAGER can see records by OWNER, MANAGER, and WORKER within their organization
-      console.log('👨‍💼 MANAGER: Fetching inventory records from organization (OWNER + MANAGER + WORKER)');
-    } else if (currentUser.role === 'WORKER') {
-      // WORKER can see records by OWNER, MANAGER, and WORKER within their organization
-      console.log('👷 WORKER: Fetching inventory records from organization (OWNER + MANAGER + WORKER)');
-    } else {
-      // Fallback - only user's own records within organization
-      console.log(`🔒 ${currentUser.role}: Fetching own inventory records only in organization`);
-    }
-    
+    // Apply additional filters
     if (type) {
-      whereClause.type = type as 'LIVESTOCK' | 'PRODUCE' | 'CONSUMABLES';
+      whereClause.OR = whereClause.OR.map(condition => ({
+        ...condition,
+        type: type as 'LIVESTOCK' | 'PRODUCE' | 'CONSUMABLES'
+      }));
     }
     
     if (categoryId) {
-      whereClause.categoryId = parseInt(categoryId as string);
+      whereClause.OR = whereClause.OR.map(condition => ({
+        ...condition,
+        categoryId: Number(categoryId)
+      }));
     }
     
     if (search) {
-      whereClause.name = {
-        contains: search,
-        mode: 'insensitive'
-      };
+      whereClause.OR = whereClause.OR.map(condition => ({
+        ...condition,
+        name: {
+          contains: search as string,
+          mode: 'insensitive'
+        }
+      }));
     }
 
     // Get all inventory items with category relationship

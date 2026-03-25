@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
@@ -104,168 +103,90 @@ const PRESET_ITEMS = [
   { name: 'Organic Fertilizer', type: 'CONSUMABLES', unit: 'kg', categoryId: 6 }
 ];
 
-async function seedInventoryForOrganization(organizationId: number) {
-  console.log(`🌱 Seeding preset inventory for organization ${organizationId}...`);
+async function updateInventoryItems() {
+  console.log('🔄 Updating inventory items to reduced list...');
 
   try {
-    // Create preset categories
-    const createdCategories = [];
-    for (const category of PRESET_CATEGORIES) {
-      const createdCategory = await prisma.inventoryCategory.create({
-        data: {
-          ...category,
-          organizationId,
-        },
-      });
-      createdCategories.push(createdCategory);
-      console.log(`  ✅ Created category: ${createdCategory.name}`);
+    // Get all organizations
+    const organizations = await prisma.organization.findMany();
+    
+    if (organizations.length === 0) {
+      console.log('❌ No organizations found. Please create an organization first.');
+      return;
     }
 
-    // Create preset items
-    for (const item of PRESET_ITEMS) {
-      const category = createdCategories.find(cat => cat.name === PRESET_CATEGORIES[item.categoryId - 1].name);
-      if (category) {
-        await prisma.inventoryItem.create({
+    console.log(`Found ${organizations.length} organization(s) to update`);
+
+    for (const organization of organizations) {
+      console.log(`\n📦 Updating inventory for organization: ${organization.name}`);
+      
+      // Delete existing inventory items and categories for this organization
+      await prisma.inventoryItem.deleteMany({
+        where: { organizationId: organization.id }
+      });
+      
+      await prisma.inventoryCategory.deleteMany({
+        where: { organizationId: organization.id }
+      });
+      
+      console.log('  🗑️  Cleared existing inventory');
+
+      // Create new preset categories
+      const createdCategories = [];
+      for (const category of PRESET_CATEGORIES) {
+        const createdCategory = await prisma.inventoryCategory.create({
           data: {
-            name: item.name,
-            type: item.type as any,
-            unit: item.unit,
-            quantity: 0,
-            categoryId: category.id,
-            organizationId,
-            metadata: {
-              pricePerUnit: null,
-              location: null,
-              supplier: null,
-              purchaseDate: null,
-              expiryDate: null,
-              minimumStock: null,
-              notes: `Preset item for ${category.name} category`
-            }
+            ...category,
+            organizationId: organization.id,
           },
         });
-        console.log(`  ✅ Created item: ${item.name} in ${category.name}`);
+        createdCategories.push(createdCategory);
+        console.log(`  ✅ Created category: ${createdCategory.name}`);
       }
+
+      // Create new preset items
+      for (const item of PRESET_ITEMS) {
+        const category = createdCategories.find(cat => cat.name === PRESET_CATEGORIES[item.categoryId - 1].name);
+        if (category) {
+          await prisma.inventoryItem.create({
+            data: {
+              name: item.name,
+              type: item.type as any,
+              unit: item.unit,
+              quantity: 0,
+              categoryId: category.id,
+              organizationId: organization.id,
+              metadata: {
+                pricePerUnit: null,
+                location: null,
+                supplier: null,
+                purchaseDate: null,
+                expiryDate: null,
+                minimumStock: null,
+                notes: `Preset item for ${category.name} category`
+              }
+            },
+          });
+          console.log(`  ✅ Created item: ${item.name} in ${category.name}`);
+        }
+      }
+
+      console.log(`  🎉 Successfully updated ${PRESET_CATEGORIES.length} categories and ${PRESET_ITEMS.length} items`);
     }
 
-    console.log(`🎉 Successfully seeded ${PRESET_CATEGORIES.length} categories and ${PRESET_ITEMS.length} items for organization ${organizationId}`);
-    return true;
+    console.log('\n✅ All organizations updated successfully!');
+    console.log(`📊 Total items per organization: ${PRESET_ITEMS.length} (reduced from 80+)`);
+    
   } catch (error) {
-    console.error(`❌ Error seeding inventory for organization ${organizationId}:`, error);
-    return false;
-  }
-}
-
-async function createTestOrganization() {
-  console.log('🏢 Creating test organization...');
-
-  try {
-    const organization = await prisma.organization.create({
-      data: {
-        name: 'Test Farm Organization',
-        description: 'A test farm for demonstrating inventory management',
-      },
-    });
-
-    console.log(`✅ Created organization: ${organization.name} (ID: ${organization.id})`);
-    return organization;
-  } catch (error) {
-    console.error('❌ Error creating test organization:', error);
-    return null;
-  }
-}
-
-async function createTestUsers(organizationId: number) {
-  console.log('👥 Creating test users...');
-
-  try {
-    const hashedPassword = await bcrypt.hash('password123', 12);
-
-    const owner = await prisma.user.create({
-      data: {
-        name: 'Farm Owner',
-        email: 'owner@testfarm.com',
-        password: hashedPassword,
-        role: 'OWNER',
-        organizationId,
-      },
-    });
-
-    const manager = await prisma.user.create({
-      data: {
-        name: 'Farm Manager',
-        email: 'manager@testfarm.com',
-        password: hashedPassword,
-        role: 'MANAGER',
-        organizationId,
-      },
-    });
-
-    const worker = await prisma.user.create({
-      data: {
-        name: 'Farm Worker',
-        email: 'worker@testfarm.com',
-        password: hashedPassword,
-        role: 'WORKER',
-        organizationId,
-      },
-    });
-
-    console.log(`✅ Created test users:`);
-    console.log(`   - Owner: ${owner.email} (password: password123)`);
-    console.log(`   - Manager: ${manager.email} (password: password123)`);
-    console.log(`   - Worker: ${worker.email} (password: password123)`);
-
-    return { owner, manager, worker };
-  } catch (error) {
-    console.error('❌ Error creating test users:', error);
-    return null;
-  }
-}
-
-async function main() {
-  console.log('🚀 Starting inventory seeding process...');
-
-  try {
-    // Create test organization
-    const organization = await createTestOrganization();
-    if (!organization) {
-      console.error('❌ Failed to create organization');
-      return;
-    }
-
-    // Create test users
-    const users = await createTestUsers(organization.id);
-    if (!users) {
-      console.error('❌ Failed to create users');
-      return;
-    }
-
-    // Seed inventory for the organization
-    const seedingSuccess = await seedInventoryForOrganization(organization.id);
-    if (!seedingSuccess) {
-      console.error('❌ Failed to seed inventory');
-      return;
-    }
-
-    console.log('\n🎊 Seeding completed successfully!');
-    console.log('\n📋 Test Credentials:');
-    console.log('Organization: Test Farm Organization');
-    console.log('Owner: owner@testfarm.com (password: password123)');
-    console.log('Manager: manager@testfarm.com (password: password123)');
-    console.log('Worker: worker@testfarm.com (password: password123)');
-    console.log('\n📝 Note: Only Owner and Manager can access inventory. Worker will see access restricted message.');
-
-  } catch (error) {
-    console.error('❌ Seeding failed:', error);
+    console.error('❌ Error updating inventory:', error);
   } finally {
     await prisma.$disconnect();
   }
 }
 
-// Run the seeding
+// Run the update
 if (require.main === module) {
-  main();
+  updateInventoryItems();
 }
 
-export { seedInventoryForOrganization, createTestOrganization, createTestUsers };
+export { updateInventoryItems };

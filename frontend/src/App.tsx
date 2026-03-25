@@ -13,7 +13,7 @@ import Reports from './components/Reports';
 import AnalyticsDashboard from './components/AnalyticsDashboard';
 import EnhancedIncomePage from './components/EnhancedIncomePage';
 import EnhancedExpensePage from './components/EnhancedExpensePage';
-import Inventory from './components/Inventory';
+import InventoryModernNew from './components/InventoryModernNew';
 import Assets from './components/Assets';
 import Settings from './components/Settings';
 import AdminSetup from './components/AdminSetup';
@@ -120,7 +120,7 @@ const AppRoutes = () => {
         path="/inventory" 
         element={
           <ProtectedRoute>
-            <Inventory />
+            <InventoryModernNew />
           </ProtectedRoute>
         } 
       />

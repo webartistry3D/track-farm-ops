@@ -318,7 +318,7 @@ const AnalyticsDashboard = () => {
         <FinancialOverviewSkeleton />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+          {/*<div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-medium text-gray-900 dark:text-white">Total Income</h3>
@@ -337,9 +337,9 @@ const AnalyticsDashboard = () => {
               </div>
               <div className="text-4xl">💰</div>
             </div>
-          </div>
+          </div>*/}
 
-          <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+          {/*<div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-medium text-gray-900 dark:text-white">Total Expenses</h3>
@@ -358,9 +358,9 @@ const AnalyticsDashboard = () => {
               </div>
               <div className="text-4xl">💸</div>
             </div>
-          </div>
+          </div>*/}
 
-          <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+          {/*<div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-medium text-gray-900 dark:text-white">Net Profit</h3>
@@ -379,12 +379,12 @@ const AnalyticsDashboard = () => {
               </div>
               <div className="text-4xl">📊</div>
             </div>
-          </div>
+          </div>*/}
         </div>
       )}
 
       {/* Date Filter */}
-      <div className="flex justify-end items-center">
+      <div className="flex justify-start items-center">
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => setDateFilter('today')}

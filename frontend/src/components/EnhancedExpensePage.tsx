@@ -9,6 +9,15 @@ import { Camera, Upload, Scan, CheckCircle, X, Table, Plus, Eye, Trash2 } from '
 import Pagination from './Pagination';
 import ConfirmModal from './ConfirmModal';
 
+// Add global error handler for unhandled promise rejections
+if (typeof window !== 'undefined') {
+  window.addEventListener('unhandledrejection', (event) => {
+    console.error('Unhandled promise rejection:', event.reason);
+    // Prevent the error from showing in browser console
+    event.preventDefault();
+  });
+}
+
 interface OCRResult {
   merchant?: string;
   amount?: number;
@@ -91,12 +100,20 @@ const EnhancedExpensePage = () => {
       const offset = (page - 1) * entriesPerPage;
       console.log(`📄 Fetching expenses: page=${page}, limit=${entriesPerPage}, offset=${offset}`);
       
-      const response = await api.get<{ entries: ExpenseEntry[], total: number }>('/finance/expenses', {
-        params: {
-          limit: entriesPerPage,
-          offset: offset
-        }
+      // Add timeout to prevent hanging requests
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Request timeout')), 10000);
       });
+      
+      const response = await Promise.race([
+        api.get<{ entries: ExpenseEntry[], total: number }>('/finance/expenses', {
+          params: {
+            limit: entriesPerPage,
+            offset: offset
+          }
+        }),
+        timeoutPromise
+      ]) as any;
       
       console.log('📊 API Response:', response.data);
       
@@ -113,7 +130,11 @@ const EnhancedExpensePage = () => {
       });
     } catch (err: any) {
       console.error('Failed to fetch expenses:', err);
-      setError('Failed to load expense records');
+      if (err.message === 'Request timeout') {
+        setError('Request timed out. Please check your connection and try again.');
+      } else {
+        setError('Failed to load expense records');
+      }
     } finally {
       setExpensesLoading(false);
     }
@@ -251,7 +272,12 @@ const EnhancedExpensePage = () => {
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      await processReceiptFile(file);
+      try {
+        await processReceiptFile(file);
+      } catch (error) {
+        console.error('❌ File processing error:', error);
+        setError('Failed to process file. Please try again.');
+      }
     }
   };
 
@@ -373,12 +399,12 @@ const EnhancedExpensePage = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg">
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+    <div className="max-w-6xl mx-auto p-0">
+      <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-2">
+        <div className="p-0">
+          {/*<h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
             Farm Expenses
-          </h2>
+          </h2>*/}
 
           {/* Tab Navigation */}
           <div className="border-b border-gray-200 dark:border-gray-700 mb-6">
@@ -889,8 +915,13 @@ const EnhancedExpensePage = () => {
                   <button
                     onClick={async () => {
                       try {
+                        console.log('📥 Starting receipt download for expense:', selectedExpense.id);
+                        
                         // Fetch the image as a blob
                         const response = await fetch(selectedExpense.receiptImageUrl!);
+                        if (!response.ok) {
+                          throw new Error(`HTTP error! status: ${response.status}`);
+                        }
                         const blob = await response.blob();
                         
                         // Create a blob URL
@@ -909,14 +940,22 @@ const EnhancedExpensePage = () => {
                         
                         // Clean up blob URL
                         window.URL.revokeObjectURL(blobUrl);
+                        
+                        console.log('✅ Receipt download completed successfully');
                       } catch (error) {
                         console.error('❌ Download failed:', error);
                         // Fallback to direct link
-                        const link = document.createElement('a');
-                        link.href = selectedExpense.receiptImageUrl!;
-                        link.download = `receipt_${selectedExpense.category}_${selectedExpense.id}.jpg`;
-                        link.target = '_blank';
-                        link.click();
+                        try {
+                          const link = document.createElement('a');
+                          link.href = selectedExpense.receiptImageUrl!;
+                          link.download = `receipt_${selectedExpense.category}_${selectedExpense.id}.jpg`;
+                          link.target = '_blank';
+                          link.click();
+                          console.log('🔄 Fallback download attempted');
+                        } catch (fallbackError) {
+                          console.error('❌ Fallback download also failed:', fallbackError);
+                          setError('Failed to download receipt. Please try again later.');
+                        }
                       }
                     }}
                     className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"

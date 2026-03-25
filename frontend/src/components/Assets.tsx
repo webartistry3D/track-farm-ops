@@ -60,8 +60,11 @@ const Assets = () => {
     return <div>Please log in to access assets.</div>;
   }
 
-  // Check subscription access first
-  if (!canAccessFeature('inventoryTransactions')) {
+  // Check subscription access and role
+  const hasSubscriptionAccess = canAccessFeature('inventoryTransactions');
+  const isOwnerOrManager = user && (user.role === 'OWNER' || user.role === 'MANAGER');
+  
+  if (!hasSubscriptionAccess && !isOwnerOrManager) {
     return (
       <RestrictedPageMessage
         feature="inventoryTransactions"
@@ -393,27 +396,20 @@ const Assets = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <div className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+      {/*<div className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-4 space-y-4 sm:space-y-0">
             <div className="text-center sm:text-left">
               <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Asset Manager</h1>
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">Manage your farm's long-term resources and equipment</p>
             </div>
-            <button
-              onClick={() => setShowAddModal(true)}
-              className="bg-green-600 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-green-700 transition-colors text-sm sm:text-base mx-auto sm:mx-0 w-full sm:w-auto justify-center"
-            >
-              <Plus className="w-4 h-4" />
-              <span>Add Asset</span>
-            </button>
           </div>
         </div>
-      </div>
+      </div>*/}
 
       {/* Stats Cards */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-0 lg:px-0 py-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-2">
           <div className="bg-white dark:bg-gray-800 p-4 lg:p-6 rounded-lg shadow">
             <div className="flex items-center">
               <div className="p-2 lg:p-3 bg-blue-100 dark:bg-blue-900 rounded-full">
@@ -524,22 +520,31 @@ const Assets = () => {
       </div>
 
       {/* Tabs */}
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+      <div className="bg-gray-100 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex overflow-x-auto">
-            {['overview', 'maintenance', 'incidents', 'analytics'].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab as any)}
-                className={`py-4 px-4 sm:px-6 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap flex-shrink-0 ${
-                  activeTab === tab
-                    ? 'border-green-500 text-green-600 dark:text-green-400'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-                }`}
-              >
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
-              </button>
-            ))}
+          <div className="flex overflow-x-auto justify-between">
+            <div className="flex overflow-x-auto">
+              {['overview', 'maintenance', 'incidents', 'analytics'].map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab as any)}
+                  className={`py-4 px-4 sm:px-6 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap flex-shrink-0 ${
+                    activeTab === tab
+                      ? 'border-green-500 text-green-600 dark:text-green-400'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                  }`}
+                >
+                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="bg-green-600 text-white px-3 sm:px-4 py-1 rounded-lg flex items-center gap-2 hover:bg-green-700 transition-colors text-sm sm:text-base ml-4 flex-shrink-0 h-full mt-3"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Asset</span>
+            </button>
           </div>
         </div>
       </div>
