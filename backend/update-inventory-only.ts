@@ -45,6 +45,20 @@ const PRESET_CATEGORIES = [
     icon: '🧪',
     color: 'bg-yellow-100 text-yellow-700 border-yellow-200',
     metadata: { keywords: ['fertilizer', 'soil', 'amendments', 'nutrients'] }
+  },
+  {
+    name: 'Harvested Produce',
+    description: 'Freshly harvested crops and farm produce ready for market',
+    icon: '🌾',
+    color: 'bg-green-100 text-green-700 border-green-200',
+    metadata: { keywords: ['harvest', 'crops', 'produce', 'market', 'vegetables', 'fruits', 'grains'] }
+  },
+  {
+    name: 'Animal Products',
+    description: 'Products derived from farm animals including eggs, milk, and meat',
+    icon: '🥚',
+    color: 'bg-amber-100 text-amber-700 border-amber-200',
+    metadata: { keywords: ['eggs', 'milk', 'meat', 'dairy', 'animal products', 'poultry products'] }
   }
 ];
 
@@ -100,7 +114,23 @@ const PRESET_ITEMS = [
   { name: 'Compost', type: 'CONSUMABLES', unit: 'kg', categoryId: 6 },
   { name: 'Manure', type: 'CONSUMABLES', unit: 'kg', categoryId: 6 },
   { name: 'Lime', type: 'CONSUMABLES', unit: 'kg', categoryId: 6 },
-  { name: 'Organic Fertilizer', type: 'CONSUMABLES', unit: 'kg', categoryId: 6 }
+  { name: 'Organic Fertilizer', type: 'CONSUMABLES', unit: 'kg', categoryId: 6 },
+  
+  // Harvested Produce (6 items)
+  { name: 'Fresh Tomatoes', type: 'PRODUCE', unit: 'kg', categoryId: 7 },
+  { name: 'Fresh Peppers', type: 'PRODUCE', unit: 'kg', categoryId: 7 },
+  { name: 'Fresh Onions', type: 'PRODUCE', unit: 'kg', categoryId: 7 },
+  { name: 'Fresh Leafy Vegetables', type: 'PRODUCE', unit: 'bunches', categoryId: 7 },
+  { name: 'Fresh Maize', type: 'PRODUCE', unit: 'kg', categoryId: 7 },
+  { name: 'Fresh Eggs', type: 'PRODUCE', unit: 'pieces', categoryId: 7 },
+  
+  // Animal Products (6 items)
+  { name: 'Farm Eggs', type: 'PRODUCE', unit: 'crates', categoryId: 8 },
+  { name: 'Fresh Milk', type: 'PRODUCE', unit: 'liters', categoryId: 8 },
+  { name: 'Chicken Meat', type: 'PRODUCE', unit: 'kg', categoryId: 8 },
+  { name: 'Goat Meat', type: 'PRODUCE', unit: 'kg', categoryId: 8 },
+  { name: 'Cheese', type: 'PRODUCE', unit: 'kg', categoryId: 8 },
+  { name: 'Yogurt', type: 'PRODUCE', unit: 'liters', categoryId: 8 }
 ];
 
 async function updateInventoryItems() {

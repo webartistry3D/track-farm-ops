@@ -186,6 +186,29 @@ export const createInventoryCategory = async (req: AuthRequest, res: Response) =
     console.log('🔍 BACKEND CREATE INVENTORY CATEGORY DEBUG:');
     console.log('  Request body:', req.body);
     
+    // Get user's organization for data protection
+    const currentUserOrg = await prisma.user.findUnique({
+      where: { id: currentUser.id },
+      select: { 
+        organizationId: true,
+        organization: {
+          select: { id: true, name: true }
+        }
+      }
+    });
+    
+    console.log('🔍 User organization data for category creation:', currentUserOrg);
+    
+    if (!currentUserOrg || !currentUserOrg.organizationId) {
+      console.log('⚠️ User not assigned to any organization - access denied for category creation');
+      return res.status(403).json({ 
+        error: 'Access denied. User must be assigned to an organization to create inventory categories.',
+        code: 'NO_ORGANIZATION'
+      });
+    }
+    
+    console.log(`🏢 Creating category for organization: ${currentUserOrg.organization?.name || 'Unknown'} (ID: ${currentUserOrg.organizationId})`);
+    
     const { name, description, icon, color, parentId, isSubcategory, metadata } = req.body;
     
     if (!name) {
@@ -200,6 +223,7 @@ export const createInventoryCategory = async (req: AuthRequest, res: Response) =
         color: color || null,
         parentId: parentId || null,
         isSubcategory: isSubcategory || false,
+        organizationId: currentUserOrg.organizationId, // ✅ CRITICAL: Link to organization
         metadata: metadata || null
       }
     });
@@ -313,6 +337,29 @@ export const createInventoryItem = async (req: AuthRequest, res: Response) => {
     console.log('  Raw initialQuantity:', req.body.initialQuantity);
     console.log('  Type of initialQuantity:', typeof req.body.initialQuantity);
     
+    // Get user's organization for data protection
+    const currentUserOrg = await prisma.user.findUnique({
+      where: { id: req.user!.id },
+      select: { 
+        organizationId: true,
+        organization: {
+          select: { id: true, name: true }
+        }
+      }
+    });
+    
+    console.log('🔍 User organization data for item creation:', currentUserOrg);
+    
+    if (!currentUserOrg || !currentUserOrg.organizationId) {
+      console.log('⚠️ User not assigned to any organization - access denied for item creation');
+      return res.status(403).json({ 
+        error: 'Access denied. User must be assigned to an organization to create inventory items.',
+        code: 'NO_ORGANIZATION'
+      });
+    }
+    
+    console.log(`🏢 Creating item for organization: ${currentUserOrg.organization?.name || 'Unknown'} (ID: ${currentUserOrg.organizationId})`);
+    
     const { 
       name, 
       type, 
@@ -375,6 +422,7 @@ export const createInventoryItem = async (req: AuthRequest, res: Response) => {
         initialQuantity: parsedQuantity,
         description: description?.trim() || null,
         categoryId: categoryId ? parseInt(categoryId) : null,
+        organizationId: currentUserOrg.organizationId, // ✅ CRITICAL: Link to organization
         // New direct fields
         location: location?.trim() || null,
         supplier: supplier?.trim() || null,

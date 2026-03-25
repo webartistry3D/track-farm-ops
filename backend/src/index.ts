@@ -9,6 +9,7 @@ import path from 'path';
 
 import authRoutes from './routes/auth';
 import inventoryRoutes from './routes/inventory';
+import inventoryTransactionRoutes from './routes/inventoryTransactions';
 import assetsRoutes from './routes/assets';
 import invoiceRoutes from './routes/invoice';
 import analyticsRoutes from './routes/analyticsRoutes';
@@ -159,6 +160,7 @@ app.get('/api', (req, res) => {
       auth: '/api/auth',
       finance: '/api/finance',
       inventory: '/api/inventory',
+      inventoryTransactions: '/api/inventory-transactions',
       invoice: '/api/invoices',
       storage: '/api/storage',
       ocr: '/api/ocr',
@@ -192,6 +194,7 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/inventory', inventoryRoutes);
+app.use('/api/inventory-transactions', inventoryTransactionRoutes);
 app.use('/api/assets', assetsRoutes);
 app.use('/api/invoices', invoiceRoutes);
 app.use('/api/analytics', analyticsRoutes);
@@ -239,7 +242,7 @@ app.use((req, res, next) => {
     res.status(404).json({
       error: 'Not found',
       message: `Route ${req.originalUrl} not found`,
-      availableEndpoints: ['/api/auth', '/api/finance', '/api/inventory', '/api/health']
+      availableEndpoints: ['/api/auth', '/api/finance', '/api/inventory', '/api/inventory-transactions', '/api/health']
     });
   } else {
     next();
