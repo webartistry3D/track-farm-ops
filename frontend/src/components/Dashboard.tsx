@@ -3,6 +3,11 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
 import { formatCurrency } from '../utils/currency';
+import { 
+  PageSkeleton, 
+  StatsCardSkeleton, 
+  ListSkeleton
+} from './SkeletonComponents';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -203,6 +208,65 @@ const Dashboard = () => {
   const isOwner = user.role === 'OWNER' || user.role === 'MANAGER';
   const netProfit = todayIncome - todayExpenses;
 
+  // Show skeleton while loading
+  if (loading) {
+    return (
+      <PageSkeleton>
+        {/* Welcome Section Skeleton */}
+        <div className="shadow rounded-lg p-0 mb-6">
+          <div className="h-8 w-48 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
+          <div className="h-4 w-64 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+        </div>
+
+        {/* Stats Cards Skeleton */}
+        {isOwner && (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <StatsCardSkeleton />
+              <StatsCardSkeleton />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <StatsCardSkeleton />
+              <StatsCardSkeleton />
+            </div>
+          </>
+        )}
+
+        {/* Quick Stats Skeleton */}
+        <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6 mb-6">
+          <h2 className="text-xl font-poppins font-semibold text-gray-900 dark:text-white mb-4">
+            <div className="h-6 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform">
+                <div className="text-xl mb-1">
+                  <div className="w-6 h-6 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mx-auto"></div>
+                </div>
+                <div className="text-xl font-poppins font-semibold text-gray-900 dark:text-white mb-2">
+                  <div className="h-6 w-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mx-auto"></div>
+                </div>
+                <div className="text-sm font-inter text-gray-500 dark:text-gray-400">
+                  <div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mx-auto"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Recent Activity Skeleton */}
+        <div>
+          <h2 className="text-xl font-poppins font-semibold text-gray-900 dark:text-white mb-4">
+            <div className="h-6 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+          </h2>
+          <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+            <ListSkeleton items={5} />
+          </div>
+        </div>
+      </PageSkeleton>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Welcome Section */}
@@ -230,10 +294,10 @@ const Dashboard = () => {
                `${selectedYear} Income`}
             </h3>
             <p className="text-3xl font-poppins font-bold text-green-600 dark:text-green-400 mt-2">
-              {loading ? '...' : formatCurrency(todayIncome.toString(), { includeSymbol: true })}
+              {formatCurrency(todayIncome.toString(), { includeSymbol: true })}
             </p>
             <p className="text-sm font-inter text-gray-500 mt-1">
-              {loading ? 'Loading...' : incomeEntries.length > 0 ? `${incomeEntries.length} transaction${incomeEntries.length !== 1 ? 's' : ''}` : 'No income recorded'}
+              {incomeEntries.length > 0 ? `${incomeEntries.length} transaction${incomeEntries.length !== 1 ? 's' : ''}` : 'No income recorded'}
             </p>
           </div>
           
@@ -250,10 +314,10 @@ const Dashboard = () => {
                `${selectedYear} Expenses`}
             </h3>
             <p className="text-3xl font-poppins font-bold text-red-600 dark:text-red-400 mt-2">
-              {loading ? '...' : formatCurrency(todayExpenses.toString(), { includeSymbol: true })}
+              {formatCurrency(todayExpenses.toString(), { includeSymbol: true })}
             </p>
             <p className="text-sm font-inter text-gray-500 mt-1">
-              {loading ? 'Loading...' : expenseEntries.length > 0 ? `${expenseEntries.length} transaction${expenseEntries.length !== 1 ? 's' : ''}` : 'No expenses recorded'}
+              {expenseEntries.length > 0 ? `${expenseEntries.length} transaction${expenseEntries.length !== 1 ? 's' : ''}` : 'No expenses recorded'}
             </p>
           </div>
           
@@ -270,10 +334,10 @@ const Dashboard = () => {
                `${selectedYear} VAT`}
             </h3>
             <p className="text-3xl font-poppins font-bold text-purple-600 dark:text-purple-400 mt-2">
-              {loading ? '...' : formatCurrency(todayVAT.toString(), { includeSymbol: true })}
+              {formatCurrency(todayVAT.toString(), { includeSymbol: true })}
             </p>
             <p className="text-sm font-inter text-gray-500 mt-1">
-              {loading ? 'Loading...' : 'Total VAT collected'}
+              Total VAT collected
             </p>
           </div>
           
@@ -292,7 +356,7 @@ const Dashboard = () => {
             <p className={`text-3xl font-poppins font-bold ${
               netProfit >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
             } mt-2`}>
-              {loading ? '...' : formatCurrency(netProfit.toString(), { includeSymbol: true })}
+              {formatCurrency(netProfit.toString(), { includeSymbol: true })}
             </p>
             <p className="text-sm font-inter text-gray-500 mt-1">
               {dateFilter === 'today' ? "Today's profit/loss" : 
@@ -445,7 +509,7 @@ const Dashboard = () => {
               >
                 <div className="text-xl mb-1">📊</div>
                 <div className="text-xl font-poppins font-semibold text-gray-900 dark:text-white">
-                  {loading ? '...' : incomeEntries.length}
+                  {incomeEntries.length}
                 </div>
                 <div className="text-sm font-inter text-gray-500 dark:text-gray-400">Income Entries</div>
               </div>
@@ -455,7 +519,7 @@ const Dashboard = () => {
               >
                 <div className="text-xl mb-1">💸</div>
                 <div className="text-xl font-poppins font-semibold text-gray-900 dark:text-white">
-                  {loading ? '...' : expenseEntries.length}
+                  {expenseEntries.length}
                 </div>
                 <div className="text-sm font-inter text-gray-500 dark:text-gray-400">Expense Entries</div>
               </div>
@@ -465,7 +529,7 @@ const Dashboard = () => {
               >
                 <div className="text-xl mb-1">📦</div>
                 <div className="text-xl font-poppins font-semibold text-gray-900 dark:text-white">
-                  {loading ? '...' : inventoryItems.length}
+                  {inventoryItems.length}
                 </div>
                 <div className="text-sm font-inter text-gray-500 dark:text-gray-400">Inventory Items</div>
               </div>
@@ -475,7 +539,7 @@ const Dashboard = () => {
               >
                 <div className="text-xl mb-1">🔄</div>
                 <div className="text-xl font-poppins font-semibold text-gray-900 dark:text-white">
-                  {loading ? '...' : incomeEntries.length + expenseEntries.length}
+                  {incomeEntries.length + expenseEntries.length}
                 </div>
                 <div className="text-sm font-inter text-gray-500 dark:text-gray-400">Transactions</div>
               </div>
@@ -486,11 +550,7 @@ const Dashboard = () => {
         <div>
           <h2 className="text-xl font-poppins font-semibold text-gray-900 dark:text-white mb-4">Recent Activity</h2>
           <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-            {loading ? (
-              <div className="text-center text-gray-500 dark:text-gray-400 py-4">
-                <p className="font-inter">Loading recent activity...</p>
-              </div>
-            ) : incomeEntries.length > 0 || expenseEntries.length > 0 ? (
+            {incomeEntries.length > 0 || expenseEntries.length > 0 ? (
               <div className="space-y-3 max-h-96 overflow-y-auto">
                 {/* Combine income and expense entries, sort by newest first, and limit to 10 entries */}
                 {[...incomeEntries.map(entry => ({ ...entry, type: 'Income' })), 

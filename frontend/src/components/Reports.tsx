@@ -7,6 +7,11 @@ import api from '../lib/api';
 import { formatCurrency } from '../utils/currency';
 import Pagination from './Pagination';
 import { X, Download, FileText } from 'lucide-react';
+import { 
+  PageSkeleton, 
+  TabSkeleton, 
+  TableSkeleton
+} from './SkeletonComponents';
 
 // Export utility functions
 const exportToCSV = (data: any[], filename: string, type: string) => {
@@ -329,10 +334,108 @@ const Reports = () => {
         )}
 
         {loading ? (
-          <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
-            <p className="mt-4 text-gray-600 dark:text-gray-400">Loading reports...</p>
-          </div>
+          <PageSkeleton>
+            {/* Date Filter Skeleton */}
+            <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
+              <div className="flex flex-wrap gap-2 items-center">
+                <div className="h-10 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                <div className="h-10 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                <div className="h-10 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                <div className="h-10 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                <div className="h-10 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                <div className="flex items-center gap-2">
+                  <div className="h-4 w-12 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                  <div className="h-10 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                  <div className="h-4 w-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                  <div className="h-10 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                </div>
+              </div>
+            </div>
+
+            {/* Report Tabs Skeleton */}
+            <TabSkeleton tabs={3} />
+
+            {/* All Transactions Tab Content Skeleton */}
+            <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6 mb-6">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <div className="h-6 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
+                  <div className="h-4 w-48 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                </div>
+                <div className="flex gap-2">
+                  <div className="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+                  <div className="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+                </div>
+              </div>
+              
+              {/* Table Skeleton */}
+              <TableSkeleton rows={8} columns={6} />
+              
+              {/* Pagination Skeleton */}
+              <div className="mt-6 flex items-center justify-between">
+                <div className="h-4 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                <div className="flex gap-2">
+                  <div className="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                  <div className="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                  <div className="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                </div>
+              </div>
+            </div>
+
+            {/* Income by Category Tab Content Skeleton */}
+            <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6 mb-6">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <div className="h-6 w-40 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
+                  <div className="h-4 w-56 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                </div>
+                <div className="flex gap-2">
+                  <div className="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+                  <div className="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+                </div>
+              </div>
+              
+              {/* Category Table Skeleton */}
+              <TableSkeleton rows={5} columns={4} />
+              
+              {/* Pagination Skeleton */}
+              <div className="mt-6 flex items-center justify-between">
+                <div className="h-4 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                <div className="flex gap-2">
+                  <div className="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                  <div className="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                  <div className="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                </div>
+              </div>
+            </div>
+
+            {/* Expense by Category Tab Content Skeleton */}
+            <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6 mb-6">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <div className="h-6 w-44 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
+                  <div className="h-4 w-60 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                </div>
+                <div className="flex gap-2">
+                  <div className="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+                  <div className="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+                </div>
+              </div>
+              
+              {/* Category Table Skeleton */}
+              <TableSkeleton rows={5} columns={4} />
+              
+              {/* Pagination Skeleton */}
+              <div className="mt-6 flex items-center justify-between">
+                <div className="h-4 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                <div className="flex gap-2">
+                  <div className="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                  <div className="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                  <div className="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                </div>
+              </div>
+            </div>
+          </PageSkeleton>
         ) : (
           <>
             {/* View Mode Toggle */}

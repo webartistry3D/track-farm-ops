@@ -9,6 +9,9 @@ import { formatCurrency, parseCurrency, validateCurrencyInput } from '../utils/c
 import { Camera, Upload, Scan, CheckCircle, X, Table, Plus, Eye, Trash2 } from 'lucide-react';
 import Pagination from './Pagination';
 import ConfirmModal from './ConfirmModal';
+import { 
+  TableSkeleton
+} from './SkeletonComponents';
 
 // Add global error handler for unhandled promise rejections
 if (typeof window !== 'undefined') {
@@ -735,12 +738,7 @@ const EnhancedExpensePage = () => {
           {activeTab === 'records' && (
             <div>
               {expensesLoading ? (
-                <div className="text-center py-8">
-                  <div className="inline-flex items-center space-x-2 text-gray-600">
-                    <div className="animate-spin w-5 h-5 border-2 border-gray-600 border-t-transparent rounded-full"></div>
-                    <span>Loading expense records...</span>
-                  </div>
-                </div>
+                <TableSkeleton rows={8} columns={5} />
               ) : expenses.length === 0 ? (
                 <div className="text-center py-8">
                   <Table className="h-12 w-12 text-gray-400 mx-auto mb-4" />

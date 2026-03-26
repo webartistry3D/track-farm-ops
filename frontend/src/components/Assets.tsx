@@ -6,6 +6,13 @@ import RestrictedPageMessage from './RestrictedPageMessage';
 import { useSubscriptionRestrictions } from '../utils/subscriptionRestrictions';
 import { Search, Plus, Edit2, Trash2, Wrench, AlertTriangle, TrendingUp, Clock, MapPin, User, QrCode, FileText, BarChart3, CheckCircle, Calendar } from 'lucide-react';
 import api from '../lib/api';
+import { 
+  PageSkeleton, 
+  TabSkeleton, 
+  TableSkeleton,
+  ChartSkeleton,
+  ListSkeleton
+} from './SkeletonComponents';
 
 interface Asset {
   id: string;
@@ -410,6 +417,91 @@ const Assets = () => {
     }
   };
 
+  // Show comprehensive skeleton while loading
+  if (loading) {
+    return (
+      <PageSkeleton>
+        {/* Search and Filter Skeleton */}
+        <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
+          <div className="flex flex-col lg:flex-row gap-4">
+            <div className="flex-1">
+              <div className="h-10 w-full bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+            </div>
+            <div className="h-10 w-32 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+            <div className="h-10 w-32 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+            <div className="h-10 w-32 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+              <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Tab Navigation Skeleton */}
+        <TabSkeleton tabs={4} />
+
+        {/* Overview Tab Content Skeleton */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <div className="h-6 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
+              <div className="h-4 w-48 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+            </div>
+            <div className="flex gap-2">
+              <div className="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+              <div className="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+            </div>
+          </div>
+          
+          {/* Assets Table Skeleton */}
+          <TableSkeleton rows={10} columns={9} />
+        </div>
+
+        {/* Maintenance Schedule Skeleton */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
+          <div className="h-6 w-40 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-4"></div>
+          <ListSkeleton items={5} />
+        </div>
+
+        {/* Recent Maintenance Records Skeleton */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
+          <div className="h-6 w-48 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-4"></div>
+          <TableSkeleton rows={5} columns={4} />
+        </div>
+
+        {/* Recent Incidents Skeleton */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
+          <div className="h-6 w-36 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-4"></div>
+          <TableSkeleton rows={5} columns={4} />
+        </div>
+
+        {/* Analytics Tab Content Skeleton */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
+          <div className="h-6 w-48 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-4"></div>
+          <ChartSkeleton height="h-64" />
+        </div>
+
+        {/* Maintenance Cost Trends Skeleton */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
+          <div className="h-6 w-56 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-4"></div>
+          <ChartSkeleton height="h-64" />
+        </div>
+
+        {/* Top Assets by Cost Skeleton */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
+          <div className="h-6 w-40 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-4"></div>
+          <ListSkeleton items={5} />
+        </div>
+
+        {/* Asset ROI Analysis Skeleton */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div className="h-6 w-36 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-4"></div>
+          <ChartSkeleton height="h-64" />
+        </div>
+      </PageSkeleton>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
@@ -678,12 +770,7 @@ const Assets = () => {
             {/* Maintenance Schedule */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Maintenance Schedule</h3>
-              {loading ? (
-                <div className="text-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
-                  <p className="text-gray-600 dark:text-gray-400 mt-2">Loading maintenance schedule...</p>
-                </div>
-              ) : assets.filter(a => a.status === 'active').length === 0 ? (
+              {assets.filter(a => a.status === 'active').length === 0 ? (
                 <div className="text-center py-8">
                   <Wrench className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
                   <p className="text-gray-600 dark:text-gray-400">No active assets scheduled for maintenance</p>
@@ -735,12 +822,7 @@ const Assets = () => {
             {/* Recent Maintenance Records */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recent Maintenance Records</h3>
-              {loading ? (
-                <div className="text-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
-                  <p className="text-gray-600 dark:text-gray-400 mt-2">Loading maintenance records...</p>
-                </div>
-              ) : maintenanceRecords.length === 0 ? (
+              {maintenanceRecords.length === 0 ? (
                 <div className="text-center py-8">
                   <FileText className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
                   <p className="text-gray-600 dark:text-gray-400">No maintenance records found</p>
@@ -929,12 +1011,7 @@ const Assets = () => {
             {/* Recent Incidents */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recent Incidents</h3>
-              {loading ? (
-                <div className="text-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
-                  <p className="text-gray-600 dark:text-gray-400 mt-2">Loading incident reports...</p>
-                </div>
-              ) : incidentReports.length === 0 ? (
+              {incidentReports.length === 0 ? (
                 <div className="text-center py-8">
                   <AlertTriangle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                   <p className="text-gray-600 dark:text-gray-400">No incident reports found</p>
@@ -1054,12 +1131,7 @@ const Assets = () => {
             {/* Asset Utilization Chart */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Asset Utilization by Category</h3>
-              {loading ? (
-                <div className="text-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
-                  <p className="text-gray-600 dark:text-gray-400 mt-2">Loading analytics data...</p>
-                </div>
-              ) : assets.length === 0 ? (
+              {assets.length === 0 ? (
                 <div className="text-center py-8">
                   <BarChart3 className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                   <p className="text-gray-600 dark:text-gray-400">No assets available for analysis</p>
@@ -1089,12 +1161,7 @@ const Assets = () => {
             {/* Maintenance Cost Trends */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Maintenance Cost Trends (Last 12 Months)</h3>
-              {loading ? (
-                <div className="text-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
-                  <p className="text-gray-600 dark:text-gray-400 mt-2">Loading maintenance trends...</p>
-                </div>
-              ) : (
+              {(
                 <div className="h-64">
                   <div className="h-full flex items-end space-x-1">
                     {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map((month) => (
@@ -1116,12 +1183,7 @@ const Assets = () => {
             {/* Top Assets by Cost */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Top Assets by Maintenance Cost</h3>
-              {loading ? (
-                <div className="text-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
-                  <p className="text-gray-600 dark:text-gray-400 mt-2">Loading asset rankings...</p>
-                </div>
-              ) : assets.length === 0 ? (
+              {assets.length === 0 ? (
                 <div className="text-center py-8">
                   <TrendingUp className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                   <p className="text-gray-600 dark:text-gray-400">No assets available for ranking</p>
@@ -1152,12 +1214,7 @@ const Assets = () => {
             {/* Asset ROI Analysis */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Asset ROI Analysis</h3>
-              {loading ? (
-                <div className="text-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
-                  <p className="text-gray-600 dark:text-gray-400 mt-2">Loading ROI analysis...</p>
-                </div>
-              ) : assets.length === 0 ? (
+              {assets.length === 0 ? (
                 <div className="text-center py-8">
                   <BarChart3 className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                   <p className="text-gray-600 dark:text-gray-400">No assets available for ROI analysis</p>
