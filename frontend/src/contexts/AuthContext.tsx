@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, useRef } from 'react';
 import type { User, LoginRequest, LoginResponse } from '../types';
 import api from '../lib/api';
 
@@ -22,6 +22,97 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  
+  // Auto-logout functionality
+  const INACTIVITY_TIMEOUT = 15 * 60 * 1000; // 15 minutes in milliseconds
+  const WARNING_TIMEOUT = 2 * 60 * 1000; // Show warning 2 minutes before logout
+  const timeoutRef = useRef<number | null>(null);
+  const warningRef = useRef<number | null>(null);
+  const lastActivityRef = useRef<number>(Date.now());
+
+  // Reset the inactivity timer
+  const resetInactivityTimer = () => {
+    lastActivityRef.current = Date.now();
+    
+    // Clear existing timers
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    if (warningRef.current) {
+      clearTimeout(warningRef.current);
+    }
+    
+    // Hide warning if it's showing
+    if ((window as any).inactivityWarning) {
+      (window as any).inactivityWarning.hide();
+    }
+    
+    // Set warning timer (2 minutes before logout)
+    warningRef.current = window.setTimeout(() => {
+      console.log('🕐 [AuthProvider] Showing inactivity warning - 2 minutes remaining');
+      if ((window as any).inactivityWarning) {
+        (window as any).inactivityWarning.show();
+      }
+    }, INACTIVITY_TIMEOUT - WARNING_TIMEOUT);
+    
+    // Set logout timer
+    timeoutRef.current = window.setTimeout(() => {
+      console.log('🕐 [AuthProvider] User inactive for 15 minutes, logging out...');
+      logout();
+    }, INACTIVITY_TIMEOUT);
+  };
+
+  // Handle user activity events
+  const handleUserActivity = () => {
+    resetInactivityTimer();
+  };
+
+  // Setup activity monitoring
+  useEffect(() => {
+    if (!user) return; // Only monitor when user is logged in
+
+    const events = [
+      'mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click', 'keydown', 'keyup'
+    ];
+
+    // Add event listeners for user activity
+    events.forEach(event => {
+      document.addEventListener(event, handleUserActivity, { passive: true });
+    });
+
+    // Handle visibility change (user switching tabs)
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        // User returned to the tab, check if they were inactive
+        const timeSinceLastActivity = Date.now() - lastActivityRef.current;
+        if (timeSinceLastActivity >= INACTIVITY_TIMEOUT) {
+          console.log('🕐 [AuthProvider] User returned after inactivity timeout, logging out...');
+          logout();
+        } else {
+          resetInactivityTimer();
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Start the timer when user logs in
+    resetInactivityTimer();
+
+    // Cleanup function
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      if (warningRef.current) {
+        clearTimeout(warningRef.current);
+      }
+      events.forEach(event => {
+        document.removeEventListener(event, handleUserActivity);
+      });
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [user]); // Re-run when user state changes
 
   useEffect(() => {
     console.log('[AuthProvider] Component mounted');
@@ -113,6 +204,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       
       setUser(userData);
       console.log('✅ [Frontend] User set in context:', userData);
+      
+      // Start inactivity timer after successful login
+      resetInactivityTimer();
+      console.log('🕐 [AuthProvider] Inactivity timer started for 15 minutes');
+      
       console.log('🎉 [Frontend] Login process completed successfully!');
       
     } catch (error: any) {
@@ -154,6 +250,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const logout = () => {
+    // Clear inactivity timers
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    if (warningRef.current) {
+      clearTimeout(warningRef.current);
+      warningRef.current = null;
+    }
+    
     localStorage.removeItem('trackfarmops_token');
     localStorage.removeItem('trackfarmops_user');
     setUser(null);

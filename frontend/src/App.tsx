@@ -22,6 +22,7 @@ import Contact from './components/Contact';
 import Privacy from './components/Privacy';
 import Terms from './components/Terms';
 import Pricing from './components/Pricing';
+import { InactivityWarning } from './components/InactivityWarning';
 import { useAuth } from './contexts/AuthContext';
 
 const queryClient = new QueryClient();
@@ -162,6 +163,14 @@ function App() {
             <Router>
               <ScrollToTop />
               <AppRoutes />
+              <InactivityWarning 
+                onWarning={() => {
+                  // This will be called when user chooses to sign out from warning
+                  // The actual logout will be handled by the AuthContext timer
+                  console.log('🕐 [App] User signed out from inactivity warning');
+                }} 
+                warningTime={2 * 60 * 1000} // 2 minutes
+              />
             </Router>
           </ToastProvider>
         </AuthProvider>
