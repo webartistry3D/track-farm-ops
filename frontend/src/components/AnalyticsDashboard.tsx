@@ -440,6 +440,73 @@ const AnalyticsDashboard = () => {
         </div>
       )}
 
+      {/* Charts Section */}
+      {financialLoading ? (
+        <ChartsSkeleton />
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Income by Category */}
+          <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Income by Category</h3>
+            <div className="space-y-3">
+              {financialSummary?.incomeByCategory.map((item, index) => {
+                const totalIncome = financialSummary.incomeByCategory.reduce((sum, cat) => sum + cat.amount, 0);
+                const percentage = totalIncome > 0 ? (item.amount / totalIncome) * 100 : 0;
+                return (
+                  <div key={index} className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{item.category}</span>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">{formatCurrency(item.amount)}</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-green-500 h-2 rounded-full" 
+                          style={{ width: `${percentage}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                    <div className="ml-4 text-sm text-gray-500 dark:text-gray-400 w-12 text-right">
+                      {percentage.toFixed(1)}%
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Expenses by Category */}
+          <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Expenses by Category</h3>
+            <div className="space-y-3">
+              {financialSummary?.expensesByCategory.map((item, index) => {
+                const totalExpenses = financialSummary.expensesByCategory.reduce((sum, cat) => sum + cat.amount, 0);
+                const percentage = totalExpenses > 0 ? (item.amount / totalExpenses) * 100 : 0;
+                return (
+                  <div key={index} className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{item.category}</span>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">{formatCurrency(item.amount)}</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-red-500 h-2 rounded-full" 
+                          style={{ width: `${percentage}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                    <div className="ml-4 text-sm text-gray-500 dark:text-gray-400 w-12 text-right">
+                      {percentage.toFixed(1)}%
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Date Filter */}
       <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
         <div className="flex flex-col gap-4">
@@ -538,73 +605,6 @@ const AnalyticsDashboard = () => {
           </div>
         </div>
       </div>
-
-      {/* Charts Section */}
-      {financialLoading ? (
-        <ChartsSkeleton />
-      ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Income by Category */}
-          <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Income by Category</h3>
-            <div className="space-y-3">
-              {financialSummary?.incomeByCategory.map((item, index) => {
-                const totalIncome = financialSummary.incomeByCategory.reduce((sum, cat) => sum + cat.amount, 0);
-                const percentage = totalIncome > 0 ? (item.amount / totalIncome) * 100 : 0;
-                return (
-                  <div key={index} className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{item.category}</span>
-                        <span className="text-sm text-gray-500 dark:text-gray-400">{formatCurrency(item.amount)}</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div 
-                          className="bg-green-500 h-2 rounded-full" 
-                          style={{ width: `${percentage}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                    <div className="ml-4 text-sm text-gray-500 dark:text-gray-400 w-12 text-right">
-                      {percentage.toFixed(1)}%
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Expenses by Category */}
-          <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Expenses by Category</h3>
-            <div className="space-y-3">
-              {financialSummary?.expensesByCategory.map((item, index) => {
-                const totalExpenses = financialSummary.expensesByCategory.reduce((sum, cat) => sum + cat.amount, 0);
-                const percentage = totalExpenses > 0 ? (item.amount / totalExpenses) * 100 : 0;
-                return (
-                  <div key={index} className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{item.category}</span>
-                        <span className="text-sm text-gray-500 dark:text-gray-400">{formatCurrency(item.amount)}</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div 
-                          className="bg-red-500 h-2 rounded-full" 
-                          style={{ width: `${percentage}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                    <div className="ml-4 text-sm text-gray-500 dark:text-gray-400 w-12 text-right">
-                      {percentage.toFixed(1)}%
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Inventory Summary */}
       {inventoryLoading ? (
