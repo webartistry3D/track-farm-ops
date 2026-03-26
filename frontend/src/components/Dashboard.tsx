@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
 import { formatCurrency } from '../utils/currency';
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const location = useLocation();
   const [incomeEntries, setIncomeEntries] = useState<any[]>([]);
   const [expenseEntries, setExpenseEntries] = useState<any[]>([]);
   const [inventoryItems, setInventoryItems] = useState<any[]>([]);
@@ -24,7 +25,15 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchDashboardData();
+    
+    // Scroll to top on page load
+    window.scrollTo(0, 0);
   }, [dateFilter, selectedMonth, selectedYear]);
+
+  // Scroll to top when location changes (navigation)
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
 
   const fetchDashboardData = async () => {
     try {
@@ -197,11 +206,11 @@ const Dashboard = () => {
   return (
     <div className="space-y-6">
       {/* Welcome Section */}
-      <div className="shadow rounded-lg p-4">
-        <h1 className="text-2xl font-poppins font-bold text-gray-900 dark:text-white mb-1">
+      <div className="shadow rounded-lg p-0">
+        <h1 className="text-xl font-poppins font-regular text-gray-900 dark:text-white mb-0">
           Hi, {user.name}! 
         </h1>
-        <p className="font-inter text-gray-600 mt-0">
+        <p className="font-inter text-gray-600 text-sm mt-0">
           Here is your business update..
         </p>
       </div>
@@ -303,100 +312,101 @@ const Dashboard = () => {
       {/* Financial Overview */}
       {/* Date Filter */}
       <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div className="flex flex-col gap-4">
           <h3 className="text-lg font-poppins font-medium text-gray-900 dark:text-white">
             Financial Overview
           </h3>
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              onClick={() => setDateFilter('today')}
-              className={`px-4 py-2 rounded-lg font-inter text-sm font-medium transition-colors duration-200 ${
-                dateFilter === 'today'
+          <div className="overflow-x-auto pb-2">
+            <div className="flex items-center gap-2 min-w-max">
+              <button
+                onClick={() => setDateFilter('today')}
+                className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
+                  dateFilter === 'today'
                   ? 'bg-green-600 text-white'
                   : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-              }`}
-            >
-              Today
-            </button>
-            <button
-              onClick={() => setDateFilter('yesterday')}
-              className={`px-4 py-2 rounded-lg font-inter text-sm font-medium transition-colors duration-200 ${
-                dateFilter === 'yesterday'
-                  ? 'bg-green-600 text-white'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-              }`}
-            >
-              Yesterday
-            </button>
-            <button
-              onClick={() => setDateFilter('week')}
-              className={`px-4 py-2 rounded-lg font-inter text-sm font-medium transition-colors duration-200 ${
-                dateFilter === 'week'
-                  ? 'bg-green-600 text-white'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-              }`}
-            >
-              Last 7 Days
-            </button>
-            <button
-              onClick={() => setDateFilter('month')}
-              className={`px-4 py-2 rounded-lg font-inter text-sm font-medium transition-colors duration-200 ${
-                dateFilter === 'month'
-                  ? 'bg-green-600 text-white'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-              }`}
-            >
-              Last 30 Days
-            </button>
-            <button
-              onClick={() => setDateFilter('allTime')}
-              className={`px-4 py-2 rounded-lg font-inter text-sm font-medium transition-colors duration-200 ${
-                dateFilter === 'allTime'
-                  ? 'bg-green-600 text-white'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-              }`}
-            >
-              All Time
-            </button>
-            <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1"></div>
-            <div className="flex items-center gap-2">
-              <label className="text-sm font-inter font-medium text-gray-700 dark:text-gray-300">Month:</label>
-              <select
-                value={selectedMonth}
-                onChange={(e) => {
-                  setSelectedMonth(parseInt(e.target.value));
-                  setDateFilter('customMonth');
-                }}
-                className="px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg font-inter text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:text-white"
+                }`}
               >
-                <option value={0}>January</option>
-                <option value={1}>February</option>
-                <option value={2}>March</option>
-                <option value={3}>April</option>
-                <option value={4}>May</option>
-                <option value={5}>June</option>
-                <option value={6}>July</option>
-                <option value={7}>August</option>
-                <option value={8}>September</option>
-                <option value={9}>October</option>
-                <option value={10}>November</option>
-                <option value={11}>December</option>
-              </select>
-            </div>
-            <div className="flex items-center gap-2">
-              <label className="text-sm font-inter font-medium text-gray-700 dark:text-gray-300">Year:</label>
-              <select
-                value={selectedYear}
-                onChange={(e) => {
-                  setSelectedYear(parseInt(e.target.value));
-                  setDateFilter('customYear');
-                }}
-                className="px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg font-inter text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:text-white"
+                Today
+              </button>
+              <button
+                onClick={() => setDateFilter('yesterday')}
+                className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
+                  dateFilter === 'yesterday'
+                  ? 'bg-green-600 text-white'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                }`}
               >
-                {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
-                  <option key={year} value={year}>{year}</option>
-                ))}
-              </select>
+                Yesterday
+              </button>
+              <button
+                onClick={() => setDateFilter('week')}
+                className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
+                  dateFilter === 'week'
+                  ? 'bg-green-600 text-white'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                }`}
+              >
+                Last 7 Days
+              </button>
+              <button
+                onClick={() => setDateFilter('month')}
+                className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
+                  dateFilter === 'month'
+                  ? 'bg-green-600 text-white'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                }`}
+              >
+                Last 30 Days
+              </button>
+              <button
+                onClick={() => setDateFilter('allTime')}
+                className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
+                  dateFilter === 'allTime'
+                  ? 'bg-green-600 text-white'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                }`}
+              >
+                All Time
+              </button>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <label className="text-xs sm:text-sm font-inter font-medium text-gray-700 dark:text-gray-300">Month:</label>
+                <select
+                  value={selectedMonth}
+                  onChange={(e) => {
+                    setSelectedMonth(parseInt(e.target.value));
+                    setDateFilter('customMonth');
+                  }}
+                  className="px-2 py-1 text-xs sm:px-3 sm:py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg font-inter text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:text-white"
+                >
+                  <option value={0}>January</option>
+                  <option value={1}>February</option>
+                  <option value={2}>March</option>
+                  <option value={3}>April</option>
+                  <option value={4}>May</option>
+                  <option value={5}>June</option>
+                  <option value={6}>July</option>
+                  <option value={7}>August</option>
+                  <option value={8}>September</option>
+                  <option value={9}>October</option>
+                  <option value={10}>November</option>
+                  <option value={11}>December</option>
+                </select>
+              </div>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <label className="text-xs sm:text-sm font-inter font-medium text-gray-700 dark:text-gray-300">Year:</label>
+                <select
+                  value={selectedYear}
+                  onChange={(e) => {
+                    setSelectedYear(parseInt(e.target.value));
+                    setDateFilter('customYear');
+                  }}
+                  className="px-2 py-1 text-xs sm:px-3 sm:py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg font-inter text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:text-white"
+                >
+                  {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
+                    <option key={year} value={year}>{year}</option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
         </div>

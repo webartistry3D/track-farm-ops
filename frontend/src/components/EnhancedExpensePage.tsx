@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
 import { processReceiptImage } from '../lib/ocrService';
@@ -39,6 +40,13 @@ const expenseCategories = [
 
 const EnhancedExpensePage = () => {
   const [activeTab, setActiveTab] = useState<'record' | 'records'>('record');
+  const location = useLocation();
+
+  // Scroll to top when navigating to Expenses page
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+
   const [formData, setFormData] = useState({
     amount: '',
     category: '',
@@ -78,6 +86,9 @@ const EnhancedExpensePage = () => {
       console.log('📄 Fetching expenses on mount/tab change');
       fetchExpenses(1);
     }
+    
+    // Scroll to top on page load
+    window.scrollTo(0, 0);
   }, [user, activeTab]);
 
   // Auto-clear success message after 3 seconds

@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
 import { formatCurrency } from '../utils/currency';
@@ -23,6 +24,12 @@ interface InventoryListProps {
 
 const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
   const { user } = useAuth();
+  const location = useLocation();
+  
+  // Scroll to top when navigating to Inventory page
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
   
   // State management
   const [items, setItems] = useState<InventoryItem[]>([]);
@@ -176,6 +183,9 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
   useEffect(() => {
     fetchCategories();
     fetchInventory();
+    
+    // Scroll to top on page load
+    window.scrollTo(0, 0);
   }, [fetchCategories, fetchInventory]);
 
   // Filter and sort items

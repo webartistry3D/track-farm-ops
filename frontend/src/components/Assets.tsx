@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { formatCurrency } from '../utils/currency';
 import RestrictedPageMessage from './RestrictedPageMessage';
 import { useSubscriptionRestrictions } from '../utils/subscriptionRestrictions';
-import { Search, Plus, Edit2, Trash2, Wrench, AlertTriangle, TrendingUp, Clock, MapPin, User, QrCode, FileText, BarChart3, CheckCircle } from 'lucide-react';
+import { Search, Plus, Edit2, Trash2, Wrench, AlertTriangle, TrendingUp, Clock, MapPin, User, QrCode, FileText, BarChart3, CheckCircle, Calendar } from 'lucide-react';
 import api from '../lib/api';
 
 interface Asset {
@@ -55,6 +56,12 @@ interface IncidentReport {
 const Assets = () => {
   const { user } = useAuth();
   const { canAccessFeature } = useSubscriptionRestrictions();
+  const location = useLocation();
+
+  // Scroll to top when navigating to Assets page
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
 
   if (!user) {
     return <div>Please log in to access assets.</div>;
@@ -316,20 +323,26 @@ const Assets = () => {
     const fetchAssets = async () => {
       try {
         setLoading(true);
+        
+        // DATABASE-ONLY APPROACH: Get assets from database
         const response = await api.get('/assets');
-        const data = response.data;
-        setAssets(data);
-        setFilteredAssets(data);
-        console.log('Assets fetched successfully:', data);
-      } catch (err: any) {
-        console.error('Error fetching assets:', err);
-        setError(err.response?.data?.error || 'Failed to fetch assets');
+        const assetsData = response.data || [];
+        
+        console.log('🏗 Assets loaded from database:', assetsData);
+        
+        setAssets(assetsData);
+        setFilteredAssets(assetsData);
+      } catch (error) {
+        console.error('Failed to fetch assets:', error);
       } finally {
         setLoading(false);
       }
     };
     
     fetchAssets();
+    
+    // Scroll to top on page load
+    window.scrollTo(0, 0);
   }, []);
 
   // Refetch assets function
@@ -372,10 +385,14 @@ const Assets = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
+      case 'planned': return 'bg-purple-100 text-purple-800';
+      case 'ordered': return 'bg-indigo-100 text-indigo-800';
+      case 'received': return 'bg-teal-100 text-teal-800';
       case 'active': return 'bg-green-100 text-green-800';
       case 'under_maintenance': return 'bg-yellow-100 text-yellow-800';
       case 'damaged': return 'bg-red-100 text-red-800';
       case 'retired': return 'bg-gray-100 text-gray-800';
+      case 'sold': return 'bg-orange-100 text-orange-800';
       default: return 'bg-blue-100 text-blue-800';
     }
   };
@@ -555,28 +572,31 @@ const Assets = () => {
           <div>
             {/* Assets Grid */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-              <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
-                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+              <div className="overflow-x-auto -mx-4 sm:mx-0 px-2 sm:px-4">
+                <table className="min-w-full sm:min-w-[800px] divide-y divide-gray-200 dark:divide-gray-700">
                   <thead className="bg-gray-50 dark:bg-gray-900">
                     <tr>
-                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Asset</th>
-                      <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Category</th>
-                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-                      <th className="hidden lg:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Location</th>
-                      <th className="hidden lg:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Assigned To</th>
-                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                      <th className="px-2 sm:px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Asset</th>
+                      <th className="hidden sm:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Category</th>
+                      <th className="hidden sm:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Cost</th>
+                      <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Location</th>
+                      <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Created By</th>
+                      <th className="hidden sm:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+                      <th className="hidden md:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                      <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Updated By</th>
+                      <th className="px-3 sm:px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     {filteredAssets.map((asset) => (
                       <tr key={asset.id} className="hover:bg-gray-50 dark:bg-gray-900 dark:hover:bg-gray-700">
-                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
+                        <td className="px-2 sm:px-3 py-3 sm:py-4 whitespace-nowrap">
                           <div className="flex items-center">
-                            <span className="text-xl sm:text-2xl mr-2 sm:mr-3">{getCategoryIcon(asset.category)}</span>
-                            <div>
-                              <div className="text-sm font-medium text-gray-900 dark:text-white">{asset.name}</div>
-                              <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{asset.model}</div>
-                              <div className="md:hidden text-xs text-gray-500 dark:text-gray-400 mt-1">
+                            <span className="text-lg sm:text-xl mr-2 sm:mr-3">{getCategoryIcon(asset.category)}</span>
+                            <div className="flex-1 min-w-0">
+                              <div className="text-sm font-medium text-gray-900 dark:text-white truncate">{asset.name}</div>
+                              <div className="text-xs text-gray-500 dark:text-gray-400 truncate">{asset.model}</div>
+                              <div className="sm:hidden text-xs text-gray-500 dark:text-gray-400 mt-1">
                                 {asset.subcategory.replace('_', ' ')} • {asset.location}
                               </div>
                             </div>
@@ -585,10 +605,8 @@ const Assets = () => {
                         <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap">
                           <span className="text-sm text-gray-900 dark:text-white">{asset.subcategory.replace('_', ' ')}</span>
                         </td>
-                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(asset.status)}`}>
-                            {asset.status.replace('_', ' ')}
-                          </span>
+                        <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                          <span className="font-medium">{formatCurrency(asset.cost)}</span>
                         </td>
                         <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                           <div className="flex items-center">
@@ -599,10 +617,27 @@ const Assets = () => {
                         <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                           <div className="flex items-center">
                             <User className="w-4 h-4 mr-1 text-gray-400 dark:text-gray-500" />
-                            {asset.assignedWorker}
+                            {user?.name || user?.email || 'Unknown'}
                           </div>
                         </td>
-                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                          <div className="flex items-center">
+                            <Calendar className="w-4 h-4 mr-1 text-gray-400 dark:text-gray-500" />
+                            {asset.purchaseDate ? new Date(asset.purchaseDate).toLocaleDateString() : 'N/A'}
+                          </div>
+                        </td>
+                        <td className="hidden md:table-cell px-3 sm:px-6 py-4 whitespace-nowrap">
+                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(asset.status)}`}>
+                            {asset.status.replace('_', ' ')}
+                          </span>
+                        </td>
+                        <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                          <div className="flex items-center">
+                            <Edit2 className="w-4 h-4 mr-1 text-gray-400 dark:text-gray-500" />
+                            {user?.name || user?.email || 'Unknown'}
+                          </div>
+                        </td>
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm font-medium text-left">
                           <div className="flex space-x-1 sm:space-x-2">
                             <button
                               onClick={() => {
@@ -638,16 +673,7 @@ const Assets = () => {
 
         {activeTab === 'maintenance' && (
           <div className="space-y-6">
-            {/* Maintenance Header with Action Button */}
-            <div className="flex justify-end">
-              <button 
-                onClick={() => setShowScheduleMaintenanceModal(true)}
-                className="bg-green-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-green-700 transition-colors"
-              >
-                <Plus className="w-4 h-4" />
-                Schedule Maintenance
-              </button>
-            </div>
+            
 
             {/* Maintenance Schedule */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
@@ -693,6 +719,17 @@ const Assets = () => {
                   ))}
                 </div>
               )}
+            </div>
+
+            {/* Maintenance Header with Action Button */}
+            <div className="flex justify-end">
+              <button 
+                onClick={() => setShowScheduleMaintenanceModal(true)}
+                className="bg-green-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-green-700 transition-colors"
+              >
+                <Plus className="w-4 h-4" />
+                Schedule Maintenance
+              </button>
             </div>
 
             {/* Recent Maintenance Records */}
@@ -1859,6 +1896,24 @@ const Assets = () => {
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                   placeholder="Enter asset description..."
                 />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Status</label>
+                <select
+                  value={formData.status || 'planned'}
+                  onChange={(e) => handleInputChange('status', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                >
+                  <option value="planned">Planned</option>
+                  <option value="ordered">Ordered</option>
+                  <option value="received">Received</option>
+                  <option value="active">Active</option>
+                  <option value="under_maintenance">Under Maintenance</option>
+                  <option value="damaged">Damaged</option>
+                  <option value="retired">Retired</option>
+                  <option value="sold">Sold</option>
+                </select>
               </div>
               
               <div className="flex justify-end space-x-3">

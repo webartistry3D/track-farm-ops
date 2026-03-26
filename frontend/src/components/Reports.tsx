@@ -143,10 +143,8 @@ const Reports = () => {
     );
   }
   const [loading, setLoading] = useState(true);
-  const [transaction, setTransaction] = useState<any>(null);
   const [error, setError] = useState('');
   const [allTransactions, setAllTransactions] = useState<any[]>([]);
-  const [viewMode, setViewMode] = useState<'single' | 'all'>('all');
   const [reportTab, setReportTab] = useState<'allTransactions' | 'incomeByCategory' | 'expenseByCategory'>('allTransactions');
   const [filterType] = useState<'all' | 'income' | 'expense'>('all');
   const [dateFilter, setDateFilter] = useState<'today' | 'yesterday' | 'last7days' | 'last30days' | 'custom' | 'allTime'>('last30days');
@@ -167,34 +165,27 @@ const Reports = () => {
     const searchParams = new URLSearchParams(location.search);
     const transactionId = searchParams.get('transactionId');
     const type = searchParams.get('type');
-
+    
     if (transactionId && type) {
-      setViewMode('single');
-      fetchTransactionDetails(transactionId, type);
-    } else {
-      fetchAllTransactions();
+      // Find and show the specific transaction
+      const transaction = allTransactions.find(t => 
+        t.id === transactionId && t.type.toLowerCase() === type.toLowerCase()
+      );
+      
+      if (transaction) {
+        setSelectedTransaction(transaction);
+        setShowDetailsModal(true);
+      }
     }
-  }, [location.search]);
+    
+    // Scroll to top on page load and navigation
+    window.scrollTo(0, 0);
+  }, [location]);
 
   // Refetch data when date filter changes
   useEffect(() => {
-    if (viewMode === 'all') {
-      fetchAllTransactions();
-    }
+    fetchAllTransactions();
   }, [dateFilter, selectedMonth, selectedYear]);
-
-  const fetchTransactionDetails = async (transactionId: string, type: string) => {
-    try {
-      setLoading(true);
-      const endpoint = type === 'income' ? `/finance/income/${transactionId}` : `/finance/expenses/${transactionId}`;
-      const response = await api.get(endpoint);
-      setTransaction({ ...response.data, type: type.charAt(0).toUpperCase() + type.slice(1) });
-    } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to fetch transaction details');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const fetchAllTransactions = async () => {
     try {
@@ -313,8 +304,8 @@ const Reports = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-4">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-0">
         {/* Header */}
         <div className="mb-2">
           {/* <div className="flex items-center justify-between">
@@ -409,213 +400,143 @@ const Reports = () => {
               </div>
             </div>*/}
 
-            {/* Report Tabs */}
-            <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
-              <div className="flex flex-wrap items-center gap-10 border-b border-gray-200 dark:border-gray-700">
-                <button
-                  onClick={() => setReportTab('allTransactions')}
-                  className={`px-4 py-2 font-inter text-sm font-medium transition-colors duration-200 border-b-2 ${
-                    reportTab === 'allTransactions'
-                      ? 'text-green-600 border-green-600 bg-green-50 dark:bg-green-900/20 dark:text-green-400'
-                      : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-                  }`}
-                >
-                  All Transactions
-                </button>
-                <button
-                  onClick={() => setReportTab('incomeByCategory')}
-                  className={`px-4 py-2 font-inter text-sm font-medium transition-colors duration-200 border-b-2 ${
-                    reportTab === 'incomeByCategory'
-                      ? 'text-green-600 border-green-600 bg-green-50 dark:bg-green-900/20 dark:text-green-400'
-                      : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-                  }`}
-                >
-                  Income by Category
-                </button>
-                <button
-                  onClick={() => setReportTab('expenseByCategory')}
-                  className={`px-4 py-2 font-inter text-sm font-medium transition-colors duration-200 border-b-2 ${
-                    reportTab === 'expenseByCategory'
-                      ? 'text-green-600 border-green-600 bg-green-50 dark:bg-green-900/20 dark:text-green-400'
-                      : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-                  }`}
-                >
-                  Expense by Category
-                </button>
-              </div>
-            </div>
-
             {/* Date Filter Controls */}
             <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
-              <div className="flex flex-wrap gap-2 items-center">
-                {/* Quick Date Buttons */}
-                <button
-                  onClick={() => setDateFilter('today')}
-                  className={`px-4 py-2 rounded-lg font-inter text-sm font-medium transition-colors duration-200 ${
-                    dateFilter === 'today'
-                      ? 'bg-green-600 text-white'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
-                  }`}
-                >
-                  Today
-                </button>
-                <button
-                  onClick={() => setDateFilter('yesterday')}
-                  className={`px-4 py-2 rounded-lg font-inter text-sm font-medium transition-colors duration-200 ${
-                    dateFilter === 'yesterday'
-                      ? 'bg-green-600 text-white'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
-                  }`}
-                >
-                  Yesterday
-                </button>
-                <button
-                  onClick={() => setDateFilter('last7days')}
-                  className={`px-4 py-2 rounded-lg font-inter text-sm font-medium transition-colors duration-200 ${
-                    dateFilter === 'last7days'
-                      ? 'bg-green-600 text-white'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
-                  }`}
-                >
-                  Last 7 Days
-                </button>
-                <button
-                  onClick={() => setDateFilter('last30days')}
-                  className={`px-4 py-2 rounded-lg font-inter text-sm font-medium transition-colors duration-200 ${
-                    dateFilter === 'last30days'
-                      ? 'bg-green-600 text-white'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
-                  }`}
-                >
-                  Last 30 Days
-                </button>
-                <button
-                  onClick={() => setDateFilter('allTime')}
-                  className={`px-4 py-2 rounded-lg font-inter text-sm font-medium transition-colors duration-200 ${
-                    dateFilter === 'allTime'
-                      ? 'bg-green-600 text-white'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
-                  }`}
-                >
-                  All Time
-                </button>
-                
-                <div className="w-px h-6 bg-gray-300 mx-1"></div>
-                
-                <div className="flex items-center gap-2">
-                  <label className="text-sm font-inter font-medium text-gray-700 dark:text-gray-300">Month:</label>
-                  <select
-                    value={selectedMonth}
-                    onChange={(e) => {
-                      setSelectedMonth(parseInt(e.target.value));
-                      setDateFilter('custom');
-                    }}
-                    className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm"
-                  >
-                    <option value="0">January</option>
-                    <option value="1">February</option>
-                    <option value="2">March</option>
-                    <option value="3">April</option>
-                    <option value="4">May</option>
-                    <option value="5">June</option>
-                    <option value="6">July</option>
-                    <option value="7">August</option>
-                    <option value="8">September</option>
-                    <option value="9">October</option>
-                    <option value="10">November</option>
-                    <option value="11">December</option>
-                  </select>
-                </div>
-                
-                <div className="flex items-center gap-2">
-                  <label className="text-sm font-inter font-medium text-gray-700 dark:text-gray-300">Year:</label>
-                  <select
-                    value={selectedYear}
-                    onChange={(e) => {
-                      setSelectedYear(parseInt(e.target.value));
-                      setDateFilter('custom');
-                    }}
-                    className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm"
-                  >
-                    <option value="2024">2024</option>
-                    <option value="2025">2025</option>
-                    <option value="2026">2026</option>
-                    <option value="2027">2027</option>
-                    <option value="2028">2028</option>
-                  </select>
+              <div className="flex flex-col gap-4">
+                <div className="overflow-x-auto pb-2">
+                  <div className="flex items-center gap-2 min-w-max">
+                    {/* Quick Date Buttons */}
+                    <button
+                      onClick={() => setDateFilter('today')}
+                      className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
+                        dateFilter === 'today'
+                          ? 'bg-green-600 text-white'
+                          : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                      }`}
+                    >
+                      Today
+                    </button>
+                    <button
+                      onClick={() => setDateFilter('yesterday')}
+                      className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
+                        dateFilter === 'yesterday'
+                          ? 'bg-green-600 text-white'
+                          : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                      }`}
+                    >
+                      Yesterday
+                    </button>
+                    <button
+                      onClick={() => setDateFilter('last7days')}
+                      className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
+                        dateFilter === 'last7days'
+                          ? 'bg-green-600 text-white'
+                          : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                      }`}
+                    >
+                      Last 7 Days
+                    </button>
+                    <button
+                      onClick={() => setDateFilter('last30days')}
+                      className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
+                        dateFilter === 'last30days'
+                          ? 'bg-green-600 text-white'
+                          : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                      }`}
+                    >
+                      Last 30 Days
+                    </button>
+                    <button
+                      onClick={() => setDateFilter('allTime')}
+                      className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
+                        dateFilter === 'allTime'
+                          ? 'bg-green-600 text-white'
+                          : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                      }`}
+                    >
+                      All Time
+                    </button>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <label className="text-xs sm:text-sm font-inter font-medium text-gray-700 dark:text-gray-300">Month:</label>
+                      <select
+                        value={selectedMonth}
+                        onChange={(e) => {
+                          setSelectedMonth(parseInt(e.target.value));
+                          setDateFilter('custom');
+                        }}
+                        className="px-2 py-1 text-xs sm:px-3 sm:py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg font-inter text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:text-white"
+                      >
+                        <option value="0">January</option>
+                        <option value="1">February</option>
+                        <option value="2">March</option>
+                        <option value="3">April</option>
+                        <option value="4">May</option>
+                        <option value="5">June</option>
+                        <option value="6">July</option>
+                        <option value="7">August</option>
+                        <option value="8">September</option>
+                        <option value="9">October</option>
+                        <option value="10">November</option>
+                        <option value="11">December</option>
+                      </select>
+                    </div>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <label className="text-xs sm:text-sm font-inter font-medium text-gray-700 dark:text-gray-300">Year:</label>
+                      <select
+                        value={selectedYear}
+                        onChange={(e) => {
+                          setSelectedYear(parseInt(e.target.value));
+                          setDateFilter('custom');
+                        }}
+                        className="px-2 py-1 text-xs sm:px-3 sm:py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg font-inter text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:text-white"
+                      >
+                        {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
+                          <option key={year} value={year}>{year}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Single Transaction View */}
-            {viewMode === 'single' && transaction && (
-              <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6 mb-6">
-                <div className="mb-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-2xl font-poppins font-bold text-gray-900 dark:text-white">
-                      Transaction Details
-                    </h2>
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                      transaction.type === 'Income' 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-red-100 text-red-800'
-                    }`}>
-                      {transaction.type}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <h3 className="text-lg font-poppins font-semibold text-gray-900 dark:text-white mb-4">Transaction Information</h3>
-                    <div className="space-y-3">
-                      <div>
-                        <label className="block text-sm font-inter font-medium text-gray-700 dark:text-gray-300">Amount</label>
-                        <p className="text-lg font-poppins font-bold text-gray-900 dark:text-white">
-                          {formatCurrency(transaction.amount.toString())}
-                        </p>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-inter font-medium text-gray-700 dark:text-gray-300">Description</label>
-                        <p className="text-gray-900 dark:text-white">{transaction.description || transaction.category || 'No description'}</p>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-inter font-medium text-gray-700 dark:text-gray-300">Date</label>
-                        <p className="text-gray-900 dark:text-white">{new Date(transaction.createdAt).toLocaleDateString()}</p>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-inter font-medium text-gray-700 dark:text-gray-300">Time</label>
-                        <p className="text-gray-900 dark:text-white">
-                          {new Date(transaction.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 className="text-lg font-poppins font-semibold text-gray-900 dark:text-white mb-4">User Information</h3>
-                    <div className="space-y-3">
-                      <div>
-                        <label className="block text-sm font-inter font-medium text-gray-700 dark:text-gray-300">Recorded by</label>
-                        <p className="text-gray-900 dark:text-white">
-                          {transaction.userName || transaction.user?.name || 'Unknown'}
-                        </p>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-inter font-medium text-gray-700 dark:text-gray-300">Email</label>
-                        <p className="text-gray-900 dark:text-white">
-                          {transaction.userEmail || transaction.user?.email || 'unknown@farmops.com'}
-                        </p>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-inter font-medium text-gray-700 dark:text-gray-300">Transaction ID</label>
-                        <p className="text-gray-900 dark:text-white font-mono text-sm">{transaction.id}</p>
-                      </div>
-                    </div>
-                  </div>
+            {/* Report Tabs */}
+            <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
+              <div className="overflow-x-auto pb-2">
+                <div className="flex items-center gap-2 min-w-max border-b border-gray-200 dark:border-gray-700">
+                  <button
+                    onClick={() => setReportTab('allTransactions')}
+                    className={`flex-shrink-0 px-3 py-2 font-inter text-xs sm:text-sm font-medium transition-colors duration-200 border-b-2 ${
+                      reportTab === 'allTransactions'
+                        ? 'text-green-600 border-green-600 bg-green-50 dark:bg-green-900/20 dark:text-green-400'
+                        : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                    }`}
+                  >
+                    All Transactions
+                  </button>
+                  <button
+                    onClick={() => setReportTab('incomeByCategory')}
+                    className={`flex-shrink-0 px-3 py-2 font-inter text-xs sm:text-sm font-medium transition-colors duration-200 border-b-2 ${
+                      reportTab === 'incomeByCategory'
+                        ? 'text-green-600 border-green-600 bg-green-50 dark:bg-green-900/20 dark:text-green-400'
+                        : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                    }`}
+                  >
+                    Income by Category
+                  </button>
+                  <button
+                    onClick={() => setReportTab('expenseByCategory')}
+                    className={`flex-shrink-0 px-3 py-2 font-inter text-xs sm:text-sm font-medium transition-colors duration-200 border-b-2 ${
+                      reportTab === 'expenseByCategory'
+                        ? 'text-green-600 border-green-600 bg-green-50 dark:bg-green-900/20 dark:text-green-400'
+                        : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                    }`}
+                  >
+                    Expense by Category
+                  </button>
                 </div>
               </div>
-            )}
+            </div>
 
             {/* All Transactions View */}
             {reportTab === 'allTransactions' && (
@@ -629,7 +550,7 @@ const Reports = () => {
                       Showing {filteredTransactions.length} transaction{filteredTransactions.length !== 1 ? 's' : ''}
                     </p>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row sm:gap-2 gap-2">
                     <button
                       onClick={() => exportToCSV(filteredTransactions, 'all-transactions', 'all')}
                       className="flex items-center gap-2 px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors duration-200"
@@ -745,7 +666,7 @@ const Reports = () => {
                       Showing {allTransactions.filter(t => t.type === 'Income').length} income transaction{allTransactions.filter(t => t.type === 'Income').length !== 1 ? 's' : ''}
                     </p>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row sm:gap-2 gap-2">
                     <button
                       onClick={() => exportToCSV(incomeTransactions, 'income-transactions', 'income')}
                       className="flex items-center gap-2 px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors duration-200"
@@ -863,7 +784,7 @@ const Reports = () => {
                       Showing {allTransactions.filter(t => t.type === 'Expense').length} expense transaction{allTransactions.filter(t => t.type === 'Expense').length !== 1 ? 's' : ''}
                     </p>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row sm:gap-2 gap-2">
                     <button
                       onClick={() => exportToCSV(expenseTransactions, 'expense-transactions', 'expense')}
                       className="flex items-center gap-2 px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors duration-200"

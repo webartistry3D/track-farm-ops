@@ -1,6 +1,12 @@
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcrypt');
 
+// 🚫 USER CREATION DISABLED - This script can no longer create users
+// ONE-TIME SETUP COMPLETED - User creation disabled again
+console.log('❌ USER CREATION DISABLED - One-time setup completed');
+console.log('🔒 User seeding has been permanently disabled for security reasons');
+process.exit(1);
+
 async function seedProduction() {
   const prisma = new PrismaClient();
   

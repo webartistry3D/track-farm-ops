@@ -31,28 +31,12 @@ async function buildProduction() {
       throw new Error(`Prisma client generation failed: ${prismaError.message}`);
     }
     
-    // Step 3: Run database migrations (SAFE)
-    try {
-      execSync('npx prisma migrate deploy', { 
-        stdio: 'pipe',
-        timeout: 60000 // 60 second timeout
-      });
-    } catch (dbError) {
-      console.error('❌ Database migration failed:', dbError.message);
-      // Don't fail the build if migration fails, but log it clearly
-      console.warn('⚠️ Continuing build despite migration failure');
-    }
+    // Step 3: Skip database migrations (PRESERVE DATA)
+    console.log('⚠️ Skipping migrations to preserve existing data');
+    console.log('📊 Database migrations disabled to prevent data loss');
     
-    // Step 4: Ensure admin user exists (SAFE - no data loss)
-    try {
-      execSync('node scripts/seed-production.js', { 
-        stdio: 'pipe',
-        timeout: 30000 // 30 second timeout
-      });
-    } catch (seedError) {
-      console.warn('⚠️ Admin user seeding warning:', seedError.message);
-      // Don't fail the build if seeding fails
-    }
+    // Step 4: Skip user seeding (DISABLED - ONE-TIME SETUP COMPLETED)
+    console.log('🚫 User seeding disabled - one-time setup completed');
     
     // Step 5: Final verification
     try {

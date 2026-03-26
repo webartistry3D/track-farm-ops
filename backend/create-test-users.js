@@ -1,6 +1,12 @@
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcrypt');
 
+// 🚫 USER CREATION DISABLED - This script can no longer create users
+// To prevent accidental user creation, this script is now disabled
+console.log('❌ USER CREATION DISABLED - This script cannot create users');
+console.log('🔒 Test user creation has been permanently disabled for security reasons');
+process.exit(1);
+
 const prisma = new PrismaClient();
 
 async function createTestUsers() {

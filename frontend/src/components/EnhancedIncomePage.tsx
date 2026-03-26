@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
 import type { IncomeEntry } from '../types';
@@ -40,6 +41,13 @@ const formatNumberWithSeparator = (value: any): string => {
 
 const EnhancedIncomePage = () => {
   const [activeTab, setActiveTab] = useState<'record' | 'invoice' | 'records' | 'invoices' | 'vat'>('record');
+  const location = useLocation();
+
+  // Scroll to top when navigating to Income page
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+
   const [formData, setFormData] = useState({
     description: '',
     quantity: '',
@@ -175,6 +183,9 @@ const EnhancedIncomePage = () => {
     } else if (activeTab === 'vat') {
       fetchVatRecords();
     }
+    
+    // Scroll to top on page load
+    window.scrollTo(0, 0);
   }, [activeTab]);
 
   // Helper function to get quantity from invoice records (for invoice-based income entries)
@@ -3104,54 +3115,57 @@ Thank you for your prompt payment.`;
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div className="group bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-6 border border-green-200 dark:border-green-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="p-2 bg-green-600 dark:bg-green-700 rounded-lg shadow-md">
-                      <TrendingUp className="h-5 w-5 text-white" />
-                    </div>
                     <div className="text-green-600 dark:text-green-400 transition-opacity duration-300">
                       <span className="text-xs font-medium">
                         {vatPercentageChanges.totalVatChange > 0 ? '+' : ''}{vatPercentageChanges.totalVatChange.toFixed(1)}%
                       </span>
                     </div>
+                    <div className="p-2 bg-green-600 dark:bg-green-700 rounded-lg shadow-md">
+                      <TrendingUp className="h-5 w-5 text-white" />
+                    </div>
                   </div>
                   <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Total VAT Collected</h3>
-                  {vatFilterChanging ? (
-                    <VATAmountSkeleton />
-                  ) : (
-                    <p className="text-3xl font-bold text-green-600 dark:text-green-400 mb-2">
-                      {formatCurrency(vatSummary.totalVat, { includeSymbol: true })}
-                    </p>
-                  )}
-                  <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                    <span className="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
-                    {vatSummary.totalTransactions} transactions
+                  <div className="flex items-center justify-between">
+                    {vatFilterChanging ? (
+                      <VATAmountSkeleton />
+                    ) : (
+                      <p className="text-3xl font-bold text-green-600 dark:text-green-400 mb-2">
+                        {formatCurrency(vatSummary.totalVat, { includeSymbol: true })}
+                      </p>
+                    )}
+                    <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                      <span className="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
+                      {vatSummary.totalTransactions} transactions
+                    </div>
                   </div>
                 </div>
                 
                 <div className="group bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-xl p-6 border border-blue-200 dark:border-blue-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="p-2 bg-blue-600 dark:bg-blue-700 rounded-lg shadow-md">
-                      <Package className="h-5 w-5 text-white" />
-                    </div>
                     <div className="text-blue-600 dark:text-blue-400 transition-opacity duration-300">
                       <span className="text-xs font-medium">
                         {vatPercentageChanges.averageVatChange > 0 ? '+' : ''}{vatPercentageChanges.averageVatChange.toFixed(1)}%
                       </span>
                     </div>
+                    <div className="p-2 bg-blue-600 dark:bg-blue-700 rounded-lg shadow-md">
+                      <Package className="h-5 w-5 text-white" />
+                    </div>
                   </div>
                   <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Average VAT</h3>
-                  {vatFilterChanging ? (
-                    <VATAmountSkeleton />
-                  ) : (
-                    <p className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">
-                      {formatCurrency(vatSummary.averageVat, { includeSymbol: true })}
-                    </p>
-                  )}
-                  <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                    <span className="w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
-                    Per transaction
+                  <div className="flex items-center justify-between">
+                    {vatFilterChanging ? (
+                      <VATAmountSkeleton />
+                    ) : (
+                      <p className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">
+                        {formatCurrency(vatSummary.averageVat, { includeSymbol: true })}
+                      </p>
+                    )}
+                    <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                      <span className="w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
+                      Per transaction
+                    </div>
                   </div>
                 </div>
-                
                 <div className="group bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-6 border border-purple-200 dark:border-purple-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
                   <div className="flex items-center justify-between mb-4">
                     <div className="p-2 bg-purple-600 dark:bg-purple-700 rounded-lg shadow-md">
@@ -3178,143 +3192,129 @@ Thank you for your prompt payment.`;
                 </div>
               </div>
 
-              {/* Enhanced Filter Section - using reports page design */}
-
-              {/* Enhanced Filter Section - using reports page design */}
+              {/* Enhanced Filter Section - using dashboard design */}
               <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
-                <div className="flex flex-wrap gap-2 items-center">
-                  {/* Quick Date Buttons */}
-                  <button
-                    onClick={() => {
-                      setVatDateFilter('today');
-                      // Force state update before API call
-                      setTimeout(() => {
-                        fetchVatRecords(true); // Pass true to indicate filter change
-                      }, 0);
-                    }}
-                    className={`px-4 py-2 rounded-lg font-inter text-sm font-medium transition-colors duration-200 ${
-                      vatDateFilter === 'today'
-                        ? 'bg-green-600 text-white'
-                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
-                    }`}
-                  >
-                    Today
-                  </button>
-                  <button
-                    onClick={() => {
-                      setVatDateFilter('yesterday');
-                    }}
-                    className={`px-4 py-2 rounded-lg font-inter text-sm font-medium transition-colors duration-200 ${
-                      vatDateFilter === 'yesterday'
-                        ? 'bg-green-600 text-white'
-                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
-                    }`}
-                  >
-                    Yesterday
-                  </button>
-                  <button
-                    onClick={() => {
-                      setVatDateFilter('last7days');
-                    }}
-                    className={`px-4 py-2 rounded-lg font-inter text-sm font-medium transition-colors duration-200 ${
-                      vatDateFilter === 'last7days'
-                        ? 'bg-green-600 text-white'
-                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
-                    }`}
-                  >
-                    Last 7 Days
-                  </button>
-                  <button
-                    onClick={() => {
-                      setVatDateFilter('last30days');
-                    }}
-                    className={`px-4 py-2 rounded-lg font-inter text-sm font-medium transition-colors duration-200 ${
-                      vatDateFilter === 'last30days'
-                        ? 'bg-green-600 text-white'
-                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
-                    }`}
-                  >
-                    Last 30 Days
-                  </button>
-                  <button
-                    onClick={() => {
-                      setVatDateFilter('allTime');
-                    }}
-                    className={`px-4 py-2 rounded-lg font-inter text-sm font-medium transition-colors duration-200 ${
-                      vatDateFilter === 'allTime'
-                        ? 'bg-green-600 text-white'
-                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
-                    }`}
-                  >
-                    All Time
-                  </button>
-                  
-                  <div className="w-px h-6 bg-gray-300 mx-1"></div>
-                  
-                  <div className="flex items-center gap-2">
-                    <label className="text-sm font-inter font-medium text-gray-700 dark:text-gray-300">Month:</label>
-                    <select
-                      value={vatSelectedMonth}
-                      onChange={(e) => {
-                        setVatSelectedMonth(parseInt(e.target.value));
-                        setVatDateFilter('custom');
-                        fetchVatRecords(true);
+                <div className="overflow-x-auto pb-2">
+                  <div className="flex items-center gap-2 min-w-max">
+                    {/* Quick Date Buttons */}
+                    <button
+                      onClick={() => {
+                        setVatDateFilter('today');
+                        // Force state update before API call
+                        setTimeout(() => {
+                          fetchVatRecords(true); // Pass true to indicate filter change
+                        }, 0);
                       }}
-                      className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm"
+                      className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
+                        vatDateFilter === 'today'
+                          ? 'bg-green-600 text-white'
+                          : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
+                      }`}
                     >
-                      <option value="0">January</option>
-                      <option value="1">February</option>
-                      <option value="2">March</option>
-                      <option value="3">April</option>
-                      <option value="4">May</option>
-                      <option value="5">June</option>
-                      <option value="6">July</option>
-                      <option value="7">August</option>
-                      <option value="8">September</option>
-                      <option value="9">October</option>
-                      <option value="10">November</option>
-                      <option value="11">December</option>
-                    </select>
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <label className="text-sm font-inter font-medium text-gray-700 dark:text-gray-300">Year:</label>
-                    <select
-                      value={vatSelectedYear}
-                      onChange={(e) => {
-                        setVatSelectedYear(parseInt(e.target.value));
-                        setVatDateFilter('custom');
-                        fetchVatRecords(true);
+                      Today
+                    </button>
+                    <button
+                      onClick={() => {
+                        setVatDateFilter('yesterday');
+                        setTimeout(() => {
+                          fetchVatRecords(true);
+                        }, 0);
                       }}
-                      className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm"
+                      className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
+                        vatDateFilter === 'yesterday'
+                          ? 'bg-green-600 text-white'
+                          : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
+                      }`}
                     >
-                      <option value="2024">2024</option>
-                      <option value="2025">2025</option>
-                      <option value="2026">2026</option>
-                      <option value="2027">2027</option>
-                      <option value="2028">2028</option>
-                    </select>
+                      Yesterday
+                    </button>
+                    <button
+                      onClick={() => {
+                        setVatDateFilter('last7days');
+                        setTimeout(() => {
+                          fetchVatRecords(true);
+                        }, 0);
+                      }}
+                      className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
+                        vatDateFilter === 'last7days'
+                          ? 'bg-green-600 text-white'
+                          : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
+                      }`}
+                    >
+                      Last 7 Days
+                    </button>
+                    <button
+                      onClick={() => {
+                        setVatDateFilter('last30days');
+                        setTimeout(() => {
+                          fetchVatRecords(true);
+                        }, 0);
+                      }}
+                      className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
+                        vatDateFilter === 'last30days'
+                          ? 'bg-green-600 text-white'
+                          : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
+                      }`}
+                    >
+                      Last 30 Days
+                    </button>
+                    <button
+                      onClick={() => {
+                        setVatDateFilter('allTime');
+                        setTimeout(() => {
+                          fetchVatRecords(true);
+                        }, 0);
+                      }}
+                      className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
+                        vatDateFilter === 'allTime'
+                          ? 'bg-green-600 text-white'
+                          : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
+                      }`}
+                    >
+                      All Time
+                    </button>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <label className="text-xs sm:text-sm font-inter font-medium text-gray-700 dark:text-gray-300">Month:</label>
+                      <select
+                        value={vatSelectedMonth}
+                        onChange={(e) => {
+                          setVatSelectedMonth(parseInt(e.target.value));
+                          setVatDateFilter('custom');
+                          fetchVatRecords(true);
+                        }}
+                        className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm"
+                      >
+                        <option value="0">January</option>
+                        <option value="1">February</option>
+                        <option value="2">March</option>
+                        <option value="3">April</option>
+                        <option value="4">May</option>
+                        <option value="5">June</option>
+                        <option value="6">July</option>
+                        <option value="7">August</option>
+                        <option value="8">September</option>
+                        <option value="9">October</option>
+                        <option value="10">November</option>
+                        <option value="11">December</option>
+                      </select>
+                    </div>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <label className="text-xs sm:text-sm font-inter font-medium text-gray-700 dark:text-gray-300">Year:</label>
+                      <select
+                        value={vatSelectedYear}
+                        onChange={(e) => {
+                          setVatSelectedYear(parseInt(e.target.value));
+                          setVatDateFilter('custom');
+                          fetchVatRecords(true);
+                        }}
+                        className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm"
+                      >
+                        {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
+                          <option key={year} value={year}>{year}</option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
-                  
-                  <div className="flex-1"></div>
-                  
-                  {/*<button
-                    onClick={fetchVatRecords}
-                    disabled={vatLoading}
-                    className="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                  >
-                    {vatLoading ? (
-                      <span className="flex items-center justify-center">
-                        <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2"></div>
-                        Loading...
-                      </span>
-                    ) : (
-                      <span className="flex items-center justify-center">
-                        <TrendingUp className="h-4 w-4 mr-2" />
-                        Apply Filter
-                      </span>
-                    )}
-                  </button>*/}
                 </div>
               </div>
 
