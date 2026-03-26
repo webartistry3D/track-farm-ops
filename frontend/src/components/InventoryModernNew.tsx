@@ -876,7 +876,7 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
         <div className="bg-gray-100 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 mb-6">
           <div className="w-full px-4 sm:px-6 lg:px-8">
             <div className="flex overflow-x-auto justify-between">
-              <div className="flex overflow-x-auto space-x-10">
+              <div className="flex overflow-x-auto space-x-4">
                 {['items', 'categories'].map((tab) => (
                   <button
                     key={tab}

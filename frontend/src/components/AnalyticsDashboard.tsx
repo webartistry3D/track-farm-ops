@@ -509,7 +509,7 @@ const AnalyticsDashboard = () => {
 
       {/* Date Filter */}
       <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
           <div className="overflow-x-auto pb-2">
             <div className="flex items-center gap-2 min-w-max">
               <button

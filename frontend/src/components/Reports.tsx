@@ -606,7 +606,7 @@ const Reports = () => {
             {/* Report Tabs */}
             <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
               <div className="overflow-x-auto pb-2">
-                <div className="flex items-center gap-2 min-w-max border-b border-gray-200 dark:border-gray-700">
+                <div className="flex items-center gap-1 min-w-max border-b border-gray-200 dark:border-gray-700">
                   <button
                     onClick={() => setReportTab('allTransactions')}
                     className={`flex-shrink-0 px-3 py-2 font-inter text-xs sm:text-sm font-medium transition-colors duration-200 border-b-2 ${
