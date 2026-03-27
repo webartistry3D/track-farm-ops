@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { prisma } from '../lib/prisma';
 import { generateToken, hashPassword, comparePassword } from '../utils/auth';
 import { AuthRequest, getReqBody } from '../middleware/auth';
-import { autoSeedByFarmType } from '../utils/smartSeeding';
+import { autoSeedByFarmTypeSimple } from '../utils/simpleSeeding';
 
 export const signup = async (req: Request, res: Response) => {
   try {
@@ -54,12 +54,16 @@ export const signup = async (req: Request, res: Response) => {
       
       // 🌾 SMART AUTO-SEEDING BASED ON FARM TYPE
       if (farmType) {
-        await autoSeedByFarmType(organization.id, farmType, organization.name);
+        await autoSeedByFarmTypeSimple(organization.id, farmType, organization.name);
       } else {
         console.log(`⚠️ No farm type specified, using default Mixed Farm preset`);
-        // Fallback to Nigerian Mixed Farm preset
-        const { seedSystemInventoryForOrganization } = require('../../prisma/seed-inventory.js');
-        await seedSystemInventoryForOrganization(organization.id);
+        // Fallback to Nigerian Mixed Farm preset using simple require
+        try {
+          const { seedSystemInventoryForOrganization } = require('../../prisma/seed-inventory.js');
+          await seedSystemInventoryForOrganization(organization.id);
+        } catch (error) {
+          console.error('❌ Error applying fallback preset:', error);
+        }
       }
       
     } else {

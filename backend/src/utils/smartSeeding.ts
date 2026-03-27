@@ -5,25 +5,31 @@
 
 import { prisma } from '../lib/prisma';
 
-// Import all seeding functions
-const { seedSystemInventoryForOrganization } = require('../../prisma/seed-inventory.js');
-const { seedPoultryFarmForOrganization } = require('../../prisma/seed-poultry.js');
-const { seedLivestockFarmForOrganization } = require('../../prisma/seed-livestock.js');
-const { seedCropFarmForOrganization } = require('../../prisma/seed-crop.js');
-const { seedFishFarmForOrganization } = require('../../prisma/seed-fish.js');
-const { seedOtherFarmForOrganization } = require('../../prisma/seed-other.js');
-
 /**
- * Map farm types to their corresponding seeding functions
+ * Map farm types to their corresponding seed file paths
  */
 const FARM_TYPE_SEEDERS = {
-  'Poultry': seedPoultryFarmForOrganization,
-  'Livestock': seedLivestockFarmForOrganization,
-  'Crop Farming': seedCropFarmForOrganization,
-  'Mixed Farm': seedSystemInventoryForOrganization, // Nigerian Mixed Farm
-  'Fish Farming': seedFishFarmForOrganization,
-  'Other': seedOtherFarmForOrganization
+  'Poultry': '../../prisma/seed-poultry.ts',
+  'Livestock': '../../prisma/seed-livestock.ts',
+  'Crop Farming': '../../prisma/seed-crop.ts',
+  'Mixed Farm': '../../prisma/seed-inventory.ts', // Nigerian Mixed Farm
+  'Fish Farming': '../../prisma/seed-fish.ts',
+  'Other': '../../prisma/seed-other.ts'
 };
+
+/**
+ * Dynamic import function for seed scripts
+ */
+async function importSeedScript(seedPath: string) {
+  try {
+    // Use dynamic import to avoid TypeScript compilation issues
+    const module = await import(seedPath);
+    return module;
+  } catch (error) {
+    console.error(`Failed to import seed script: ${seedPath}`, error);
+    return null;
+  }
+}
 
 /**
  * Get preset information for each farm type
@@ -98,15 +104,53 @@ export async function autoSeedByFarmType(organizationId: number, farmType: strin
       return true;
     }
 
-    // Get the appropriate seeding function
-    const seedingFunction = FARM_TYPE_SEEDERS[farmType];
+    // Get seed file path
+    const seedPath = FARM_TYPE_SEEDERS[farmType];
     
-    if (!seedingFunction) {
+    if (!seedPath) {
       console.log(`⚠️ Unknown farm type: "${farmType}", using default preset`);
-      return await seedSystemInventoryForOrganization(organizationId);
+      // Fallback to Nigerian Mixed Farm preset
+      const fallbackModule = await importSeedScript(FARM_TYPE_SEEDERS['Mixed Farm']);
+      if (fallbackModule && fallbackModule.seedSystemInventoryForOrganization) {
+        return await fallbackModule.seedSystemInventoryForOrganization(organizationId);
+      }
+      return false;
     }
 
-    // Apply the appropriate preset
+    // Dynamically import and execute the appropriate seed function
+    const seedModule = await importSeedScript(seedPath);
+    
+    // Get the appropriate seeding function based on farm type
+    let seedingFunction;
+    switch (farmType) {
+      case 'Poultry':
+        seedingFunction = seedModule?.seedPoultryFarmForOrganization;
+        break;
+      case 'Livestock':
+        seedingFunction = seedModule?.seedLivestockFarmForOrganization;
+        break;
+      case 'Crop Farming':
+        seedingFunction = seedModule?.seedCropFarmForOrganization;
+        break;
+      case 'Mixed Farm':
+        seedingFunction = seedModule?.seedSystemInventoryForOrganization;
+        break;
+      case 'Fish Farming':
+        seedingFunction = seedModule?.seedFishFarmForOrganization;
+        break;
+      case 'Other':
+        seedingFunction = seedModule?.seedOtherFarmForOrganization;
+        break;
+      default:
+        seedingFunction = seedModule?.seedSystemInventoryForOrganization;
+    }
+
+    if (!seedingFunction) {
+      console.error(`❌ Could not find seeding function for farm type: ${farmType}`);
+      return false;
+    }
+
+    // Execute the seeding function
     const success = await seedingFunction(organizationId);
     
     if (success) {
