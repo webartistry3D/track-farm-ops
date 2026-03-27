@@ -734,65 +734,70 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
         </div>
 
         {/* Filters and Controls */}
-        <div className="bg-white dark:bg-gray-800 shadow-lg p-6 mb-0">
-          <div className="flex flex-col lg:flex-row gap-4">
-            {/* Search */}
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  placeholder="Search items..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
-                />
-              </div>
+        <div className="bg-white dark:bg-gray-800 shadow-lg p-4 sm:p-6 mb-0">
+          {/* Search and Primary Actions - Mobile First */}
+          <div className="flex flex-col gap-4 mb-4">
+            {/* Search Bar */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Search items..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+              />
             </div>
             
-            {/* Action Buttons */}
-            <div className="flex items-center space-x-2">
-              <button
-                onClick={handleRefresh}
-                className="p-2 bg-gray-100 dark:bg-gray-700 text-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors"
-                title="Refresh data"
-              >
-                <RefreshCw className="w-5 h-5" />
-              </button>
+            {/* Primary Action Buttons - Stack on mobile, row on larger screens */}
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+              {/* Secondary Actions */}
+              <div className="flex gap-2">
+                <button
+                  onClick={handleRefresh}
+                  className="p-2 bg-gray-100 dark:bg-gray-700 text-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors"
+                  title="Refresh data"
+                >
+                  <RefreshCw className="w-5 h-5" />
+                </button>
+                
+                <button
+                  onClick={handleExport}
+                  className="p-2 bg-gray-100 dark:bg-gray-700 text-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors"
+                  title="Export to CSV"
+                >
+                  <Download className="w-5 h-5" />
+                </button>
+              </div>
               
-              <button
-                onClick={handleExport}
-                className="p-2 bg-gray-100 dark:bg-gray-700 text-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors"
-                title="Export to CSV"
-              >
-                <Download className="w-5 h-5" />
-              </button>
-              
-              <button
-                onClick={() => setShowAddItemModal(true)}
-                className="bg-green-600 text-white px-3 sm:px-4 py-1 rounded-lg flex items-center gap-2 hover:bg-green-700 transition-colors text-sm sm:text-base"
-              >
-                <Plus className="w-4 h-4" />
-                <span>Item</span>
-              </button>
-              
-              <button
-                onClick={() => setShowAddCategoryModal(true)}
-                className="bg-blue-600 text-white px-3 sm:px-4 py-1 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition-colors text-sm sm:text-base"
-              >
-                <Plus className="w-4 h-4" />
-                <span>Category</span>
-              </button>
+              {/* Main Action Buttons - Both on same row */}
+              <div className="flex gap-2 sm:gap-3 flex-1">
+                <button
+                  onClick={() => setShowAddItemModal(true)}
+                  className="bg-green-600 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-green-700 transition-colors font-medium whitespace-nowrap flex-1 sm:flex-initial"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>Add Item</span>
+                </button>
+                
+                <button
+                  onClick={() => setShowAddCategoryModal(true)}
+                  className="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-blue-700 transition-colors font-medium whitespace-nowrap flex-1 sm:flex-initial"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>Add Category</span>
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* Additional Filters Row */}
-          <div className="flex flex-col sm:flex-row gap-4 mt-4">
+          {/* Secondary Filters - Responsive Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-3">
             {/* Category Filter */}
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+              className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
             >
               <option value="all">All Categories</option>
               {categories.map(category => (
@@ -806,9 +811,9 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
             <select
               value={stockStatusFilter}
               onChange={(e) => setStockStatusFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+              className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
             >
-              <option value="all">All Stock Status</option>
+              <option value="all">All Stock</option>
               <option value="in_stock">In Stock</option>
               <option value="low">Low Stock</option>
               <option value="out">Out of Stock</option>
@@ -818,7 +823,7 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+              className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
             >
               <option value="name">Sort by Name</option>
               <option value="quantity">Sort by Quantity</option>
@@ -830,7 +835,7 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
             {/* Sort Order Toggle */}
             <button
               onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-              className="p-2 bg-gray-100 dark:bg-gray-700 text-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors"
+              className="p-2 bg-gray-100 dark:bg-gray-700 text-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors text-sm"
               title={`Currently: ${sortOrder === 'asc' ? 'Ascending' : 'Descending'} (Click to reverse)`}
             >
               {sortOrder === 'asc' ? (
@@ -846,29 +851,33 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
               )}
             </button>
 
-            {/* View Mode */}
-            <div className="flex items-center space-x-2">
-              <button
-                onClick={() => setViewMode('grid')}
-                className={`p-2 rounded-lg transition-colors ${
-                  viewMode === 'grid'
-                    ? 'bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400'
-                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
-                }`}
-              >
-                <Grid3X3 className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => setViewMode('list')}
-                className={`p-2 rounded-lg transition-colors ${
-                  viewMode === 'list'
-                    ? 'bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400'
-                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
-                }`}
-              >
-                <List className="w-4 h-4" />
-              </button>
-            </div>
+            {/* View Mode - Hide on mobile for categories tab */}
+            {(activeTab === 'items') && (
+              <div className="flex items-center space-x-1 justify-center sm:justify-start">
+                <button
+                  onClick={() => setViewMode('grid')}
+                  className={`p-2 rounded-lg transition-colors ${
+                    viewMode === 'grid'
+                      ? 'bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400'
+                      : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
+                  }`}
+                  title="Grid View"
+                >
+                  <Grid3X3 className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setViewMode('list')}
+                  className={`p-2 rounded-lg transition-colors ${
+                    viewMode === 'list'
+                      ? 'bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400'
+                      : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
+                  }`}
+                  title="List View"
+                >
+                  <List className="w-4 h-4" />
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -1209,179 +1218,146 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
 
         {activeTab === 'categories' && (
           <div>
-            {/* Categories Grid/List */}
-            <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-4'}>
-              {categories.map((category) => {
-                const itemCount = items.filter(item => item.categoryId === category.id).length;
-                const totalValue = items
-                  .filter(item => item.categoryId === category.id)
-                  .reduce((sum, item) => sum + calculateItemValue(item), 0);
-                
-                return (
-                  <div
-                    key={category.id}
-                    className="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
-                  >
-                    <div className="p-6">
-                      {viewMode === 'grid' ? (
-                        // Grid View Layout
-                        <>
-                          <div className="flex flex-col items-center text-center mb-6">
-                            <div className="w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-2xl flex items-center justify-center text-4xl mb-4 shadow-lg">
-                              {category.icon || '📦'}
-                            </div>
-                            <div>
-                              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                                {category.name}
-                              </h3>
-                              <p className="text-sm text-gray-600 dark:text-gray-400 max-w-xs">
-                                {category.description || 'No description'}
-                              </p>
-                            </div>
-                          </div>
-                          
-                          <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-                            <div className="space-y-3">
-                              <div className="flex justify-between items-center">
-                                <span className="text-sm text-gray-600 dark:text-gray-400">Items:</span>
-                                <span className={`px-3 py-1 text-sm font-medium rounded-full border ${
-                                  itemCount > 0 
-                                    ? 'bg-green-100 text-green-700 border-green-200'
-                                    : 'bg-gray-100 text-gray-700 border-gray-200'
-                                }`}>
-                                  {itemCount}
-                                </span>
+            {/* Categories Table */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        Category Details
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        Items Count
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        Total Value
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        Status
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        Description
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        Created
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    {categories.map((category) => {
+                      const itemCount = items.filter(item => item.categoryId === category.id).length;
+                      const totalValue = items
+                        .filter(item => item.categoryId === category.id)
+                        .reduce((sum, item) => sum + calculateItemValue(item), 0);
+                      
+                      const status = {
+                        label: itemCount > 0 ? 'Active' : 'Empty',
+                        color: itemCount > 0 
+                          ? 'bg-green-100 text-green-700 border-green-200'
+                          : 'bg-gray-100 text-gray-700 border-gray-200'
+                      };
+                      
+                      return (
+                        <tr key={category.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center">
+                              <div className="w-12 h-12 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-xl flex items-center justify-center text-2xl mr-4 shadow-md">
+                                {category.icon || '📦'}
                               </div>
-                              
-                              <div className="flex justify-between items-center">
-                                <span className="text-sm text-gray-600 dark:text-gray-400">Total Value:</span>
-                                <span className="text-sm font-semibold text-gray-900 dark:text-white break-all max-w-[120px]">
-                                  {formatCurrency(totalValue)}
-                                </span>
+                              <div>
+                                <div className="text-sm font-medium text-gray-900 dark:text-white">
+                                  {category.name}
+                                </div>
+                                <div className="text-xs text-gray-500 dark:text-gray-400">
+                                  ID: #{category.id}
+                                </div>
                               </div>
                             </div>
-                          </div>
-                          
-                          <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
-                            <div className="flex items-center space-x-2">
-                              {itemCount > 0 ? (
-                                <div className="flex items-center space-x-1">
-                                  <Check className="w-4 h-4 text-green-600" />
-                                  <span className="text-xs text-green-600 font-medium">Active</span>
-                                </div>
-                              ) : (
-                                <div className="flex items-center space-x-1">
-                                  <AlertTriangle className="w-4 h-4 text-gray-400" />
-                                  <span className="text-xs text-gray-400 font-medium">Empty</span>
-                                </div>
-                              )}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-900 dark:text-white">
+                              <div className="font-medium">{itemCount}</div>
+                              <div className="text-xs text-gray-500">items</div>
                             </div>
-                            
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm font-medium text-blue-600 dark:text-blue-400">
+                              {formatCurrency(totalValue)}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full border ${status.color}`}>
+                              {status.label}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">
+                              {category.description || 'No description'}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-900 dark:text-white">
+                              <div>{new Date(category.createdAt).toLocaleDateString()}</div>
+                              <div className="text-xs text-gray-500">
+                                {new Date(category.createdAt).toLocaleTimeString()}
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div className="flex items-center space-x-2">
                               <button
                                 onClick={() => console.log('View category details not implemented')}
-                                className="p-2 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                                className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
+                                title="View Details"
                               >
                                 <Eye className="w-4 h-4" />
                               </button>
                               <button
                                 onClick={() => console.log('Edit category not implemented')}
-                                className="p-2 text-gray-400 hover:text-yellow-600 dark:hover:text-yellow-400 transition-colors rounded-lg hover:bg-yellow-50 dark:hover:bg-yellow-900/20"
+                                className="text-yellow-600 hover:text-yellow-900 dark:text-yellow-400 dark:hover:text-yellow-300"
+                                title="Edit Category"
+                              >
+                                <Edit2 className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={() => console.log('Delete category not implemented')}
+                                className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                                title="Delete Category"
                               >
                                 <Trash2 className="w-4 h-4" />
                               </button>
                             </div>
-                          </div>
-                        </>
-                      ) : (
-                        // List View Layout
-                        <div className="bg-white dark:bg-gray-800">
-                          <div className="p-0">
-                            <div className="flex items-start justify-between mb-3">
-                              <div className="flex-1">
-                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-                                  {category.name}
-                                </h3>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">
-                                  {category.description || 'No description'}
-                                </p>
-                              </div>
-                              <span className={`px-2 py-1 text-xs font-medium rounded-full border ${
-                                itemCount > 0 
-                                  ? 'bg-green-100 text-green-700 border-green-200'
-                                  : 'bg-gray-100 text-gray-700 border-gray-200'
-                              }`}>
-                                {itemCount > 0 ? 'Active' : 'Empty'}
-                              </span>
-                            </div>
-                            
-                            <div className="space-y-2">
-                              <div className="flex justify-between">
-                                <span className="text-sm text-gray-600 dark:text-gray-400">Items:</span>
-                                <span className="text-sm font-medium text-gray-900 dark:text-white">
-                                  {itemCount}
-                                </span>
-                              </div>
-                              
-                              <div className="flex justify-between">
-                                <span className="text-sm text-gray-600 dark:text-gray-400">Total Value:</span>
-                                <span className="text-sm font-medium text-gray-900 dark:text-white break-all max-w-[120px]">
-                                  {formatCurrency(totalValue)}
-                                </span>
-                              </div>
-                            </div>
-                            
-                            <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                              <div className="flex items-center space-x-1">
-                                {itemCount > 0 ? (
-                                  <Check className="w-4 h-4 text-green-600" />
-                                ) : (
-                                  <AlertTriangle className="w-4 h-4 text-gray-400" />
-                                )}
-                              </div>
-                              
-                              <div className="flex items-center space-x-2">
-                                <button
-                                  onClick={() => console.log('View category details not implemented')}
-                                  className="p-2 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20"
-                                >
-                                  <Eye className="w-4 h-4" />
-                                </button>
-                                <button
-                                  onClick={() => console.log('Edit category not implemented')}
-                                  className="p-2 text-gray-400 hover:text-yellow-600 dark:hover:text-yellow-400 transition-colors rounded-lg hover:bg-yellow-50 dark:hover:bg-yellow-900/20"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {categories.length === 0 && (
-              <div className="text-center py-12">
-                <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                  No categories found
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-6">
-                  Get started by adding your first category
-                </p>
-                <button
-                  onClick={() => console.log('Add category modal not implemented')}
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-                >
-                  <Plus className="w-4 h-4 mr-2 inline" />
-                  Add First Category
-                </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
               </div>
-            )}
+              
+              {categories.length === 0 && (
+                <div className="text-center py-12">
+                  <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                    No categories found
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400 mb-6">
+                    Get started by adding your first category
+                  </p>
+                  <button
+                    onClick={() => setShowAddCategoryModal(true)}
+                    className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+                  >
+                    <Plus className="w-5 h-5 inline mr-2" />
+                    Add First Category
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         )}
 
