@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { prisma } from '../lib/prisma';
 import { generateToken, hashPassword, comparePassword } from '../utils/auth';
 import { AuthRequest, getReqBody } from '../middleware/auth';
-import { autoSeedByFarmTypeSimple } from '../utils/simpleSeeding';
+import { seedNigerianMixedFarmForOrganization } from '../utils/seeding';
 
 export const signup = async (req: Request, res: Response) => {
   try {
@@ -52,19 +52,8 @@ export const signup = async (req: Request, res: Response) => {
       
       console.log(`✅ Created owner ${name} with organization: ${farmName} (Farm Type: ${farmType || 'Not specified'})`);
       
-      // 🌾 SMART AUTO-SEEDING BASED ON FARM TYPE
-      if (farmType) {
-        await autoSeedByFarmTypeSimple(organization.id, farmType, organization.name);
-      } else {
-        console.log(`⚠️ No farm type specified, using default Mixed Farm preset`);
-        // Fallback to Nigerian Mixed Farm preset using simple require
-        try {
-          const { seedSystemInventoryForOrganization } = require('../../prisma/seed-inventory.js');
-          await seedSystemInventoryForOrganization(organization.id);
-        } catch (error) {
-          console.error('❌ Error applying fallback preset:', error);
-        }
-      }
+      // 🌾 AUTO-SEED NIGERIAN MIXED FARM PRESET FOR ALL ORGANIZATIONS
+      await seedNigerianMixedFarmForOrganization(organization.id, farmName);
       
     } else {
       // Create user without organization (non-owners)
