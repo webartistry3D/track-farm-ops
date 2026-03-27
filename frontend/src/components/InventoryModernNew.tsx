@@ -824,7 +824,7 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
           </div>
 
           {/* Filters Skeleton */}
-          <div className="bg-white dark:bg-gray-800 shadow-lg p-6 mb-0">
+          <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 mb-0">
             <div className="flex flex-col lg:flex-row gap-4">
               <div className="flex-1">
                 <div className="h-10 w-full bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
@@ -969,7 +969,7 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
         </div>
 
         {/* Filters and Controls */}
-        <div className="bg-white dark:bg-gray-800 shadow-lg p-4 sm:p-6 mb-0">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6 mb-0">
           {/* Search and Primary Actions - Mobile First */}
           <div className="flex flex-col gap-4 mb-4">
             {/* Search Bar */}

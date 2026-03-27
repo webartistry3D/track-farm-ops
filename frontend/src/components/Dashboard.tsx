@@ -270,7 +270,7 @@ const Dashboard = () => {
   return (
     <div className="space-y-6">
       {/* Welcome Section */}
-      <div className="shadow rounded-lg p-0">
+      <div className="rounded-lg p-0">
         <h1 className="text-xl font-poppins font-regular text-gray-900 dark:text-white mb-0">
           Hi, {user.name}! 
         </h1>

@@ -414,7 +414,7 @@ const EnhancedExpensePage = () => {
 
   return (
     <div className="max-w-6xl mx-auto p-0">
-      <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-2">
+      <div className="dark:bg-gray-900 rounded-lg p-0">
         <div className="p-0">
           {/*<h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
             Farm Expenses

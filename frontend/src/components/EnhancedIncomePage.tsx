@@ -1465,7 +1465,7 @@ Generated on: ${new Date().toLocaleString()}
 
   return (
     <div className="max-w-6xl mx-auto p-0">
-      <div className="rounded-lg shadow-lg bg-white dark:bg-gray-900 p-2">
+      <div className="rounded-lg dark:bg-gray-900 p-0">
         <div className="p-0">
           {/*<h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
             <TrendingUp className="h-6 w-6 text-green-600" />
@@ -1474,14 +1474,7 @@ Generated on: ${new Date().toLocaleString()}
 
           {/* Tab Navigation */}
           <div className="border-b border-gray-200 dark:border-gray-700 mb-6">
-            <nav 
-              className="-mb-px flex space-x-12 overflow-x-auto"
-              style={{
-                msOverflowStyle: 'none',
-                scrollbarWidth: 'none',
-                WebkitScrollbar: 'none'
-              } as React.CSSProperties}
-            >
+            <nav className="-mb-px flex space-x-4 overflow-x-auto">
               <button
                 onClick={() => handleTabChange('record')}
                 className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 whitespace-nowrap ${
@@ -2776,21 +2769,21 @@ Generated on: ${new Date().toLocaleString()}
                           const subject = `Invoice ${invoiceToEmail.invoiceNumber || 'N/A'} from FarmOps`;
                           const body = `Dear ${invoiceToEmail.clientName || 'Valued Customer'},
 
-Thank you for your business. Please find your invoice details below:
+                          Thank you for your business. Please find your invoice details below:
 
-Invoice Number: ${invoiceToEmail.invoiceNumber || 'N/A'}
-Amount: ${formatCurrency(invoiceToEmail.total || 0)}
-Due Date: ${invoiceToEmail.dueDate ? new Date(invoiceToEmail.dueDate).toLocaleDateString() : 'N/A'}
+                          Invoice Number: ${invoiceToEmail.invoiceNumber || 'N/A'}
+                          Amount: ${formatCurrency(invoiceToEmail.total || 0)}
+                          Due Date: ${invoiceToEmail.dueDate ? new Date(invoiceToEmail.dueDate).toLocaleDateString() : 'N/A'}
 
-Items: ${invoiceToEmail.items?.map((item: any) => 
-  `- ${item.description || 'Item'}: ${item.quantity || 0} × ${formatCurrency(item.unitPrice || item.price || 0, { includeSymbol: false })} = ${formatCurrency(item.total || 0, { includeSymbol: false })}`
-).join('\n') || 'No items listed'}
+                          Items: ${invoiceToEmail.items?.map((item: any) => 
+                            `- ${item.description || 'Item'}: ${item.quantity || 0} × ${formatCurrency(item.unitPrice || item.price || 0, { includeSymbol: false })} = ${formatCurrency(item.total || 0, { includeSymbol: false })}`
+                          ).join('\n') || 'No items listed'}
 
-Total Amount: ${formatCurrency(invoiceToEmail.total || 0)}
+                          Total Amount: ${formatCurrency(invoiceToEmail.total || 0)}
 
-Payment Method: ${invoiceToEmail.paymentMethod || 'Bank Transfer'}
+                          Payment Method: ${invoiceToEmail.paymentMethod || 'Bank Transfer'}
 
-Thank you for your prompt payment.`;
+                          Thank you for your prompt payment.`;
 
                           const mailtoLink = `mailto:${invoiceToEmail.clientEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
                           window.open(mailtoLink, '_blank');

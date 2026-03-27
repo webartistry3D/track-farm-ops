@@ -119,7 +119,7 @@ const Assets = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
-  const [activeTab, setActiveTab] = useState<'overview' | 'maintenance' | 'incidents' | 'analytics'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'downtime' | 'incidents' | 'analytics'>('overview');
   const [_error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<Partial<Asset>>({
@@ -577,7 +577,7 @@ const Assets = () => {
       </div>
 
       {/* Filters and Search */}
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+      <div className="bg-white dark:bg-gray-800 rounded-xl border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:flex-wrap sm:gap-4 sm:items-center">
             <div className="w-full sm:flex-1 sm:min-w-64">
@@ -635,7 +635,7 @@ const Assets = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex overflow-x-auto justify-between">
             <div className="flex overflow-x-auto space-x-4">
-              {['overview', 'maintenance', 'incidents', 'analytics'].map((tab) => (
+              {['overview', 'downtime', 'incidents', 'analytics'].map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab as any)}
@@ -765,7 +765,7 @@ const Assets = () => {
           </div>
         )}
 
-        {activeTab === 'maintenance' && (
+        {activeTab === 'downtime' && (
           <div className="space-y-6">
             
 
