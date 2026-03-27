@@ -3,8 +3,9 @@ import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
-// Preset inventory categories for small-scale Nigerian mixed farm
-const PRESET_CATEGORIES = [
+// 🌾 SOLE SYSTEM PRESET - Nigerian Mixed Farm Inventory Categories
+// This is the only preset system for TrackFarmOps application
+const SYSTEM_PRESET_CATEGORIES = [
   {
     name: 'Livestock',
     description: 'Animals raised on the farm',
@@ -63,8 +64,9 @@ const PRESET_CATEGORIES = [
   }
 ];
 
-// Preset inventory items for small-scale Nigerian mixed farm
-const PRESET_ITEMS = [
+// 🌾 SOLE SYSTEM PRESET - Nigerian Mixed Farm Inventory Items
+// This is the only preset system for TrackFarmOps application
+const SYSTEM_PRESET_ITEMS = [
   // Livestock (8 items)
   { name: 'Broiler Chickens', type: 'LIVESTOCK', unit: 'pieces', categoryId: 1, quantity: 50 },
   { name: 'Layer Chickens', type: 'LIVESTOCK', unit: 'pieces', categoryId: 1, quantity: 30 },
@@ -117,7 +119,7 @@ const PRESET_ITEMS = [
   { name: 'Lime', type: 'CONSUMABLES', unit: 'kg', categoryId: 6, quantity: 30 },
   { name: 'Organic Fertilizer', type: 'CONSUMABLES', unit: 'kg', categoryId: 6, quantity: 20 },
   
-  // Harvested Produce (6 items)
+  // Harvested Produce (5 items)
   { name: 'Fresh Tomatoes', type: 'PRODUCE', unit: 'kg', categoryId: 7, quantity: 60 },
   { name: 'Fresh Peppers', type: 'PRODUCE', unit: 'kg', categoryId: 7, quantity: 40 },
   { name: 'Fresh Leafy Vegetables', type: 'PRODUCE', unit: 'bunches', categoryId: 7, quantity: 25 },
@@ -133,13 +135,22 @@ const PRESET_ITEMS = [
   { name: 'Yogurt', type: 'PRODUCE', unit: 'liters', categoryId: 8, quantity: 5 }
 ];
 
-async function seedInventoryForOrganization(organizationId: number) {
-  console.log(`🌱 Seeding preset inventory for organization ${organizationId}...`);
+async function seedSystemInventoryForOrganization(organizationId: number) {
+  console.log(`� Seeding Nigerian Mixed Farm preset inventory for organization ${organizationId}...`);
 
   try {
-    // Create preset categories
+    // Clear existing inventory for this organization to ensure clean slate
+    console.log(`🧹 Clearing existing inventory for organization ${organizationId}...`);
+    await prisma.inventoryItem.deleteMany({
+      where: { organizationId }
+    });
+    await prisma.inventoryCategory.deleteMany({
+      where: { organizationId }
+    });
+
+    // Create system preset categories
     const createdCategories = [];
-    for (const category of PRESET_CATEGORIES) {
+    for (const category of SYSTEM_PRESET_CATEGORIES) {
       const createdCategory = await prisma.inventoryCategory.create({
         data: {
           ...category,
@@ -150,9 +161,9 @@ async function seedInventoryForOrganization(organizationId: number) {
       console.log(`  ✅ Created category: ${createdCategory.name}`);
     }
 
-    // Create preset items
-    for (const item of PRESET_ITEMS) {
-      const category = createdCategories.find(cat => cat.name === PRESET_CATEGORIES[item.categoryId - 1].name);
+    // Create system preset items
+    for (const item of SYSTEM_PRESET_ITEMS) {
+      const category = createdCategories.find(cat => cat.name === SYSTEM_PRESET_CATEGORIES[item.categoryId - 1].name);
       if (category) {
         await prisma.inventoryItem.create({
           data: {
@@ -169,7 +180,7 @@ async function seedInventoryForOrganization(organizationId: number) {
               purchaseDate: null,
               expiryDate: null,
               minimumStock: null,
-              notes: `Preset item for ${category.name} category`
+              notes: `Nigerian Mixed Farm preset item for ${category.name} category`
             }
           },
         });
@@ -177,7 +188,7 @@ async function seedInventoryForOrganization(organizationId: number) {
       }
     }
 
-    console.log(`🎉 Successfully seeded ${PRESET_CATEGORIES.length} categories and ${PRESET_ITEMS.length} items for organization ${organizationId}`);
+    console.log(`🎉 Successfully seeded ${SYSTEM_PRESET_CATEGORIES.length} categories and ${SYSTEM_PRESET_ITEMS.length} items for organization ${organizationId}`);
     return true;
   } catch (error) {
     console.error(`❌ Error seeding inventory for organization ${organizationId}:`, error);
@@ -192,7 +203,7 @@ async function createTestOrganization() {
     const organization = await prisma.organization.create({
       data: {
         name: 'Test Farm Organization',
-        description: 'A test farm for demonstrating inventory management',
+        description: 'A test Nigerian mixed farm for demonstrating inventory management',
       },
     });
 
@@ -252,11 +263,30 @@ async function createTestUsers(organizationId: number) {
   }
 }
 
-async function main() {
-  console.log('🚀 Starting inventory seeding process...');
+async function seedAllOrganizations() {
+  console.log(`🌾 Seeding Nigerian Mixed Farm presets for all organizations...`);
 
   try {
-    // Create test organization
+    const organizations = await prisma.organization.findMany();
+    console.log(`� Found ${organizations.length} organizations to seed`);
+
+    for (const org of organizations) {
+      await seedSystemInventoryForOrganization(org.id);
+    }
+
+    console.log(`🎉 Successfully seeded all organizations with Nigerian Mixed Farm presets`);
+    return true;
+  } catch (error) {
+    console.error(`❌ Error seeding all organizations:`, error);
+    return false;
+  }
+}
+
+async function main() {
+  console.log('🚀 Starting Nigerian Mixed Farm preset seeding process...');
+
+  try {
+    // Option 1: Create test organization and seed it
     const organization = await createTestOrganization();
     if (!organization) {
       console.error('❌ Failed to create organization');
@@ -270,16 +300,16 @@ async function main() {
       return;
     }
 
-    // Seed inventory for the organization
-    const seedingSuccess = await seedInventoryForOrganization(organization.id);
+    // Seed Nigerian Mixed Farm inventory for the organization
+    const seedingSuccess = await seedSystemInventoryForOrganization(organization.id);
     if (!seedingSuccess) {
       console.error('❌ Failed to seed inventory');
       return;
     }
 
-    console.log('\n🎊 Seeding completed successfully!');
+    console.log('\n🎊 Nigerian Mixed Farm preset seeding completed successfully!');
     console.log('\n📋 Test Credentials:');
-    console.log('Organization: Test Farm Organization');
+    console.log('Organization: Test Farm Organization (Nigerian Mixed Farm)');
     console.log('Owner: owner@testfarm.com (password: password123)');
     console.log('Manager: manager@testfarm.com (password: password123)');
     console.log('Worker: worker@testfarm.com (password: password123)');
@@ -297,4 +327,9 @@ if (require.main === module) {
   main();
 }
 
-export { seedInventoryForOrganization, createTestOrganization, createTestUsers };
+export { 
+  seedSystemInventoryForOrganization, 
+  createTestOrganization, 
+  createTestUsers,
+  seedAllOrganizations
+};

@@ -453,31 +453,42 @@ const EnhancedExpensePage = () => {
             <div>
               {/* OCR Section */}
               {!ocrResult && (
-                <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                  <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100 mb-3 flex items-center gap-2">
-                    <Scan className="h-5 w-5" />
-                    Quick Receipt Scan
-                  </h3>
-                  <p className="text-blue-700 dark:text-blue-300 mb-4 text-sm">
-                    Take a photo or upload a receipt to automatically extract expense details
-                  </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <button
-                      onClick={handleCameraCapture}
-                      disabled={isScanning}
-                      className="flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                      <Camera className="h-5 w-5" />
-                      {isScanning ? 'Processing...' : 'Take Photo'}
-                    </button>
-                    <button
-                      onClick={handleFileUpload}
-                      disabled={isScanning}
-                      className="flex items-center justify-center gap-2 px-4 py-3 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                      <Upload className="h-5 w-5" />
-                      {isScanning ? 'Processing...' : 'Upload Image'}
-                    </button>
+                <div className="mb-6 max-w-2xl">
+                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl border border-blue-200 dark:border-blue-700 shadow-sm">
+                    <div className="p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center space-x-3">
+                          <div className="p-2 bg-blue-600 dark:bg-blue-700 rounded-lg shadow-sm">
+                            <Scan className="h-4 w-4 text-white" />
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">Quick Receipt Scan</h3>
+                            <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                              Extract expense details automatically
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex flex-col sm:flex-row gap-2">
+                        <button
+                          onClick={handleCameraCapture}
+                          disabled={isScanning}
+                          className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 bg-blue-600 dark:bg-blue-700 text-white text-sm font-medium rounded-lg hover:bg-blue-700 dark:hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md"
+                        >
+                          <Camera className="h-4 w-4" />
+                          {isScanning ? 'Processing...' : 'Take Photo'}
+                        </button>
+                        <button
+                          onClick={handleFileUpload}
+                          disabled={isScanning}
+                          className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 text-sm font-medium rounded-lg border border-blue-200 dark:border-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md"
+                        >
+                          <Upload className="h-4 w-4" />
+                          {isScanning ? 'Processing...' : 'Upload Image'}
+                        </button>
+                      </div>
+                    </div>
                   </div>
                   
                   <input

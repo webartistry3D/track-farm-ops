@@ -147,7 +147,8 @@ const Signup = () => {
         name: formData.ownerName,
         email: formData.email,
         password: formData.password,
-        farmName: formData.farmName
+        farmName: formData.farmName,
+        farmType: formData.farmType // Send farm type to backend
       });
 
       setMessage('Account created successfully! Logging you in...');

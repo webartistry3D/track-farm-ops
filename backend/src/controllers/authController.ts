@@ -2,11 +2,12 @@ import { Request, Response } from 'express';
 import { prisma } from '../lib/prisma';
 import { generateToken, hashPassword, comparePassword } from '../utils/auth';
 import { AuthRequest, getReqBody } from '../middleware/auth';
+import { autoSeedByFarmType } from '../utils/smartSeeding';
 
 export const signup = async (req: Request, res: Response) => {
   try {
     const body = getReqBody(req);
-    const { name, email, password, role, farmName } = body;
+    const { name, email, password, role, farmName, farmType } = body;
 
     if (!name || !email || !password) {
       return res.status(400).json({ error: 'Name, email, and password are required' });
@@ -49,7 +50,18 @@ export const signup = async (req: Request, res: Response) => {
         }
       });
       
-      console.log(`✅ Created owner ${name} with organization: ${farmName}`);
+      console.log(`✅ Created owner ${name} with organization: ${farmName} (Farm Type: ${farmType || 'Not specified'})`);
+      
+      // 🌾 SMART AUTO-SEEDING BASED ON FARM TYPE
+      if (farmType) {
+        await autoSeedByFarmType(organization.id, farmType, organization.name);
+      } else {
+        console.log(`⚠️ No farm type specified, using default Mixed Farm preset`);
+        // Fallback to Nigerian Mixed Farm preset
+        const { seedSystemInventoryForOrganization } = require('../../prisma/seed-inventory.js');
+        await seedSystemInventoryForOrganization(organization.id);
+      }
+      
     } else {
       // Create user without organization (non-owners)
       newUser = await prisma.user.create({
