@@ -164,12 +164,11 @@ function App() {
               <ScrollToTop />
               <AppRoutes />
               <InactivityWarning 
-                onWarning={() => {
-                  // This will be called when user chooses to sign out from warning
-                  // The actual logout will be handled by the AuthContext timer
-                  console.log('🕐 [App] User signed out from inactivity warning');
-                }} 
-                warningTime={2 * 60 * 1000} // 2 minutes
+                onLogout={() => {
+                  // This will be called when user dismisses the logout modal
+                  // Can be used for additional cleanup if needed
+                  console.log('User acknowledged logout message');
+                }}
               />
             </Router>
           </ToastProvider>

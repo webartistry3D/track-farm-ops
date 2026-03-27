@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
 import { formatCurrency } from '../utils/currency';
 import type { InventoryItem } from '../types';
+import Pagination from './Pagination';
 import { 
   Search, Plus, Edit2, Trash2, AlertTriangle, TrendingUp, Clock, MapPin, User, FileText, CheckCircle, Calendar, 
   Package, Activity, RefreshCw, Grid3X3, List, Check,
@@ -60,6 +61,12 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
   const [itemToView, setItemToView] = useState<InventoryItem | null>(null);
   const [showUsageModal, setShowUsageModal] = useState(false);
   const [itemToUse, setItemToUse] = useState<InventoryItem | null>(null);
+  const [showEditItemModal, setShowEditItemModal] = useState(false);
+  const [itemToEdit, setItemToEdit] = useState<InventoryItem | null>(null);
+  const [showEditCategoryModal, setShowEditCategoryModal] = useState(false);
+  const [categoryToEdit, setCategoryToEdit] = useState<any>(null);
+  const [showViewCategoryModal, setShowViewCategoryModal] = useState(false);
+  const [categoryToView, setCategoryToView] = useState<any>(null);
   
   // Form states
   const [newItem, setNewItem] = useState({
@@ -71,6 +78,22 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
     minimumStock: '',
     notes: ''
   });
+
+  // Edit item form state
+  const [editItem, setEditItem] = useState({
+    name: '',
+    categoryId: '',
+    quantity: '',
+    unit: 'pieces',
+    pricePerUnit: '',
+    minimumStock: '',
+    notes: ''
+  });
+
+  // Formatted display states for edit item
+  const [formattedEditItem, setFormattedEditItem] = useState({
+    pricePerUnit: ''
+  });
   
   // Formatted display states for thousand separators
   const [formattedItem, setFormattedItem] = useState({
@@ -78,8 +101,22 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
     pricePerUnit: '',
     minimumStock: ''
   });
+
+  // Pagination states
+  const [itemsCurrentPage, setItemsCurrentPage] = useState(1);
+  const [categoriesCurrentPage, setCategoriesCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  const categoriesPerPage = 10;
   
   const [newCategory, setNewCategory] = useState({
+    name: '',
+    description: '',
+    icon: '📦',
+    color: 'bg-gray-100 text-gray-700 border-gray-200'
+  });
+
+  // Edit category form state
+  const [editCategory, setEditCategory] = useState({
     name: '',
     description: '',
     icon: '📦',
@@ -252,6 +289,20 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
     });
   }, [filteredItems, sortBy, sortOrder, calculateItemValue, getStockStatus]);
 
+  // Pagination for items
+  const paginatedItems = useMemo(() => {
+    const startIndex = (itemsCurrentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return sortedItems.slice(startIndex, endIndex);
+  }, [sortedItems, itemsCurrentPage, itemsPerPage]);
+
+  // Pagination for categories
+  const paginatedCategories = useMemo(() => {
+    const startIndex = (categoriesCurrentPage - 1) * categoriesPerPage;
+    const endIndex = startIndex + categoriesPerPage;
+    return categories.slice(startIndex, endIndex);
+  }, [categories, categoriesCurrentPage, categoriesPerPage]);
+
   // Calculate totals
   const totals = useMemo(() => {
     const totalValue = sortedItems.reduce((sum, item) => {
@@ -368,7 +419,9 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
           purchaseDate: new Date().toISOString(),
           location: null,
           supplier: null,
-          expiryDate: null
+          expiryDate: null,
+          createdBy: user?.name || user?.email || 'Unknown',
+          updatedBy: user?.name || user?.email || 'Unknown'
         }
       };
 
@@ -414,7 +467,9 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
         icon: newCategory.icon,
         color: newCategory.color,
         metadata: {
-          keywords: [newCategory.name.toLowerCase()]
+          keywords: [newCategory.name.toLowerCase()],
+          createdBy: user?.name || user?.email || 'Unknown',
+          updatedBy: user?.name || user?.email || 'Unknown'
         }
       };
 
@@ -442,6 +497,183 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
       });
     }
   }, [newCategory]);
+
+  // Edit Item Handlers
+  const handleEditClick = useCallback((item: InventoryItem) => {
+    setItemToEdit(item);
+    const pricePerUnitValue = item.metadata?.pricePerUnit?.toString() || '';
+    setEditItem({
+      name: item.name,
+      categoryId: item.categoryId?.toString() || '',
+      quantity: item.quantity.toString(),
+      unit: item.unit || 'pieces',
+      pricePerUnit: pricePerUnitValue,
+      minimumStock: item.metadata?.minimumStock?.toString() || '',
+      notes: item.metadata?.notes || ''
+    });
+    // Set formatted display value
+    const formattedPrice = pricePerUnitValue === '' ? '' : Number(pricePerUnitValue).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    setFormattedEditItem({
+      pricePerUnit: formattedPrice
+    });
+    setShowEditItemModal(true);
+  }, []);
+
+  const handleEditItem = useCallback(async () => {
+    if (!itemToEdit || !editItem.name || !editItem.categoryId || !editItem.quantity) {
+      setNotification({
+        type: 'error',
+        message: 'Please fill in all required fields'
+      });
+      return;
+    }
+
+    try {
+      // Determine item type based on category
+      const category = categories.find(cat => cat.id === Number(editItem.categoryId));
+      const categoryName = category?.name?.toLowerCase() || '';
+      
+      let itemType = 'SUPPLIES';
+      if (categoryName.includes('livestock') || categoryName.includes('animal')) {
+        itemType = 'LIVESTOCK';
+      } else if (categoryName.includes('feed') || categoryName.includes('nutrition')) {
+        itemType = 'SUPPLIES';
+      } else if (categoryName.includes('medicine') || categoryName.includes('health')) {
+        itemType = 'MEDICINE';
+      } else if (categoryName.includes('equipment') || categoryName.includes('tool')) {
+        itemType = 'EQUIPMENT';
+      } else if (categoryName.includes('seed') || categoryName.includes('planting')) {
+        itemType = 'SEEDS';
+      } else if (categoryName.includes('fertilizer') || categoryName.includes('soil')) {
+        itemType = 'FERTILIZERS';
+      } else if (categoryName.includes('harvested') || categoryName.includes('produce')) {
+        itemType = 'PRODUCE';
+      } else if (categoryName.includes('pesticide')) {
+        itemType = 'PESTICIDES';
+      }
+
+      const updateData = {
+        name: editItem.name,
+        type: itemType,
+        categoryId: Number(editItem.categoryId),
+        quantity: Number(editItem.quantity),
+        unit: editItem.unit,
+        pricePerUnit: Number(editItem.pricePerUnit) || 0,
+        minimumStock: Number(editItem.minimumStock) || 0,
+        metadata: {
+          notes: editItem.notes,
+          location: itemToEdit.metadata?.location || null,
+          supplier: itemToEdit.metadata?.supplier || null,
+          purchaseDate: itemToEdit.metadata?.purchaseDate || null,
+          expiryDate: itemToEdit.metadata?.expiryDate || null,
+          updatedBy: user?.name || user?.email || 'Unknown'
+        }
+      };
+
+      const response = await api.put(`/inventory/items/${itemToEdit.id}`, updateData);
+      
+      if (response.data) {
+        setItems(prev => prev.map(item => 
+          item.id === itemToEdit.id ? response.data : item
+        ));
+        setShowEditItemModal(false);
+        setItemToEdit(null);
+        setEditItem({
+          name: '',
+          categoryId: '',
+          quantity: '',
+          unit: 'pieces',
+          pricePerUnit: '',
+          minimumStock: '',
+          notes: ''
+        });
+        setFormattedEditItem({
+          pricePerUnit: ''
+        });
+        
+        setNotification({
+          type: 'success',
+          message: 'Item updated successfully'
+        });
+      }
+    } catch (err: any) {
+      setNotification({
+        type: 'error',
+        message: err.response?.data?.error || 'Failed to update item'
+      });
+    }
+  }, [itemToEdit, editItem, categories, user]);
+
+  // Edit Category Handlers
+  const handleEditCategoryClick = useCallback((category: any) => {
+    setCategoryToEdit(category);
+    setEditCategory({
+      name: category.name,
+      description: category.description,
+      icon: category.icon,
+      color: category.color
+    });
+    setShowEditCategoryModal(true);
+  }, []);
+
+  const handleEditCategory = useCallback(async () => {
+    if (!categoryToEdit || !editCategory.name) {
+      setNotification({
+        type: 'error',
+        message: 'Please fill in all required fields'
+      });
+      return;
+    }
+
+    try {
+      const updateData = {
+        name: editCategory.name,
+        description: editCategory.description,
+        icon: editCategory.icon,
+        color: editCategory.color,
+        metadata: {
+          keywords: [editCategory.name.toLowerCase()],
+          updatedBy: user?.name || user?.email || 'Unknown'
+        }
+      };
+
+      const response = await api.put(`/inventory/categories/${categoryToEdit.id}`, updateData);
+      
+      if (response.data) {
+        setCategories(prev => prev.map(cat => 
+          cat.id === categoryToEdit.id ? response.data : cat
+        ));
+        setShowEditCategoryModal(false);
+        setCategoryToEdit(null);
+        setEditCategory({
+          name: '',
+          description: '',
+          icon: '📦',
+          color: 'bg-gray-100 text-gray-700 border-gray-200'
+        });
+        
+        setNotification({
+          type: 'success',
+          message: 'Category updated successfully'
+        });
+      }
+    } catch (err: any) {
+      setNotification({
+        type: 'error',
+        message: err.response?.data?.error || 'Failed to update category'
+      });
+    }
+  }, [categoryToEdit, editCategory, user]);
+
+  const handleDeleteCategoryClick = useCallback((category: any) => {
+    setItemToDelete(category);
+    setShowDeleteModal(true);
+  }, []);
+
+  const handleViewCategoryClick = useCallback((category: any) => {
+    setCategoryToView(category);
+    setShowViewCategoryModal(true);
+  }, []);
 
   // Record Usage Handler
   const handleRecordUsage = useCallback(async () => {
@@ -478,7 +710,10 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
         usageType: usageData.usageType,
         relatedEntity: usageData.relatedEntity || null,
         relatedEntityId: usageData.relatedEntityId || null,
-        location: usageData.location || null
+        location: usageData.location || null,
+        metadata: {
+          performedBy: user?.name || user?.email || 'Unknown'
+        }
       };
 
       const response = await api.post('/inventory-transactions/usage', usagePayload);
@@ -851,33 +1086,31 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
               )}
             </button>
 
-            {/* View Mode - Hide on mobile for categories tab */}
-            {(activeTab === 'items') && (
-              <div className="flex items-center space-x-1 justify-center sm:justify-start">
-                <button
-                  onClick={() => setViewMode('grid')}
-                  className={`p-2 rounded-lg transition-colors ${
-                    viewMode === 'grid'
-                      ? 'bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400'
-                      : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
-                  }`}
-                  title="Grid View"
-                >
-                  <Grid3X3 className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => setViewMode('list')}
-                  className={`p-2 rounded-lg transition-colors ${
-                    viewMode === 'list'
-                      ? 'bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400'
-                      : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
-                  }`}
-                  title="List View"
-                >
-                  <List className="w-4 h-4" />
-                </button>
-              </div>
-            )}
+            {/* View Mode - Available on both tabs */}
+            <div className="flex items-center space-x-1 justify-center sm:justify-start">
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`p-2 rounded-lg transition-colors ${
+                  viewMode === 'grid'
+                    ? 'bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400'
+                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
+                }`}
+                title="Grid View"
+              >
+                <Grid3X3 className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setViewMode('list')}
+                className={`p-2 rounded-lg transition-colors ${
+                  viewMode === 'list'
+                    ? 'bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400'
+                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
+                }`}
+                title="List View"
+              >
+                <List className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
 
@@ -962,16 +1195,35 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
                           <div className="flex items-center space-x-2">
                             <button
                               onClick={() => {
+                                setItemToUse(item);
+                                setShowUsageModal(true);
+                              }}
+                              className="p-1 text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 transition-colors"
+                              title="Record Usage"
+                            >
+                              <MinusCircle className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => {
                                 setItemToView(item);
                                 setShowViewItemModal(true);
                               }}
                               className="p-1 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                              title="View Details"
                             >
                               <Eye className="w-4 h-4" />
                             </button>
                             <button
+                              onClick={() => handleEditClick(item)}
+                              className="p-1 text-gray-400 hover:text-yellow-600 dark:hover:text-yellow-400 transition-colors"
+                              title="Edit Item"
+                            >
+                              <Edit2 className="w-4 h-4" />
+                            </button>
+                            <button
                               onClick={() => handleDeleteClick(item)}
                               className="p-1 text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                              title="Delete Item"
                             >
                               <Trash2 className="w-4 h-4" />
                             </button>
@@ -1028,12 +1280,18 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
                           Created
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                          Created By
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                          Updated By
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                           Actions
                         </th>
                       </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                      {sortedItems.map((item) => {
+                      {paginatedItems.map((item) => {
                         const status = getStockStatus(item);
                         const value = calculateItemValue(item);
                         
@@ -1132,6 +1390,16 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
                                 </div>
                               </div>
                             </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm text-gray-900 dark:text-white">
+                                {item.metadata?.createdBy || user?.name || user?.email || 'Unknown'}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm text-gray-900 dark:text-white">
+                                {item.metadata?.updatedBy || item.metadata?.createdBy || user?.name || user?.email || 'Unknown'}
+                              </div>
+                            </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                               <div className="flex items-center space-x-2">
                                 <button
@@ -1155,6 +1423,13 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
                                   <Eye className="w-4 h-4" />
                                 </button>
                                 <button
+                                  onClick={() => handleEditClick(item)}
+                                  className="text-yellow-600 hover:text-yellow-900 dark:text-yellow-400 dark:hover:text-yellow-300"
+                                  title="Edit Item"
+                                >
+                                  <Edit2 className="w-4 h-4" />
+                                </button>
+                                <button
                                   onClick={() => handleDeleteClick(item)}
                                   className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
                                   title="Delete Item"
@@ -1169,6 +1444,17 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
                     </tbody>
                   </table>
                 </div>
+                
+                {/* Pagination Component for Items */}
+                {sortedItems.length > 0 && (
+                  <Pagination
+                    currentPage={itemsCurrentPage}
+                    totalPages={Math.ceil(sortedItems.length / itemsPerPage)}
+                    onPageChange={setItemsCurrentPage}
+                    entriesPerPage={itemsPerPage}
+                    totalEntries={sortedItems.length}
+                  />
+                )}
                 
                 {sortedItems.length === 0 && (
                   <div className="text-center py-12">
@@ -1218,146 +1504,270 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
 
         {activeTab === 'categories' && (
           <div>
-            {/* Categories Table */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                        Category Details
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                        Items Count
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                        Total Value
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                        Status
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                        Description
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                        Created
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    {categories.map((category) => {
-                      const itemCount = items.filter(item => item.categoryId === category.id).length;
-                      const totalValue = items
-                        .filter(item => item.categoryId === category.id)
-                        .reduce((sum, item) => sum + calculateItemValue(item), 0);
-                      
-                      const status = {
-                        label: itemCount > 0 ? 'Active' : 'Empty',
-                        color: itemCount > 0 
-                          ? 'bg-green-100 text-green-700 border-green-200'
-                          : 'bg-gray-100 text-gray-700 border-gray-200'
-                      };
-                      
-                      return (
-                        <tr key={category.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center">
-                              <div className="w-12 h-12 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-xl flex items-center justify-center text-2xl mr-4 shadow-md">
-                                {category.icon || '📦'}
-                              </div>
-                              <div>
-                                <div className="text-sm font-medium text-gray-900 dark:text-white">
-                                  {category.name}
-                                </div>
-                                <div className="text-xs text-gray-500 dark:text-gray-400">
-                                  ID: #{category.id}
-                                </div>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-900 dark:text-white">
-                              <div className="font-medium">{itemCount}</div>
-                              <div className="text-xs text-gray-500">items</div>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm font-medium text-blue-600 dark:text-blue-400">
-                              {formatCurrency(totalValue)}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full border ${status.color}`}>
-                              {status.label}
-                            </span>
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">
+            {viewMode === 'grid' ? (
+              // Grid View - Card Layout
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {paginatedCategories.map((category) => {
+                  const itemCount = items.filter(item => item.categoryId === category.id).length;
+                  const totalValue = items
+                    .filter(item => item.categoryId === category.id)
+                    .reduce((sum, item) => sum + calculateItemValue(item), 0);
+                  
+                  return (
+                    <div
+                      key={category.id}
+                      className="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                    >
+                      <div className="p-6">
+                        <div className="flex flex-col items-center text-center mb-6">
+                          <div className="w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-2xl flex items-center justify-center text-4xl mb-4 shadow-lg">
+                            {category.icon || '📦'}
+                          </div>
+                          <div>
+                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                              {category.name}
+                            </h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-400 max-w-xs">
                               {category.description || 'No description'}
+                            </p>
+                          </div>
+                        </div>
+                        
+                        <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+                          <div className="space-y-3">
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm text-gray-600 dark:text-gray-400">Items:</span>
+                              <span className={`px-3 py-1 text-sm font-medium rounded-full border ${
+                                itemCount > 0 
+                                  ? 'bg-green-100 text-green-700 border-green-200'
+                                  : 'bg-gray-100 text-gray-700 border-gray-200'
+                              }`}>
+                                {itemCount}
+                              </span>
                             </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-900 dark:text-white">
-                              <div>{new Date(category.createdAt).toLocaleDateString()}</div>
-                              <div className="text-xs text-gray-500">
-                                {new Date(category.createdAt).toLocaleTimeString()}
+                            
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm text-gray-600 dark:text-gray-400">Total Value:</span>
+                              <span className="text-sm font-semibold text-gray-900 dark:text-white break-all max-w-[120px]">
+                                {formatCurrency(totalValue)}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                          <div className="flex items-center space-x-2">
+                            {itemCount > 0 ? (
+                              <div className="flex items-center space-x-1">
+                                <Check className="w-4 h-4 text-green-600" />
+                                <span className="text-xs text-green-600 font-medium">Active</span>
                               </div>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <div className="flex items-center space-x-2">
-                              <button
-                                onClick={() => console.log('View category details not implemented')}
-                                className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
-                                title="View Details"
-                              >
-                                <Eye className="w-4 h-4" />
-                              </button>
-                              <button
-                                onClick={() => console.log('Edit category not implemented')}
-                                className="text-yellow-600 hover:text-yellow-900 dark:text-yellow-400 dark:hover:text-yellow-300"
-                                title="Edit Category"
-                              >
-                                <Edit2 className="w-4 h-4" />
-                              </button>
-                              <button
-                                onClick={() => console.log('Delete category not implemented')}
-                                className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
-                                title="Delete Category"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+                            ) : (
+                              <div className="flex items-center space-x-1">
+                                <AlertTriangle className="w-4 h-4 text-gray-400" />
+                                <span className="text-xs text-gray-400 font-medium">Empty</span>
+                              </div>
+                            )}
+                          </div>
+                          
+                          <div className="flex items-center space-x-2">
+                            <button
+                              onClick={() => handleViewCategoryClick(category)}
+                              className="p-2 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                              title="View Category Details"
+                            >
+                              <Eye className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => handleEditCategoryClick(category)}
+                              className="p-2 text-gray-400 hover:text-yellow-600 dark:hover:text-yellow-400 transition-colors rounded-lg hover:bg-yellow-50 dark:hover:bg-yellow-900/20"
+                              title="Edit Category"
+                            >
+                              <Edit2 className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteCategoryClick(category)}
+                              className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
+                              title="Delete Category"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-              
-              {categories.length === 0 && (
-                <div className="text-center py-12">
-                  <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                    No categories found
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400 mb-6">
-                    Get started by adding your first category
-                  </p>
-                  <button
-                    onClick={() => setShowAddCategoryModal(true)}
-                    className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
-                  >
-                    <Plus className="w-5 h-5 inline mr-2" />
-                    Add First Category
-                  </button>
+            ) : (
+              // List View - Table Layout
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                          Category Details
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                          Items Count
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                          Total Value
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                          Status
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                          Description
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                          Created
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                          Created By
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                          Updated By
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                      {paginatedCategories.map((category) => {
+                        const itemCount = items.filter(item => item.categoryId === category.id).length;
+                        const totalValue = items
+                          .filter(item => item.categoryId === category.id)
+                          .reduce((sum, item) => sum + calculateItemValue(item), 0);
+                        
+                        const status = {
+                          label: itemCount > 0 ? 'Active' : 'Empty',
+                          color: itemCount > 0 
+                            ? 'bg-green-100 text-green-700 border-green-200'
+                            : 'bg-gray-100 text-gray-700 border-gray-200'
+                        };
+                        
+                        return (
+                          <tr key={category.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="flex items-center">
+                                <div className="w-12 h-12 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-xl flex items-center justify-center text-2xl mr-4 shadow-md">
+                                  {category.icon || '📦'}
+                                </div>
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">
+                                    {category.name}
+                                  </div>
+                                  <div className="text-xs text-gray-500 dark:text-gray-400">
+                                    ID: #{category.id}
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm text-gray-900 dark:text-white">
+                                <div className="font-medium">{itemCount}</div>
+                                <div className="text-xs text-gray-500">items</div>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm font-medium text-blue-600 dark:text-blue-400">
+                                {formatCurrency(totalValue)}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full border ${status.color}`}>
+                                {status.label}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4">
+                              <div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">
+                                {category.description || 'No description'}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm text-gray-900 dark:text-white">
+                                <div>{new Date(category.createdAt).toLocaleDateString()}</div>
+                                <div className="text-xs text-gray-500">
+                                  {new Date(category.createdAt).toLocaleTimeString()}
+                                </div>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm text-gray-900 dark:text-white">
+                                {category.metadata?.createdBy || user?.name || user?.email || 'Unknown'}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm text-gray-900 dark:text-white">
+                                {category.metadata?.updatedBy || category.metadata?.createdBy || user?.name || user?.email || 'Unknown'}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                              <div className="flex items-center space-x-2">
+                                <button
+                                  onClick={() => handleViewCategoryClick(category)}
+                                  className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
+                                  title="View Details"
+                                >
+                                  <Eye className="w-4 h-4" />
+                                </button>
+                                <button
+                                  onClick={() => handleEditCategoryClick(category)}
+                                  className="text-yellow-600 hover:text-yellow-900 dark:text-yellow-400 dark:hover:text-yellow-300"
+                                  title="Edit Category"
+                                >
+                                  <Edit2 className="w-4 h-4" />
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteCategoryClick(category)}
+                                  className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                                  title="Delete Category"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </div>
-              )}
             </div>
+            )}
+
+            {/* Pagination Component for Categories */}
+            {categories.length > 0 && (
+              <Pagination
+                currentPage={categoriesCurrentPage}
+                totalPages={Math.ceil(categories.length / categoriesPerPage)}
+                onPageChange={setCategoriesCurrentPage}
+                entriesPerPage={categoriesPerPage}
+                totalEntries={categories.length}
+              />
+            )}
+
+            {categories.length === 0 && (
+              <div className="text-center py-12">
+                <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                  No categories found
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-6">
+                  Get started by adding your first category
+                </p>
+                <button
+                  onClick={() => setShowAddCategoryModal(true)}
+                  className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+                >
+                  <Plus className="w-5 h-5 inline mr-2" />
+                  Add First Category
+                </button>
+              </div>
+            )}
           </div>
         )}
 
@@ -1752,64 +2162,70 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
                 />
               </div>
               
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Usage Type
-                </label>
-                <select
-                  value={usageData.usageType}
-                  onChange={(e) => setUsageData(prev => ({ ...prev, usageType: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
-                >
-                  <option value="INITIAL_STOCK">Initial Stock</option>
-                  <option value="RESTOCK">Restock</option>
-                  <option value="FEEDING">Feeding</option>
-                  <option value="PLANTING">Planting</option>
-                  <option value="SALES">Sales</option>
-                  <option value="WASTE">Waste</option>
-                  <option value="TRANSFER">Transfer</option>
-                  <option value="ADJUSTMENT">Adjustment</option>
-                  <option value="OTHER">Other</option>
-                </select>
+              {/* First Row: Usage Type and Related Entity */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Usage Type
+                  </label>
+                  <select
+                    value={usageData.usageType}
+                    onChange={(e) => setUsageData(prev => ({ ...prev, usageType: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                  >
+                    <option value="INITIAL_STOCK">Initial Stock</option>
+                    <option value="RESTOCK">Restock</option>
+                    <option value="FEEDING">Feeding</option>
+                    <option value="PLANTING">Planting</option>
+                    <option value="SALES">Sales</option>
+                    <option value="WASTE">Waste</option>
+                    <option value="TRANSFER">Transfer</option>
+                    <option value="ADJUSTMENT">Adjustment</option>
+                    <option value="OTHER">Other</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Related Entity
+                  </label>
+                  <input
+                    type="text"
+                    value={usageData.relatedEntity}
+                    onChange={(e) => setUsageData(prev => ({ ...prev, relatedEntity: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                    placeholder="Customer name, field, animal, etc."
+                  />
+                </div>
               </div>
               
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Related Entity
-                </label>
-                <input
-                  type="text"
-                  value={usageData.relatedEntity}
-                  onChange={(e) => setUsageData(prev => ({ ...prev, relatedEntity: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
-                  placeholder="Customer name, field, animal, etc."
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Reference ID
-                </label>
-                <input
-                  type="text"
-                  value={usageData.relatedEntityId}
-                  onChange={(e) => setUsageData(prev => ({ ...prev, relatedEntityId: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
-                  placeholder="Order #, Job ID, etc."
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Location
-                </label>
-                <input
-                  type="text"
-                  value={usageData.location}
-                  onChange={(e) => setUsageData(prev => ({ ...prev, location: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
-                  placeholder="Where the usage occurred"
-                />
+              {/* Second Row: Reference ID and Location */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Reference ID
+                  </label>
+                  <input
+                    type="text"
+                    value={usageData.relatedEntityId}
+                    onChange={(e) => setUsageData(prev => ({ ...prev, relatedEntityId: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                    placeholder="Order #, Job ID, etc."
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Location
+                  </label>
+                  <input
+                    type="text"
+                    value={usageData.location}
+                    onChange={(e) => setUsageData(prev => ({ ...prev, location: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                    placeholder="Where the usage occurred"
+                  />
+                </div>
               </div>
             </div>
             
@@ -2089,6 +2505,531 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
                 </p>
                 <button
                   onClick={() => setShowViewItemModal(false)}
+                  className="px-6 py-2 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors font-medium"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Item Modal */}
+      {showEditItemModal && itemToEdit && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
+            {/* Header */}
+            <div className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600 px-6 py-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Edit Item</h2>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Update inventory item details</p>
+                </div>
+                <button
+                  onClick={() => setShowEditItemModal(false)}
+                  className="w-8 h-8 bg-gray-100 dark:bg-gray-600 rounded-lg flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-500 transition-colors"
+                >
+                  <svg className="w-4 h-4 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 overflow-y-auto p-6">
+              <form onSubmit={(e) => { e.preventDefault(); handleEditItem(); }} className="space-y-4">
+                {/* First Row: Item Name and Category */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Item Name *
+                    </label>
+                    <input
+                      type="text"
+                      value={editItem.name}
+                      onChange={(e) => setEditItem(prev => ({ ...prev, name: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                      placeholder="Enter item name"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Category *
+                    </label>
+                    <select
+                      value={editItem.categoryId}
+                      onChange={(e) => setEditItem(prev => ({ ...prev, categoryId: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                      required
+                    >
+                      <option value="">Select category</option>
+                      {categories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.icon} {category.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Second Row: Quantity and Unit */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Quantity *
+                    </label>
+                    <input
+                      type="text"
+                      value={editItem.quantity}
+                      onChange={(e) => setEditItem(prev => ({ ...prev, quantity: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                      placeholder="0"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Unit
+                    </label>
+                    <select
+                      value={editItem.unit}
+                      onChange={(e) => setEditItem(prev => ({ ...prev, unit: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                    >
+                      <option value="pieces">Pieces</option>
+                      <option value="kg">Kilograms</option>
+                      <option value="liters">Liters</option>
+                      <option value="meters">Meters</option>
+                      <option value="bags">Bags</option>
+                      <option value="boxes">Boxes</option>
+                      <option value="bottles">Bottles</option>
+                      <option value="dozens">Dozens</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Third Row: Price per Unit and Minimum Stock */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Price per Unit (₦)
+                    </label>
+                    <input
+                      type="text"
+                      value={formattedEditItem.pricePerUnit ? `₦${formattedEditItem.pricePerUnit}` : ''}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        // Remove currency symbol and non-numeric characters except decimal point
+                        const cleanValue = value.replace(/[^0-9.]/g, '');
+                        // Allow only positive numbers with up to 2 decimal places
+                        const formattedValue = cleanValue === '' ? '' : cleanValue.replace(/(\..*?)\./g, '$1');
+                        // Update stored value (without formatting)
+                        setEditItem(prev => ({ ...prev, pricePerUnit: formattedValue }));
+                        // Update display value (with formatting)
+                        const displayValue = formattedValue === '' ? '' : Number(formattedValue).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+                        setFormattedEditItem(prev => ({ ...prev, pricePerUnit: displayValue }));
+                      }}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                      placeholder="₦0.00"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Minimum Stock
+                    </label>
+                    <input
+                      type="text"
+                      value={editItem.minimumStock}
+                      onChange={(e) => setEditItem(prev => ({ ...prev, minimumStock: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                      placeholder="0"
+                    />
+                  </div>
+                </div>
+
+                {/* Notes */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Notes
+                  </label>
+                  <textarea
+                    value={editItem.notes}
+                    onChange={(e) => setEditItem(prev => ({ ...prev, notes: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                    placeholder="Additional notes about this item"
+                    rows={3}
+                  />
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex justify-end space-x-3 pt-4">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowEditItemModal(false);
+                      setItemToEdit(null);
+                      setEditItem({
+                        name: '',
+                        categoryId: '',
+                        quantity: '',
+                        unit: 'pieces',
+                        pricePerUnit: '',
+                        minimumStock: '',
+                        notes: ''
+                      });
+                      setFormattedEditItem({
+                        pricePerUnit: ''
+                      });
+                    }}
+                    className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-6 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors font-medium"
+                  >
+                    Update Item
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Category Modal */}
+      {showEditCategoryModal && categoryToEdit && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
+            {/* Header */}
+            <div className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600 px-6 py-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Edit Category</h2>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Update category details</p>
+                </div>
+                <button
+                  onClick={() => setShowEditCategoryModal(false)}
+                  className="w-8 h-8 bg-gray-100 dark:bg-gray-600 rounded-lg flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-500 transition-colors"
+                >
+                  <svg className="w-4 h-4 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 overflow-y-auto p-6">
+              <form onSubmit={(e) => { e.preventDefault(); handleEditCategory(); }} className="space-y-4">
+                {/* Category Name */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Category Name *
+                  </label>
+                  <input
+                    type="text"
+                    value={editCategory.name}
+                    onChange={(e) => setEditCategory(prev => ({ ...prev, name: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                    placeholder="Enter category name"
+                    required
+                  />
+                </div>
+
+                {/* Description */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Description
+                  </label>
+                  <textarea
+                    value={editCategory.description}
+                    onChange={(e) => setEditCategory(prev => ({ ...prev, description: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                    placeholder="Describe this category"
+                    rows={3}
+                  />
+                </div>
+
+                {/* Icon Selection */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Icon
+                  </label>
+                  <div className="grid grid-cols-8 gap-2">
+                    {['📦', '🐄', '🌾', '💊', '🔧', '🌱', '🧪', '🚜', '🥕', '🌽', '🍎', '🥚', '🥛', '🧈', '🍖', '🐟'].map(icon => (
+                      <button
+                        key={icon}
+                        type="button"
+                        onClick={() => setEditCategory(prev => ({ ...prev, icon }))}
+                        className={`p-2 text-lg rounded-lg border transition-colors ${
+                          editCategory.icon === icon
+                            ? 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20'
+                            : 'border-gray-300 dark:border-gray-600 hover:border-gray-400'
+                        }`}
+                      >
+                        {icon}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Color Selection */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Color
+                  </label>
+                  <div className="grid grid-cols-4 gap-2">
+                    {[
+                      'bg-gray-100 text-gray-700 border-gray-200',
+                      'bg-blue-100 text-blue-700 border-blue-200',
+                      'bg-green-100 text-green-700 border-green-200',
+                      'bg-red-100 text-red-700 border-red-200',
+                      'bg-yellow-100 text-yellow-700 border-yellow-200',
+                      'bg-purple-100 text-purple-700 border-purple-200',
+                      'bg-pink-100 text-pink-700 border-pink-200',
+                      'bg-indigo-100 text-indigo-700 border-indigo-200'
+                    ].map(color => (
+                      <button
+                        key={color}
+                        type="button"
+                        onClick={() => setEditCategory(prev => ({ ...prev, color }))}
+                        className={`px-3 py-2 rounded-lg border text-sm font-medium transition-colors ${
+                          editCategory.color === color
+                            ? 'ring-2 ring-yellow-500'
+                            : 'hover:opacity-80'
+                        } ${color}`}
+                      >
+                        {color.split(' ')[1].replace('text-', '').replace('-700', '')}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex justify-end space-x-3 pt-4">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowEditCategoryModal(false);
+                      setCategoryToEdit(null);
+                      setEditCategory({
+                        name: '',
+                        description: '',
+                        icon: '📦',
+                        color: 'bg-gray-100 text-gray-700 border-gray-200'
+                      });
+                    }}
+                    className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-6 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors font-medium"
+                  >
+                    Update Category
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* View Category Modal */}
+      {showViewCategoryModal && categoryToView && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+            {/* Header with Category Info */}
+            <div className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-600 px-8 py-6 border-b border-gray-200 dark:border-gray-600">
+              <div className="flex items-start justify-between">
+                <div className="flex items-center space-x-6">
+                  <div className={`w-16 h-16 ${categoryToView.color || 'bg-gray-100 text-gray-700'} rounded-2xl flex items-center justify-center text-3xl shadow-lg border border-gray-200 dark:border-gray-600`}>
+                    {categoryToView.icon || '📦'}
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{categoryToView.name}</h2>
+                    <p className="text-gray-600 dark:text-gray-400 mb-3">
+                      {categoryToView.description || 'No description provided'}
+                    </p>
+                    <div className="flex items-center space-x-4 text-sm">
+                      <span className="text-gray-500 dark:text-gray-400">
+                        Category ID: #{categoryToView.id}
+                      </span>
+                      <span className="text-gray-400">•</span>
+                      <span className="text-gray-500 dark:text-gray-400">
+                        Created {new Date(categoryToView.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowViewCategoryModal(false)}
+                  className="w-10 h-10 bg-white dark:bg-gray-700 rounded-lg flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors shadow-md"
+                >
+                  <svg className="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 overflow-y-auto p-8">
+              {/* Statistics Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4">
+                  <div className="text-center">
+                    <span className="text-blue-600 dark:text-blue-400 text-2xl font-bold block mb-2">
+                      {items.filter(item => item.categoryId === categoryToView.id).length}
+                    </span>
+                    <p className="text-sm font-medium text-blue-900 dark:text-blue-100">Total Items</p>
+                    <p className="text-xs text-blue-700 dark:text-blue-300">Items in this category</p>
+                  </div>
+                </div>
+
+                <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4">
+                  <div className="text-center">
+                    <span className="text-green-600 dark:text-green-400 text-xl font-bold block mb-2">
+                      {formatCurrency(
+                        items
+                          .filter(item => item.categoryId === categoryToView.id)
+                          .reduce((sum, item) => sum + calculateItemValue(item), 0)
+                      )}
+                    </span>
+                    <p className="text-sm font-medium text-green-900 dark:text-green-100">Total Value</p>
+                    <p className="text-xs text-green-700 dark:text-green-300">Combined item value</p>
+                  </div>
+                </div>
+
+                <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-xl p-4">
+                  <div className="text-center">
+                    <span className="text-purple-600 dark:text-purple-400 text-xl font-bold block mb-2">
+                      {items.filter(item => item.categoryId === categoryToView.id).filter(item => {
+                        const status = getStockStatus(item);
+                        return status.label === 'Low Stock' || status.label === 'Out of Stock';
+                      }).length}
+                    </span>
+                    <p className="text-sm font-medium text-purple-900 dark:text-purple-100">Low Stock</p>
+                    <p className="text-xs text-purple-700 dark:text-purple-300">Items needing attention</p>
+                  </div>
+                </div>
+
+                <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-xl p-4">
+                  <div className="text-center">
+                    <span className="text-orange-600 dark:text-orange-400 text-xl font-bold block mb-2">
+                      {items.filter(item => item.categoryId === categoryToView.id).filter(item => {
+                        const status = getStockStatus(item);
+                        return status.label === 'In Stock';
+                      }).length}
+                    </span>
+                    <p className="text-sm font-medium text-orange-900 dark:text-orange-100">In Stock</p>
+                    <p className="text-xs text-orange-700 dark:text-orange-300">Available items</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Items Table */}
+              <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Items in this Category</h3>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">
+                    {items.filter(item => item.categoryId === categoryToView.id).length} items total
+                  </span>
+                </div>
+                
+                {items.filter(item => item.categoryId === categoryToView.id).length > 0 ? (
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b border-gray-200 dark:border-gray-600">
+                          <th className="text-left py-3 px-4 text-sm font-medium text-gray-700 dark:text-gray-300">Item Name</th>
+                          <th className="text-left py-3 px-4 text-sm font-medium text-gray-700 dark:text-gray-300">Quantity</th>
+                          <th className="text-left py-3 px-4 text-sm font-medium text-gray-700 dark:text-gray-300">Unit</th>
+                          <th className="text-left py-3 px-4 text-sm font-medium text-gray-700 dark:text-gray-300">Value</th>
+                          <th className="text-left py-3 px-4 text-sm font-medium text-gray-700 dark:text-gray-300">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {items
+                          .filter(item => item.categoryId === categoryToView.id)
+                          .slice(0, 15)
+                          .map((item) => {
+                            const status = getStockStatus(item);
+                            return (
+                              <tr key={item.id} className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                                <td className="py-3 px-4">
+                                  <div className="font-medium text-gray-900 dark:text-white">{item.name}</div>
+                                </td>
+                                <td className="py-3 px-4 text-gray-600 dark:text-gray-400">{item.quantity}</td>
+                                <td className="py-3 px-4 text-gray-600 dark:text-gray-400">{item.unit}</td>
+                                <td className="py-3 px-4 text-gray-600 dark:text-gray-400">
+                                  {formatCurrency(calculateItemValue(item))}
+                                </td>
+                                <td className="py-3 px-4">
+                                  <span className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded-full border ${status.color}`}>
+                                    {status.icon} {status.label}
+                                  </span>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                      </tbody>
+                    </table>
+                    {items.filter(item => item.categoryId === categoryToView.id).length > 15 && (
+                      <div className="text-center py-4 text-sm text-gray-500 dark:text-gray-400">
+                        Showing 15 of {items.filter(item => item.categoryId === categoryToView.id).length} items
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No items found</h3>
+                    <p className="text-gray-500 dark:text-gray-400">This category doesn't contain any items yet</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Metadata */}
+              <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4">
+                  <label className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Created</label>
+                  <p className="mt-1 text-sm text-gray-900 dark:text-white flex items-center">
+                    <Calendar className="w-4 h-4 mr-2 text-gray-400" />
+                    {new Date(categoryToView.createdAt).toLocaleDateString()} at {new Date(categoryToView.createdAt).toLocaleTimeString()}
+                  </p>
+                </div>
+                <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4">
+                  <label className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Created By</label>
+                  <p className="mt-1 text-sm text-gray-900 dark:text-white flex items-center">
+                    <User className="w-4 h-4 mr-2 text-gray-400" />
+                    {categoryToView.metadata?.createdBy || user?.name || user?.email || 'Unknown'}
+                  </p>
+                </div>
+                <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4">
+                  <label className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Updated By</label>
+                  <p className="mt-1 text-sm text-gray-900 dark:text-white flex items-center">
+                    <User className="w-4 h-4 mr-2 text-gray-400" />
+                    {categoryToView.metadata?.updatedBy || categoryToView.metadata?.createdBy || user?.name || user?.email || 'Unknown'}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="bg-gray-50 dark:bg-gray-700/50 px-8 py-4 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex items-center justify-end">
+                <button
+                  onClick={() => setShowViewCategoryModal(false)}
                   className="px-6 py-2 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors font-medium"
                 >
                   Close

@@ -1,106 +1,72 @@
 import { useEffect, useState } from 'react';
 
 interface InactivityWarningProps {
-  onWarning: () => void;
-  warningTime: number; // Time in milliseconds before logout
+  onLogout: () => void; // Called when user is logged out due to inactivity
 }
 
 export const InactivityWarning: React.FC<InactivityWarningProps> = ({ 
-  onWarning, 
-  warningTime = 2 * 60 * 1000 // 2 minutes before logout
+  onLogout
 }) => {
-  const [showWarning, setShowWarning] = useState(false);
-  const [timeRemaining, setTimeRemaining] = useState(warningTime);
+  const [showLoggedOutModal, setShowLoggedOutModal] = useState(false);
 
-  useEffect(() => {
-    let interval: number | null = null;
-
-    if (showWarning) {
-      interval = window.setInterval(() => {
-        setTimeRemaining(prev => {
-          if (prev <= 1000) { // Less than 1 second remaining
-            onWarning();
-            return 0;
-          }
-          return prev - 1000;
-        });
-      }, 1000);
-    }
-
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [showWarning, onWarning]);
-
-  const show = () => {
-    setShowWarning(true);
-    setTimeRemaining(warningTime);
+  const showLoggedOutMessage = () => {
+    setShowLoggedOutModal(true);
+    // Auto-hide after 5 seconds
+    setTimeout(() => {
+      setShowLoggedOutModal(false);
+    }, 5000);
   };
 
   const hide = () => {
-    setShowWarning(false);
+    setShowLoggedOutModal(false);
   };
 
   // Expose methods to parent
   useEffect(() => {
     // Store methods in window for parent component access
-    (window as any).inactivityWarning = { show, hide };
+    (window as any).inactivityWarning = { 
+      show: showLoggedOutMessage, 
+      hide 
+    };
     
     return () => {
       delete (window as any).inactivityWarning;
     };
   }, []);
 
-  if (!showWarning) return null;
-
-  const formatTime = (ms: number) => {
-    const minutes = Math.floor(ms / 60000);
-    const seconds = Math.floor((ms % 60000) / 1000);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-  };
+  if (!showLoggedOutModal) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
         <div className="text-center">
-          <div className="w-16 h-16 bg-yellow-100 dark:bg-yellow-900 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+          <div className="w-16 h-16 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
             </svg>
           </div>
           
           <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-            Session Expiring Soon
+            You Have Been Logged Out
           </h3>
           
           <p className="text-gray-600 dark:text-gray-400 mb-4">
-            You've been inactive for a while. Your session will expire in{" "}
-            <span className="font-bold text-yellow-600 dark:text-yellow-400">
-              {formatTime(timeRemaining)}
-            </span>
-            {" "}for security reasons.
+            You have been automatically logged out due to 15 minutes of inactivity for security reasons.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <p className="text-sm text-gray-500 dark:text-gray-500">
+            Please sign in again to continue using the application.
+          </p>
+          
+          <div className="mt-6">
             <button
               onClick={() => {
                 hide();
-                // Trigger user activity to reset timer
-                window.dispatchEvent(new Event('user-activity'));
+                onLogout();
               }}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
             >
-              Keep Me Signed In
-            </button>
-            
-            <button
-              onClick={() => {
-                hide();
-                onWarning();
-              }}
-              className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-            >
-              Sign Out Now
+              Got it
             </button>
           </div>
         </div>

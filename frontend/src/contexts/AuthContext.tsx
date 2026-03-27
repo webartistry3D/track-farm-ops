@@ -25,37 +25,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   
   // Auto-logout functionality
   const INACTIVITY_TIMEOUT = 15 * 60 * 1000; // 15 minutes in milliseconds
-  const WARNING_TIMEOUT = 2 * 60 * 1000; // Show warning 2 minutes before logout
   const timeoutRef = useRef<number | null>(null);
-  const warningRef = useRef<number | null>(null);
   const lastActivityRef = useRef<number>(Date.now());
 
   // Reset the inactivity timer
   const resetInactivityTimer = () => {
     lastActivityRef.current = Date.now();
     
-    // Clear existing timers
+    // Clear existing timer
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
-    if (warningRef.current) {
-      clearTimeout(warningRef.current);
-    }
     
-    // Hide warning if it's showing
-    if ((window as any).inactivityWarning) {
-      (window as any).inactivityWarning.hide();
-    }
-    
-    // Set warning timer (2 minutes before logout)
-    warningRef.current = window.setTimeout(() => {
-      console.log('🕐 [AuthProvider] Showing inactivity warning - 2 minutes remaining');
-      if ((window as any).inactivityWarning) {
-        (window as any).inactivityWarning.show();
-      }
-    }, INACTIVITY_TIMEOUT - WARNING_TIMEOUT);
-    
-    // Set logout timer
+    // Set logout timer (15 minutes)
     timeoutRef.current = window.setTimeout(() => {
       console.log('🕐 [AuthProvider] User inactive for 15 minutes, logging out...');
       logout();
@@ -103,9 +85,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
-      }
-      if (warningRef.current) {
-        clearTimeout(warningRef.current);
       }
       events.forEach(event => {
         document.removeEventListener(event, handleUserActivity);
@@ -250,14 +229,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const logout = () => {
-    // Clear inactivity timers
+    // Clear inactivity timer
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
     }
-    if (warningRef.current) {
-      clearTimeout(warningRef.current);
-      warningRef.current = null;
+    
+    // Show inactivity logout modal
+    if ((window as any).inactivityWarning) {
+      (window as any).inactivityWarning.show();
     }
     
     localStorage.removeItem('trackfarmops_token');
