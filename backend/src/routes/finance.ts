@@ -6,7 +6,8 @@ import {
   createExpenseEntry, 
   getExpenseEntries,
   deleteExpenseEntry,
-  getFinancialSummary
+  getFinancialSummary,
+  getVatRecords
 } from '../controllers/financeController';
 import { authenticate, authorize } from '../middleware/auth';
 
@@ -24,6 +25,9 @@ router.delete('/income/:id', deleteIncomeEntry);
 router.post('/expenses', createExpenseEntry);
 router.get('/expenses', getExpenseEntries);
 router.delete('/expenses/:id', deleteExpenseEntry);
+
+// VAT routes
+router.get('/vat/records', getVatRecords);
 
 // Summary routes - only owners can view full summaries
 router.get('/summary', authorize(['OWNER', 'MANAGER']), getFinancialSummary);

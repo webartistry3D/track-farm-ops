@@ -22,7 +22,6 @@ import Contact from './components/Contact';
 import Privacy from './components/Privacy';
 import Terms from './components/Terms';
 import Pricing from './components/Pricing';
-import { InactivityWarning } from './components/InactivityWarning';
 import { useAuth } from './contexts/AuthContext';
 
 const queryClient = new QueryClient();
@@ -163,13 +162,6 @@ function App() {
             <Router>
               <ScrollToTop />
               <AppRoutes />
-              <InactivityWarning 
-                onLogout={() => {
-                  // This will be called when user dismisses the logout modal
-                  // Can be used for additional cleanup if needed
-                  console.log('User acknowledged logout message');
-                }}
-              />
             </Router>
           </ToastProvider>
         </AuthProvider>

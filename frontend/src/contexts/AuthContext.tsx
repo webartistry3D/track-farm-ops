@@ -235,11 +235,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       timeoutRef.current = null;
     }
     
-    // Show inactivity logout modal
-    if ((window as any).inactivityWarning) {
-      (window as any).inactivityWarning.show();
-    }
-    
     localStorage.removeItem('trackfarmops_token');
     localStorage.removeItem('trackfarmops_user');
     setUser(null);

@@ -65,8 +65,8 @@ export const createIncomeEntry = async (req: AuthRequest, res: Response) => {
         unitPrice: unitPrice ? parseFloat(unitPrice) : null,
         enableVAT: enableVAT !== undefined ? enableVAT : false,
         vatRate: vatRate ? parseFloat(vatRate) : 7.5,
-        vatAmount: vatAmount ? parseFloat(vatAmount) : null,
-        subtotal: subtotal ? parseFloat(subtotal) : null,
+        vatAmount: vatAmount ? parseFloat(vatAmount) : (enableVAT ? (parseFloat(amount) * (vatRate ? parseFloat(vatRate) : 7.5)) / 100 : null),
+        subtotal: subtotal ? parseFloat(subtotal) : (enableVAT ? (parseFloat(amount) / (1 + (vatRate ? parseFloat(vatRate) : 7.5) / 100)) : null),
         userId: currentUser.id,
         organizationId: currentUserOrg.organizationId,
         createdBy: currentUser.id
@@ -377,23 +377,31 @@ export const getExpenseEntries = async (req: AuthRequest, res: Response) => {
       offset: parseInt(offset as string)
     });
   } catch (error) {
-    console.error('Get expense entries error:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-};
 
 export const getFinancialSummary = async (req: AuthRequest, res: Response) => {
   try {
+    console.log('🚀 getFinancialSummary API called');
+    console.log('👤 Request user:', req.user);
+    console.log('📅 Query params:', req.query);
+    
     const { startDate, endDate } = req.query;
     const currentUser = req.user!;
+
+    console.log(`📊 Processing request for user ${currentUser.id}, role: ${currentUser.role}`);
+    console.log(`📊 Date range: ${startDate} to ${endDate}`);
 
     const dateFilter: any = {};
     if (startDate) {
       dateFilter.gte = new Date(startDate as string);
     }
     if (endDate) {
-      dateFilter.lte = new Date(endDate as string);
+      // Set endDate to end of the day (23:59:59.999)
+      const endOfDay = new Date(endDate as string);
+      endOfDay.setHours(23, 59, 59, 999);
+      dateFilter.lte = new Date(endOfDay); // Convert back to Date object
     }
+
+    console.log(`🔍 Final date filter:`, dateFilter);
 
     // Multi-tenant: Get user IDs that the current user should see WITHIN THEIR ORGANIZATION
     let userIds: number[];
@@ -403,12 +411,12 @@ export const getFinancialSummary = async (req: AuthRequest, res: Response) => {
       where: { id: currentUser.id },
       select: { 
         organizationId: true,
-        organization: {
-          select: { id: true, name: true }
-        }
+        organization: { select: { name: true } }
       }
     });
-    
+
+    console.log(`🏢 User organization:`, currentUserOrg);
+
     if (!currentUserOrg || !currentUserOrg.organizationId) {
       console.log('⚠️ User not assigned to any organization - access denied for financial summary');
       return res.status(403).json({ 
@@ -432,18 +440,24 @@ export const getFinancialSummary = async (req: AuthRequest, res: Response) => {
       userIds = [currentUser.id];
     }
 
+    console.log(`👥 User IDs to include:`, userIds);
+
     const whereClause = {
       userId: { in: userIds },
       organizationId: currentUserOrg.organizationId, // CRITICAL: Add organization filter
       ...(Object.keys(dateFilter).length > 0 && { date: dateFilter })
     };
 
-    const totalIncome = await prisma.incomeEntry.aggregate({
+    console.log(`🔍 Final where clause:`, whereClause);
+
+    // Get total income
+    const totalIncomeResult = await prisma.incomeEntry.aggregate({
       where: whereClause,
       _sum: { amount: true }
     });
 
-    const totalExpenses = await prisma.expenseEntry.aggregate({
+    // Get total expenses
+    const totalExpensesResult = await prisma.expenseEntry.aggregate({
       where: whereClause,
       _sum: { amount: true }
     });
@@ -460,11 +474,18 @@ export const getFinancialSummary = async (req: AuthRequest, res: Response) => {
       _sum: { amount: true }
     });
 
-    const netProfit = Number(totalIncome._sum.amount || 0) - Number(totalExpenses._sum.amount || 0);
+    console.log(`📊 Income by Category Debug:`, incomeByCategory);
+    console.log(`📊 Expenses by Category Debug:`, expensesByCategory);
+    console.log(`📊 Total Income Result:`, totalIncomeResult);
+    console.log(`📊 Total Expenses Result:`, totalExpensesResult);
 
-    res.json({
-      totalIncome: Number(totalIncome._sum.amount || 0),
-      totalExpenses: Number(totalExpenses._sum.amount || 0),
+    const totalIncome = Number(totalIncomeResult._sum.amount || 0);
+    const totalExpenses = Number(totalExpensesResult._sum.amount || 0);
+    const netProfit = totalIncome - totalExpenses;
+
+    const response = {
+      totalIncome,
+      totalExpenses,
       netProfit,
       incomeByCategory: incomeByCategory.map((item: any) => ({
         category: item.category,
@@ -474,10 +495,13 @@ export const getFinancialSummary = async (req: AuthRequest, res: Response) => {
         category: item.category,
         amount: Number(item._sum.amount || 0)
       }))
-    });
+    };
+
+    console.log(`📡 Final API response:`, response);
+    res.json(response);
   } catch (error) {
-    console.error('Get financial summary error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('❌ Error in getFinancialSummary:', error);
+    res.status(500).json({ error: 'Failed to fetch financial summary' });
   }
 };
 
@@ -571,6 +595,131 @@ export const deleteExpenseEntry = async (req: AuthRequest, res: Response) => {
     res.json({ message: 'Expense entry deleted successfully' });
   } catch (error) {
     console.error('Delete expense entry error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const getVatRecords = async (req: AuthRequest, res: Response) => {
+  try {
+    const { startDate, endDate, limit = 50, offset = 0 } = req.query;
+    const currentUser = req.user!;
+
+    console.log(`📄 FETCHING VAT RECORDS - NEW REQUEST`);
+    console.log(`📄 User: ${currentUser.role} ${currentUser.name} (ID: ${currentUser.id})`);
+    console.log(`🔍 DEBUG: VAT query params:`, { startDate, endDate, limit, offset });
+
+    // Get current user's organization
+    const currentUserOrg = await prisma.user.findUnique({
+      where: { id: currentUser.id },
+      select: { 
+        organizationId: true,
+        organization: {
+          select: { id: true, name: true }
+        }
+      }
+    });
+    
+    if (!currentUserOrg || !currentUserOrg.organizationId) {
+      console.log('⚠️ User not assigned to any organization - access denied for VAT records');
+      return res.status(403).json({ 
+        error: 'Access denied. User must be assigned to an organization.',
+        code: 'NO_ORGANIZATION'
+      });
+    }
+
+    // Build date filter
+    const dateFilter: any = {};
+    if (startDate && endDate) {
+      dateFilter.gte = new Date(startDate as string);
+      // Set endDate to end of the day (23:59:59.999)
+      const endOfDay = new Date(endDate as string);
+      endOfDay.setHours(23, 59, 59, 999);
+      dateFilter.lte = new Date(endOfDay); // Convert back to Date object
+    }
+
+    // Get all income entries that have VAT amounts (same as Income Records query)
+    console.log(`🔍 VAT DEBUG: Fetching all income entries for VAT extraction`);
+    console.log(`🔍 VAT DEBUG: Organization ID:`, currentUserOrg.organizationId);
+    
+    const allIncomeEntries = await prisma.incomeEntry.findMany({
+      where: {
+        organizationId: currentUserOrg.organizationId,
+        ...(Object.keys(dateFilter).length > 0 && { date: dateFilter })
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true
+          }
+        }
+      },
+      orderBy: {
+        date: 'desc'
+      }
+    });
+
+    console.log(`🔍 DEBUG: Found ${allIncomeEntries.length} total income entries with VAT`);
+    console.log(`🔍 DEBUG: Sample entry:`, allIncomeEntries[0] ? {
+      id: allIncomeEntries[0].id,
+      amount: allIncomeEntries[0].amount,
+      enableVAT: allIncomeEntries[0].enableVAT,
+      vatAmount: allIncomeEntries[0].vatAmount,
+      vatRate: allIncomeEntries[0].vatRate
+    } : 'No entries found');
+
+    // Filter entries based on user access rights
+    const accessibleEntries = [];
+    for (const entry of allIncomeEntries) {
+      const hasAccess = await canUserAccessRecord(currentUser, entry.userId, entry.createdBy || undefined);
+      if (hasAccess) {
+        accessibleEntries.push(entry);
+      }
+    }
+
+    console.log(`🔍 DEBUG: User ${currentUser.name} has access to ${accessibleEntries.length} VAT entries`);
+
+    // Process entries to create VAT records - extract VAT from Income Records VAT Amount column
+    const vatRecords = accessibleEntries
+      .filter(entry => entry.vatAmount && entry.vatAmount > 0) // Only include entries with VAT amounts
+      .map(entry => ({
+        id: entry.id,
+        date: entry.date,
+        description: entry.description,
+        category: entry.category,
+        subtotal: entry.subtotal || (entry.amount / (1 + (entry.vatRate || 7.5) / 100)),
+        vatRate: entry.vatRate || 7.5,
+        vatAmount: entry.vatAmount, // Extract directly from Income Records VAT Amount column
+        totalAmount: entry.amount,
+        user: entry.user,
+        status: 'pending', // VAT status
+        transactionCount: 1
+      }));
+
+    console.log(`🔍 DEBUG: Processed ${vatRecords.length} VAT records`);
+    console.log(`🔍 DEBUG: Sample VAT record:`, vatRecords[0] || 'No VAT records');
+
+    // Apply pagination
+    const paginatedRecords = vatRecords.slice(parseInt(offset as string), parseInt(offset as string) + parseInt(limit as string));
+    
+    const totalCount = vatRecords.length;
+
+    console.log('📊 VAT Records Response:', {
+      count: paginatedRecords.length,
+      total: totalCount,
+      sampleRecord: paginatedRecords[0]
+    });
+
+    res.json({
+      records: paginatedRecords,
+      total: totalCount,
+      limit: parseInt(limit as string),
+      offset: parseInt(offset as string)
+    });
+  } catch (error) {
+    console.error('Get VAT records error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };

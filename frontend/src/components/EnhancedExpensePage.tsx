@@ -462,9 +462,9 @@ const EnhancedExpensePage = () => {
                             <Scan className="h-4 w-4 text-white" />
                           </div>
                           <div>
-                            <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">Quick Receipt Scan</h3>
-                            <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
-                              Extract expense details automatically
+                            {/*<h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">Quick Receipt Scan</h3>*/}
+                            <p className="text-md text-gray-600 dark:text-gray-400 mt-0.5">
+                              Extract expense details wth AI-powered OCR
                             </p>
                           </div>
                         </div>

@@ -76,7 +76,7 @@ const Layout = ({ children }: LayoutProps) => {
   const notifications = [
     { id: 1, title: 'Low Stock Alert', message: 'Chicken Feed is running low', time: '2 hours ago', read: false },
     { id: 2, title: 'New Income Recorded', message: '₦50,000 from egg sales', time: '5 hours ago', read: true },
-    { id: 3, title: 'System Update', message: 'FarmOps v2.0 is now available', time: '1 day ago', read: true },
+    { id: 3, title: 'System Update', message: 'TrackFarmOps v2.0 is now available', time: '1 day ago', read: true },
   ];
 
   const isAdmin = user ? (user.role === 'OWNER' || user.role === 'MANAGER') : false;
@@ -114,7 +114,7 @@ const Layout = ({ children }: LayoutProps) => {
             ✕
           </button>
           <div className="flex items-center">
-            <span className="text-white text-xl font-bold">🚜 FarmOps</span>
+            <span className="text-white text-md font-bold">Track-Farm-Ops</span>
           </div>
         </div>
         
@@ -184,7 +184,7 @@ const Layout = ({ children }: LayoutProps) => {
               {/* Page title */}
               <div className="flex-1 flex justify-center lg:justify-start">
                 <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
-                  {navigation.find(item => item.current)?.name || 'FarmOps'}
+                  {navigation.find(item => item.current)?.name || 'Track-Farm-Ops'}
                 </h1>
               </div>
 
