@@ -610,22 +610,22 @@ const AnalyticsDashboard = () => {
       {inventoryLoading ? (
         <InventorySkeleton />
       ) : (
-        <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+        <div className="bg-white dark:bg-gray-900 shadow rounded-lg p-0">
           <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Inventory Summary</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center p-4 bg-gray-50 dark:bg-gray-900/20 rounded-lg">
+            <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
               <div className="text-2xl font-bold text-gray-900 dark:text-white">{inventorySummary?.totalItems || 0}</div>
               <div className="text-sm text-gray-500 dark:text-gray-400">Total Items</div>
             </div>
-            <div className="text-center p-4 bg-gray-50 dark:bg-gray-900/20 rounded-lg">
+            <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
               <div className="text-2xl font-bold text-gray-900 dark:text-white">{inventorySummary?.livestock || 0}</div>
               <div className="text-sm text-gray-500 dark:text-gray-400">Livestock</div>
             </div>
-            <div className="text-center p-4 bg-gray-50 dark:bg-gray-900/20 rounded-lg">
+            <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
               <div className="text-2xl font-bold text-gray-900 dark:text-white">{inventorySummary?.produce || 0}</div>
               <div className="text-sm text-gray-500 dark:text-gray-400">Produce</div>
             </div>
-            <div className="text-center p-4 bg-gray-50 dark:bg-gray-900/20 rounded-lg">
+            <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
               <div className="text-2xl font-bold text-gray-900 dark:text-white">{inventorySummary?.consumables || 0}</div>
               <div className="text-sm text-gray-500 dark:text-gray-400">Consumables</div>
             </div>
@@ -642,6 +642,7 @@ const AnalyticsDashboard = () => {
       )}
 
       {/* Quick Actions */}
+      {/*
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div>
           <h2 className="text-xl font-poppins font-semibold mb-4">Quick Actions</h2>
@@ -664,7 +665,7 @@ const AnalyticsDashboard = () => {
             )}
           </div>
           
-          {/* Quick Stats */}
+          {/* Quick Stats /}
           <div className="mt-6">
             <h3 className="text-lg font-poppins font-semibold mb-4">Quick Stats</h3>
             <div className="grid grid-cols-2 gap-3">
@@ -700,7 +701,7 @@ const AnalyticsDashboard = () => {
           </div>
         </div>
         
-        {/* Business Update */}
+        {/* Business Update /}
         <div>
           <h2 className="text-xl font-poppins font-semibold mb-4">Business Update</h2>
           <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-6 border border-blue-200 dark:border-blue-700">
@@ -747,6 +748,7 @@ const AnalyticsDashboard = () => {
           </div>
         </div>
       </div>
+      */}
     </div>
   );
 };

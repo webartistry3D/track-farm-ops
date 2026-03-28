@@ -518,7 +518,7 @@ const Assets = () => {
       </div>*/}
 
       {/* Stats Cards */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-0 lg:px-0 py-6">
+      <div className="max-w-7xl mx-auto px-0 sm:px-0 lg:px-0 py-6">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-2">
           <div className="bg-white dark:bg-gray-800 p-4 lg:p-6 rounded-lg shadow">
             <div className="flex items-center">
@@ -632,7 +632,7 @@ const Assets = () => {
 
       {/* Tabs */}
       <div className="bg-gray-100 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-0">
           <div className="flex overflow-x-auto justify-between">
             <div className="flex overflow-x-auto space-x-4">
               {['overview', 'downtime', 'incidents', 'analytics'].map((tab) => (
@@ -661,24 +661,24 @@ const Assets = () => {
       </div>
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-0 py-6">
+      <div className="max-w-7xl mx-auto px-0 sm:px-0 lg:px-0 py-6">
         {activeTab === 'overview' && (
           <div>
             {/* Assets Grid */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-              <div className="overflow-x-auto -mx-4 sm:mx-0 px-0 sm:px-0">
-                <table className="min-w-full sm:min-w-[800px] divide-y divide-gray-200 dark:divide-gray-700">
+              <div className="overflow-x-auto">
+                <table className="min-w-[700px] w-full divide-y divide-gray-200 dark:divide-gray-700">
                   <thead className="bg-gray-50 dark:bg-gray-800">
                     <tr>
                       <th className="px-2 sm:px-3 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Asset</th>
-                      <th className="hidden sm:table-cell px-3 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Category</th>
-                      <th className="hidden sm:table-cell px-3 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Cost</th>
+                      <th className="px-2 sm:px-3 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Category</th>
+                      <th className="px-2 sm:px-3 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Cost</th>
                       <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Location</th>
                       <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Created By</th>
-                      <th className="hidden sm:table-cell px-3 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
-                      <th className="hidden md:table-cell px-3 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                      <th className="px-2 sm:px-3 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+                      <th className="px-2 sm:px-3 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
                       <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Last Update</th>
-                      <th className="px-3 sm:px-6 py-4 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                      <th className="px-2 sm:px-3 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -690,17 +690,14 @@ const Assets = () => {
                             <div className="flex-1 min-w-0">
                               <div className="text-sm font-medium text-gray-900 dark:text-white truncate">{asset.name}</div>
                               <div className="text-xs text-gray-500 dark:text-gray-400 truncate">{asset.model}</div>
-                              <div className="sm:hidden text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                {asset.subcategory.replace('_', ' ')} • {asset.location}
-                              </div>
                             </div>
                           </div>
                         </td>
-                        <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap">
-                          <span className="text-sm text-gray-900 dark:text-white">{asset.subcategory.replace('_', ' ')}</span>
+                        <td className="px-2 sm:px-3 py-3 sm:py-4 whitespace-nowrap">
+                          <span className="text-xs sm:text-sm text-gray-900 dark:text-white">{asset.subcategory.replace('_', ' ')}</span>
                         </td>
-                        <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                          <span className="font-medium">{formatCurrency(asset.cost)}</span>
+                        <td className="px-2 sm:px-3 py-3 sm:py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                          <span className="font-medium text-xs sm:text-sm">{formatCurrency(asset.cost)}</span>
                         </td>
                         <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                           <div className="flex items-center">
@@ -714,13 +711,13 @@ const Assets = () => {
                             {user?.name || user?.email || 'Unknown'}
                           </div>
                         </td>
-                        <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                        <td className="px-2 sm:px-3 py-3 sm:py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                           <div className="flex items-center">
                             <Calendar className="w-4 h-4 mr-1 text-gray-400 dark:text-gray-500" />
-                            {asset.purchaseDate ? new Date(asset.purchaseDate).toLocaleDateString() : 'N/A'}
+                            <span className="text-xs sm:text-sm">{asset.purchaseDate ? new Date(asset.purchaseDate).toLocaleDateString() : 'N/A'}</span>
                           </div>
                         </td>
-                        <td className="hidden md:table-cell px-3 sm:px-6 py-4 whitespace-nowrap">
+                        <td className="px-2 sm:px-3 py-3 sm:py-4 whitespace-nowrap">
                           <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(asset.status)}`}>
                             {asset.status.replace('_', ' ')}
                           </span>
@@ -731,7 +728,7 @@ const Assets = () => {
                             {user?.name || user?.email || 'Unknown'}
                           </div>
                         </td>
-                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm font-medium text-left">
+                        <td className="px-2 sm:px-3 py-3 sm:py-4 whitespace-nowrap text-sm font-medium text-left">
                           <div className="flex space-x-1 sm:space-x-2">
                             <button
                               onClick={() => {

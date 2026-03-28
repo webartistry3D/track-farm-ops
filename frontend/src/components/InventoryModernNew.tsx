@@ -908,7 +908,7 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
         </div>
       </div>*/}
       
-      <div className="w-full px-4 sm:px-0 lg:px-0 py-6">
+      <div className="w-full px-0 sm:px-0 lg:px-0 py-6">
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">

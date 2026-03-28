@@ -153,7 +153,7 @@ export const TabSkeleton: React.FC<{
   className?: string;
 }> = ({ tabs = 3, className = '' }) => (
   <div className={`bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 mb-6 ${className}`}>
-    <div className="w-full px-4 sm:px-6 lg:px-8">
+    <div className="max-w-7xl mx-auto px-0 sm:px-0 lg:px-0">
       <div className="flex overflow-x-auto justify-between">
         <div className="flex overflow-x-auto">
           {[...Array(tabs)].map((_, i) => (
@@ -174,17 +174,19 @@ export const FilterSkeleton: React.FC<{
   inputs?: number;
   className?: string;
 }> = ({ inputs = 3, className = '' }) => (
-  <div className={`bg-white dark:bg-gray-800 shadow-lg p-6 mb-0 ${className}`}>
-    <div className="flex flex-col lg:flex-row gap-4">
-      <div className="flex-1">
-        <SkeletonElement className="h-10 w-full rounded-lg" />
-      </div>
-      {[...Array(inputs)].map((_, i) => (
-        <SkeletonElement key={i} className="h-10 w-32 rounded-lg" />
-      ))}
-      <div className="flex items-center space-x-2">
-        <SkeletonElement className="w-8 h-8 rounded-lg" />
-        <SkeletonElement className="w-8 h-8 rounded-lg" />
+  <div className={`bg-white dark:bg-gray-800 shadow-lg rounded-xl border-b border-gray-200 dark:border-gray-700 ${className}`}>
+    <div className="max-w-7xl mx-auto px-0 sm:px-0 lg:px-0 py-4">
+      <div className="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:flex-wrap sm:gap-4 sm:items-center">
+        <div className="w-full sm:flex-1 sm:min-w-64">
+          <SkeletonElement className="h-10 w-full rounded-lg" />
+        </div>
+        {[...Array(inputs)].map((_, i) => (
+          <SkeletonElement key={i} className="h-10 w-32 rounded-lg" />
+        ))}
+        <div className="flex items-center space-x-2">
+          <SkeletonElement className="w-8 h-8 rounded-lg" />
+          <SkeletonElement className="w-8 h-8 rounded-lg" />
+        </div>
       </div>
     </div>
   </div>
@@ -228,7 +230,7 @@ export const PageSkeleton: React.FC<{
   className?: string;
 }> = ({ children, className = '' }) => (
   <div className={`min-h-screen bg-gray-50 dark:bg-gray-900 ${className}`}>
-    <div className="w-full px-4 sm:px-0 lg:px-0 py-6">
+    <div className="w-full px-0 sm:px-0 lg:px-0 py-6">
       {children}
     </div>
   </div>
