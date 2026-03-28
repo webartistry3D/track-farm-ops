@@ -604,56 +604,42 @@ const Reports = () => {
             </div>
 
             {/* Report Tabs */}
-            <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
-              <div className="overflow-x-auto pb-2">
-                <div className="flex items-center gap-1 min-w-max border-b border-gray-200 dark:border-gray-700">
-                  <button
-                    onClick={() => setReportTab('allTransactions')}
-                    className={`flex-shrink-0 px-3 py-2 font-inter text-xs sm:text-sm font-medium transition-colors duration-200 border-b-2 ${
-                      reportTab === 'allTransactions'
-                        ? 'text-green-600 border-green-600 bg-green-50 dark:bg-green-900/20 dark:text-green-400'
-                        : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-                    }`}
-                  >
-                    All Transactions
-                  </button>
-                  <button
-                    onClick={() => setReportTab('incomeByCategory')}
-                    className={`flex-shrink-0 px-3 py-2 font-inter text-xs sm:text-sm font-medium transition-colors duration-200 border-b-2 ${
-                      reportTab === 'incomeByCategory'
-                        ? 'text-green-600 border-green-600 bg-green-50 dark:bg-green-900/20 dark:text-green-400'
-                        : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-                    }`}
-                  >
-                    Income by Category
-                  </button>
-                  <button
-                    onClick={() => setReportTab('expenseByCategory')}
-                    className={`flex-shrink-0 px-3 py-2 font-inter text-xs sm:text-sm font-medium transition-colors duration-200 border-b-2 ${
-                      reportTab === 'expenseByCategory'
-                        ? 'text-green-600 border-green-600 bg-green-50 dark:bg-green-900/20 dark:text-green-400'
-                        : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-                    }`}
-                  >
-                    Expense by Category
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* All Transactions View */}
-            {reportTab === 'allTransactions' && (
-              <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6 mb-6">
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <h2 className="text-2xl font-poppins font-bold text-gray-900 dark:text-white">
+            <div className="bg-white dark:bg-gray-900 shadow rounded-lg p-0 mb-6">
+              <div className="overflow-x-auto pb-0">
+                <div className="flex items-center justify-between gap-1 min-w-max border-b border-gray-200 dark:border-gray-700">
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => setReportTab('allTransactions')}
+                      className={`flex-shrink-0 px-3 py-2 font-inter text-xs sm:text-sm font-medium transition-colors duration-200 border-b-2 ${
+                        reportTab === 'allTransactions'
+                          ? 'text-green-600 border-green-600 bg-green-50 dark:bg-green-900/20 dark:text-green-400'
+                          : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                      }`}
+                    >
                       All Transactions
-                    </h2>
-                    <p className="mt-2 text-gray-600 dark:text-gray-400">
-                      Showing {filteredTransactions.length} transaction{filteredTransactions.length !== 1 ? 's' : ''}
-                    </p>
+                    </button>
+                    <button
+                      onClick={() => setReportTab('incomeByCategory')}
+                      className={`flex-shrink-0 px-3 py-2 font-inter text-xs sm:text-sm font-medium transition-colors duration-200 border-b-2 ${
+                        reportTab === 'incomeByCategory'
+                          ? 'text-green-600 border-green-600 bg-green-50 dark:bg-green-900/20 dark:text-green-400'
+                          : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                      }`}
+                    >
+                      Income by Category
+                    </button>
+                    <button
+                      onClick={() => setReportTab('expenseByCategory')}
+                      className={`flex-shrink-0 px-3 py-2 font-inter text-xs sm:text-sm font-medium transition-colors duration-200 border-b-2 ${
+                        reportTab === 'expenseByCategory'
+                          ? 'text-green-600 border-green-600 bg-green-50 dark:bg-green-900/20 dark:text-green-400'
+                          : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                      }`}
+                    >
+                      Expense by Category
+                    </button>
                   </div>
-                  <div className="flex flex-col sm:flex-row sm:gap-2 gap-2">
+                  <div className="flex flex-col sm:flex-row sm:gap-2 gap-2 pb-2">
                     <button
                       onClick={() => exportToCSV(filteredTransactions, 'all-transactions', 'all')}
                       className="flex items-center gap-2 px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors duration-200"
@@ -670,12 +656,17 @@ const Reports = () => {
                     </button>
                   </div>
                 </div>
+              </div>
+            </div>
 
+            {/* All Transactions View */}
+            {reportTab === 'allTransactions' && (
+              <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-0 mb-6  ">
                 {paginatedTransactions.length > 0 ? (
                   <>
-                    <div className="overflow-x-auto">
+                    <div className="overflow-x-auto ">
                       <table className="min-w-[800px] divide-y divide-gray-200 dark:divide-gray-700">
-                        <thead className="bg-gray-50 dark:bg-gray-900">
+                        <thead className="bg-gray-50 dark:bg-gray-800">
                           <tr>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-24">
                               Date
@@ -759,8 +750,8 @@ const Reports = () => {
 
             {/* Income by Category Section */}
             {reportTab === 'incomeByCategory' && (
-              <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6 mb-6">
-                <div className="flex items-center justify-between mb-6">
+              <div className="bg-white dark:bg-gray-900 shadow rounded-lg p-0 mb-6">
+                {/*<div className="flex items-center justify-between mb-6">
                   <div>
                     <h2 className="text-2xl font-poppins font-bold text-gray-900 dark:text-white">
                       Income by Category
@@ -785,13 +776,13 @@ const Reports = () => {
                       PDF
                     </button>
                   </div>
-                </div>
+                </div>*/}
 
                 {incomeTransactions.length > 0 ? (
                   <>
                     <div className="overflow-x-auto">
                       <table className="min-w-[900px] divide-y divide-gray-200 dark:divide-gray-700">
-                        <thead className="bg-gray-50 dark:bg-gray-900">
+                        <thead className="bg-gray-50 dark:bg-gray-800">
                           <tr>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-24">
                               Date
@@ -877,8 +868,8 @@ const Reports = () => {
 
             {/* Expenses by Category Section */}
             {reportTab === 'expenseByCategory' && (
-              <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6 mb-6">
-                <div className="flex items-center justify-between mb-6">
+              <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-0 mb-6">
+                {/*<div className="flex items-center justify-between mb-6">
                   <div>
                     <h2 className="text-2xl font-poppins font-bold text-gray-900 dark:text-white">
                       Expenses by Category
@@ -903,13 +894,13 @@ const Reports = () => {
                       PDF
                     </button>
                   </div>
-                </div>
+                </div>*/}
 
                 {expenseTransactions.length > 0 ? (
                   <>
                     <div className="overflow-x-auto">
                       <table className="min-w-[900px] divide-y divide-gray-200 dark:divide-gray-700">
-                        <thead className="bg-gray-50 dark:bg-gray-900">
+                        <thead className="bg-gray-50 dark:bg-gray-800">
                           <tr>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-24">
                               Date

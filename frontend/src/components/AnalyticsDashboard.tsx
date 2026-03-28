@@ -1,10 +1,19 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
 import { formatCurrency } from '../utils/currency';
-import { TrendingUp, FileText } from 'lucide-react';
+import { 
+  TrendingUp, 
+  ShoppingCart, 
+  Calendar,
+  BarChart3,
+  PieChart,
+  RefreshCw,
+  Package,
+  Heart,
+  Apple,
+  Box
+} from 'lucide-react';
 
 interface FinancialSummary {
   totalIncome: number;
@@ -14,21 +23,6 @@ interface FinancialSummary {
   expensesByCategory: { category: string; amount: number }[];
 }
 
-interface InventoryItem {
-  id: number;
-  name: string;
-  type: string;
-  quantity: number;
-  unit: string;
-  pricePerUnit?: number;
-  category?: string;
-  location?: string;
-  supplier?: string;
-  purchaseDate?: string;
-  expiryDate?: string;
-  minimumStock?: number;
-}
-
 interface InventorySummary {
   totalItems: number;
   livestock: number;
@@ -36,36 +30,40 @@ interface InventorySummary {
   consumables: number;
   totalTransactions: number;
   itemsByType: {
-    LIVESTOCK: InventoryItem[];
-    PRODUCE: InventoryItem[];
-    CONSUMABLES: InventoryItem[];
+    LIVESTOCK: any[];
+    PRODUCE: any[];
+    CONSUMABLES: any[];
   };
 }
 
 const AnalyticsDashboard = () => {
   const { user } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  // Scroll to top when navigating to Analytics page
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location]);
 
   // Check if user has appropriate role
   if (!user) {
-    return <div>Please log in to view analytics.</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+        <div className="text-center">
+          <div className="text-gray-500 dark:text-gray-400">Please log in to view analytics.</div>
+        </div>
+      </div>
+    );
   }
 
   const isOwner = user.role === 'OWNER' || user.role === 'MANAGER';
 
   if (!isOwner) {
     return (
-      <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 rounded-lg p-6">
-        <h3 className="text-lg font-medium text-yellow-900 mb-2">Access Restricted</h3>
-        <p className="text-yellow-700">
-          Analytics is only available to farm owners and managers.
-        </p>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+        <div className="max-w-md w-full bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6 text-center">
+          <div className="w-16 h-16 bg-yellow-100 dark:bg-yellow-900 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Calendar className="w-8 h-8 text-yellow-600 dark:text-yellow-400" />
+          </div>
+          <h3 className="text-lg font-semibold text-yellow-900 dark:text-yellow-100 mb-2">Access Restricted</h3>
+          <p className="text-yellow-700 dark:text-yellow-300">
+            Analytics is only available to farm owners and managers.
+          </p>
+        </div>
       </div>
     );
   }
@@ -74,99 +72,18 @@ const AnalyticsDashboard = () => {
   const [inventorySummary, setInventorySummary] = useState<InventorySummary | null>(null);
   const [financialLoading, setFinancialLoading] = useState(true);
   const [inventoryLoading, setInventoryLoading] = useState(true);
-  const [, setError] = useState('');
-  const [dateFilter, setDateFilter] = useState<'today' | 'yesterday' | 'week' | 'month' | 'customMonth' | 'customYear' | 'allTime'>('month');
+  const [dateFilter, setDateFilter] = useState<'today' | 'yesterday' | 'last7days' | 'last30days' | 'custom' | 'allTime'>('allTime');
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
-  // Calculate performance metrics from real data
-  const calculateRevenueGrowth = (current: FinancialSummary | null, previous: FinancialSummary | null): string => {
-    if (!current || !previous || previous.totalIncome === 0) {
-      return (current?.totalIncome && current.totalIncome > 0) ? '+100.0%' : '0.0%';
-    }
-    const growth = ((current.totalIncome - previous.totalIncome) / previous.totalIncome) * 100;
-    return `${growth >= 0 ? '+' : ''}${growth.toFixed(1)}%`;
-  };
-
-  const calculateCostEfficiency = (financial: FinancialSummary | null): string => {
-    if (!financial || financial.totalIncome === 0) {
-      return '0.0%';
-    }
-    const efficiency = ((financial.totalIncome - financial.totalExpenses) / financial.totalIncome) * 100;
-    return `${Math.max(0, efficiency).toFixed(1)}%`;
-  };
-
-  const calculateInventoryHealth = (inventory: InventorySummary | null): string => {
-    if (!inventory) {
-      return '0.0%';
-    }
-    // Calculate health based on total items and distribution
-    const totalItems = inventory.totalItems || 0;
-    const idealDistribution = totalItems / 3; // Equal distribution across 3 categories
-    const livestockRatio = (inventory.livestock || 0) / idealDistribution;
-    const produceRatio = (inventory.produce || 0) / idealDistribution;
-    const consumablesRatio = (inventory.consumables || 0) / idealDistribution;
-    
-    // Calculate variance from ideal distribution (lower is better)
-    const variance = Math.abs(1 - livestockRatio) + Math.abs(1 - produceRatio) + Math.abs(1 - consumablesRatio);
-    const healthScore = Math.max(0, 100 - (variance * 20)); // Scale variance to health score
-    
-    return `${healthScore.toFixed(1)}%`;
-  };
-
-  // Get previous period data for comparison
-  const [previousFinancialSummary, setPreviousFinancialSummary] = useState<FinancialSummary | null>(null);
-
-  // Fetch previous period data
-  useEffect(() => {
-    const fetchPreviousPeriodData = async () => {
-      try {
-        const endDate = new Date();
-        const startDate = new Date();
-        startDate.setMonth(startDate.getMonth() - 1); // Previous month
-        
-        const startDateStr = startDate.toISOString().split('T')[0];
-        const endDateStr = endDate.toISOString().split('T')[0];
-        
-        console.log(`📈 Fetching previous period data: ${startDateStr} to ${endDateStr}`);
-        const response = await api.get(`/finance/summary?startDate=${startDateStr}&endDate=${endDateStr}`);
-        const data = validateFinancialSummary(response.data);
-        setPreviousFinancialSummary(data);
-      } catch (err: any) {
-        console.error('Failed to fetch previous period data:', err);
-        setPreviousFinancialSummary(null);
-      }
-    };
-
-    if (user) {
-      fetchPreviousPeriodData();
-    }
-  }, [user]);
-
-  // Calculate real metrics
-  const revenueGrowth = calculateRevenueGrowth(financialSummary, previousFinancialSummary);
-  const costEfficiency = calculateCostEfficiency(financialSummary);
-  const inventoryHealth = calculateInventoryHealth(inventorySummary);
   const getDefaultFinancialSummary = (): FinancialSummary => ({
     totalIncome: 0,
     totalExpenses: 0,
     netProfit: 0,
-    incomeByCategory: [
-      { category: 'Crop Sales', amount: 0 },
-      { category: 'Livestock Sales', amount: 0 },
-      { category: 'Services', amount: 0 },
-      { category: 'Other Income', amount: 0 }
-    ],
-    expensesByCategory: [
-      { category: 'Feed', amount: 0 },
-      { category: 'Equipment', amount: 0 },
-      { category: 'Labor', amount: 0 },
-      { category: 'Supplies', amount: 0 },
-      { category: 'Other Expenses', amount: 0 }
-    ]
+    incomeByCategory: [],
+    expensesByCategory: []
   });
 
-  // Default fallback data for InventorySummary
   const getDefaultInventorySummary = (): InventorySummary => ({
     totalItems: 0,
     livestock: 0,
@@ -180,577 +97,551 @@ const AnalyticsDashboard = () => {
     }
   });
 
-  // Validation functions
-  const validateFinancialSummary = (data: any): FinancialSummary => {
-    const defaultSummary = getDefaultFinancialSummary();
-    return {
-      totalIncome: typeof data.totalIncome === 'number' ? data.totalIncome : defaultSummary.totalIncome,
-      totalExpenses: typeof data.totalExpenses === 'number' ? data.totalExpenses : defaultSummary.totalExpenses,
-      netProfit: typeof data.netProfit === 'number' ? data.netProfit : defaultSummary.netProfit,
-      incomeByCategory: Array.isArray(data.incomeByCategory) ? data.incomeByCategory : defaultSummary.incomeByCategory,
-      expensesByCategory: Array.isArray(data.expensesByCategory) ? data.expensesByCategory : defaultSummary.expensesByCategory
-    };
-  };
-
-  const validateInventorySummary = (data: any): InventorySummary => {
-    const defaultSummary = getDefaultInventorySummary();
-    return {
-      totalItems: typeof data.totalItems === 'number' ? data.totalItems : defaultSummary.totalItems,
-      livestock: typeof data.livestock === 'number' ? data.livestock : defaultSummary.livestock,
-      produce: typeof data.produce === 'number' ? data.produce : defaultSummary.produce,
-      consumables: typeof data.consumables === 'number' ? data.consumables : defaultSummary.consumables,
-      totalTransactions: typeof data.totalTransactions === 'number' ? data.totalTransactions : defaultSummary.totalTransactions,
-      itemsByType: data.itemsByType && typeof data.itemsByType === 'object' ? data.itemsByType : defaultSummary.itemsByType
-    };
-  };
-
   useEffect(() => {
+    console.log('🔄 useEffect triggered - dateFilter changed to:', dateFilter);
     fetchAnalytics();
-    
-    // Scroll to top on page load
-    window.scrollTo(0, 0);
   }, [dateFilter, selectedMonth, selectedYear]);
 
   const fetchAnalytics = async () => {
     try {
+      console.log('🔄 fetchAnalytics triggered - dateFilter:', dateFilter);
       setFinancialLoading(true);
       setInventoryLoading(true);
-      setError('');
+
+      const today = new Date().toISOString().split('T')[0];
+      let startDate = '';
+      let endDate = today;
       
       // Calculate date range based on filter
-      let startDate = '';
-      let endDate = '';
-      const today = new Date();
-      
       switch (dateFilter) {
         case 'today':
-          startDate = today.toISOString().split('T')[0];
-          endDate = today.toISOString().split('T')[0];
+          startDate = today;
+          endDate = today;
           break;
         case 'yesterday':
-          const yesterday = new Date(today);
+          const yesterday = new Date();
           yesterday.setDate(yesterday.getDate() - 1);
           startDate = yesterday.toISOString().split('T')[0];
           endDate = yesterday.toISOString().split('T')[0];
           break;
-        case 'week':
-          const weekAgo = new Date(today);
+        case 'last7days':
+          const weekAgo = new Date();
           weekAgo.setDate(weekAgo.getDate() - 7);
           startDate = weekAgo.toISOString().split('T')[0];
-          endDate = today.toISOString().split('T')[0];
+          endDate = today;
           break;
-        case 'month':
-          const monthAgo = new Date(today);
-          monthAgo.setDate(monthAgo.getDate() - 30);
-          startDate = monthAgo.toISOString().split('T')[0];
-          endDate = today.toISOString().split('T')[0];
+        case 'last30days':
+          const thirtyDaysAgo = new Date();
+          thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+          startDate = thirtyDaysAgo.toISOString().split('T')[0];
+          endDate = today;
           break;
-        case 'customMonth':
-          const firstDayOfCustomMonth = new Date(selectedYear, selectedMonth, 1);
+        case 'custom':
+          const customDate = new Date(selectedYear, selectedMonth, 1);
           const lastDayOfCustomMonth = new Date(selectedYear, selectedMonth + 1, 0);
-          startDate = firstDayOfCustomMonth.toISOString().split('T')[0];
+          startDate = customDate.toISOString().split('T')[0];
           endDate = lastDayOfCustomMonth.toISOString().split('T')[0];
           break;
-        case 'customYear':
-          const firstDayOfCustomYear = new Date(selectedYear, 0, 1);
-          const lastDayOfCustomYear = new Date(selectedYear, 11, 31);
-          startDate = firstDayOfCustomYear.toISOString().split('T')[0];
-          endDate = lastDayOfCustomYear.toISOString().split('T')[0];
-          break;
         case 'allTime':
-          // For all time, don't set date limits - fetch all records
+          // For all time, don't set date limits
           startDate = '';
           endDate = '';
           break;
       }
-      
-      // Fetch financial summary with date range and graceful fallback
+
+      console.log(`📅 Date range: ${startDate} to ${endDate}`);
+
       let financialData = getDefaultFinancialSummary();
       try {
-        console.log(`📊 Fetching financial data for date range: ${startDate} to ${endDate}`);
-        const financialResponse = await api.get(`/finance/summary?startDate=${startDate}&endDate=${endDate}`);
-        console.log('📊 Financial API response:', financialResponse.data);
-        financialData = validateFinancialSummary(financialResponse.data);
-        console.log('📊 Validated financial data:', financialData);
-      } catch (financialError: any) {
-        console.error('Financial API error:', financialError);
-        financialData = getDefaultFinancialSummary();
+        console.log('📊 Making API calls to /finance/income and /finance/expenses');
+        const [incomeResponse, expenseResponse] = await Promise.all([
+          api.get(`/finance/income?startDate=${startDate}&endDate=${endDate}`),
+          api.get(`/finance/expenses?startDate=${startDate}&endDate=${endDate}`)
+        ]);
+
+        const incomeData = incomeResponse.data?.entries || [];
+        const expenseData = expenseResponse.data?.entries || [];
+
+        // Calculate totals from the actual transaction data
+        const totalIncome = incomeData.reduce((sum: number, entry: any) => sum + (entry.amount || 0), 0);
+        const totalExpenses = expenseData.reduce((sum: number, entry: any) => sum + (entry.amount || 0), 0);
+
+        // Group by category
+        const incomeByCategory = incomeData.reduce((acc: any[], entry: any) => {
+          const category = entry.category || 'General';
+          const existing = acc.find(item => item.category === category);
+          if (existing) {
+            existing.amount += entry.amount || 0;
+          } else {
+            acc.push({ category, amount: entry.amount || 0 });
+          }
+          return acc;
+        }, []);
+
+        const expensesByCategory = expenseData.reduce((acc: any[], entry: any) => {
+          const category = entry.category || 'General';
+          const existing = acc.find(item => item.category === category);
+          if (existing) {
+            existing.amount += entry.amount || 0;
+          } else {
+            acc.push({ category, amount: entry.amount || 0 });
+          }
+          return acc;
+        }, []);
+
+        financialData = {
+          totalIncome,
+          totalExpenses,
+          netProfit: totalIncome - totalExpenses,
+          incomeByCategory,
+          expensesByCategory
+        };
+
+        console.log('📊 Processed financial data:', financialData);
+      } catch (error) {
+        console.error('❌ Financial API error:', error);
       }
-      
-      // Fetch inventory summary with graceful fallback
+
       let inventoryData = getDefaultInventorySummary();
       try {
-        console.log('📦 Fetching inventory data...');
         const inventoryResponse = await api.get('/inventory/summary');
-        console.log('📦 Inventory API response:', inventoryResponse.data);
-        inventoryData = validateInventorySummary(inventoryResponse.data);
-        console.log('📦 Validated inventory data:', inventoryData);
-      } catch (inventoryError: any) {
-        console.error('Inventory API error:', inventoryError);
-        inventoryData = getDefaultInventorySummary();
+        inventoryData = {
+          totalItems: typeof inventoryResponse.data.totalItems === 'number' ? inventoryResponse.data.totalItems : 0,
+          livestock: typeof inventoryResponse.data.livestock === 'number' ? inventoryResponse.data.livestock : 0,
+          produce: typeof inventoryResponse.data.produce === 'number' ? inventoryResponse.data.produce : 0,
+          consumables: typeof inventoryResponse.data.consumables === 'number' ? inventoryResponse.data.consumables : 0,
+          totalTransactions: typeof inventoryResponse.data.totalTransactions === 'number' ? inventoryResponse.data.totalTransactions : 0,
+          itemsByType: inventoryResponse.data.itemsByType && typeof inventoryResponse.data.itemsByType === 'object' ? inventoryResponse.data.itemsByType : { LIVESTOCK: [], PRODUCE: [], CONSUMABLES: [] }
+        };
+      } catch (error) {
+        console.error('❌ Inventory API error:', error);
       }
-      
-      // Set the validated data
+
       setFinancialSummary(financialData);
       setInventorySummary(inventoryData);
-      
-    } catch (err: any) {
-      console.error('Unexpected error in fetchAnalytics:', err);
-      // Set fallback data instead of showing error
+    } catch (error) {
+      console.error('❌ Unexpected error in fetchAnalytics:', error);
       setFinancialSummary(getDefaultFinancialSummary());
       setInventorySummary(getDefaultInventorySummary());
-      setError(''); // Clear error to prevent error message display
     } finally {
       setFinancialLoading(false);
       setInventoryLoading(false);
     }
   };
 
-  
-  // Skeleton components for individual sections
-  const FinancialOverviewSkeleton = () => (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      {[...Array(3)].map((_, i) => (
-        <div key={i} className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex-1">
-              <div className="h-6 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
-              <div className="h-8 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-1"></div>
-              <div className="h-4 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+  const getDateFilterLabel = () => {
+    switch (dateFilter) {
+      case 'today': return 'Today';
+      case 'yesterday': return 'Yesterday';
+      case 'last7days': return 'Last 7 Days';
+      case 'last30days': return 'Last 30 Days';
+      case 'custom': return 'Custom';
+      case 'allTime': return 'All Time';
+      default: return 'Custom';
+    }
+  };
+
+  const StatCard = ({ title, value, icon, color }: {
+    title: string;
+    value: string;
+    icon: React.ReactNode;
+    color: string;
+  }) => {
+    const getGradientColor = () => {
+      if (color === "bg-green-500") return "from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 dark:border-green-700";
+      if (color === "bg-red-500") return "from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 dark:border-red-700";
+      if (color === "bg-blue-500") return "from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 dark:border-blue-700";
+      if (color === "bg-orange-500") return "from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 dark:border-orange-700";
+      if (color === "bg-indigo-500") return "from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 dark:border-indigo-700";
+      return "from-gray-50 to-slate-50 dark:from-gray-900/20 dark:to-slate-900/20 dark:border-gray-700";
+    };
+
+    const getIconGradientColor = () => {
+      if (color === "bg-green-500") return "from-green-500 to-green-600 dark:from-green-600 dark:to-green-700";
+      if (color === "bg-red-500") return "from-red-500 to-red-600 dark:from-red-600 dark:to-red-700";
+      if (color === "bg-blue-500") return "from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700";
+      if (color === "bg-orange-500") return "from-orange-500 to-orange-600 dark:from-orange-600 dark:to-orange-700";
+      if (color === "bg-indigo-500") return "from-indigo-500 to-indigo-600 dark:from-indigo-600 dark:to-indigo-700";
+      return "from-gray-500 to-gray-600 dark:from-gray-600 dark:to-gray-700";
+    };
+
+    const getTextColor = () => {
+      if (color === "bg-green-500") return "text-green-600 dark:text-green-400";
+      if (color === "bg-red-500") return "text-red-600 dark:text-red-400";
+      if (color === "bg-blue-500") return "text-blue-600 dark:text-blue-400";
+      if (color === "bg-orange-500") return "text-orange-600 dark:text-orange-400";
+      if (color === "bg-indigo-500") return "text-indigo-600 dark:text-indigo-400";
+      return "text-gray-600 dark:text-gray-400";
+    };
+
+    return (
+      <div className={`group bg-gradient-to-br ${getGradientColor()} rounded-xl p-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300`}>
+        <div className="flex items-start justify-between mb-3">
+          <div className="flex flex-col space-y-1">
+            <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">{title}</h3>
+            <div className="flex items-center space-x-2">
+              <div className="w-1 h-1 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
+              <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
+                {getDateFilterLabel()}
+              </span>
             </div>
-            <div className="h-12 w-12 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+          </div>
+          <div className="flex items-center space-x-2 mt-1">
+            <div className={`p-2 bg-gradient-to-br ${getIconGradientColor()} rounded-lg shadow-lg`}>
+              {icon}
+            </div>
           </div>
         </div>
-      ))}
-    </div>
-  );
-
-  const ChartsSkeleton = () => (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      {[...Array(2)].map((_, i) => (
-        <div key={i} className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-          <div className="h-6 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-4"></div>
-          <div className="space-y-3">
-            {[...Array(4)].map((_, j) => (
-              <div key={j} className="flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="flex justify-between items-center mb-1">
-                    <div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                    <div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-gray-300 h-2 rounded-full w-3/4 animate-pulse"></div>
-                  </div>
-                </div>
-                <div className="ml-4 h-4 w-12 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-              </div>
-            ))}
-          </div>
+        <div className="flex items-center">
+          <p className={`text-3xl font-bold ${getTextColor()}`}>
+            {value}
+          </p>
         </div>
-      ))}
-    </div>
-  );
-
-  const InventorySkeleton = () => (
-    <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-      <div className="h-6 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-4"></div>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {[...Array(4)].map((_, i) => (
-          <div key={i} className="text-center p-4 bg-gray-50 dark:bg-gray-900/20 rounded-lg">
-            <div className="h-8 w-12 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mx-auto mb-1"></div>
-            <div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mx-auto"></div>
-          </div>
-        ))}
       </div>
-      <div className="mt-6 text-center">
-        <div className="h-5 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mx-auto"></div>
-      </div>
-    </div>
-  );
+    );
+  };
 
   return (
-    <div className="space-y-6">
-      {/* Financial Overview */}
-      {financialLoading ? (
-        <FinancialOverviewSkeleton />
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/*<div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white">Total Income</h3>
-                <p className="text-3xl font-bold text-green-600 mt-2">
-                  {formatCurrency(financialSummary?.totalIncome || 0)}
-                </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                  {dateFilter === 'today' ? 'Today' : 
-                   dateFilter === 'yesterday' ? 'Yesterday' :
-                   dateFilter === 'week' ? 'Last 7 Days' : 
-                   dateFilter === 'month' ? 'Last 30 Days' :
-                   dateFilter === 'allTime' ? 'All Time' :
-                   dateFilter === 'customMonth' ? new Date(selectedYear, selectedMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) :
-                   selectedYear.toString()}
-                </p>
-              </div>
-              <div className="text-4xl">💰</div>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="bg-white dark:bg-gray-900 border-b border-gray-900 dark:border-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-0 py-0">
+          <div className="flex items-center justify-between">
+            <div>
+              {/*<h1 className="text-2xl font-bold text-gray-900 dark:text-white">Analytics Dashboard</h1>*/}
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                Comprehensive overview of your farm's performance
+              </p>
             </div>
-          </div>*/}
-
-          {/*<div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white">Total Expenses</h3>
-                <p className="text-3xl font-bold text-red-600 mt-2">
-                  {formatCurrency(financialSummary?.totalExpenses || 0)}
-                </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                  {dateFilter === 'today' ? 'Today' : 
-                   dateFilter === 'yesterday' ? 'Yesterday' :
-                   dateFilter === 'week' ? 'Last 7 Days' : 
-                   dateFilter === 'month' ? 'Last 30 Days' :
-                   dateFilter === 'allTime' ? 'All Time' :
-                   dateFilter === 'customMonth' ? new Date(selectedYear, selectedMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) :
-                   selectedYear.toString()}
-                </p>
-              </div>
-              <div className="text-4xl">💸</div>
-            </div>
-          </div>*/}
-
-          {/*<div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white">Net Profit</h3>
-                <p className={`text-3xl font-bold mt-2 ${(financialSummary?.netProfit || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  {formatCurrency(financialSummary?.netProfit || 0)} {(financialSummary?.netProfit || 0) >= 0 ? '' : '📉'}
-                </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                  {dateFilter === 'today' ? 'Today' : 
-                   dateFilter === 'yesterday' ? 'Yesterday' :
-                   dateFilter === 'week' ? 'Last 7 Days' : 
-                   dateFilter === 'month' ? 'Last 30 Days' :
-                   dateFilter === 'allTime' ? 'All Time' :
-                   dateFilter === 'customMonth' ? new Date(selectedYear, selectedMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) :
-                   selectedYear.toString()}
-                </p>
-              </div>
-              <div className="text-4xl">📊</div>
-            </div>
-          </div>*/}
-        </div>
-      )}
-
-      {/* Charts Section */}
-      {financialLoading ? (
-        <ChartsSkeleton />
-      ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Income by Category */}
-          <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Income by Category</h3>
-            <div className="space-y-3">
-              {financialSummary?.incomeByCategory.map((item, index) => {
-                const totalIncome = financialSummary.incomeByCategory.reduce((sum, cat) => sum + cat.amount, 0);
-                const percentage = totalIncome > 0 ? (item.amount / totalIncome) * 100 : 0;
-                return (
-                  <div key={index} className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{item.category}</span>
-                        <span className="text-sm text-gray-500 dark:text-gray-400">{formatCurrency(item.amount)}</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div 
-                          className="bg-green-500 h-2 rounded-full" 
-                          style={{ width: `${percentage}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                    <div className="ml-4 text-sm text-gray-500 dark:text-gray-400 w-12 text-right">
-                      {percentage.toFixed(1)}%
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Expenses by Category */}
-          <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Expenses by Category</h3>
-            <div className="space-y-3">
-              {financialSummary?.expensesByCategory.map((item, index) => {
-                const totalExpenses = financialSummary.expensesByCategory.reduce((sum, cat) => sum + cat.amount, 0);
-                const percentage = totalExpenses > 0 ? (item.amount / totalExpenses) * 100 : 0;
-                return (
-                  <div key={index} className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{item.category}</span>
-                        <span className="text-sm text-gray-500 dark:text-gray-400">{formatCurrency(item.amount)}</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div 
-                          className="bg-red-500 h-2 rounded-full" 
-                          style={{ width: `${percentage}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                    <div className="ml-4 text-sm text-gray-500 dark:text-gray-400 w-12 text-right">
-                      {percentage.toFixed(1)}%
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Date Filter */}
-      <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
-        <div className="flex flex-col gap-2">
-          <div className="overflow-x-auto pb-2">
-            <div className="flex items-center gap-2 min-w-max">
+            <div className="flex items-center space-x-3">
               <button
-                onClick={() => setDateFilter('today')}
-                className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
-                  dateFilter === 'today'
-                    ? 'bg-green-600 text-white'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                }`}
+                onClick={fetchAnalytics}
+                className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
-                Today
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Refresh
               </button>
-              <button
-                onClick={() => setDateFilter('yesterday')}
-                className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
-                  dateFilter === 'yesterday'
-                    ? 'bg-green-600 text-white'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                }`}
-              >
-                Yesterday
-              </button>
-              <button
-                onClick={() => setDateFilter('week')}
-                className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
-                  dateFilter === 'week'
-                    ? 'bg-green-600 text-white'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                }`}
-              >
-                Last 7 Days
-              </button>
-              <button
-                onClick={() => setDateFilter('month')}
-                className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
-                  dateFilter === 'month'
-                    ? 'bg-green-600 text-white'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                }`}
-              >
-                Last 30 Days
-              </button>
-              <button
-                onClick={() => setDateFilter('allTime')}
-                className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
-                  dateFilter === 'allTime'
-                    ? 'bg-green-600 text-white'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                }`}
-              >
-                All Time
-              </button>
-              <div className="flex items-center gap-2 flex-shrink-0">
-                <label className="text-xs sm:text-sm font-inter font-medium text-gray-700 dark:text-gray-300">Month:</label>
-                <select
-                  value={selectedMonth}
-                  onChange={(e) => {
-                    setSelectedMonth(parseInt(e.target.value));
-                    setDateFilter('customMonth');
-                  }}
-                  className="px-2 py-1 text-xs sm:px-3 sm:py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg font-inter text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:text-white"
-                >
-                  <option value="0">January</option>
-                  <option value="1">February</option>
-                  <option value="2">March</option>
-                  <option value="3">April</option>
-                  <option value="4">May</option>
-                  <option value="5">June</option>
-                  <option value="6">July</option>
-                  <option value="7">August</option>
-                  <option value="8">September</option>
-                  <option value="9">October</option>
-                  <option value="10">November</option>
-                  <option value="11">December</option>
-                </select>
-              </div>
-              <div className="flex items-center gap-2 flex-shrink-0">
-                <label className="text-xs sm:text-sm font-inter font-medium text-gray-700 dark:text-gray-300">Year:</label>
-                <select
-                  value={selectedYear}
-                  onChange={(e) => {
-                    setSelectedYear(parseInt(e.target.value));
-                    setDateFilter('customYear');
-                  }}
-                  className="px-2 py-1 text-xs sm:px-3 sm:py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg font-inter text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:text-white"
-                >
-                  {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
-                    <option key={year} value={year}>{year}</option>
-                  ))}
-                </select>
-              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Inventory Summary */}
-      {inventoryLoading ? (
-        <InventorySkeleton />
-      ) : (
-        <div className="bg-white dark:bg-gray-900 shadow rounded-lg p-0">
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Inventory Summary</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">{inventorySummary?.totalItems || 0}</div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">Total Items</div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-0 py-0">
+        <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-8">
+          <div className="flex flex-col gap-4">
+            <div className="overflow-x-auto pb-2">
+              <div className="flex items-center gap-2 min-w-max">
+                {/* Quick Date Buttons */}
+                <button
+                  onClick={() => setDateFilter('today')}
+                  className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
+                    dateFilter === 'today'
+                      ? 'bg-green-600 text-white'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  }`}
+                >
+                  Today
+                </button>
+                <button
+                  onClick={() => setDateFilter('yesterday')}
+                  className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
+                    dateFilter === 'yesterday'
+                      ? 'bg-green-600 text-white'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  }`}
+                >
+                  Yesterday
+                </button>
+                <button
+                  onClick={() => setDateFilter('last7days')}
+                  className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
+                    dateFilter === 'last7days'
+                      ? 'bg-green-600 text-white'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  }`}
+                >
+                  Last 7 Days
+                </button>
+                <button
+                  onClick={() => setDateFilter('last30days')}
+                  className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
+                    dateFilter === 'last30days'
+                      ? 'bg-green-600 text-white'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  }`}
+                >
+                  Last 30 Days
+                </button>
+                <button
+                  onClick={() => setDateFilter('allTime')}
+                  className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
+                    dateFilter === 'allTime'
+                      ? 'bg-green-600 text-white'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  }`}
+                >
+                  All Time
+                </button>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <label className="text-xs sm:text-sm font-inter font-medium text-gray-700 dark:text-gray-300">Month:</label>
+                  <select
+                    value={selectedMonth}
+                    onChange={(e) => {
+                      setSelectedMonth(parseInt(e.target.value));
+                      setDateFilter('custom');
+                    }}
+                    className="px-2 py-1 text-xs sm:px-3 sm:py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg font-inter text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:text-white"
+                  >
+                    <option value="0">January</option>
+                    <option value="1">February</option>
+                    <option value="2">March</option>
+                    <option value="3">April</option>
+                    <option value="4">May</option>
+                    <option value="5">June</option>
+                    <option value="6">July</option>
+                    <option value="7">August</option>
+                    <option value="8">September</option>
+                    <option value="9">October</option>
+                    <option value="10">November</option>
+                    <option value="11">December</option>
+                  </select>
+                </div>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <label className="text-xs sm:text-sm font-inter font-medium text-gray-700 dark:text-gray-300">Year:</label>
+                  <select
+                    value={selectedYear}
+                    onChange={(e) => {
+                      setSelectedYear(parseInt(e.target.value));
+                      setDateFilter('custom');
+                    }}
+                    className="px-2 py-1 text-xs sm:px-3 sm:py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg font-inter text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:text-white"
+                  >
+                    {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
+                      <option key={year} value={year}>{year}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
             </div>
-            <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">{inventorySummary?.livestock || 0}</div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">Livestock</div>
-            </div>
-            <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">{inventorySummary?.produce || 0}</div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">Produce</div>
-            </div>
-            <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">{inventorySummary?.consumables || 0}</div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">Consumables</div>
-            </div>
-          </div>
-          <div className="mt-6 text-center">
-            <button 
-              onClick={() => navigate('/inventory')}
-              className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
-            >
-              View All Inventory →
-            </button>
           </div>
         </div>
-      )}
 
-      {/* Quick Actions */}
-      {/*
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div>
-          <h2 className="text-xl font-poppins font-semibold mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Link to="/income" className="font-inter btn btn-primary text-center">
-              Record Income
-            </Link>
-            <Link to="/expenses" className="font-inter btn btn-secondary text-center">
-              Record Expense
-            </Link>
-            {isOwner && (
-              <>
-                <Link to="/reports" className="font-inter btn btn-secondary text-center">
-                  View Reports
-                </Link>
-                <Link to="/inventory" className="font-inter btn btn-secondary text-center">
-                  Manage Inventory
-                </Link>
-              </>
+        <div className="mb-8">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Financial Overview</h2>
+          {financialLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                  <div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
+                  <div className="h-8 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
+                  <div className="h-3 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <StatCard
+                title="Total Income"
+                value={formatCurrency(financialSummary?.totalIncome || 0)}
+                icon={<TrendingUp className="h-4 w-4 text-white" />}
+                color="bg-green-500"
+              />
+              <StatCard
+                title="Total Expenses"
+                value={formatCurrency(financialSummary?.totalExpenses || 0)}
+                icon={<ShoppingCart className="h-4 w-4 text-white" />}
+                color="bg-red-500"
+              />
+              <StatCard
+                title="Net Profit"
+                value={formatCurrency(financialSummary?.netProfit || 0)}
+                icon={<TrendingUp className="h-4 w-4 text-white" />}
+                color={(financialSummary?.netProfit || 0) >= 0 ? "bg-blue-500" : "bg-orange-500"}
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+              <BarChart3 className="w-5 h-5 mr-2 text-green-500" />
+              Income by Category
+            </h2>
+            {financialLoading ? (
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                <div className="h-6 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-4"></div>
+                <div className="space-y-3">
+                  {[...Array(4)].map((_, i) => (
+                    <div key={i} className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <div className="flex justify-between items-center mb-1">
+                          <div className="h-4 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                          <div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                        </div>
+                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                          <div className="bg-gray-300 dark:bg-gray-600 h-2 rounded-full w-3/4 animate-pulse"></div>
+                        </div>
+                      </div>
+                      <div className="ml-4 h-4 w-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                {!financialSummary?.incomeByCategory || financialSummary.incomeByCategory.length === 0 ? (
+                  <div className="text-center py-8">
+                    <PieChart className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">No income data available</p>
+                    <p className="text-gray-400 dark:text-gray-500 text-xs mt-1">Create income entries to see category breakdowns</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {financialSummary.incomeByCategory.map((item, index) => {
+                      const totalIncome = financialSummary.incomeByCategory.reduce((sum, cat) => sum + cat.amount, 0);
+                      const percentage = totalIncome > 0 ? (item.amount / totalIncome) * 100 : 0;
+                      return (
+                        <div key={index} className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="flex justify-between items-center mb-2">
+                              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{item.category}</span>
+                              <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                                {formatCurrency(item.amount)}
+                              </span>
+                            </div>
+                            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                              <div
+                                className="bg-green-500 h-2 rounded-full transition-all duration-300"
+                                style={{ width: `${percentage}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                          <div className="ml-4 text-sm text-gray-500 dark:text-gray-400 w-12 text-right">
+                            {percentage.toFixed(1)}%
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             )}
           </div>
-          
-          {/* Quick Stats /}
-          <div className="mt-6">
-            <h3 className="text-lg font-poppins font-semibold mb-4">Quick Stats</h3>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform">
-                <div className="text-xl mb-1">📊</div>
-                <div className="text-xl font-poppins font-semibold text-gray-900 dark:text-white">
-                  {financialLoading ? '...' : financialSummary?.totalIncome || 0}
+
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+              <PieChart className="w-5 h-5 mr-2 text-red-500" />
+              Expenses by Category
+            </h2>
+            {financialLoading ? (
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                <div className="h-6 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-4"></div>
+                <div className="space-y-3">
+                  {[...Array(4)].map((_, i) => (
+                    <div key={i} className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <div className="flex justify-between items-center mb-1">
+                          <div className="h-4 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                          <div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                        </div>
+                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                          <div className="bg-gray-300 dark:bg-gray-600 h-2 rounded-full w-3/4 animate-pulse"></div>
+                        </div>
+                      </div>
+                      <div className="ml-4 h-4 w-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    </div>
+                  ))}
                 </div>
-                <div className="text-sm font-inter text-gray-500 dark:text-gray-400">Total Income</div>
               </div>
-              <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform">
-                <div className="text-xl mb-1">💸</div>
-                <div className="text-xl font-poppins font-semibold text-gray-900 dark:text-white">
-                  {financialLoading ? '...' : financialSummary?.totalExpenses || 0}
-                </div>
-                <div className="text-sm font-inter text-gray-500 dark:text-gray-400">Total Expenses</div>
+            ) : (
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                {!financialSummary?.expensesByCategory || financialSummary.expensesByCategory.length === 0 ? (
+                  <div className="text-center py-8">
+                    <PieChart className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">No expense data available</p>
+                    <p className="text-gray-400 dark:text-gray-500 text-xs mt-1">Create expense entries to see category breakdowns</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {financialSummary.expensesByCategory.map((item, index) => {
+                      const totalExpenses = financialSummary.expensesByCategory.reduce((sum, cat) => sum + cat.amount, 0);
+                      const percentage = totalExpenses > 0 ? (item.amount / totalExpenses) * 100 : 0;
+                      return (
+                        <div key={index} className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="flex justify-between items-center mb-2">
+                              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{item.category}</span>
+                              <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                                {formatCurrency(item.amount)}
+                              </span>
+                            </div>
+                            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                              <div
+                                className="bg-red-500 h-2 rounded-full transition-all duration-300"
+                                style={{ width: `${percentage}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                          <div className="ml-4 text-sm text-gray-500 dark:text-gray-400 w-12 text-right">
+                            {percentage.toFixed(1)}%
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
-              <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform">
-                <div className="text-xl mb-1">📦</div>
-                <div className="text-xl font-poppins font-semibold text-gray-900 dark:text-white">
-                  {inventoryLoading ? '...' : inventorySummary?.totalItems || 0}
-                </div>
-                <div className="text-sm font-inter text-gray-500 dark:text-gray-400">Inventory Items</div>
-              </div>
-              <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform">
-                <div className="text-xl mb-1">💰</div>
-                <div className="text-xl font-poppins font-semibold text-gray-900 dark:text-white">
-                  {financialLoading ? '...' : (financialSummary?.netProfit || 0)}
-                </div>
-                <div className="text-sm font-inter text-gray-500 dark:text-gray-400">Net Profit</div>
-              </div>
-            </div>
+            )}
           </div>
         </div>
-        
-        {/* Business Update /}
+
         <div>
-          <h2 className="text-xl font-poppins font-semibold mb-4">Business Update</h2>
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-6 border border-blue-200 dark:border-blue-700">
-            <div className="flex items-center mb-4">
-              <div className="p-3 bg-blue-600 dark:bg-blue-700 rounded-lg shadow-lg">
-                <TrendingUp className="h-6 w-6 text-white" />
-              </div>
-              <div className="ml-4">
-                <h3 className="text-lg font-poppins font-semibold text-gray-900 dark:text-white">Performance Overview</h3>
-                <p className="text-sm font-inter text-gray-600 dark:text-gray-300">Your farm's key metrics at a glance</p>
-              </div>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+            <Package className="w-5 h-5 mr-2 text-blue-500" />
+            Inventory Overview
+          </h2>
+          {inventoryLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                  <div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
+                  <div className="h-8 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
+                  <div className="h-3 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                </div>
+              ))}
             </div>
-            
-            <div className="space-y-4">
-              <div className="flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded-lg">
-                <span className="text-sm font-inter text-gray-600 dark:text-gray-400">Revenue Growth</span>
-                <span className="text-sm font-poppins font-semibold text-green-600 dark:text-green-400">
-                  {financialLoading || !previousFinancialSummary ? '...' : revenueGrowth}
-                </span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded-lg">
-                <span className="text-sm font-inter text-gray-600 dark:text-gray-400">Cost Efficiency</span>
-                <span className="text-sm font-poppins font-semibold text-blue-600 dark:text-blue-400">
-                  {financialLoading ? '...' : costEfficiency}
-                </span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded-lg">
-                <span className="text-sm font-inter text-gray-600 dark:text-gray-400">Inventory Health</span>
-                <span className="text-sm font-poppins font-semibold text-purple-600 dark:text-purple-400">
-                  {inventoryLoading ? '...' : inventoryHealth}
-                </span>
-              </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <StatCard
+                title="Total Items"
+                value={inventorySummary?.totalItems?.toString() || '0'}
+                icon={<Package className="w-6 h-6 text-white" />}
+                color="bg-blue-500"
+              />
+              <StatCard
+                title="Livestock"
+                value={inventorySummary?.livestock?.toString() || '0'}
+                icon={<Heart className="w-6 h-6 text-white" />}
+                color="bg-indigo-500"
+              />
+              <StatCard
+                title="Produce"
+                value={inventorySummary?.produce?.toString() || '0'}
+                icon={<Apple className="w-6 h-6 text-white" />}
+                color="bg-green-500"
+              />
+              <StatCard
+                title="Consumables"
+                value={inventorySummary?.consumables?.toString() || '0'}
+                icon={<Box className="w-6 h-6 text-white" />}
+                color="bg-orange-500"
+              />
             </div>
-            
-            <div className="mt-6 text-center">
-              <Link 
-                to="/reports" 
-                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-poppins font-medium rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
-              >
-                <FileText className="h-4 w-4 mr-2" />
-                View Detailed Reports
-              </Link>
-            </div>
-          </div>
+          )}
         </div>
       </div>
-      */}
     </div>
   );
 };
 
-export default AnalyticsDashboard;
+        export default AnalyticsDashboard;

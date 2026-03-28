@@ -1257,6 +1257,26 @@ TrackFarmOps Team`;
       
       const records = response.data?.records || [];
       
+      // Update period based on date filter
+      const updatedRecords = records.map((record: any) => {
+        let updatedPeriod = record.period;
+        
+        // Override period based on date filter
+        if (vatDateFilter === 'last30days') {
+          updatedPeriod = 'monthly';
+        } else if (vatDateFilter === 'last7days') {
+          updatedPeriod = 'weekly';
+        } else if (vatDateFilter === 'today' || vatDateFilter === 'yesterday') {
+          updatedPeriod = 'daily';
+        }
+        // For 'custom' and 'allTime', keep the original period from backend
+        
+        return {
+          ...record,
+          period: updatedPeriod
+        };
+      });
+      
       // Calculate previous period data for percentage changes
       let previousParams = { ...params };
       let previousStartDate = '';
@@ -1307,9 +1327,9 @@ TrackFarmOps Team`;
       }
       
       // Calculate current period summary
-      const totalVat = records.reduce((sum: number, record: any) => sum + (record.vatAmount || 0), 0);
-      const averageVat = records.length > 0 ? totalVat / records.length : 0;
-      const highestVat = records.length > 0 ? Math.max(...records.map((r: any) => r.vatAmount || 0)) : 0;
+      const totalVat = updatedRecords.reduce((sum: number, record: any) => sum + (record.vatAmount || 0), 0);
+      const averageVat = updatedRecords.length > 0 ? totalVat / updatedRecords.length : 0;
+      const highestVat = updatedRecords.length > 0 ? Math.max(...updatedRecords.map((r: any) => r.vatAmount || 0)) : 0;
       
       // Calculate previous period summary
       const previousTotalVat = previousRecords.reduce((sum: number, record: any) => sum + (record.vatAmount || 0), 0);
@@ -1337,22 +1357,22 @@ TrackFarmOps Team`;
         highestVatChange
       });
       
-      setVatRecords(records);
+      setVatRecords(updatedRecords);
       setVatSummary({
         totalVat,
         averageVat,
         highestVat,
-        totalTransactions: records.reduce((sum: number, record: any) => sum + (record.transactionCount || 0), 0)
+        totalTransactions: updatedRecords.reduce((sum: number, record: any) => sum + (record.transactionCount || 0), 0)
       });
       setVatPercentageChanges({
         totalVatChange,
         averageVatChange,
         highestVatChange
       });
-      setVatTotalPages(Math.ceil(response.data?.total || records.length / vatEntriesPerPage));
-      setVatTotalRecords(response.data?.total || records.length);
+      setVatTotalPages(Math.ceil(response.data?.total || updatedRecords.length / vatEntriesPerPage));
+      setVatTotalRecords(response.data?.total || updatedRecords.length);
       
-      console.log(`✅ VAT records fetched successfully: ${records.length} records`);
+      console.log(`✅ VAT records fetched successfully: ${updatedRecords.length} records`);
       console.log(`📈 Percentage changes:`, {
         totalVatChange,
         averageVatChange,
@@ -3106,7 +3126,7 @@ Generated on: ${new Date().toLocaleString()}
 
               {/* Enhanced Summary Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div className="group bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-3 border border-green-200 dark:border-green-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+                <div className="group bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-3 dark:border-green-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex flex-col space-y-1">
                       <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Total VAT Collected</h3>
@@ -3137,7 +3157,7 @@ Generated on: ${new Date().toLocaleString()}
                   </div>
                 </div>
                 
-                <div className="group bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-xl p-3 border border-blue-200 dark:border-blue-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+                <div className="group bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-xl p-3 dark:border-blue-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex flex-col space-y-1">
                       <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Average VAT</h3>
@@ -3167,7 +3187,7 @@ Generated on: ${new Date().toLocaleString()}
                     )}
                   </div>
                 </div>
-                <div className="group bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-3 border border-purple-200 dark:border-purple-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+                <div className="group bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-3 dark:border-purple-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex flex-col space-y-1">
                       <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Highest VAT</h3>
@@ -3325,17 +3345,17 @@ Generated on: ${new Date().toLocaleString()}
 
               {/* Enhanced VAT Records Table */}
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
-                <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 px-6 py-4 border-b border-purple-200 dark:border-purple-700">
+                <div className="bg-gray-50 dark:bg-gray-700/50 px-6 py-4 border-b border-gray-200 dark:border-gray-600">
                   <div className="flex items-center justify-between">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
-                      <Table className="h-5 w-5 mr-2 text-purple-600 dark:text-purple-400" />
+                      <Table className="h-5 w-5 mr-2 text-gray-600 dark:text-gray-400" />
                       VAT Remittance Records
                     </h3>
                     <div className="flex items-center space-x-2">
                       <span className="text-sm text-gray-500 dark:text-gray-400">
                         {vatRecords.length} records
                       </span>
-                      <span className="px-2 py-1 bg-purple-100 dark:bg-purple-800 text-purple-800 dark:text-purple-200 text-xs rounded-full">
+                      <span className="px-2 py-1 bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-200 text-xs rounded-full">
                         {vatDateFilter.charAt(0).toUpperCase() + vatDateFilter.slice(1).replace(/([A-Z])/g, ' $1').trim()}
                       </span>
                     </div>
@@ -3345,14 +3365,31 @@ Generated on: ${new Date().toLocaleString()}
                 {vatLoading ? (
                   <div className="flex flex-col items-center justify-center py-12 space-y-4">
                     <div className="relative">
-                      <div className="animate-spin w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full"></div>
+                      <div className="animate-spin w-12 h-12 border-4 border-gray-200 border-t-gray-600 rounded-full"></div>
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <Receipt className="h-5 w-5 text-purple-600" />
+                        <Receipt className="h-5 w-5 text-gray-600" />
                       </div>
                     </div>
                     <div className="text-center space-y-2">
                       <p className="text-gray-500 dark:text-gray-400">Loading VAT records...</p>
                       <p className="text-sm text-gray-400 dark:text-gray-500">Please wait while we fetch your data</p>
+                    </div>
+                  </div>
+                ) : vatRecords.length === 0 ? (
+                  <div className="text-center py-12">
+                    <Receipt className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No VAT Records Found</h3>
+                    <p className="text-gray-600 dark:text-gray-400 mb-4">
+                      There are no income entries with VAT enabled in the selected period.
+                    </p>
+                    <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
+                      <h4 className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-2">How to enable VAT:</h4>
+                      <ol className="text-sm text-blue-800 dark:text-blue-200 space-y-1 text-left">
+                        <li>1. Create a new income entry</li>
+                        <li>2. Enable the "Enable VAT" toggle</li>
+                        <li>3. Set your VAT rate (default: 7.5%)</li>
+                        <li>4. Save the entry</li>
+                      </ol>
                     </div>
                   </div>
                 ) : (
@@ -3469,7 +3506,7 @@ Generated on: ${new Date().toLocaleString()}
                       >
                         Previous
                       </button>
-                      <span className="px-3 py-2 text-sm font-medium text-purple-600 dark:text-purple-400 bg-purple-100 dark:bg-purple-900 border border-purple-300 dark:border-purple-600 rounded-lg">
+                      <span className="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg">
                         Page {vatCurrentPage} of {vatTotalPages}
                       </span>
                       <button
@@ -3489,7 +3526,7 @@ Generated on: ${new Date().toLocaleString()}
                         setVatEntriesPerPage(Number(e.target.value));
                         setVatCurrentPage(1);
                       }}
-                      className="px-3 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white"
+                      className="px-3 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500 dark:bg-gray-700 dark:text-white"
                     >
                       <option value={5}>5</option>
                       <option value={10}>10</option>

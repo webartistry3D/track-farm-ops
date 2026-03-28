@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
 import { formatCurrency } from '../utils/currency';
+import { TrendingUp, ShoppingCart, Calculator } from 'lucide-react';
 import { 
   PageSkeleton, 
   StatsCardSkeleton, 
@@ -281,94 +282,148 @@ const Dashboard = () => {
 
       {isOwner && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-            <h3 className="text-lg font-poppins font-medium text-gray-900 dark:text-white mb-2">
-              {dateFilter === 'today' ? "Income" : 
-               dateFilter === 'yesterday' ? "Income" :
-               dateFilter === 'week' ? "Income" : 
-               dateFilter === 'month' ? "Income" :
-               dateFilter === 'thisMonth' ? "Income" :
-               dateFilter === 'thisYear' ? "Income" :
-               dateFilter === 'allTime' ? "All Time Income" :
-               dateFilter === 'customMonth' ? `${new Date(selectedYear, selectedMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} Income` :
-               `${selectedYear} Income`}
-            </h3>
-            <p className="text-3xl font-poppins font-bold text-green-600 dark:text-green-400 mt-2">
-              {formatCurrency(todayIncome.toString(), { includeSymbol: true })}
-            </p>
-            <p className="text-sm font-inter text-gray-500 mt-1">
-              {incomeEntries.length > 0 ? `${incomeEntries.length} transaction${incomeEntries.length !== 1 ? 's' : ''}` : 'No income recorded'}
-            </p>
+          <div className="group bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-3 dark:border-green-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex flex-col space-y-1">
+                <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                  {dateFilter === 'today' ? "Income" : 
+                   dateFilter === 'yesterday' ? "Income" :
+                   dateFilter === 'week' ? "Income" : 
+                   dateFilter === 'month' ? "Income" :
+                   dateFilter === 'thisMonth' ? "Income" :
+                   dateFilter === 'thisYear' ? "Income" :
+                   dateFilter === 'allTime' ? "All Time Income" :
+                   dateFilter === 'customMonth' ? `${new Date(selectedYear, selectedMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} Income` :
+                   `${selectedYear} Income`}
+                </h3>
+                <div className="flex items-center space-x-2">
+                  <div className="w-1 h-1 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
+                  <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
+                    {incomeEntries.length > 0 ? `${incomeEntries.length} transaction${incomeEntries.length !== 1 ? 's' : ''}` : 'No income recorded'}
+                  </span>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2 mt-1">
+                <div className="p-2 bg-gradient-to-br from-green-500 to-green-600 dark:from-green-600 dark:to-green-700 rounded-lg shadow-lg">
+                  <TrendingUp className="h-4 w-4 text-white" />
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center">
+              <p className="text-3xl font-bold text-green-600 dark:text-green-400">
+                {formatCurrency(todayIncome.toString(), { includeSymbol: true })}
+              </p>
+            </div>
           </div>
           
-          <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-            <h3 className="text-lg font-poppins font-medium text-gray-900 dark:text-white mb-2">
-              {dateFilter === 'today' ? "Expenses" : 
-               dateFilter === 'yesterday' ? "Expenses" :
-               dateFilter === 'week' ? "Expenses" : 
-               dateFilter === 'month' ? "Expenses" :
-               dateFilter === 'thisMonth' ? "Expenses" :
-               dateFilter === 'thisYear' ? "Expenses" :
-               dateFilter === 'allTime' ? "All Time Expenses" :
-               dateFilter === 'customMonth' ? `${new Date(selectedYear, selectedMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} Expenses` :
-               `${selectedYear} Expenses`}
-            </h3>
-            <p className="text-3xl font-poppins font-bold text-red-600 dark:text-red-400 mt-2">
-              {formatCurrency(todayExpenses.toString(), { includeSymbol: true })}
-            </p>
-            <p className="text-sm font-inter text-gray-500 mt-1">
-              {expenseEntries.length > 0 ? `${expenseEntries.length} transaction${expenseEntries.length !== 1 ? 's' : ''}` : 'No expenses recorded'}
-            </p>
+          <div className="group bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 rounded-xl p-3 dark:border-red-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex flex-col space-y-1">
+                <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                  {dateFilter === 'today' ? "Expenses" : 
+                   dateFilter === 'yesterday' ? "Expenses" :
+                   dateFilter === 'week' ? "Expenses" : 
+                   dateFilter === 'month' ? "Expenses" :
+                   dateFilter === 'thisMonth' ? "Expenses" :
+                   dateFilter === 'thisYear' ? "Expenses" :
+                   dateFilter === 'allTime' ? "All Time Expenses" :
+                   dateFilter === 'customMonth' ? `${new Date(selectedYear, selectedMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} Expenses` :
+                   `${selectedYear} Expenses`}
+                </h3>
+                <div className="flex items-center space-x-2">
+                  <div className="w-1 h-1 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
+                  <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
+                    {expenseEntries.length > 0 ? `${expenseEntries.length} transaction${expenseEntries.length !== 1 ? 's' : ''}` : 'No expenses recorded'}
+                  </span>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2 mt-1">
+                <div className="p-2 bg-gradient-to-br from-red-500 to-red-600 dark:from-red-600 dark:to-red-700 rounded-lg shadow-lg">
+                  <ShoppingCart className="h-4 w-4 text-white" />
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center">
+              <p className="text-3xl font-bold text-red-600 dark:text-red-400">
+                {formatCurrency(todayExpenses.toString(), { includeSymbol: true })}
+              </p>
+            </div>
           </div>
           
-          <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-            <h3 className="text-lg font-poppins font-medium text-gray-900 dark:text-white mb-2">
-              {dateFilter === 'today' ? "VAT" : 
-               dateFilter === 'yesterday' ? "VAT" :
-               dateFilter === 'week' ? "VAT" : 
-               dateFilter === 'month' ? "VAT" :
-               dateFilter === 'thisMonth' ? "VAT" :
-               dateFilter === 'thisYear' ? "VAT" :
-               dateFilter === 'allTime' ? "All Time VAT" :
-               dateFilter === 'customMonth' ? `${new Date(selectedYear, selectedMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} VAT` :
-               `${selectedYear} VAT`}
-            </h3>
-            <p className="text-3xl font-poppins font-bold text-purple-600 dark:text-purple-400 mt-2">
-              {formatCurrency(todayVAT.toString(), { includeSymbol: true })}
-            </p>
-            <p className="text-sm font-inter text-gray-500 mt-1">
-              Total VAT collected
-            </p>
+          <div className="group bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-3 dark:border-purple-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex flex-col space-y-1">
+                <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                  {dateFilter === 'today' ? "VAT" : 
+                   dateFilter === 'yesterday' ? "VAT" :
+                   dateFilter === 'week' ? "VAT" : 
+                   dateFilter === 'month' ? "VAT" :
+                   dateFilter === 'thisMonth' ? "VAT" :
+                   dateFilter === 'thisYear' ? "VAT" :
+                   dateFilter === 'allTime' ? "All Time VAT" :
+                   dateFilter === 'customMonth' ? `${new Date(selectedYear, selectedMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} VAT` :
+                   `${selectedYear} VAT`}
+                </h3>
+                <div className="flex items-center space-x-2">
+                  <div className="w-1 h-1 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
+                  <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
+                    Total VAT collected
+                  </span>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2 mt-1">
+                <div className="p-2 bg-gradient-to-br from-purple-500 to-purple-600 dark:from-purple-600 dark:to-purple-700 rounded-lg shadow-lg">
+                  <Calculator className="h-4 w-4 text-white" />
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center">
+              <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">
+                {formatCurrency(todayVAT.toString(), { includeSymbol: true })}
+              </p>
+            </div>
           </div>
           
-          <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-            <h3 className="text-lg font-poppins font-medium text-gray-900 dark:text-white mb-2">
-              {dateFilter === 'today' ? "Net Profit" : 
-               dateFilter === 'yesterday' ? "Net Profit" :
-               dateFilter === 'week' ? "Net Profit" : 
-               dateFilter === 'month' ? "Net Profit" :
-               dateFilter === 'thisMonth' ? "Net Profit" :
-               dateFilter === 'thisYear' ? "Net Profit" :
-               dateFilter === 'allTime' ? "All Time Net Profit" :
-               dateFilter === 'customMonth' ? `${new Date(selectedYear, selectedMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} Net Profit` :
-               `${selectedYear} Net Profit`}
-            </h3>
-            <p className={`text-3xl font-poppins font-bold ${
-              netProfit >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
-            } mt-2`}>
-              {formatCurrency(netProfit.toString(), { includeSymbol: true })}
-            </p>
-            <p className="text-sm font-inter text-gray-500 mt-1">
-              {dateFilter === 'today' ? "Today's profit/loss" : 
-               dateFilter === 'yesterday' ? "Yesterday's profit/loss" :
-               dateFilter === 'week' ? "Last 7 days profit/loss" :
-               dateFilter === 'month' ? "Last 30 days profit/loss" :
-               dateFilter === 'thisMonth' ? "This month's profit/loss" :
-               dateFilter === 'thisYear' ? "This year's profit/loss" :
-               dateFilter === 'allTime' ? "All time profit/loss" :
-               dateFilter === 'customMonth' ? `${new Date(selectedYear, selectedMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} profit/loss` :
-               `${selectedYear} profit/loss`}
-            </p>
+          <div className={`group bg-gradient-to-br ${netProfit >= 0 ? 'from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 dark:border-green-700' : 'from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 dark:border-red-700'} rounded-xl p-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300`}>
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex flex-col space-y-1">
+                <h3 className={`text-sm font-semibold text-gray-700 dark:text-gray-300`}>
+                  {dateFilter === 'today' ? "Net Profit" : 
+                   dateFilter === 'yesterday' ? "Net Profit" :
+                   dateFilter === 'week' ? "Net Profit" : 
+                   dateFilter === 'month' ? "Net Profit" :
+                   dateFilter === 'thisMonth' ? "Net Profit" :
+                   dateFilter === 'thisYear' ? "Net Profit" :
+                   dateFilter === 'allTime' ? "All Time Net Profit" :
+                   dateFilter === 'customMonth' ? `${new Date(selectedYear, selectedMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} Net Profit` :
+                   `${selectedYear} Net Profit`}
+                </h3>
+                <div className="flex items-center space-x-2">
+                  <div className="w-1 h-1 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
+                  <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
+                    {dateFilter === 'today' ? "Today's profit/loss" : 
+                     dateFilter === 'yesterday' ? "Yesterday's profit/loss" :
+                     dateFilter === 'week' ? "Last 7 days profit/loss" :
+                     dateFilter === 'month' ? "Last 30 days profit/loss" :
+                     dateFilter === 'thisMonth' ? "This month's profit/loss" :
+                     dateFilter === 'thisYear' ? "This year's profit/loss" :
+                     dateFilter === 'allTime' ? "All time profit/loss" :
+                     dateFilter === 'customMonth' ? `${new Date(selectedYear, selectedMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} profit/loss` :
+                     `${selectedYear} profit/loss`}
+                  </span>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2 mt-1">
+                <div className={`p-2 bg-gradient-to-br ${netProfit >= 0 ? 'from-green-500 to-green-600 dark:from-green-600 dark:to-green-700' : 'from-red-500 to-red-600 dark:from-red-600 dark:to-red-700'} rounded-lg shadow-lg`}>
+                  {netProfit >= 0 ? <TrendingUp className="h-4 w-4 text-white" /> : <TrendingUp className="h-4 w-4 text-white" />}
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center">
+              <p className={`text-3xl font-bold ${netProfit >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                {formatCurrency(netProfit.toString(), { includeSymbol: true })}
+              </p>
+            </div>
           </div>
         </div>
       )}

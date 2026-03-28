@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { formatCurrency } from '../utils/currency';
 import RestrictedPageMessage from './RestrictedPageMessage';
 import { useSubscriptionRestrictions } from '../utils/subscriptionRestrictions';
-import { Search, Plus, Edit2, Trash2, Wrench, AlertTriangle, TrendingUp, Clock, MapPin, User, QrCode, FileText, BarChart3, CheckCircle, Calendar } from 'lucide-react';
+import { Search, Plus, Edit2, Trash2, Wrench, AlertTriangle, TrendingUp, Clock, MapPin, User, QrCode, FileText, BarChart3, CheckCircle } from 'lucide-react';
 import api from '../lib/api';
 import { 
   PageSkeleton, 
@@ -670,15 +670,15 @@ const Assets = () => {
                 <table className="min-w-[700px] w-full divide-y divide-gray-200 dark:divide-gray-700">
                   <thead className="bg-gray-50 dark:bg-gray-800">
                     <tr>
-                      <th className="px-2 sm:px-3 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Asset</th>
-                      <th className="px-2 sm:px-3 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Category</th>
-                      <th className="px-2 sm:px-3 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Cost</th>
-                      <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Location</th>
-                      <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Created By</th>
-                      <th className="px-2 sm:px-3 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
-                      <th className="px-2 sm:px-3 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-                      <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Last Update</th>
-                      <th className="px-2 sm:px-3 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                      <th className="px-2 sm:px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Asset</th>
+                      <th className="px-2 sm:px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Category</th>
+                      <th className="px-2 sm:px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Cost</th>
+                      <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Location</th>
+                      <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Created By</th>
+                      <th className="px-2 sm:px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+                      <th className="px-2 sm:px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                      <th className="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Last Update</th>
+                      <th className="px-2 sm:px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -701,19 +701,19 @@ const Assets = () => {
                         </td>
                         <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                           <div className="flex items-center">
-                            <MapPin className="w-4 h-4 mr-1 text-gray-400 dark:text-gray-500" />
+                            {/*<MapPin className="w-4 h-4 mr-1 text-gray-400 dark:text-gray-500" />*/}
                             {asset.location}
                           </div>
                         </td>
                         <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                           <div className="flex items-center">
-                            <User className="w-4 h-4 mr-1 text-gray-400 dark:text-gray-500" />
+                            {/*<User className="w-4 h-4 mr-1 text-gray-400 dark:text-gray-500" />*/}
                             {user?.name || user?.email || 'Unknown'}
                           </div>
                         </td>
                         <td className="px-2 sm:px-3 py-3 sm:py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                           <div className="flex items-center">
-                            <Calendar className="w-4 h-4 mr-1 text-gray-400 dark:text-gray-500" />
+                            {/*<Calendar className="w-4 h-4 mr-1 text-gray-400 dark:text-gray-500" />*/}
                             <span className="text-xs sm:text-sm">{asset.purchaseDate ? new Date(asset.purchaseDate).toLocaleDateString() : 'N/A'}</span>
                           </div>
                         </td>
@@ -724,7 +724,7 @@ const Assets = () => {
                         </td>
                         <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                           <div className="flex items-center">
-                            <Edit2 className="w-4 h-4 mr-1 text-gray-400 dark:text-gray-500" />
+                            {/*<Edit2 className="w-4 h-4 mr-1 text-gray-400 dark:text-gray-500" />*/}
                             {user?.name || user?.email || 'Unknown'}
                           </div>
                         </td>
