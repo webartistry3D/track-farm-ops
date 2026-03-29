@@ -113,21 +113,49 @@ class StorageService {
    */
   private async uploadToS3(file: any, key: string): Promise<{ url: string; key: string }> {
     try {
-      // For now, simulate S3 upload with local storage
-      // In production, you would use AWS SDK here
-      const filePath = path.join(this.uploadDir, key);
-      const dir = path.dirname(filePath);
-      
-      await fs.mkdir(dir, { recursive: true });
-      await fs.writeFile(filePath, file.buffer);
+      // Import AWS SDK
+      const AWS = require('aws-sdk');
+      const s3 = new AWS.S3({
+        accessKeyId: this.config.accessKeyId,
+        secretAccessKey: this.config.secretAccessKey,
+        region: this.config.region,
+        // Add endpoint if custom S3-compatible service
+        ...(this.config.endpoint && { endpoint: this.config.endpoint })
+      });
 
-      const url = `https://${this.config.bucket}.s3.${this.config.region}.amazonaws.com/${key}`;
+      const params = {
+        Bucket: this.config.bucket,
+        Key: key,
+        Body: file.buffer,
+        ContentType: file.mimetype,
+        // Set proper ACL for public access
+        ACL: 'public-read',
+        // Force path style if needed
+        ...(this.config.forcePathStyle && { 
+          UseAccelerateEndpoint: false,
+          ForcePathStyle: true 
+        })
+      };
+
+      console.log(`📤 Uploading to S3: ${key} (${file.mimetype})`);
       
-      console.log(`✅ S3 upload simulated: ${key}`);
+      const result = await s3.upload(params).promise();
+      
+      // Generate proper S3 URL
+      let url: string;
+      if (this.config.forcePathStyle) {
+        url = `https://s3.${this.config.region}.amazonaws.com/${this.config.bucket}/${key}`;
+      } else {
+        url = `https://${this.config.bucket}.s3.${this.config.region}.amazonaws.com/${key}`;
+      }
+      
+      console.log(`✅ S3 upload successful: ${key}`);
+      console.log(`🔗 S3 URL: ${url}`);
+      
       return { url, key };
     } catch (error) {
       console.error('❌ S3 upload failed:', error);
-      throw new Error('S3 upload failed');
+      throw new Error(`S3 upload failed: ${error.message}`);
     }
   }
 
@@ -167,11 +195,26 @@ class StorageService {
           return null;
         }
       } else {
-        // S3 - for now, read from local storage (simulated)
-        const filePath = path.join(this.uploadDir, key);
+        // S3 - get from AWS S3
+        const AWS = require('aws-sdk');
+        const s3 = new AWS.S3({
+          accessKeyId: this.config.accessKeyId,
+          secretAccessKey: this.config.secretAccessKey,
+          region: this.config.region,
+          ...(this.config.endpoint && { endpoint: this.config.endpoint })
+        });
+
+        const params = {
+          Bucket: this.config.bucket,
+          Key: key
+        };
+
         try {
-          return await fs.readFile(filePath);
+          const result = await s3.getObject(params).promise();
+          console.log(`✅ S3 file retrieved: ${key}`);
+          return result.Body as Buffer;
         } catch (error) {
+          console.error(`❌ S3 get file failed: ${key}`, error);
           return null;
         }
       }
@@ -194,18 +237,8 @@ class StorageService {
           await fs.unlink(filePath);
           return true;
         } catch (error) {
-          console.warn('File not found for deletion:', key);
-          return true; // Consider it successful if file doesn't exist
-        }
-      } else {
-        // S3 - for now, delete from local storage (simulated)
-        const filePath = path.join(this.uploadDir, key);
-        try {
-          await fs.unlink(filePath);
-          return true;
-        } catch (error) {
-          console.warn('File not found for deletion:', key);
-          return true;
+          console.error(`❌ S3 delete file failed: ${key}`, error);
+          return false;
         }
       }
     } catch (error) {
