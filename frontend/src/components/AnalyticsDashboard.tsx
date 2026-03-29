@@ -209,16 +209,16 @@ const AnalyticsDashboard = () => {
           console.log('🔍 Income data analysis:', {
             totalEntries: incomeData.length,
             sampleEntries: incomeData.slice(0, 5),
-            allAmounts: incomeData.map(entry => entry.amount)
+            allAmounts: incomeData.map((entry: { amount: string | number }) => entry.amount)
           });
           
-          const totalIncome = incomeData.reduce((sum: number, entry: any) => {
-            const amount = parseFloat(entry.amount) || 0;
+          const totalIncome = incomeData.reduce((sum: number, entry: { amount: string | number }) => {
+            const amount = parseFloat(String(entry.amount)) || 0;
             console.log('🔍 Income entry amount:', entry.amount, 'parsed to:', amount, 'running sum:', sum + amount);
             return sum + amount;
           }, 0);
-          const totalExpenses = expenseData.reduce((sum: number, entry: any) => {
-            const amount = parseFloat(entry.amount) || 0;
+          const totalExpenses = expenseData.reduce((sum: number, entry: { amount: string | number }) => {
+            const amount = parseFloat(String(entry.amount)) || 0;
             console.log('🔍 Expense entry amount:', entry.amount, 'parsed to:', amount);
             return sum + amount;
           }, 0);
