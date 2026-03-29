@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import api from '../lib/api';
+import { useAuth } from '../contexts/AuthContext';
 import type { LoginRequest } from '../types';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [credentials, setCredentials] = useState<LoginRequest>({
     email: '',
     password: ''
@@ -59,17 +60,23 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      // Direct API call
-      const response = await api.post('/auth/login', credentials);
+      // Use AuthContext login function with better error handling
+      await login(credentials);
       
-      // Store token and user data
-      localStorage.setItem('farmops_token', response.data.token);
-      localStorage.setItem('farmops_user', JSON.stringify(response.data.user));
-      
-      // Navigate to dashboard
+      // Navigate to dashboard on success
       navigate('/dashboard');
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Login failed. Please try again.');
+      console.error('Login error:', err);
+      // Handle specific timeout errors
+      if (err.message.includes('timed out')) {
+        setError('Login request timed out. The server may be starting up. Please try again in a moment.');
+      } else if (err.message.includes('Network error')) {
+        setError('Network error. Please check your internet connection and try again.');
+      } else if (err.message.includes('Server error')) {
+        setError('Server error. Please try again later.');
+      } else {
+        setError(err.message || 'Login failed. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -231,7 +238,14 @@ const Login = () => {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Signing in...
+                  <span className="flex items-center">
+                    Signing in
+                    <span className="ml-1">
+                      <span className="inline-block animate-bounce">.</span>
+                      <span className="inline-block animate-bounce" style={{ animationDelay: '0.1s' }}>.</span>
+                      <span className="inline-block animate-bounce" style={{ animationDelay: '0.2s' }}>.</span>
+                    </span>
+                  </span>
                 </>
               ) : (
                 'Sign in'
@@ -239,6 +253,13 @@ const Login = () => {
             </button>
           </div>
         </form>
+        
+        {/* Helpful hint for slow logins */}
+        <div className="mt-4 text-center">
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            💡 <span className="font-medium">Tip:</span> First login may take up to 30 seconds if server is starting up
+          </p>
+        </div>
       </div>
     </div>
   );

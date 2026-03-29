@@ -131,6 +131,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       });
 
       console.log('📤 [Frontend] Sending login request...');
+      console.log('⏱️ [Frontend] Request timeout set to 30 seconds');
       const startTime = Date.now();
       
       const response = await api.post<LoginResponse>('/auth/login', credentials);
@@ -203,6 +204,28 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           headers: error.config?.headers
         }
       });
+      
+      // Handle specific timeout errors
+      if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+        console.error('⏰ [Frontend] Login request timed out after 30 seconds');
+        console.error('🌐 [Frontend] This is likely due to server cold start or network issues');
+        console.error('💡 [Frontend] Try again in a few moments or check your connection');
+        throw new Error('Login request timed out. The server may be starting up. Please try again in a moment.');
+      }
+      
+      // Handle network connectivity issues
+      if (error.code === 'ERR_NETWORK' || error.message.includes('Network Error')) {
+        console.error('🌐 [Frontend] Network connectivity issue detected');
+        console.error('💡 [Frontend] Check your internet connection and try again');
+        throw new Error('Network error. Please check your internet connection and try again.');
+      }
+      
+      // Handle server errors
+      if (error.response?.status >= 500) {
+        console.error('🔥 [Frontend] Server error detected');
+        console.error('💡 [Frontend] The server is experiencing issues. Try again later.');
+        throw new Error('Server error. Please try again later.');
+      }
       
       // Detailed error analysis
       if (error.response?.data) {
