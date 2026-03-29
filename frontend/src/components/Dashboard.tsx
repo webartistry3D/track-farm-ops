@@ -55,19 +55,16 @@ const Dashboard = () => {
           startDate = endDate = today.toISOString().split('T')[0];
           break;
         case 'yesterday':
-          const yesterday = new Date(today);
-          yesterday.setDate(yesterday.getDate() - 1);
+          const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
           startDate = endDate = yesterday.toISOString().split('T')[0];
           break;
         case 'week':
-          const weekAgo = new Date(today);
-          weekAgo.setDate(weekAgo.getDate() - 7);
+          const weekAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
           startDate = weekAgo.toISOString().split('T')[0];
           endDate = today.toISOString().split('T')[0];
           break;
         case 'month':
-          const monthAgo = new Date(today);
-          monthAgo.setDate(monthAgo.getDate() - 30);
+          const monthAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30);
           startDate = monthAgo.toISOString().split('T')[0];
           endDate = today.toISOString().split('T')[0];
           break;
@@ -604,7 +601,7 @@ const Dashboard = () => {
 
         <div>
           <h2 className="text-xl font-poppins font-semibold text-gray-900 dark:text-white mb-4">Recent Activity</h2>
-          <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+          <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-0">
             {incomeEntries.length > 0 || expenseEntries.length > 0 ? (
               <div className="space-y-3 max-h-96 overflow-y-auto">
                 {/* Combine income and expense entries, sort by newest first, and limit to 10 entries */}
@@ -616,7 +613,7 @@ const Dashboard = () => {
                     <Link 
                       key={index} 
                       to={`/reports?transactionId=${entry.id}&type=${entry.type.toLowerCase()}`}
-                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200 block"
+                      className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200 block"
                     >
                       <div className="flex items-center space-x-3">
                         <div className={`w-2 h-2 rounded-full ${
@@ -625,34 +622,34 @@ const Dashboard = () => {
                         <div>
                           <div className="flex items-center space-x-2">
                             <span className={`font-inter font-medium text-sm ${
-                              entry.type === 'Income' ? 'text-green-700' : 'text-red-700'
+                              entry.type === 'Income' ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'
                             }`}>
                               {entry.type === 'Income' ? 'Income' : 'Expense'}
                             </span>
-                            <span className="font-inter text-gray-900 font-medium">
+                            <span className="font-inter text-gray-900 dark:text-white font-medium">
                               {formatCurrency(entry.amount.toString())}
                             </span>
                           </div>
                           <div className="flex items-center space-x-2 mt-1">
-                            <span className="font-inter text-xs text-gray-600">
+                            <span className="font-inter text-xs text-gray-600 dark:text-gray-300">
                               {entry.description || entry.category || 'No description'}
                             </span>
                           </div>
                           <div className="flex items-center space-x-2 mt-1">
-                            <span className="font-inter text-xs text-gray-500">
+                            <span className="font-inter text-xs text-gray-500 dark:text-gray-400">
                               by {entry.userName || entry.user?.name || 'Unknown'}
                             </span>
-                            <span className="font-inter text-xs text-gray-400">
+                            <span className="font-inter text-xs text-gray-400 dark:text-gray-500">
                               ({entry.userEmail || entry.user?.email || 'unknown@trackfarmops.com'})
                             </span>
                           </div>
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="font-inter text-xs text-gray-500">
+                        <div className="font-inter text-xs text-gray-500 dark:text-gray-400">
                           {new Date(entry.createdAt).toLocaleDateString()}
                         </div>
-                        <div className="font-inter text-xs text-gray-400">
+                        <div className="font-inter text-xs text-gray-400 dark:text-gray-500">
                           {new Date(entry.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </div>
                       </div>

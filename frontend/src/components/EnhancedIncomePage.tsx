@@ -2037,31 +2037,57 @@ Generated on: ${new Date().toLocaleString()}
                 </form>
               ) : (
                 <div className="space-y-4">
-                  <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 p-6 rounded-lg">
-                    <h3 className="text-lg font-semibold text-green-800 dark:text-green-200 mb-2">
+                  <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 p-4 sm:p-6 rounded-lg">
+                    <h3 className="text-base sm:text-lg font-semibold text-green-800 dark:text-green-200 mb-2">
                       Invoice Generated Successfully!
                     </h3>
-                    <p className="text-green-600 dark:text-green-400 mb-4">
+                    <p className="text-sm sm:text-base text-green-600 dark:text-green-400 mb-4">
                       Invoice #{generatedInvoice.invoiceNumber} has been created for {generatedInvoice.clientName}
                     </p>
-                    <div className="flex gap-4">
+                    
+                    {/* Invoice Summary - Mobile Optimized */}
+                    <div className="bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-4 mb-4 border border-green-200 dark:border-green-700">
+                      <div className="grid grid-cols-2 gap-3 sm:gap-4 text-sm">
+                        <div>
+                          <span className="text-gray-500 dark:text-gray-400 block">Amount:</span>
+                          <span className="font-semibold text-gray-900 dark:text-white">
+                            {formatCurrency(generatedInvoice.total || 0)}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-gray-500 dark:text-gray-400 block">Due Date:</span>
+                          <span className="font-semibold text-gray-900 dark:text-white">
+                            {generatedInvoice.dueDate ? new Date(generatedInvoice.dueDate).toLocaleDateString() : 'N/A'}
+                          </span>
+                        </div>
+                        <div className="col-span-2">
+                          <span className="text-gray-500 dark:text-gray-400 block">Items:</span>
+                          <span className="font-semibold text-gray-900 dark:text-white">
+                            {generatedInvoice.items?.length || 0} items
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Action Buttons - Mobile First Layout */}
+                    <div className="space-y-3 sm:space-y-0 sm:flex sm:gap-3">
                       <button
                         onClick={downloadInvoice}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+                        className="w-full sm:w-auto px-4 py-2 sm:py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base font-medium"
                       >
                         <Download className="h-4 w-4" />
                         Download Invoice
                       </button>
                       <button
                         onClick={sendInvoice}
-                        className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2"
+                        className="w-full sm:w-auto px-4 py-2 sm:py-2.5 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base font-medium"
                       >
                         <Send className="h-4 w-4" />
                         Send Invoice
                       </button>
                       <button
                         onClick={resetInvoiceForm}
-                        className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                        className="w-full sm:w-auto px-4 py-2 sm:py-2.5 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm sm:text-base font-medium"
                       >
                         Create New Invoice
                       </button>

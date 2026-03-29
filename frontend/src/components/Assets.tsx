@@ -441,12 +441,29 @@ const Assets = () => {
         {/* Tab Navigation Skeleton */}
         <TabSkeleton tabs={4} />
 
+        {/* Key Performance Indicators Skeleton - Matches actual 2x4 grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="bg-white dark:bg-gray-800 p-4 lg:p-6 rounded-lg shadow">
+              <div className="flex items-center">
+                <div className="p-2 lg:p-3 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse">
+                  <div className="w-5 h-5 lg:w-6 lg:h-6 bg-gray-300 dark:bg-gray-600 rounded animate-pulse"></div>
+                </div>
+                <div className="ml-3 lg:ml-4 flex-1">
+                  <div className="h-4 w-24 lg:h-4 lg:w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
+                  <div className="h-8 w-16 lg:h-8 lg:w-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
         {/* Overview Tab Content Skeleton */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <div className="h-6 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
-              <div className="h-4 w-48 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+              <div className="h-6 w-48 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
+              <div className="h-4 w-64 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
             </div>
             <div className="flex gap-2">
               <div className="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
@@ -1136,22 +1153,67 @@ const Assets = () => {
                   <p className="text-gray-600 dark:text-gray-400">No assets available for analysis</p>
                 </div>
               ) : (
-                <div className="h-64 flex items-end space-x-2">
-                  <div className="flex-1 bg-blue-200 rounded-t-lg relative">
-                    <div className="absolute bottom-0 left-0 right-0 p-2 text-center text-xs text-gray-600 dark:text-gray-400">Machinery</div>
-                    <div className="bg-blue-500 h-48 rounded-t-lg" style={{height: '0%'}}></div>
+                <div className="h-64">
+                  <div className="h-full flex items-end space-x-2">
+                    {(() => {
+                      // Calculate asset utilization by category
+                      const categoryData = [
+                        { name: 'Machinery', color: 'blue', assets: assets.filter(a => a.category === 'machinery') },
+                        { name: 'Vehicles', color: 'green', assets: assets.filter(a => a.category === 'vehicles') },
+                        { name: 'Infrastructure', color: 'yellow', assets: assets.filter(a => a.category === 'infrastructure') },
+                        { name: 'Tools', color: 'purple', assets: assets.filter(a => a.category === 'tools') },
+                        { name: 'Irrigation', color: 'indigo', assets: assets.filter(a => a.category === 'irrigation_power') },
+                        { name: 'Livestock', color: 'orange', assets: assets.filter(a => a.category === 'livestock') }
+                      ].filter(cat => cat.assets.length > 0);
+
+                      // Calculate utilization percentage for each category
+                      const maxUtilization = Math.max(...categoryData.map(cat => cat.assets.length));
+                      
+                      return categoryData.map((category) => {
+                        const utilization = maxUtilization > 0 ? (category.assets.length / maxUtilization) * 100 : 0;
+                        const heightPercent = Math.max(utilization, 10); // Minimum 10% height for visibility
+                        
+                        return (
+                          <div key={category.name} className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-t-lg relative">
+                            <div className="absolute bottom-0 left-0 right-0 p-2 text-center text-xs text-gray-600 dark:text-gray-400 font-medium">
+                              {category.name}
+                            </div>
+                            <div 
+                              className={`bg-${category.color}-500 dark:bg-${category.color}-600 h-48 rounded-t-lg transition-all duration-500 ease-out`}
+                              style={{ height: `${heightPercent}%` }}
+                            >
+                              <div className="absolute top-2 left-0 right-0 text-center">
+                                <span className="text-xs font-bold text-white">
+                                  {category.assets.length}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="absolute -bottom-6 left-0 right-0 text-center">
+                              <span className="text-xs text-gray-500 dark:text-gray-400">
+                                {utilization.toFixed(0)}%
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      });
+                    })()}
                   </div>
-                  <div className="flex-1 bg-green-200 rounded-t-lg relative">
-                    <div className="absolute bottom-0 left-0 right-0 p-2 text-center text-xs text-gray-600 dark:text-gray-400">Vehicles</div>
-                    <div className="bg-green-500 h-48 rounded-t-lg" style={{height: '0%'}}></div>
-                  </div>
-                  <div className="flex-1 bg-yellow-200 rounded-t-lg relative">
-                    <div className="absolute bottom-0 left-0 right-0 p-2 text-center text-xs text-gray-600 dark:text-gray-400">Infrastructure</div>
-                    <div className="bg-yellow-500 h-48 rounded-t-lg" style={{height: '0%'}}></div>
-                  </div>
-                  <div className="flex-1 bg-purple-200 rounded-t-lg relative">
-                    <div className="absolute bottom-0 left-0 right-0 p-2 text-center text-xs text-gray-600 dark:text-gray-400">Tools</div>
-                    <div className="bg-purple-500 h-48 rounded-t-lg" style={{height: '0%'}}></div>
+                  
+                  {/* Legend */}
+                  <div className="mt-8 flex flex-wrap justify-center gap-4">
+                    {[
+                      { name: 'Machinery', color: 'bg-blue-500' },
+                      { name: 'Vehicles', color: 'bg-green-500' },
+                      { name: 'Infrastructure', color: 'bg-yellow-500' },
+                      { name: 'Tools', color: 'bg-purple-500' },
+                      { name: 'Irrigation', color: 'bg-indigo-500' },
+                      { name: 'Livestock', color: 'bg-orange-500' }
+                    ].map((item) => (
+                      <div key={item.name} className="flex items-center space-x-2">
+                        <div className={`w-3 h-3 ${item.color} rounded-full`}></div>
+                        <span className="text-xs text-gray-600 dark:text-gray-400">{item.name}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               )}

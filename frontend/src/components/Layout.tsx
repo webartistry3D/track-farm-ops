@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { SubscriptionRestrictions } from '../utils/subscriptionRestrictions';
+import { InactivityWarning } from './InactivityWarning';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -13,9 +14,35 @@ const Layout = ({ children }: LayoutProps) => {
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [subscription, setSubscription] = useState<any>(null);
+  const [showInactivityWarning, setShowInactivityWarning] = useState(false);
   const { user, logout } = useAuth();
   const { isDark, toggleTheme } = useTheme();
   const location = useLocation();
+
+  // Inactivity detection state
+  const [inactivityTimer, setInactivityTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
+
+  // Auto logout function
+  const handleAutoLogout = () => {
+    setShowInactivityWarning(true);
+    logout();
+  };
+
+  // Reset inactivity timer on user activity
+  const resetInactivityTimer = () => {
+    if (inactivityTimer) {
+      clearTimeout(inactivityTimer);
+    }
+    const newTimer = setTimeout(() => {
+      handleAutoLogout();
+    }, 15 * 60 * 1000); // 15 minutes
+    setInactivityTimer(newTimer);
+  };
+
+  // Activity detection
+  const handleUserActivity = () => {
+    resetInactivityTimer();
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -48,6 +75,36 @@ const Layout = ({ children }: LayoutProps) => {
       }
     };
 
+    // Inactivity detection setup
+    const setupInactivityDetection = () => {
+      // Events that reset the inactivity timer
+      const activityEvents = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
+      
+      activityEvents.forEach(event => {
+        document.addEventListener(event, handleUserActivity);
+      });
+
+      // Initial timer setup
+      resetInactivityTimer();
+    };
+
+    const cleanupInactivityDetection = () => {
+      const activityEvents = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
+      
+      activityEvents.forEach(event => {
+        document.removeEventListener(event, handleUserActivity);
+      });
+
+      if (inactivityTimer) {
+        clearTimeout(inactivityTimer);
+      }
+    };
+
+    // Only setup inactivity detection if user is logged in
+    if (user) {
+      setupInactivityDetection();
+    }
+
     initializeSubscriptionRestrictions();
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -56,8 +113,9 @@ const Layout = ({ children }: LayoutProps) => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
       window.removeEventListener('resize', handleResize);
+      cleanupInactivityDetection();
     };
-  }, [profileDropdownOpen, notificationsOpen]);
+  }, [profileDropdownOpen, notificationsOpen, user, logout]);
 
   const allNavigation = [
     { name: 'Dashboard', href: '/dashboard', icon: '📊', current: location.pathname === '/dashboard', restricted: false },
@@ -345,6 +403,16 @@ const Layout = ({ children }: LayoutProps) => {
             </div>
           </div>
         </main>
+
+        {/* Inactivity Warning Modal */}
+        {showInactivityWarning && (
+          <InactivityWarning 
+            onLogout={() => {
+              setShowInactivityWarning(false);
+              logout();
+            }}
+          />
+        )}
       </div>
     </div>
   );

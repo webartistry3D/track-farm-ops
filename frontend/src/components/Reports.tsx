@@ -195,33 +195,30 @@ const Reports = () => {
   const fetchAllTransactions = async () => {
     try {
       setLoading(true);
-      const today = new Date().toISOString().split('T')[0];
+      const today = new Date();
       let startDate = '';
-      let endDate = today;
+      let endDate = today.toISOString().split('T')[0];
       
       // Calculate date range based on filter
       switch (dateFilter) {
         case 'today':
-          startDate = today;
-          endDate = today;
+          startDate = today.toISOString().split('T')[0];
+          endDate = today.toISOString().split('T')[0];
           break;
         case 'yesterday':
-          const yesterday = new Date();
-          yesterday.setDate(yesterday.getDate() - 1);
+          const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
           startDate = yesterday.toISOString().split('T')[0];
           endDate = yesterday.toISOString().split('T')[0];
           break;
         case 'last7days':
-          const weekAgo = new Date();
-          weekAgo.setDate(weekAgo.getDate() - 7);
+          const weekAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
           startDate = weekAgo.toISOString().split('T')[0];
-          endDate = today;
+          endDate = today.toISOString().split('T')[0];
           break;
         case 'last30days':
-          const thirtyDaysAgo = new Date();
-          thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+          const thirtyDaysAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30);
           startDate = thirtyDaysAgo.toISOString().split('T')[0];
-          endDate = today;
+          endDate = today.toISOString().split('T')[0];
           break;
         case 'custom':
           const customDate = new Date(selectedYear, selectedMonth, 1);
