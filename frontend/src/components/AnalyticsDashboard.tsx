@@ -103,16 +103,16 @@ const AnalyticsDashboard = () => {
   }, [dateFilter, selectedMonth, selectedYear]);
 
   const fetchAnalytics = async () => {
-    try {
-      console.log('🔄 fetchAnalytics triggered - dateFilter:', dateFilter);
-      setFinancialLoading(true);
-      setInventoryLoading(true);
+    console.log('🔄 fetchAnalytics triggered - dateFilter:', dateFilter);
+    setFinancialLoading(true);
+    setInventoryLoading(true);
 
+    try {
+      // Calculate date range based on filter
       const today = new Date();
       let startDate = '';
-      let endDate = today.toISOString().split('T')[0];
-      
-      // Calculate date range based on filter
+      let endDate = '';
+
       switch (dateFilter) {
         case 'today':
           startDate = today.toISOString().split('T')[0];
@@ -140,7 +140,7 @@ const AnalyticsDashboard = () => {
           endDate = lastDayOfCustomMonth.toISOString().split('T')[0];
           break;
         case 'allTime':
-          // For all time, don't set date limits
+          // For allTime, don't set date filters to get all data
           startDate = '';
           endDate = '';
           break;
@@ -152,49 +152,155 @@ const AnalyticsDashboard = () => {
       try {
         console.log('📊 Making API calls to /finance/income and /finance/expenses');
         const [incomeResponse, expenseResponse] = await Promise.all([
-          api.get(`/finance/income?startDate=${startDate}&endDate=${endDate}`),
-          api.get(`/finance/expenses?startDate=${startDate}&endDate=${endDate}`)
+          api.get(`/finance/income${startDate && endDate ? `?startDate=${startDate}&endDate=${endDate}` : ''}`),
+          api.get(`/finance/expenses${startDate && endDate ? `?startDate=${startDate}&endDate=${endDate}` : ''}`)
         ]);
+
+        console.log('📥 Raw API responses:', {
+          incomeResponse: incomeResponse.data,
+          expenseResponse: expenseResponse.data,
+          incomeResponseStatus: incomeResponse.status,
+          expenseResponseStatus: expenseResponse.status
+        });
 
         const incomeData = incomeResponse.data?.entries || [];
         const expenseData = expenseResponse.data?.entries || [];
 
-        // Calculate totals from the actual transaction data
-        const totalIncome = incomeData.reduce((sum: number, entry: any) => sum + (entry.amount || 0), 0);
-        const totalExpenses = expenseData.reduce((sum: number, entry: any) => sum + (entry.amount || 0), 0);
+        console.log('📊 Extracted data arrays:', {
+          incomeData: incomeData.length,
+          expenseData: expenseData.length,
+          incomeDataSample: incomeData.slice(0, 2),
+          expenseDataSample: expenseData.slice(0, 2)
+        });
 
-        // Group by category
-        const incomeByCategory = incomeData.reduce((acc: any[], entry: any) => {
-          const category = entry.category || 'General';
-          const existing = acc.find(item => item.category === category);
-          if (existing) {
-            existing.amount += entry.amount || 0;
-          } else {
-            acc.push({ category, amount: entry.amount || 0 });
-          }
-          return acc;
-        }, []);
+        console.log('🔍 Checking API response structure:', {
+          hasIncomeTotal: 'totalIncome' in incomeResponse.data,
+          hasExpenseTotal: 'totalExpenses' in expenseResponse.data,
+          incomeTotalValue: incomeResponse.data?.totalIncome,
+          expenseTotalValue: expenseResponse.data?.totalExpenses,
+          incomeTotalType: typeof incomeResponse.data?.totalIncome,
+          expenseTotalType: typeof expenseResponse.data?.totalExpenses
+        });
 
-        const expensesByCategory = expenseData.reduce((acc: any[], entry: any) => {
-          const category = entry.category || 'General';
-          const existing = acc.find(item => item.category === category);
-          if (existing) {
-            existing.amount += entry.amount || 0;
-          } else {
-            acc.push({ category, amount: entry.amount || 0 });
-          }
-          return acc;
-        }, []);
+        // Check if API is returning pre-calculated totals instead of entries
+        if (typeof incomeResponse.data?.totalIncome === 'string' || typeof expenseResponse.data?.totalExpenses === 'string') {
+          console.log('⚠️ API is returning pre-calculated totals as strings!');
+          const apiTotalIncome = Number(incomeResponse.data?.totalIncome) || 0;
+          const apiTotalExpenses = Number(expenseResponse.data?.totalExpenses) || 0;
 
-        financialData = {
-          totalIncome,
-          totalExpenses,
-          netProfit: totalIncome - totalExpenses,
-          incomeByCategory,
-          expensesByCategory
-        };
+          console.log('🔧 Converted API totals:', {
+            totalIncome: apiTotalIncome,
+            totalExpenses: apiTotalExpenses,
+            netProfit: apiTotalIncome - apiTotalExpenses
+          });
+
+          financialData = {
+            totalIncome: apiTotalIncome,
+            totalExpenses: apiTotalExpenses,
+            netProfit: apiTotalIncome - apiTotalExpenses,
+            incomeByCategory: incomeResponse.data?.incomeByCategory || [],
+            expensesByCategory: expenseResponse.data?.expensesByCategory || []
+          };
+        } else if (incomeData.length > 0 || expenseData.length > 0) {
+          // Calculate from individual entries
+          console.log('📊 Calculating from individual entries...');
+
+          // Calculate totals from the actual transaction data
+          console.log('🔍 Income data analysis:', {
+            totalEntries: incomeData.length,
+            sampleEntries: incomeData.slice(0, 5),
+            allAmounts: incomeData.map(entry => entry.amount)
+          });
+          
+          const totalIncome = incomeData.reduce((sum: number, entry: any) => {
+            const amount = parseFloat(entry.amount) || 0;
+            console.log('🔍 Income entry amount:', entry.amount, 'parsed to:', amount, 'running sum:', sum + amount);
+            return sum + amount;
+          }, 0);
+          const totalExpenses = expenseData.reduce((sum: number, entry: any) => {
+            const amount = parseFloat(entry.amount) || 0;
+            console.log('🔍 Expense entry amount:', entry.amount, 'parsed to:', amount);
+            return sum + amount;
+          }, 0);
+
+          console.log('💰 Calculated totals:', {
+            totalIncome,
+            totalExpenses,
+            netProfit: totalIncome - totalExpenses,
+            incomeEntries: incomeData.length,
+            expenseEntries: expenseData.length
+          });
+
+          // Group by category
+          const incomeByCategory = incomeData.reduce((acc: any[], entry: any) => {
+            const category = entry.category || 'General';
+            const amount = parseFloat(entry.amount) || 0;
+            const existing = acc.find(item => item.category === category);
+            if (existing) {
+              existing.amount += amount;
+            } else {
+              acc.push({ category, amount });
+            }
+            return acc;
+          }, []);
+
+          const expensesByCategory = expenseData.reduce((acc: any[], entry: any) => {
+            const category = entry.category || 'General';
+            const amount = parseFloat(entry.amount) || 0;
+            const existing = acc.find(item => item.category === category);
+            if (existing) {
+              existing.amount += amount;
+            } else {
+              acc.push({ category, amount });
+            }
+            return acc;
+          }, []);
+
+          financialData = {
+            totalIncome: Number(totalIncome) || 0,
+            totalExpenses: Number(totalExpenses) || 0,
+            netProfit: Number(totalIncome) - Number(totalExpenses),
+            incomeByCategory,
+            expensesByCategory
+          };
+        } else {
+          console.log('📊 No data available - using default values');
+        }
 
         console.log('📊 Processed financial data:', financialData);
+        
+        // FINAL SAFETY NET: Ensure all values are numbers regardless of source
+        const safeFinancialData = {
+          totalIncome: Number(financialData.totalIncome) || 0,
+          totalExpenses: Number(financialData.totalExpenses) || 0,
+          netProfit: Number(financialData.netProfit) || 0,
+          incomeByCategory: financialData.incomeByCategory || [],
+          expensesByCategory: financialData.expensesByCategory || []
+        };
+        
+        console.log('🛡️ Final safe financial data:', safeFinancialData);
+        console.log('🔍 Data types:', {
+          totalIncome: typeof safeFinancialData.totalIncome,
+          totalExpenses: typeof safeFinancialData.totalExpenses,
+          netProfit: typeof safeFinancialData.netProfit
+        });
+        
+        // Replace the financial data with the safe version
+        financialData = safeFinancialData;
+        
+        // ADDITIONAL SAFETY: Force string to number conversion at the point of use
+        if (typeof financialData.totalIncome === 'string') {
+          console.warn('⚠️ FORCING string to number conversion for totalIncome');
+          financialData.totalIncome = Number(financialData.totalIncome) || 0;
+        }
+        if (typeof financialData.totalExpenses === 'string') {
+          console.warn('⚠️ FORCING string to number conversion for totalExpenses');
+          financialData.totalExpenses = Number(financialData.totalExpenses) || 0;
+        }
+        if (typeof financialData.netProfit === 'string') {
+          console.warn('⚠️ FORCING string to number conversion for netProfit');
+          financialData.netProfit = Number(financialData.netProfit) || 0;
+        }
       } catch (error) {
         console.error('❌ Financial API error:', error);
       }
@@ -438,21 +544,21 @@ const AnalyticsDashboard = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <StatCard
                 title="Total Income"
-                value={formatCurrency(financialSummary?.totalIncome || 0)}
+                value={formatCurrency(Number(financialSummary?.totalIncome) || 0)}
                 icon={<TrendingUp className="h-4 w-4 text-white" />}
                 color="bg-green-500"
               />
               <StatCard
                 title="Total Expenses"
-                value={formatCurrency(financialSummary?.totalExpenses || 0)}
+                value={formatCurrency(Number(financialSummary?.totalExpenses) || 0)}
                 icon={<ShoppingCart className="h-4 w-4 text-white" />}
                 color="bg-red-500"
               />
               <StatCard
                 title="Net Profit"
-                value={formatCurrency(financialSummary?.netProfit || 0)}
+                value={formatCurrency(Number(financialSummary?.netProfit) || 0)}
                 icon={<TrendingUp className="h-4 w-4 text-white" />}
-                color={(financialSummary?.netProfit || 0) >= 0 ? "bg-blue-500" : "bg-orange-500"}
+                color={(Number(financialSummary?.netProfit) || 0) >= 0 ? "bg-blue-500" : "bg-orange-500"}
               />
             </div>
           )}

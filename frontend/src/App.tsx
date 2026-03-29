@@ -22,6 +22,7 @@ import Contact from './components/Contact';
 import Privacy from './components/Privacy';
 import Terms from './components/Terms';
 import Pricing from './components/Pricing';
+import SuperUserRoutes from './components/SuperUserRoutes';
 import { useAuth } from './contexts/AuthContext';
 
 const queryClient = new QueryClient();
@@ -76,6 +77,10 @@ const AppRoutes = () => {
       <Route path="/privacy" element={<Privacy />} />
       <Route path="/terms" element={<Terms />} />
       <Route path="/pricing" element={<Pricing />} />
+      
+      {/* Superuser Routes - Separate from regular user routes */}
+      <Route path="/super-user/*" element={<SuperUserRoutes />} />
+      
       <Route 
         path="/dashboard" 
         element={

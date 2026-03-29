@@ -1109,16 +1109,17 @@ TrackFarmOps Team`;
       const totalAmount = subtotal + vatAmount;
       
       const incomeData = {
-        amount: totalAmount.toString(),
+        amount: subtotal.toString(),
         description: formData.description,
         quantity: formData.quantity,
         unitPrice: formData.unitPrice,
-        category: formData.category,
-        paymentMethod: formData.paymentMethod,
+        vatRate: formData.vatRate,
+        vatAmount: vatAmount,
+        totalAmount: totalAmount,
         date: formData.date,
         enableVAT: formData.enableVAT,
-        vatRate: formData.vatRate,
-        vatAmount: vatAmount.toString(),
+        category: formData.category,
+        paymentMethod: formData.paymentMethod,
         subtotal: subtotal.toString()
       };
       
