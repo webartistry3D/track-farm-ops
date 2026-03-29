@@ -1199,21 +1199,18 @@ TrackFarmOps Team`;
           endDate = today.toISOString().split('T')[0];
           break;
         case 'yesterday':
-          const yesterday = new Date();
-          yesterday.setDate(yesterday.getDate() - 1);
+          const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
           startDate = yesterday.toISOString().split('T')[0];
           endDate = yesterday.toISOString().split('T')[0];
           console.log(`🔍 Yesterday calculation: today=${today.toISOString().split('T')[0]}, yesterday=${yesterday.toISOString().split('T')[0]}`);
           break;
         case 'last7days':
-          const weekAgo = new Date();
-          weekAgo.setDate(weekAgo.getDate() - 7);
+          const weekAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
           startDate = weekAgo.toISOString().split('T')[0];
           endDate = today.toISOString().split('T')[0];
           break;
         case 'last30days':
-          const thirtyDaysAgo = new Date();
-          thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+          const thirtyDaysAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30);
           startDate = thirtyDaysAgo.toISOString().split('T')[0];
           endDate = today.toISOString().split('T')[0];
           break;
@@ -1284,22 +1281,17 @@ TrackFarmOps Team`;
       
       // Calculate previous period based on current filter
       if (vatDateFilter === 'today') {
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
+        const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
         previousStartDate = yesterday.toISOString().split('T')[0];
         previousEndDate = yesterday.toISOString().split('T')[0];
       } else if (vatDateFilter === 'last7days') {
-        const fourteenDaysAgo = new Date();
-        fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
-        const sevenDaysAgo = new Date();
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        const fourteenDaysAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 14);
+        const sevenDaysAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
         previousStartDate = fourteenDaysAgo.toISOString().split('T')[0];
         previousEndDate = sevenDaysAgo.toISOString().split('T')[0];
       } else if (vatDateFilter === 'last30days') {
-        const sixtyDaysAgo = new Date();
-        sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
-        const thirtyDaysAgo = new Date();
-        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        const sixtyDaysAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 60);
+        const thirtyDaysAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30);
         previousStartDate = sixtyDaysAgo.toISOString().split('T')[0];
         previousEndDate = thirtyDaysAgo.toISOString().split('T')[0];
       } else if (vatDateFilter === 'custom') {
