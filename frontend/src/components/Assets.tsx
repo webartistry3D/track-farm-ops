@@ -537,7 +537,13 @@ const Assets = () => {
       {/* Stats Cards */}
       <div className="max-w-7xl mx-auto px-0 sm:px-0 lg:px-0 py-0">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-4">
-          <div className="bg-white dark:bg-gray-800 p-4 lg:p-6 rounded-lg shadow">
+          <div 
+            onClick={() => {
+              // Navigate to all assets view
+              console.log('Total Assets clicked');
+            }}
+            className="bg-white dark:bg-gray-800 p-4 lg:p-6 rounded-lg shadow cursor-pointer hover:shadow-xl transition-all duration-300"
+          >
             <div className="flex items-center">
               <div className="p-2 lg:p-3 bg-blue-100 dark:bg-blue-900 rounded-full">
                 <TrendingUp className="w-5 h-5 lg:w-6 lg:h-6 text-blue-600 dark:text-blue-400" />
@@ -549,7 +555,13 @@ const Assets = () => {
             </div>
           </div>
           
-          <div className="bg-white dark:bg-gray-800 p-4 lg:p-6 rounded-lg shadow">
+          <div 
+            onClick={() => {
+              // Navigate to active assets
+              console.log('Active Assets clicked');
+            }}
+            className="bg-white dark:bg-gray-800 p-4 lg:p-6 rounded-lg shadow cursor-pointer hover:shadow-xl transition-all duration-300"
+          >
             <div className="flex items-center">
               <div className="p-2 lg:p-3 bg-green-100 dark:bg-green-900 rounded-full">
                 <Wrench className="w-5 h-5 lg:w-6 lg:h-6 text-green-600 dark:text-green-400" />
@@ -563,7 +575,13 @@ const Assets = () => {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 p-4 lg:p-6 rounded-lg shadow">
+          <div 
+            onClick={() => {
+              // Navigate to maintenance assets
+              console.log('Maintenance Assets clicked');
+            }}
+            className="bg-white dark:bg-gray-800 p-4 lg:p-6 rounded-lg shadow cursor-pointer hover:shadow-xl transition-all duration-300"
+          >
             <div className="flex items-center">
               <div className="p-2 lg:p-3 bg-yellow-100 dark:bg-yellow-900 rounded-full">
                 <Clock className="w-5 h-5 lg:w-6 lg:h-6 text-yellow-600 dark:text-yellow-400" />
@@ -577,7 +595,13 @@ const Assets = () => {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 p-4 lg:p-6 rounded-lg shadow">
+          <div 
+            onClick={() => {
+              // Navigate to assets with issues
+              console.log('Asset Issues clicked');
+            }}
+            className="bg-white dark:bg-gray-800 p-4 lg:p-6 rounded-lg shadow cursor-pointer hover:shadow-xl transition-all duration-300"
+          >
             <div className="flex items-center">
               <div className="p-2 lg:p-3 bg-red-100 dark:bg-red-900 rounded-full">
                 <AlertTriangle className="w-5 h-5 lg:w-6 lg:h-6 text-red-600 dark:text-red-400" />
@@ -700,7 +724,14 @@ const Assets = () => {
                   </thead>
                   <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     {filteredAssets.map((asset) => (
-                      <tr key={asset.id} className="hover:bg-gray-50 dark:bg-gray-900 dark:hover:bg-gray-700">
+                      <tr 
+                        key={asset.id}
+                        onClick={() => {
+                          // Handle asset click - could open details modal or navigate to asset details
+                          console.log('Asset clicked:', asset.name);
+                        }}
+                        className="hover:bg-gray-50 dark:bg-gray-900 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+                      >
                         <td className="px-2 sm:px-3 py-3 sm:py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             <span className="text-lg sm:text-xl mr-2 sm:mr-3">{getCategoryIcon(asset.category)}</span>

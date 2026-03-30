@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
 import { formatCurrency } from '../utils/currency';
@@ -13,6 +13,7 @@ import {
 const Dashboard = () => {
   const { user } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const [incomeEntries, setIncomeEntries] = useState<any[]>([]);
   const [expenseEntries, setExpenseEntries] = useState<any[]>([]);
   const [inventoryItems, setInventoryItems] = useState<any[]>([]);
@@ -279,7 +280,10 @@ const Dashboard = () => {
 
       {isOwner && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="group bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-3 dark:border-green-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+          <div 
+            onClick={() => navigate('/income')}
+            className="group bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-3 dark:border-green-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
+          >
             <div className="flex items-start justify-between mb-3">
               <div className="flex flex-col space-y-1">
                 <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
@@ -313,7 +317,10 @@ const Dashboard = () => {
             </div>
           </div>
           
-          <div className="group bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 rounded-xl p-3 dark:border-red-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+          <div 
+            onClick={() => navigate('/expenses')}
+            className="group bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 rounded-xl p-3 dark:border-red-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
+          >
             <div className="flex items-start justify-between mb-3">
               <div className="flex flex-col space-y-1">
                 <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
@@ -347,7 +354,10 @@ const Dashboard = () => {
             </div>
           </div>
           
-          <div className="group bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-3 dark:border-purple-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+          <div 
+            onClick={() => navigate('/vat')}
+            className="group bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-3 dark:border-purple-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
+          >
             <div className="flex items-start justify-between mb-3">
               <div className="flex flex-col space-y-1">
                 <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
@@ -381,12 +391,15 @@ const Dashboard = () => {
             </div>
           </div>
           
-          <div className={`group bg-gradient-to-br ${
-            dateFilter === 'allTime' ? 
-              'from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 dark:border-blue-700' :
-              netProfit >= 0 ? 'from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 dark:border-green-700' : 
-              'from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 dark:border-red-700'
-          } rounded-xl p-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300`}>
+          <div 
+            onClick={() => dateFilter === 'allTime' ? navigate('/analytics') : navigate('/income?filter=' + dateFilter)}
+            className={`group bg-gradient-to-br ${
+              dateFilter === 'allTime' ? 
+                'from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 dark:border-blue-700' :
+                netProfit >= 0 ? 'from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 dark:border-green-700' : 
+                'from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 dark:border-red-700'
+            } rounded-xl p-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer`}
+          >
             <div className="flex items-start justify-between mb-3">
               <div className="flex flex-col space-y-1">
                 <h3 className={`text-sm font-semibold text-gray-700 dark:text-gray-300`}>

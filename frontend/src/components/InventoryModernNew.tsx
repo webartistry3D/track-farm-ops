@@ -906,7 +906,13 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
       <div className="w-full px-0 sm:px-0 lg:px-0 py-0">
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+          <div 
+            onClick={() => {
+              // Navigate to items view or show all items
+              console.log('Total Items clicked');
+            }}
+            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+          >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Items</p>
@@ -920,7 +926,13 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
             </div>
           </div>
           
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+          <div 
+            onClick={() => {
+              // Navigate to categories view
+              console.log('Total Categories clicked');
+            }}
+            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+          >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Categories</p>
@@ -934,7 +946,13 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
             </div>
           </div>
           
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+          <div 
+            onClick={() => {
+              // Show high-value items or filter by value
+              console.log('Total Value clicked');
+            }}
+            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+          >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Value</p>
@@ -948,7 +966,13 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
             </div>
           </div>
           
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+          <div 
+            onClick={() => {
+              // Navigate to low stock items
+              console.log('Low Stock Items clicked');
+            }}
+            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+          >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Low Stock Items</p>
@@ -1144,8 +1168,12 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
                 return (
                   <div
                     key={item.id}
+                    onClick={() => {
+                      setItemToView(item);
+                      setShowViewItemModal(true);
+                    }}
                     className={viewMode === 'grid' 
-                      ? "bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                      ? "bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer"
                       : "hidden" // Hide individual cards in table view
                     }
                   >
@@ -1511,7 +1539,11 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
                   return (
                     <div
                       key={category.id}
-                      className="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                      onClick={() => {
+                        // Filter items by this category
+                        setItems(items.filter(item => item.categoryId === category.id));
+                      }}
+                      className="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer"
                     >
                       <div className="p-6">
                         <div className="flex flex-col items-center text-center mb-6">

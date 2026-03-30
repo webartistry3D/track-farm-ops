@@ -377,7 +377,13 @@ const AnalyticsDashboard = () => {
     };
 
     return (
-      <div className={`group bg-gradient-to-br ${getGradientColor()} rounded-xl p-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300`}>
+      <div 
+        onClick={() => {
+          // Handle card click - could navigate to detailed view or filter
+          console.log('Analytics card clicked:', title);
+        }}
+        className={`group bg-gradient-to-br ${getGradientColor()} rounded-xl p-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer`}
+      >
         <div className="flex items-start justify-between mb-3">
           <div className="flex flex-col space-y-1">
             <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">{title}</h3>
