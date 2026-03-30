@@ -404,9 +404,9 @@ const AnalyticsDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="bg-white dark:bg-gray-900 border-b border-gray-900 dark:border-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-0 py-0">
+    <div className="min-h-screen bg-gray-0 dark:bg-gray-900">
+      <div className="bg-white dark:bg-gray-900 dark:border-gray-900">
+        <div className="max-w-7xl mx-auto px-0 sm:px-0 lg:px-0 py-0">
           {/*<div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Analytics Dashboard</h1>
@@ -427,7 +427,43 @@ const AnalyticsDashboard = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-0 py-0">
+      <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-0 py-0">
+        <div className="mb-8">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Financial Overview</h2>
+          {financialLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                  <div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
+                  <div className="h-8 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
+                  <div className="h-3 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <StatCard
+                title="Total Income"
+                value={formatCurrency(Number(financialSummary?.totalIncome) || 0)}
+                icon={<TrendingUp className="h-4 w-4 text-white" />}
+                color="bg-green-500"
+              />
+              <StatCard
+                title="Total Expenses"
+                value={formatCurrency(Number(financialSummary?.totalExpenses) || 0)}
+                icon={<ShoppingCart className="h-4 w-4 text-white" />}
+                color="bg-red-500"
+              />
+              <StatCard
+                title="Net Profit"
+                value={formatCurrency(Number(financialSummary?.netProfit) || 0)}
+                icon={<TrendingUp className="h-4 w-4 text-white" />}
+                color={(Number(financialSummary?.netProfit) || 0) >= 0 ? "bg-blue-500" : "bg-orange-500"}
+              />
+            </div>
+          )}
+        </div>
+
         <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-8">
           <div className="flex flex-col gap-4">
             <div className="overflow-x-auto pb-2">
@@ -525,42 +561,6 @@ const AnalyticsDashboard = () => {
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="mb-8">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Financial Overview</h2>
-          {financialLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                  <div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
-                  <div className="h-8 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
-                  <div className="h-3 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <StatCard
-                title="Total Income"
-                value={formatCurrency(Number(financialSummary?.totalIncome) || 0)}
-                icon={<TrendingUp className="h-4 w-4 text-white" />}
-                color="bg-green-500"
-              />
-              <StatCard
-                title="Total Expenses"
-                value={formatCurrency(Number(financialSummary?.totalExpenses) || 0)}
-                icon={<ShoppingCart className="h-4 w-4 text-white" />}
-                color="bg-red-500"
-              />
-              <StatCard
-                title="Net Profit"
-                value={formatCurrency(Number(financialSummary?.netProfit) || 0)}
-                icon={<TrendingUp className="h-4 w-4 text-white" />}
-                color={(Number(financialSummary?.netProfit) || 0) >= 0 ? "bg-blue-500" : "bg-orange-500"}
-              />
-            </div>
-          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">

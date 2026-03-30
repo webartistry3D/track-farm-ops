@@ -427,7 +427,7 @@ const EnhancedExpensePage = () => {
                 onClick={() => handleTabChange('record')}
                 className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${
                   activeTab === 'record'
-                    ? 'border-orange-500 text-orange-600 dark:text-orange-400'
+                    ? 'border-amber-500 text-amber-600 dark:text-amber-400'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
                 }`}
               >
@@ -438,7 +438,7 @@ const EnhancedExpensePage = () => {
                 onClick={() => handleTabChange('records')}
                 className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${
                   activeTab === 'records'
-                    ? 'border-orange-500 text-orange-600 dark:text-orange-400'
+                    ? 'border-amber-500 text-amber-600 dark:text-amber-400'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
                 }`}
               >
@@ -454,11 +454,11 @@ const EnhancedExpensePage = () => {
               {/* OCR Section */}
               {!ocrResult && (
                 <div className="mb-6 max-w-2xl">
-                  <div className="bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 rounded-xl border border-orange-200 dark:border-orange-700 shadow-sm">
+                  <div className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 rounded-xl border border-amber-200 dark:border-amber-700 shadow-sm">
                     <div className="p-4">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center space-x-3">
-                          <div className="p-2 bg-orange-600 dark:bg-orange-700 rounded-lg shadow-sm">
+                          <div className="p-2 bg-amber-600 dark:bg-amber-700 rounded-lg shadow-sm">
                             <Scan className="h-4 w-4 text-white" />
                           </div>
                           <div>
@@ -474,7 +474,7 @@ const EnhancedExpensePage = () => {
                         <button
                           onClick={handleCameraCapture}
                           disabled={isScanning}
-                          className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 bg-orange-600 dark:bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 dark:hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md"
+                          className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 bg-amber-600 dark:bg-amber-600 text-white text-sm font-medium rounded-lg hover:bg-amber-700 dark:hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md"
                         >
                           <Camera className="h-4 w-4" />
                           {isScanning ? 'Processing...' : 'Take Photo'}
@@ -482,7 +482,7 @@ const EnhancedExpensePage = () => {
                         <button
                           onClick={handleFileUpload}
                           disabled={isScanning}
-                          className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 bg-white dark:bg-gray-800 text-orange-600 dark:text-orange-400 text-sm font-medium rounded-lg border border-orange-200 dark:border-orange-700 hover:bg-orange-50 dark:hover:bg-orange-900/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md"
+                          className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 bg-white dark:bg-gray-800 text-amber-600 dark:text-amber-400 text-sm font-medium rounded-lg border border-amber-200 dark:border-amber-700 hover:bg-amber-50 dark:hover:bg-amber-900/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md"
                         >
                           <Upload className="h-4 w-4" />
                           {isScanning ? 'Processing...' : 'Upload Image'}
@@ -627,7 +627,7 @@ const EnhancedExpensePage = () => {
                       type="text"
                       id="merchant"
                       name="merchant"
-                      className="w-full px-3 py-2 h-10 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 dark:bg-gray-700 dark:text-white"
+                      className="w-full px-3 py-2 h-10 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white"
                       placeholder="e.g., Feed Store, Veterinary Clinic"
                       value={formData.merchant}
                       onChange={handleChange}
@@ -644,7 +644,7 @@ const EnhancedExpensePage = () => {
                       id="amount"
                       name="amount"
                       required
-                      className="w-full px-3 py-2 h-10 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 dark:bg-gray-700 dark:text-white"
+                      className="w-full px-3 py-2 h-10 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white"
                       placeholder="0.00"
                       value={displayAmount}
                       onChange={handleAmountChange}
@@ -663,7 +663,7 @@ const EnhancedExpensePage = () => {
                       id="category"
                       name="category"
                       required
-                      className="w-full px-3 py-2 h-10 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 dark:bg-gray-700 dark:text-white"
+                      className="w-full px-3 py-2 h-10 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white"
                       value={formData.category}
                       onChange={handleChange}
                     >
@@ -686,7 +686,7 @@ const EnhancedExpensePage = () => {
                       id="date"
                       name="date"
                       required
-                      className="w-full px-3 py-2 h-10 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 dark:bg-gray-700 dark:text-white"
+                      className="w-full px-3 py-2 h-10 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white"
                       value={formData.date}
                       onChange={handleChange}
                     />
@@ -736,7 +736,7 @@ const EnhancedExpensePage = () => {
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="px-6 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="px-6 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     {isLoading ? 'Recording...' : 'Record Expense'}
                   </button>
@@ -759,7 +759,7 @@ const EnhancedExpensePage = () => {
                   </p>
                   <button
                     onClick={() => handleTabChange('record')}
-                    className="inline-flex items-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+                    className="inline-flex items-center px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors"
                   >
                     <Plus className="h-4 w-4 mr-2" />
                     Record First Expense
@@ -803,7 +803,7 @@ const EnhancedExpensePage = () => {
                             {expense.merchant || 'Manual Entry'}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-100 text-orange-800 dark:bg-orange-800 dark:text-orange-100">
+                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-amber-100 text-amber-800 dark:bg-amber-800 dark:text-amber-100">
                               {expense.category}
                             </span>
                           </td>
@@ -817,7 +817,7 @@ const EnhancedExpensePage = () => {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                             <div className="flex items-center">
-                              <div className="h-2 w-2 bg-orange-400 rounded-full mr-2"></div>
+                              <div className="h-2 w-2 bg-amber-400 rounded-full mr-2"></div>
                               {expense.user?.name || 'Unknown'}
                             </div>
                           </td>
@@ -826,7 +826,7 @@ const EnhancedExpensePage = () => {
                               {expense.hasReceipt ? (
                                 <button
                                   onClick={() => handleViewReceipt(expense)}
-                                  className="text-orange-600 hover:text-orange-800 dark:text-orange-400 dark:hover:text-orange-300 transition-colors"
+                                  className="text-amber-600 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-300 transition-colors"
                                   title="View Receipt"
                                 >
                                   <Eye className="h-4 w-4" />
@@ -978,7 +978,7 @@ const EnhancedExpensePage = () => {
                         }
                       }
                     }}
-                    className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+                    className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors"
                   >
                     Download Receipt
                   </button>
