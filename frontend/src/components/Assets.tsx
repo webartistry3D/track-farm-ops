@@ -535,8 +535,8 @@ const Assets = () => {
       </div>*/}
 
       {/* Stats Cards */}
-      <div className="max-w-7xl mx-auto px-0 sm:px-0 lg:px-0 py-6">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-2">
+      <div className="max-w-7xl mx-auto px-0 sm:px-0 lg:px-0 py-0">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-4">
           <div className="bg-white dark:bg-gray-800 p-4 lg:p-6 rounded-lg shadow">
             <div className="flex items-center">
               <div className="p-2 lg:p-3 bg-blue-100 dark:bg-blue-900 rounded-full">

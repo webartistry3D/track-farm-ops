@@ -903,7 +903,7 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
         </div>
       </div>*/}
       
-      <div className="w-full px-0 sm:px-0 lg:px-0 py-6">
+      <div className="w-full px-0 sm:px-0 lg:px-0 py-0">
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
@@ -2880,8 +2880,8 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
             {/* Content */}
             <div className="flex-1 overflow-y-auto p-8">
               {/* Statistics Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-2">
+                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-0">
                   <div className="text-center">
                     <span className="text-blue-600 dark:text-blue-400 text-2xl font-bold block mb-2">
                       {items.filter(item => item.categoryId === categoryToView.id).length}

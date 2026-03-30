@@ -306,10 +306,10 @@ const Reports = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-0 dark:bg-gray-900 py-4">
+    <div className="min-h-screen bg-gray-0 dark:bg-gray-900 py-0">
       <div className="max-w-6xl mx-auto px-0 sm:px-0 lg:px-0">
         {/* Header */}
-        <div className="mb-2">
+        <div className="mb-0">
           {/* <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-poppins font-bold text-gray-900 dark:text-white">Reports</h1>
