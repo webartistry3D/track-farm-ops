@@ -40,10 +40,10 @@ const Pricing = () => {
       price: { monthly: 40000, annual: 384000 },
       features: [
         'Everything in Free, plus...',
-        '3 workers',
+        'Up to 20 workers',
         'Full inventory transactions',
+        'Full Assets Management',
         'Owner dashboard & financial reports',
-        'Simple reports',
         'Data export (CSV / Excel)',
         'Priority email support',
         '1 - 2 farm locations',
@@ -55,7 +55,7 @@ const Pricing = () => {
     },
     {
       id: 'pro',
-      name: 'Pro',
+      name: 'Mega',
       description: 'Everything in Growth, plus...',
       emoji: '🚜',
       price: { monthly: 100000, annual: 960000 },
@@ -101,7 +101,7 @@ const Pricing = () => {
     },
     {
       emoji: '🇳🇬',
-      title: 'Built for Nigeria',
+      title: 'Built for Nigerian farmers',
       description: 'Designed specifically for Nigerian farm realities'
     },
     {
@@ -327,10 +327,10 @@ const Pricing = () => {
         <div className="mb-20">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-poppins font-bold text-gray-900 mb-4">
-              Why Farm Owners Choose FarmOps
+              Why Farm Owners Choose Track-Farm-Ops
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Built specifically for the Nigerian agricultural landscape
+              Built for the Nigerian farmers
             </p>
           </div>
           
@@ -359,9 +359,9 @@ const Pricing = () => {
           <h2 className="text-3xl md:text-4xl font-poppins font-bold mb-4">
             Ready to Transform Your Farm?
           </h2>
-          <p className="text-xl text-green-100 mb-8 max-w-2xl mx-auto">
+          {/*<p className="text-xl text-green-100 mb-8 max-w-2xl mx-auto">
             Join thousands of Nigerian farmers who are already using FarmOps to grow their business
-          </p>
+          </p>*/}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/signup"

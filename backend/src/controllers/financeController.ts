@@ -519,7 +519,13 @@ export const getVATRecords = async (req: AuthRequest, res: Response) => {
     const currentUser = req.user!;
 
     console.log(`📄 Fetching VAT records for ${currentUser.role} ${currentUser.name} (ID: ${currentUser.id})`);
-    console.log(`🔍 DEBUG: VAT query params:`, { startDate, endDate, limit, offset });
+    console.log(`🔍 DEBUG: VAT API called with:`, { startDate, endDate, limit, offset });
+    console.log(`🔍 DEBUG: Parsed date ranges:`, {
+      startDateObj: startDate ? new Date(startDate as string) : null,
+      endDateObj: endDate ? new Date(endDate as string) : null,
+      startDateUTC: startDate ? new Date(startDate as string).toUTCString() : null,
+      endDateUTC: endDate ? new Date(endDate as string).toUTCString() : null
+    });
 
     // Completely disable all caching mechanisms
     res.set('Cache-Control', 'no-cache, no-store, must-revalidate, private');
@@ -539,10 +545,12 @@ export const getVATRecords = async (req: AuthRequest, res: Response) => {
     // Get all income entries first, then filter based on access rights
     const allIncomeEntries = await prisma.incomeEntry.findMany({
       where: {
-        ...(startDate && endDate && {
+        // If startDate and endDate are provided, filter by date range
+        // If they're empty strings (allTime), don't filter by date
+        ...(startDate && endDate && startDate !== '' && endDate !== '' && {
           date: {
             gte: new Date(startDate as string),
-            lte: new Date(endDate as string)
+            lte: new Date(endDate as string + 'T23:59:59.999Z') // Include full end day
           }
         })
       },
@@ -565,10 +573,12 @@ export const getVATRecords = async (req: AuthRequest, res: Response) => {
     // Get all expense entries first, then filter based on access rights
     const allExpenseEntries = await prisma.expenseEntry.findMany({
       where: {
-        ...(startDate && endDate && {
+        // If startDate and endDate are provided, filter by date range
+        // If they're empty strings (allTime), don't filter by date
+        ...(startDate && endDate && startDate !== '' && endDate !== '' && {
           date: {
             gte: new Date(startDate as string),
-            lte: new Date(endDate as string)
+            lte: new Date(endDate as string + 'T23:59:59.999Z') // Include full end day
           }
         })
       },
@@ -610,52 +620,46 @@ export const getVATRecords = async (req: AuthRequest, res: Response) => {
 
     console.log(`🔍 DEBUG: User ${currentUser.name} has access to ${accessibleIncomeEntries.length} income entries and ${accessibleExpenseEntries.length} expense entries`);
 
+    // Debug: Log ALL income entries before VAT filtering
+    console.log('🔍 DEBUG: ALL income entries before VAT filter:', accessibleIncomeEntries.map(e => ({
+      id: e.id,
+      date: e.date,
+      enableVAT: e.enableVAT,
+      vatAmount: e.vatAmount,
+      amount: e.amount,
+      description: e.description?.substring(0, 50) + '...'
+    })));
+
     // Combine all entries for VAT calculation
     const allEntries = [...accessibleIncomeEntries, ...accessibleExpenseEntries];
 
-    // Filter entries that have VAT enabled
-    const vatEntries = allEntries.filter(entry => entry.enableVAT && entry.vatAmount && entry.vatAmount > 0);
+    console.log(`🔍 DEBUG: All entries before VAT filter:`, {
+      totalEntries: allEntries.length,
+      incomeEntries: accessibleIncomeEntries.length,
+      expenseEntries: accessibleExpenseEntries.length,
+      sampleIncome: accessibleIncomeEntries.slice(0, 3).map(e => ({
+        id: e.id,
+        date: e.date,
+        enableVAT: e.enableVAT,
+        vatAmount: e.vatAmount,
+        amount: e.amount,
+        description: e.description?.substring(0, 60) + '...'
+      })),
+      sampleExpense: accessibleExpenseEntries.slice(0, 2).map(e => ({
+        id: e.id,
+        date: e.date,
+        enableVAT: e.enableVAT,
+        vatAmount: e.vatAmount,
+        amount: e.amount,
+        description: e.description?.substring(0, 60) + '...'
+      }))
+    });
 
-    // Calculate VAT totals
-    const totalVat = vatEntries.reduce((sum, entry) => sum + entry.vatAmount, 0);
-    const totalVatableAmount = vatEntries.reduce((sum, entry) => sum + entry.amount, 0);
+    // Return all entries (like Income Records API) - frontend will handle VAT filtering
+    const paginatedRecords = allEntries.slice(parseInt(offset as string), parseInt(offset as string) + parseInt(limit as string));
+    const totalCount = allEntries.length;
 
-    // Group by period
-    const vatByPeriod = vatEntries.reduce((acc: any[], entry) => {
-      const entryDate = new Date(entry.date);
-      const period = entryDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
-      
-      let existing = acc.find(item => item.period === period);
-      if (!existing) {
-        acc.push({
-          period,
-          totalVat: 0,
-          totalVatableAmount: 0,
-          entries: []
-        });
-        existing = acc[acc.length - 1];
-      }
-      
-      existing.totalVat += entry.vatAmount;
-      existing.totalVatableAmount += entry.amount;
-      existing.entries.push({
-        id: entry.id,
-        date: entry.date,
-        description: entry.description,
-        amount: entry.amount,
-        vatAmount: entry.vatAmount,
-        vatRate: entry.vatRate,
-        user: entry.user
-      });
-      
-      return acc;
-    }, []);
-
-    // Apply pagination
-    const paginatedRecords = vatEntries.slice(parseInt(offset as string), parseInt(offset as string) + parseInt(limit as string));
-    const totalCount = vatEntries.length;
-
-    console.log('📊 VAT Records:', {
+    console.log('📊 VAT Records (All Entries):', {
       count: paginatedRecords.length,
       total: totalCount,
       limit: parseInt(limit as string),

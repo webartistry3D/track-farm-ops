@@ -691,15 +691,23 @@ export const markInvoiceAsPaid = async (req: AuthRequest, res: Response) => {
     try {
       console.log(`🔍 DEBUG: Creating income entry for invoice ${existingInvoice.invoiceNumber}`);
       
+      // Use invoice subtotal directly (already calculated correctly in invoice)
+      const subtotal = existingInvoice.subtotal ? Number(existingInvoice.subtotal) : 0;
+      const vatAmount = subtotal > 0 ? (subtotal * 0.075) : 0;
+      
+      console.log(`🔍 DEBUG: Invoice ${existingInvoice.invoiceNumber} - Using invoice subtotal: ₦${subtotal}, VAT: ₦${vatAmount}, Total: ₦${subtotal + vatAmount}`);
+      console.log(`🔍 DEBUG: Saving income entry with amount (invoice subtotal): ₦${subtotal}`);
+      
       const incomeEntry = await prisma.incomeEntry.create({
         data: {
-          amount: existingInvoice.total,
+          amount: subtotal, // Use invoice subtotal directly
           category: 'Sales',
           paymentMethod: existingInvoice.paymentMethod || 'TRANSFER',
           date: new Date(),
           description: description,
           quantity: totalQuantity > 0 ? totalQuantity : null,
-          unitPrice: totalQuantity > 0 ? (Number(existingInvoice.total) / totalQuantity) : null,
+          unitPrice: totalQuantity > 0 ? (subtotal / totalQuantity) : null, // Use subtotal for unit price
+          vatAmount: vatAmount, // Store VAT separately
           userId: currentUser.id, // User who marked invoice as paid
           organizationId: currentUserOrg.organizationId
         },

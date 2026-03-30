@@ -553,7 +553,7 @@ const Landing = () => {
               : 'opacity-0 translate-y-16'
           }`}>
             <h2 className="text-3xl md:text-4xl font-poppins font-bold text-gray-900 mb-4">
-              How TrackFarmOps Works
+              How Track-Farm-Ops Works
             </h2>
           </div>
 
@@ -661,7 +661,7 @@ const Landing = () => {
                       </div>
                     </div>
                     <p className="font-inter text-gray-700 text-sm leading-relaxed">
-                      "TrackFarmOps has transformed how we manage our poultry farm. We can now track everything from our phones and the owner in Canada can see real-time updates."
+                      "Track-Farm-Ops has transformed how we manage our poultry farm. We can now track everything from our phones and the owner in Canada can see real-time updates."
                     </p>
                   </div>
 
@@ -796,7 +796,7 @@ const Landing = () => {
                       </div>
                     </div>
                     <p className="font-inter text-gray-700 text-sm leading-relaxed">
-                      "TrackFarmOps has transformed how we manage our poultry farm. We can now track everything from our phones and the owner in Canada can see real-time updates."
+                      "Track-Farm-Ops has transformed how we manage our poultry farm. We can now track everything from our phones and the owner in Canada can see real-time updates."
                     </p>
                   </div>
 
@@ -945,7 +945,7 @@ const Landing = () => {
               : 'opacity-0 translate-y-16'
           }`}>
             <p className="text-lg font-inter text-green-100 mb-8">
-              Join Nigerian farmers who are already using TrackFarmOps to grow their business
+              Join Nigerian farmers who are already using Track-Farm-Ops to grow their business
             </p>
             <Link 
               to="/signup" 
@@ -962,7 +962,7 @@ const Landing = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-              <div className="text-2xl font-bold text-green-400 mb-4">🚜 TrackFarmOps</div>
+              <div className="text-2xl font-bold text-green-400 mb-4">🚜 Track-Farm-Ops</div>
               <p className="text-gray-400">
                 Complete farm management system for Nigerian farms
               </p>
@@ -996,7 +996,7 @@ const Landing = () => {
           </div>
           
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2026 TrackFarmOps. Built by WebArtistry Ceations®. All rights reserved.</p>
+            <p>&copy; 2026 Track-Farm-Ops. Built by WebArtistry Ceations®. All rights reserved.</p>
           </div>
         </div>
       </footer>

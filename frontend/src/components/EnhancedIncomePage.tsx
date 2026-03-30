@@ -1169,30 +1169,23 @@ TrackFarmOps Team`;
       <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4"></div>
     </div>
   );
-  const fetchVatRecords = async (isFilterChange = false) => {
+  const fetchVatRecords = async (isFilterChange: boolean = false) => {
     if (!user) return;
     
-    // Show loading state immediately for filter changes
+    setVatLoading(true);
     if (isFilterChange) {
       setVatFilterChanging(true);
+      // Small delay to show loading state
+      setTimeout(() => setVatFilterChanging(false), 300);
     }
-    setVatLoading(true);
-    setError('');
-    
+
     try {
-      // Build API query based on date filter - use same logic as reports page
-      const offset = (vatCurrentPage - 1) * vatEntriesPerPage;
-      
-      let params: any = {
-        limit: vatEntriesPerPage,
-        offset: offset,
-        _t: Date.now() // Cache-busting parameter like other functions
-      };
-      
-      // Calculate date range based on filter - same as reports page
+      // Calculate date range based on filter
       const today = new Date();
       let startDate = '';
       let endDate = '';
+      
+      const params: any = {};
       
       switch (vatDateFilter) {
         case 'today':
@@ -1200,10 +1193,12 @@ TrackFarmOps Team`;
           endDate = today.toISOString().split('T')[0];
           break;
         case 'yesterday':
-          const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
-          startDate = yesterday.toISOString().split('T')[0];
-          endDate = yesterday.toISOString().split('T')[0];
-          console.log(`🔍 Yesterday calculation: today=${today.toISOString().split('T')[0]}, yesterday=${yesterday.toISOString().split('T')[0]}`);
+          // Use UTC-based calculation to avoid timezone issues
+          const todayUTC = new Date();
+          const yesterdayUTC = new Date(Date.UTC(todayUTC.getFullYear(), todayUTC.getMonth(), todayUTC.getDate() - 1));
+          startDate = yesterdayUTC.toISOString().split('T')[0];
+          endDate = yesterdayUTC.toISOString().split('T')[0];
+          break;
           break;
         case 'last7days':
           const weekAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
@@ -1236,27 +1231,28 @@ TrackFarmOps Team`;
       console.log(`💰 Fetching VAT records for user ${user.name} (ID: ${user.id}): dateFilter=${vatDateFilter}, page=${vatCurrentPage}, limit=${vatEntriesPerPage}, isFilterChange=${isFilterChange}`);
       console.log(`📅 Date range: startDate=${startDate}, endDate=${endDate}`);
       
-      // Test: Log the exact date objects being created
-      if (vatDateFilter === 'yesterday') {
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        console.log(`🔍 Yesterday calculation: today=${today.toISOString().split('T')[0]}, yesterday=${yesterday.toISOString().split('T')[0]}`);
-      }
-      
-      // Add more debugging for API call
-      console.log('🚀 About to call API with params:', params);
-      console.log('🔍 API endpoint:', '/finance/vat/records');
-      console.log('🔍 API method:', 'GET');
-      
       // Fetch current period data
       const response = await api.get('/finance/vat/records', { params });
-      console.log('📊 API response:', response);
-      console.log('📊 API response data:', response.data);
       
       const records = response.data?.records || [];
       
+      // Temporarily disable ALL filtering to debug backend response
+      const vatEntries = records; // .filter((entry: any) => entry.enableVAT && entry.vatAmount && entry.vatAmount > 0);
+      
+      console.log('🔍 DEBUG: COMPLETELY DISABLED FILTERING:', {
+        totalRecords: records.length,
+        vatRecords: vatEntries.length,
+        allRecords: records.map((e: any) => ({
+          id: e.id,
+          description: e.description?.substring(0, 50) + '...',
+          enableVAT: e.enableVAT,
+          vatAmount: e.vatAmount,
+          amount: e.amount
+        }))
+      });
+      
       // Update period based on date filter
-      const updatedRecords = records.map((record: any) => {
+      const updatedRecords = vatEntries.map((record: any) => {
         let updatedPeriod = record.period;
         
         // Override period based on date filter
@@ -1285,6 +1281,10 @@ TrackFarmOps Team`;
         const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
         previousStartDate = yesterday.toISOString().split('T')[0];
         previousEndDate = yesterday.toISOString().split('T')[0];
+      } else if (vatDateFilter === 'yesterday') {
+        const dayBeforeYesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 2);
+        previousStartDate = dayBeforeYesterday.toISOString().split('T')[0];
+        previousEndDate = dayBeforeYesterday.toISOString().split('T')[0];
       } else if (vatDateFilter === 'last7days') {
         const fourteenDaysAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 14);
         const sevenDaysAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
@@ -1320,14 +1320,14 @@ TrackFarmOps Team`;
       }
       
       // Calculate current period summary
-      const totalVat = updatedRecords.reduce((sum: number, record: any) => sum + (record.vatAmount || 0), 0);
+      const totalVat = updatedRecords.reduce((sum: number, record: any) => sum + parseFloat(record.vatAmount?.toString() || '0'), 0);
       const averageVat = updatedRecords.length > 0 ? totalVat / updatedRecords.length : 0;
-      const highestVat = updatedRecords.length > 0 ? Math.max(...updatedRecords.map((r: any) => r.vatAmount || 0)) : 0;
+      const highestVat = updatedRecords.length > 0 ? Math.max(...updatedRecords.map((r: any) => parseFloat(r.vatAmount?.toString() || '0'))) : 0;
       
       // Calculate previous period summary
-      const previousTotalVat = previousRecords.reduce((sum: number, record: any) => sum + (record.vatAmount || 0), 0);
+      const previousTotalVat = previousRecords.reduce((sum: number, record: any) => sum + parseFloat(record.vatAmount?.toString() || '0'), 0);
       const previousAverageVat = previousRecords.length > 0 ? previousTotalVat / previousRecords.length : 0;
-      const previousHighestVat = previousRecords.length > 0 ? Math.max(...previousRecords.map((r: any) => r.vatAmount || 0)) : 0;
+      const previousHighestVat = previousRecords.length > 0 ? Math.max(...previousRecords.map((r: any) => parseFloat(r.vatAmount?.toString() || '0'))) : 0;
       
       // Calculate percentage changes (handle edge cases)
       const totalVatChange = previousTotalVat > 0 ? ((totalVat - previousTotalVat) / previousTotalVat) * 100 : 
@@ -1350,6 +1350,7 @@ TrackFarmOps Team`;
         highestVatChange
       });
       
+      console.log('🔍 DEBUG: setVatRecords called with:', updatedRecords.length, 'records');
       setVatRecords(updatedRecords);
       setVatSummary({
         totalVat,
@@ -3350,13 +3351,13 @@ Generated on: ${new Date().toLocaleString()}
                   <div className="flex items-center justify-between">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
                       <Table className="h-5 w-5 mr-2 text-gray-600 dark:text-gray-400" />
-                      VAT Remittance Records
+                      VAT Records
                     </h3>
                     <div className="flex items-center space-x-2">
                       <span className="text-sm text-gray-500 dark:text-gray-400">
                         {vatRecords.length} records
                       </span>
-                      <span className="px-2 py-1 bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-200 text-xs rounded-full">
+                      <span className="px-2 py-1 bg-green-100 dark:bg-green-600 text-green-800 dark:text-green-200 text-xs rounded-full">
                         {vatDateFilter.charAt(0).toUpperCase() + vatDateFilter.slice(1).replace(/([A-Z])/g, ' $1').trim()}
                       </span>
                     </div>
@@ -3383,7 +3384,7 @@ Generated on: ${new Date().toLocaleString()}
                     <p className="text-gray-600 dark:text-gray-400 mb-4">
                       There are no income entries with VAT enabled in the selected period.
                     </p>
-                    <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
+                    {/*<div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
                       <h4 className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-2">How to enable VAT:</h4>
                       <ol className="text-sm text-blue-800 dark:text-blue-200 space-y-1 text-left">
                         <li>1. Create a new income entry</li>
@@ -3391,7 +3392,7 @@ Generated on: ${new Date().toLocaleString()}
                         <li>3. Set your VAT rate (default: 7.5%)</li>
                         <li>4. Save the entry</li>
                       </ol>
-                    </div>
+                    </div>*/}
                   </div>
                 ) : (
                   <div className="overflow-x-auto">
@@ -3401,8 +3402,8 @@ Generated on: ${new Date().toLocaleString()}
                           <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">Date</th>
                           <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">Invoice #</th>
                           <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">Period</th>
+                          {/*<th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">Old VAT</th>*/}
                           <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">VAT Amount</th>
-                          <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">Transactions</th>
                           <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">Status</th>
                           <th className="px-6 py-4 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">Actions</th>
                         </tr>
@@ -3443,19 +3444,22 @@ Generated on: ${new Date().toLocaleString()}
                                 </span>
                               </span>
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white font-mono font-semibold">
-                              {vatFilterChanging ? (
-                                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 animate-pulse"></div>
-                              ) : (
-                                formatCurrency(record.vatAmount?.toString() || '0', { includeSymbol: true })
-                              )}
+                            {/*<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white font-medium">
+                              <div className="flex items-center">
+                                <span className="text-gray-400 mr-2">₦</span>
+                                {formatCurrency(record.amount?.toString() || '0', { includeSymbol: false })}
+                              </div>
+                            </td>*/}
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600 dark:text-green-400 font-mono font-semibold">
+                              {/* Use stored VAT amount directly since backend now has correct values */}
+                              {formatCurrency(record.vatAmount?.toString() || '0', { includeSymbol: true })}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                            {/*<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                               <div className="flex items-center">
                                 <span className="w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
                                 {record.transactionCount || 1}
                               </div>
-                            </td>
+                            </td>*/}
                             <td className="px-6 py-4 whitespace-nowrap text-sm">
                               <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium ${
                                 record.status === 'remitted' ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100' :

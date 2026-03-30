@@ -812,11 +812,10 @@ router.get('/vat/records', authenticate, async (req: AuthRequest, res) => {
     
     console.log(`📅 Date filter applied:`, dateFilter);
 
-    // Fetch income entries with VAT data ONLY (not invoices)
+    // Fetch ALL income entries (like Income Records API) - frontend will handle VAT filtering
     const incomeEntries = await prisma.incomeEntry.findMany({
       where: {
         userId: currentUser.id,
-        enableVAT: true, // Only get entries with VAT enabled
         date: dateFilter
       },
       orderBy: {
