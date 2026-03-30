@@ -79,6 +79,7 @@ const EnhancedIncomePage = () => {
     totalVat: 0,
     averageVat: 0,
     highestVat: 0,
+    lowestVat: 0,
     totalTransactions: 0
   });
   
@@ -86,7 +87,8 @@ const EnhancedIncomePage = () => {
   const [vatPercentageChanges, setVatPercentageChanges] = useState({
     totalVatChange: 0,
     averageVatChange: 0,
-    highestVatChange: 0
+    highestVatChange: 0,
+    lowestVatChange: 0
   });
   
   // Invoice state
@@ -1323,11 +1325,13 @@ TrackFarmOps Team`;
       const totalVat = updatedRecords.reduce((sum: number, record: any) => sum + parseFloat(record.vatAmount?.toString() || '0'), 0);
       const averageVat = updatedRecords.length > 0 ? totalVat / updatedRecords.length : 0;
       const highestVat = updatedRecords.length > 0 ? Math.max(...updatedRecords.map((r: any) => parseFloat(r.vatAmount?.toString() || '0'))) : 0;
+      const lowestVat = updatedRecords.length > 0 ? Math.min(...updatedRecords.map((r: any) => parseFloat(r.vatAmount?.toString() || '0'))) : 0;
       
       // Calculate previous period summary
       const previousTotalVat = previousRecords.reduce((sum: number, record: any) => sum + parseFloat(record.vatAmount?.toString() || '0'), 0);
       const previousAverageVat = previousRecords.length > 0 ? previousTotalVat / previousRecords.length : 0;
       const previousHighestVat = previousRecords.length > 0 ? Math.max(...previousRecords.map((r: any) => parseFloat(r.vatAmount?.toString() || '0'))) : 0;
+      const previousLowestVat = previousRecords.length > 0 ? Math.min(...previousRecords.map((r: any) => parseFloat(r.vatAmount?.toString() || '0'))) : 0;
       
       // Calculate percentage changes (handle edge cases)
       const totalVatChange = previousTotalVat > 0 ? ((totalVat - previousTotalVat) / previousTotalVat) * 100 : 
@@ -1336,6 +1340,8 @@ TrackFarmOps Team`;
                                    (averageVat > 0 ? 100 : 0);
       const highestVatChange = previousHighestVat > 0 ? ((highestVat - previousHighestVat) / previousHighestVat) * 100 : 
                                    (highestVat > 0 ? 100 : 0);
+      const lowestVatChange = previousLowestVat > 0 ? ((lowestVat - previousLowestVat) / previousLowestVat) * 100 : 
+                                 (lowestVat > 0 ? 100 : 0);
       
       // Debug: Log the calculation values
       console.log('📈 Percentage calculation debug:', {
@@ -1347,21 +1353,25 @@ TrackFarmOps Team`;
         averageVatChange,
         highestVat,
         previousHighestVat,
-        highestVatChange
+        highestVatChange,
+        lowestVat,
+        previousLowestVat,
+        lowestVatChange
       });
       
       console.log('🔍 DEBUG: setVatRecords called with:', updatedRecords.length, 'records');
-      setVatRecords(updatedRecords);
       setVatSummary({
         totalVat,
         averageVat,
         highestVat,
+        lowestVat,
         totalTransactions: updatedRecords.reduce((sum: number, record: any) => sum + (record.transactionCount || 0), 0)
       });
       setVatPercentageChanges({
         totalVatChange,
         averageVatChange,
-        highestVatChange
+        highestVatChange,
+        lowestVatChange
       });
       setVatTotalPages(Math.ceil(response.data?.total || updatedRecords.length / vatEntriesPerPage));
       setVatTotalRecords(response.data?.total || updatedRecords.length);
@@ -3180,14 +3190,14 @@ Generated on: ${new Date().toLocaleString()}
                 <div className="group bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-xl p-3 dark:border-blue-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex flex-col space-y-1">
-                      <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Average VAT</h3>
+                      <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Lowest VAT</h3>
                       <div className="flex items-center space-x-2">
                         <div className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
-                          {vatPercentageChanges.averageVatChange > 0 ? '+' : ''}{vatPercentageChanges.averageVatChange.toFixed(1)}%
+                          {vatPercentageChanges.lowestVatChange > 0 ? '+' : ''}{vatPercentageChanges.lowestVatChange.toFixed(1)}%
                         </div>
                         <div className="w-1 h-1 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
                         <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
-                          Per transaction
+                          Single transaction
                         </span>
                       </div>
                     </div>
@@ -3202,7 +3212,7 @@ Generated on: ${new Date().toLocaleString()}
                       <VATAmountSkeleton />
                     ) : (
                       <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-                        {formatCurrency(vatSummary.averageVat, { includeSymbol: true })}
+                        {formatCurrency(vatSummary.lowestVat, { includeSymbol: true })}
                       </p>
                     )}
                   </div>
@@ -3405,7 +3415,7 @@ Generated on: ${new Date().toLocaleString()}
                           {/*<th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">Old VAT</th>*/}
                           <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">VAT Amount</th>
                           <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">Status</th>
-                          <th className="px-6 py-4 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">Actions</th>
+                          <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">Actions</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-200 dark:divide-gray-700">

@@ -381,7 +381,12 @@ const Dashboard = () => {
             </div>
           </div>
           
-          <div className={`group bg-gradient-to-br ${netProfit >= 0 ? 'from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 dark:border-green-700' : 'from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 dark:border-red-700'} rounded-xl p-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300`}>
+          <div className={`group bg-gradient-to-br ${
+            dateFilter === 'allTime' ? 
+              'from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 dark:border-blue-700' :
+              netProfit >= 0 ? 'from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 dark:border-green-700' : 
+              'from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 dark:border-red-700'
+          } rounded-xl p-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300`}>
             <div className="flex items-start justify-between mb-3">
               <div className="flex flex-col space-y-1">
                 <h3 className={`text-sm font-semibold text-gray-700 dark:text-gray-300`}>
@@ -411,13 +416,23 @@ const Dashboard = () => {
                 </div>
               </div>
               <div className="flex items-center space-x-2 mt-1">
-                <div className={`p-2 bg-gradient-to-br ${netProfit >= 0 ? 'from-green-500 to-green-600 dark:from-green-600 dark:to-green-700' : 'from-red-500 to-red-600 dark:from-red-600 dark:to-red-700'} rounded-lg shadow-lg`}>
+                <div className={`p-2 bg-gradient-to-br ${
+                  dateFilter === 'allTime' ? 
+                    'from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700' :
+                    netProfit >= 0 ? 'from-green-500 to-green-600 dark:from-green-600 dark:to-green-700' : 
+                    'from-red-500 to-red-600 dark:from-red-600 dark:to-red-700'
+                } rounded-lg shadow-lg`}>
                   {netProfit >= 0 ? <TrendingUp className="h-4 w-4 text-white" /> : <TrendingUp className="h-4 w-4 text-white" />}
                 </div>
               </div>
             </div>
             <div className="flex items-center">
-              <p className={`text-3xl font-bold ${netProfit >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+              <p className={`text-3xl font-bold ${
+                dateFilter === 'allTime' ? 
+                  'text-blue-600 dark:text-blue-400' :
+                  netProfit >= 0 ? 'text-green-600 dark:text-green-400' : 
+                  'text-red-600 dark:text-red-400'
+              }`}>
                 {formatCurrency(netProfit.toString(), { includeSymbol: true })}
               </p>
             </div>
