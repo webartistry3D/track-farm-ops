@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import SuperUserSignup from './SuperUserSignup';
+import SuperUserSignup from './SuperUserSignup.tsx';
 import SuperUserDashboard from './SuperUserDashboard';
 import { useAuth } from '../contexts/AuthContext';
 

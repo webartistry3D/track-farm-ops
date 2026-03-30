@@ -3244,10 +3244,6 @@ Generated on: ${new Date().toLocaleString()}
                     <button
                       onClick={() => {
                         setVatDateFilter('today');
-                        // Force state update before API call
-                        setTimeout(() => {
-                          fetchVatRecords(true); // Pass true to indicate filter change
-                        }, 0);
                       }}
                       className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                         vatDateFilter === 'today'
@@ -3260,9 +3256,6 @@ Generated on: ${new Date().toLocaleString()}
                     <button
                       onClick={() => {
                         setVatDateFilter('yesterday');
-                        setTimeout(() => {
-                          fetchVatRecords(true);
-                        }, 0);
                       }}
                       className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                         vatDateFilter === 'yesterday'
@@ -3275,9 +3268,6 @@ Generated on: ${new Date().toLocaleString()}
                     <button
                       onClick={() => {
                         setVatDateFilter('last7days');
-                        setTimeout(() => {
-                          fetchVatRecords(true);
-                        }, 0);
                       }}
                       className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                         vatDateFilter === 'last7days'
@@ -3290,9 +3280,6 @@ Generated on: ${new Date().toLocaleString()}
                     <button
                       onClick={() => {
                         setVatDateFilter('last30days');
-                        setTimeout(() => {
-                          fetchVatRecords(true);
-                        }, 0);
                       }}
                       className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                         vatDateFilter === 'last30days'
@@ -3305,9 +3292,6 @@ Generated on: ${new Date().toLocaleString()}
                     <button
                       onClick={() => {
                         setVatDateFilter('allTime');
-                        setTimeout(() => {
-                          fetchVatRecords(true);
-                        }, 0);
                       }}
                       className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                         vatDateFilter === 'allTime'
@@ -3324,7 +3308,6 @@ Generated on: ${new Date().toLocaleString()}
                         onChange={(e) => {
                           setVatSelectedMonth(parseInt(e.target.value));
                           setVatDateFilter('custom');
-                          fetchVatRecords(true);
                         }}
                         className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm"
                       >
@@ -3349,7 +3332,6 @@ Generated on: ${new Date().toLocaleString()}
                         onChange={(e) => {
                           setVatSelectedYear(parseInt(e.target.value));
                           setVatDateFilter('custom');
-                          fetchVatRecords(true);
                         }}
                         className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm"
                       >
