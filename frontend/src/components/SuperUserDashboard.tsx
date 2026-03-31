@@ -207,7 +207,38 @@ const SuperUserDashboard = () => {
       setRefreshing(false);
     };
 
-    const handleUserAction = async (userId: string, action: string) => {
+    const handleMaintenanceMode = async () => {
+    try {
+      await api.post('/superuser/maintenance-mode');
+      alert('Maintenance mode toggled successfully');
+    } catch (error) {
+      console.error('Failed to toggle maintenance mode:', error);
+      alert('Failed to toggle maintenance mode');
+    }
+  };
+
+  const handleBackupDatabase = async () => {
+    try {
+      const response = await api.post('/superuser/backup-database');
+      alert('Database backup started successfully');
+      console.log('Backup response:', response);
+    } catch (error) {
+      console.error('Failed to backup database:', error);
+      alert('Failed to backup database');
+    }
+  };
+
+  const handleClearCache = async () => {
+    try {
+      await api.post('/superuser/clear-cache');
+      alert('Cache cleared successfully');
+    } catch (error) {
+      console.error('Failed to clear cache:', error);
+      alert('Failed to clear cache');
+    }
+  };
+
+  const handleUserAction = async (userId: string, action: string) => {
       console.log(`🔍 DEBUG: handleUserAction called with userId: ${userId}, action: ${action}`);
       try {
         console.log(`🔍 DEBUG: Making API call to /superuser/users/${userId}/${action}`);
@@ -619,7 +650,7 @@ const SuperUserDashboard = () => {
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500 dark:text-gray-400">Revenue:</span>
-                <span className="text-gray-900 dark:text-white">${org.revenue.toLocaleString()}</span>
+                <span className="text-gray-900 dark:text-white">₦{org.revenue.toLocaleString()}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500 dark:text-gray-400">Plan:</span>
@@ -693,25 +724,25 @@ const SuperUserDashboard = () => {
           </div>
           <div className="space-y-3">
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600 dark:text-gray-400">CPU Usage</span>
-              <span className="text-sm font-medium text-gray-900 dark:text-white">45%</span>
+              <span className="text-sm text-slate-600 dark:text-slate-400">CPU Usage</span>
+              <span className="text-sm font-medium text-slate-900 dark:text-white">{stats?.systemHealth || 0}%</span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-green-500 h-2 rounded-full" style={{ width: '45%' }}></div>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Memory</span>
-              <span className="text-sm font-medium text-gray-900 dark:text-white">62%</span>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-yellow-500 h-2 rounded-full" style={{ width: '62%' }}></div>
+            <div className="w-full bg-slate-200 rounded-full h-2">
+              <div className="bg-green-500 h-2 rounded-full" style={{ width: `${stats?.systemHealth || 0}%` }}></div>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Disk Space</span>
-              <span className="text-sm font-medium text-gray-900 dark:text-white">78%</span>
+              <span className="text-sm text-slate-600 dark:text-slate-400">Memory</span>
+              <span className="text-sm font-medium text-slate-900 dark:text-white">{stats?.storageUsed ? Math.round((stats.storageUsed / stats.storageTotal) * 100) : 0}%</span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-orange-500 h-2 rounded-full" style={{ width: '78%' }}></div>
+            <div className="w-full bg-slate-200 rounded-full h-2">
+              <div className="bg-yellow-500 h-2 rounded-full" style={{ width: `${stats?.storageUsed ? Math.round((stats.storageUsed / stats.storageTotal) * 100) : 0}%` }}></div>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-slate-600 dark:text-slate-400">Disk Space</span>
+              <span className="text-sm font-medium text-slate-900 dark:text-white">{stats?.storageUsed ? Math.round((stats.storageUsed / stats.storageTotal) * 100) : 0}%</span>
+            </div>
+            <div className="w-full bg-slate-200 rounded-full h-2">
+              <div className="bg-orange-500 h-2 rounded-full" style={{ width: `${stats?.storageUsed ? Math.round((stats.storageUsed / stats.storageTotal) * 100) : 0}%` }}></div>
             </div>
           </div>
         </div>
@@ -723,20 +754,20 @@ const SuperUserDashboard = () => {
           </div>
           <div className="space-y-3">
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Connections</span>
-              <span className="text-sm font-medium text-gray-900 dark:text-white">12/100</span>
+              <span className="text-sm text-slate-600 dark:text-slate-400">Connections</span>
+              <span className="text-sm font-medium text-slate-900 dark:text-white">{stats?.totalUsers || 0}/100</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Query Time</span>
-              <span className="text-sm font-medium text-gray-900 dark:text-white">23ms</span>
+              <span className="text-sm text-slate-600 dark:text-slate-400">Query Time</span>
+              <span className="text-sm font-medium text-slate-900 dark:text-white">{stats?.serverUptime || 0}ms</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Cache Hit Rate</span>
-              <span className="text-sm font-medium text-gray-900 dark:text-white">94%</span>
+              <span className="text-sm text-slate-600 dark:text-slate-400">Cache Hit Rate</span>
+              <span className="text-sm font-medium text-slate-900 dark:text-white">{100 - (stats?.errorRate || 0)}%</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Storage</span>
-              <span className="text-sm font-medium text-gray-900 dark:text-white">45.2GB</span>
+              <span className="text-sm text-slate-600 dark:text-slate-400">Storage</span>
+              <span className="text-sm font-medium text-slate-900 dark:text-white">{((stats?.storageUsed || 0) / 1024).toFixed(1)}GB</span>
             </div>
           </div>
         </div>
@@ -748,16 +779,16 @@ const SuperUserDashboard = () => {
           </div>
           <div className="space-y-3">
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Requests/min</span>
-              <span className="text-sm font-medium text-gray-900 dark:text-white">1,234</span>
+              <span className="text-sm text-slate-600 dark:text-slate-400">Requests/min</span>
+              <span className="text-sm font-medium text-slate-900 dark:text-white">{stats?.apiCalls || 0}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Avg Response</span>
-              <span className="text-sm font-medium text-gray-900 dark:text-white">145ms</span>
+              <span className="text-sm text-slate-600 dark:text-slate-400">Response Time</span>
+              <span className="text-sm font-medium text-slate-900 dark:text-white">{stats?.serverUptime || 0}ms</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Error Rate</span>
-              <span className="text-sm font-medium text-gray-900 dark:text-white">0.2%</span>
+              <span className="text-sm text-slate-600 dark:text-slate-400">Error Rate</span>
+              <span className="text-sm font-medium text-slate-900 dark:text-white">{stats?.errorRate || 0}%</span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-gray-600 dark:text-gray-400">Uptime</span>
@@ -813,16 +844,32 @@ const SuperUserDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">User Growth</h3>
-          <div className="h-64 flex items-center justify-center text-gray-500">
-            <LineChart className="w-16 h-16" />
-            <p className="ml-4">Chart visualization would go here</p>
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-600 dark:text-gray-400">Total Users</span>
+              <span className="text-2xl font-bold text-gray-900 dark:text-white">{stats?.totalUsers || 0}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-600 dark:text-gray-400">Active Users</span>
+              <span className="text-2xl font-bold text-green-600">{stats?.activeUsers || 0}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-600 dark:text-gray-400">Growth Rate</span>
+              <span className="text-2xl font-bold text-emerald-600">+{stats?.monthlyGrowth || 0}%</span>
+            </div>
           </div>
         </div>
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Revenue Trends</h3>
-          <div className="h-64 flex items-center justify-center text-gray-500">
-            <BarChart3 className="w-16 h-16" />
-            <p className="ml-4">Chart visualization would go here</p>
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-600 dark:text-gray-400">Total Revenue</span>
+              <span className="text-2xl font-bold text-gray-900 dark:text-white">₦{(stats?.totalRevenue || 0).toLocaleString()}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-600 dark:text-gray-400">Monthly Growth</span>
+              <span className="text-2xl font-bold text-emerald-600">+{stats?.monthlyGrowth || 0}%</span>
+            </div>
           </div>
         </div>
       </div>
@@ -839,8 +886,11 @@ const SuperUserDashboard = () => {
               <p className="text-sm font-medium text-gray-900 dark:text-white">Maintenance Mode</p>
               <p className="text-xs text-gray-500 dark:text-gray-400">Temporarily disable user access</p>
             </div>
-            <button className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700">
-              Enable
+            <button 
+              onClick={handleMaintenanceMode}
+              className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+            >
+              {loading ? 'Enabling...' : 'Enable Maintenance'}
             </button>
           </div>
           <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
@@ -848,8 +898,12 @@ const SuperUserDashboard = () => {
               <p className="text-sm font-medium text-gray-900 dark:text-white">Backup Database</p>
               <p className="text-xs text-gray-500 dark:text-gray-400">Create system backup</p>
             </div>
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-              Backup Now
+            <button 
+              onClick={handleBackupDatabase}
+              disabled={loading}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+            >
+              {loading ? 'Backing Up...' : 'Backup Now'}
             </button>
           </div>
           <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
@@ -857,8 +911,12 @@ const SuperUserDashboard = () => {
               <p className="text-sm font-medium text-gray-900 dark:text-white">Clear Cache</p>
               <p className="text-xs text-gray-500 dark:text-gray-400">Clear system cache</p>
             </div>
-            <button className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
-              Clear Cache
+            <button 
+              onClick={handleClearCache}
+              disabled={loading}
+              className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50"
+            >
+              {loading ? 'Clearing...' : 'Clear Cache'}
             </button>
           </div>
         </div>
