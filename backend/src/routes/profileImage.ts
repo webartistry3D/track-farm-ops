@@ -1,15 +1,15 @@
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs').promises;
-const fsSync = require('fs');
-const { PrismaClient } = require('@prisma/client');
-
-const prisma = new PrismaClient();
+import multer from 'multer';
+import path from 'path';
+import { promises as fs } from 'fs';
+import fsSync from 'fs';
+import { prisma } from '../lib/prisma';
+import { Request, Response } from 'express';
+import { AuthRequest } from '../middleware/auth';
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const uploadDir = path.join(__dirname, '../../uploads/profile-images');
+    const uploadDir = path.join(process.cwd(), 'uploads/profile-images');
     
     // Create directory if it doesn't exist
     if (!fsSync.existsSync(uploadDir)) {
@@ -19,10 +19,10 @@ const storage = multer.diskStorage({
     cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
-    // Create unique filename
+    // Create unique filename without user ID (will be updated later)
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
     const ext = path.extname(file.originalname);
-    cb(null, 'profile-' + req.user.id + '-' + uniqueSuffix + ext);
+    cb(null, 'profile-' + uniqueSuffix + ext);
   }
 });
 
@@ -44,7 +44,7 @@ const upload = multer({
 });
 
 // Profile image upload endpoint
-const uploadProfileImage = async (req, res) => {
+export const uploadProfileImage = async (req: AuthRequest, res: Response) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
@@ -92,9 +92,4 @@ const uploadProfileImage = async (req, res) => {
 };
 
 // Middleware to handle single file upload
-const uploadProfileImageMiddleware = upload.single('profileImage');
-
-module.exports = {
-  uploadProfileImage,
-  uploadProfileImageMiddleware
-};
+export const uploadProfileImageMiddleware = upload.single('profileImage');

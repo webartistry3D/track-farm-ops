@@ -21,82 +21,84 @@ model User {
   passwordChangedBy      Int?                   @map("password_changed_by")
   passwordChangeCount   Int                    @default(0) @map("password_change_count")
   requiresPasswordChange Boolean                @default(false) @map("requires_password_change")
+  address               String?
+  phone                 String?
   profileImageUrl       String?                @map("profile_image_url")
   expenseEntries        ExpenseEntry[]
   incomeEntries         IncomeEntry[]
   inventoryTransactions InventoryTransaction[]
+  paidInvoices          Invoice[]              @relation("InvoicePaidBy")
   invoices              Invoice[]
   subscriptions         Subscription[]
   passwordHistory       PasswordHistory[]
   organization          Organization?          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  paidInvoices          Invoice[]              @relation("InvoicePaidBy")
 
   @@map("users")
 }
 
 model Organization {
-  id              Int                    @id @default(autoincrement())
-  name            String
-  description     String?
-  createdAt       DateTime               @default(now()) @map("created_at")
-  updatedAt       DateTime               @updatedAt @map("updated_at")
-  users           User[]
-  inventoryItems  InventoryItem[]
+  id                  Int                 @id @default(autoincrement())
+  name                String
+  description         String?
+  createdAt           DateTime            @default(now()) @map("created_at")
+  updatedAt           DateTime            @updatedAt @map("updated_at")
+  assets              Asset[]
+  expenseEntries      ExpenseEntry[]
+  incomeEntries       IncomeEntry[]
   inventoryCategories InventoryCategory[]
-  assets          Asset[]
-  incomeEntries   IncomeEntry[]
-  expenseEntries  ExpenseEntry[]
-  subscriptions   Subscription[]
-  vatRecords      VatRecord[]
+  inventoryItems      InventoryItem[]
+  subscriptions       Subscription[]
+  users               User[]
+  vatRecords          VatRecord[]
 
   @@map("organizations")
 }
 
 model IncomeEntry {
-  id            Int           @id @default(autoincrement())
-  amount        Decimal       @db.Decimal(10, 2)
-  category      String
-  paymentMethod PaymentMethod @map("payment_method")
-  date          DateTime
-  createdAt     DateTime      @default(now()) @map("created_at")
-  updatedAt     DateTime      @updatedAt @map("updated_at")
-  userId        Int           @map("user_id")
-  organizationId Int          @map("organization_id")
-  description   String?       @map("description")
-  enableVAT     Boolean?      @default(false) @map("enable_vat")
-  quantity      Decimal?      @db.Decimal(10, 2)
-  subtotal      Decimal?      @db.Decimal(10, 2)
-  unitPrice     Decimal?      @map("unit_price") @db.Decimal(10, 2)
-  vatAmount     Decimal?      @map("vat_amount") @db.Decimal(10, 2)
-  vatRate       Decimal?      @default(7.5) @map("vat_rate") @db.Decimal(5, 2)
-  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  organization  Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  createdBy     Int?           @map("created_by")
-  metadata      Json?          @map("metadata") // Store invoice creator and related info
+  id             Int           @id @default(autoincrement())
+  amount         Decimal       @db.Decimal(10, 2)
+  category       String
+  paymentMethod  PaymentMethod @map("payment_method")
+  date           DateTime
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+  userId         Int           @map("user_id")
+  organizationId Int           @map("organization_id")
+  description    String?       @map("description")
+  enableVAT      Boolean?      @default(false) @map("enable_vat")
+  quantity       Decimal?      @db.Decimal(10, 2)
+  subtotal       Decimal?      @db.Decimal(10, 2)
+  unitPrice      Decimal?      @map("unit_price") @db.Decimal(10, 2)
+  vatAmount      Decimal?      @map("vat_amount") @db.Decimal(10, 2)
+  vatRate        Decimal?      @default(7.5) @map("vat_rate") @db.Decimal(5, 2)
+  createdBy      Int?          @map("created_by")
+  metadata       Json?         @map("metadata")
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([description])
   @@map("income_entries")
-  @@index([description]) // Index for faster lookups
 }
 
 model ExpenseEntry {
-  id            Int      @id @default(autoincrement())
-  amount        Decimal  @db.Decimal(10, 2)
-  category      String
-  note          String?
-  date          DateTime
-  createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime @updatedAt @map("updated_at")
-  userId        Int      @map("user_id")
-  organizationId Int      @map("organization_id")
-  createdBy     Int?     @map("created_by")
-  merchant      String?  @default("Manual Entry")
-  hasReceipt    Boolean  @default(false)
-  receiptImageUrl String? @map("receipt_image_url")
-  ocrConfidence Int?
-  ocrSource     String?
-  rawText       String?
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  organization  Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  id              Int          @id @default(autoincrement())
+  amount          Decimal      @db.Decimal(10, 2)
+  category        String
+  note            String?
+  date            DateTime
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @updatedAt @map("updated_at")
+  userId          Int          @map("user_id")
+  organizationId  Int          @map("organization_id")
+  createdBy       Int?         @map("created_by")
+  merchant        String?      @default("Manual Entry")
+  hasReceipt      Boolean      @default(false)
+  receiptImageUrl String?      @map("receipt_image_url")
+  ocrConfidence   Int?
+  ocrSource       String?
+  rawText         String?
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("expense_entries")
 }
@@ -110,19 +112,17 @@ model InventoryItem {
   createdAt       DateTime               @default(now()) @map("created_at")
   updatedAt       DateTime               @updatedAt @map("updated_at")
   initialQuantity Decimal?               @map("initial_quantity") @db.Decimal(10, 2)
-  description     String?                // Added: Item description
+  description     String?
   categoryId      Int?                   @map("category_id")
   organizationId  Int?                   @map("organization_id")
-  // Added: Frequently accessed fields moved from metadata for better performance
-  location        String?                // Storage location
-  supplier        String?                // Supplier name
-  purchaseDate    DateTime?             @map("purchase_date") // Purchase date
-  expiryDate      DateTime?             @map("expiry_date") // Expiry date
-  minimumStock    Decimal?               @map("minimum_stock") @db.Decimal(10, 2) // Minimum stock alert level
-  pricePerUnit    Decimal?               @map("price_per_unit") @db.Decimal(10, 2) // Price per unit
-  // Keep remaining fields in metadata for flexibility
-  metadata        Json?                  @map("metadata") // For storing additional data like notes, tags, etc.
-  category        InventoryCategory?      @relation(fields: [categoryId], references: [id])
+  location        String?
+  supplier        String?
+  purchaseDate    DateTime?              @map("purchase_date")
+  expiryDate      DateTime?              @map("expiry_date")
+  minimumStock    Decimal?               @map("minimum_stock") @db.Decimal(10, 2)
+  pricePerUnit    Decimal?               @map("price_per_unit") @db.Decimal(10, 2)
+  metadata        Json?                  @map("metadata")
+  category        InventoryCategory?     @relation(fields: [categoryId], references: [id])
   organization    Organization?          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   transactions    InventoryTransaction[]
 
@@ -130,23 +130,22 @@ model InventoryItem {
 }
 
 model InventoryCategory {
-  id              Int                    @id @default(autoincrement())
-  name            String
-  description     String?
-  icon            String?
-  color           String?
-  parentId         Int?                   @map("parent_id")
-  isSubcategory   Boolean                 @default(false) @map("is_subcategory")
-  organizationId  Int?                   @map("organization_id")
-  metadata        Json?                   @map("metadata") // For storing additional data like keywords, subcategories, etc.
-  createdAt       DateTime               @default(now()) @map("created_at")
-  updatedAt       DateTime               @updatedAt @map("updated_at")
-  parent          InventoryCategory?       @relation("CategorySubcategories", fields: [parentId], references: [id])
-  subcategories    InventoryCategory[]       @relation("CategorySubcategories")
-  organization    Organization?          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  items           InventoryItem[]
+  id             Int                 @id @default(autoincrement())
+  name           String
+  description    String?
+  icon           String?
+  color          String?
+  parentId       Int?                @map("parent_id")
+  isSubcategory  Boolean             @default(false) @map("is_subcategory")
+  organizationId Int?                @map("organization_id")
+  metadata       Json?               @map("metadata")
+  createdAt      DateTime            @default(now()) @map("created_at")
+  updatedAt      DateTime            @updatedAt @map("updated_at")
+  organization   Organization?       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  parent         InventoryCategory?  @relation("CategorySubcategories", fields: [parentId], references: [id])
+  subcategories  InventoryCategory[] @relation("CategorySubcategories")
+  items          InventoryItem[]
 
-  // @@unique([organizationId, name]) // Temporarily removed for migration
   @@map("inventory_categories")
 }
 
@@ -154,11 +153,11 @@ model InventoryTransaction {
   id              Int           @id @default(autoincrement())
   quantityChange  Decimal       @map("quantity_change") @db.Decimal(10, 2)
   reason          String
-  usageType       UsageType?    @map("usage_type") // Type of usage (feeding, planting, sales, etc.)
-  costPerUnit     Decimal?      @map("cost_per_unit") @db.Decimal(10, 2) // Cost per unit at time of usage
-  totalCost       Decimal?      @map("total_cost") @db.Decimal(10, 2) // Total cost of this transaction
-  relatedEntity   String?       @map("related_entity") // Related entity (customer, field, animal, etc.)
-  relatedEntityId Int?          @map("related_entity_id") // ID of related entity
+  usageType       UsageType?    @map("usage_type")
+  costPerUnit     Decimal?      @map("cost_per_unit") @db.Decimal(10, 2)
+  totalCost       Decimal?      @map("total_cost") @db.Decimal(10, 2)
+  relatedEntity   String?       @map("related_entity")
+  relatedEntityId Int?          @map("related_entity_id")
   date            DateTime
   createdAt       DateTime      @default(now()) @map("created_at")
   updatedAt       DateTime      @updatedAt @map("updated_at")
@@ -168,6 +167,104 @@ model InventoryTransaction {
   user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("inventory_transactions")
+}
+
+model Invoice {
+  id              Int            @id @default(autoincrement())
+  invoiceNumber   String         @unique @map("invoice_number")
+  clientName      String         @map("client_name")
+  clientEmail     String?        @map("client_email")
+  clientPhone     String?        @map("client_phone")
+  clientAddress   String?        @map("client_address")
+  businessName    String         @map("business_name")
+  businessEmail   String?        @map("business_email")
+  businessPhone   String?        @map("business_phone")
+  businessAddress String?        @map("business_address")
+  items           Json
+  subtotal        Decimal        @db.Decimal(10, 2)
+  tax             Decimal        @default(0) @db.Decimal(10, 2)
+  total           Decimal        @db.Decimal(10, 2)
+  status          InvoiceStatus  @default(PENDING)
+  paymentMethod   PaymentMethod? @map("payment_method")
+  dueDate         DateTime?      @map("due_date")
+  paidDate        DateTime?      @map("paid_date")
+  paidBy          Int?           @map("paid_by")
+  notes           String?
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+  userId          Int            @map("user_id")
+  createdBy       Int?           @map("created_by")
+  paidByUser      User?          @relation("InvoicePaidBy", fields: [paidBy], references: [id])
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("invoices")
+}
+
+model Asset {
+  id                  Int          @id @default(autoincrement())
+  name                String
+  description         String?
+  category            String
+  subcategory         String?
+  purchaseDate        DateTime?    @map("purchase_date")
+  supplier            String?
+  cost                Decimal      @default(0) @db.Decimal(10, 2)
+  warrantyPeriod      String?      @map("warranty_period")
+  expectedLifespan    Int          @default(10) @map("expected_lifespan")
+  depreciationMethod  String       @default("straight_line") @map("depreciation_method")
+  currentCondition    String       @default("good")
+  location            String
+  assignedWorker      String?      @map("assigned_worker")
+  status              String       @default("planned")
+  model               String?
+  serialNumber        String?      @map("serial_number")
+  powerRating         String?      @map("power_rating")
+  capacity            String?
+  fuelType            String?      @map("fuel_type")
+  maintenanceInterval String?      @map("maintenance_interval")
+  organizationId      Int          @map("organization_id")
+  createdBy           Int          @map("created_by")
+  createdAt           DateTime     @default(now()) @map("created_at")
+  updatedAt           DateTime     @updatedAt @map("updated_at")
+  organization        Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("assets")
+}
+
+model Subscription {
+  id                Int          @id @default(autoincrement())
+  userId            Int          @map("user_id")
+  organizationId    Int          @map("organization_id")
+  plan              String
+  status            String
+  billingCycle      String
+  price             Decimal      @db.Decimal(10, 2)
+  paystackReference String?      @map("paystack_reference")
+  expiresAt         DateTime?    @map("expires_at")
+  activatedAt       DateTime?    @map("activated_at")
+  cancelledAt       DateTime?    @map("cancelled_at")
+  createdAt         DateTime     @default(now()) @map("created_at")
+  updatedAt         DateTime     @updatedAt @map("updated_at")
+  organization      Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user              User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
+}
+
+model VatRecord {
+  id               Int          @id @default(autoincrement())
+  period           String
+  date             DateTime     @default(now()) @map("date")
+  vatAmount        Decimal      @db.Decimal(10, 2)
+  transactionCount Int          @default(0)
+  status           VatStatus    @default(PENDING) @map("status")
+  createdAt        DateTime     @default(now()) @map("created_at")
+  updatedAt        DateTime     @updatedAt @map("updated_at")
+  userId           Int          @map("user_id")
+  organizationId   Int          @map("organization_id")
+  organization     Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("vat_records")
 }
 
 enum UsageType {
@@ -180,69 +277,6 @@ enum UsageType {
   TRANSFER
   ADJUSTMENT
   OTHER
-}
-
-model Invoice {
-  id             Int              @id @default(autoincrement())
-  invoiceNumber  String           @unique @map("invoice_number")
-  clientName     String           @map("client_name")
-  clientEmail    String?          @map("client_email")
-  clientPhone    String?          @map("client_phone")
-  clientAddress  String?          @map("client_address")
-  businessName   String           @map("business_name")
-  businessEmail  String?          @map("business_email")
-  businessPhone  String?          @map("business_phone")
-  businessAddress String?         @map("business_address")
-  items          Json             // Invoice items as JSON array
-  subtotal       Decimal          @db.Decimal(10, 2)
-  tax            Decimal          @db.Decimal(10, 2) @default(0)
-  total          Decimal          @db.Decimal(10, 2)
-  status         InvoiceStatus     @default(PENDING)
-  paymentMethod  PaymentMethod?   @map("payment_method")
-  dueDate        DateTime?        @map("due_date")
-  paidDate       DateTime?        @map("paid_date")
-  paidBy        Int?             @map("paid_by") // User who marked invoice as paid
-  notes          String?          
-  createdAt      DateTime         @default(now()) @map("created_at")
-  updatedAt      DateTime         @updatedAt @map("updated_at")
-  userId         Int              @map("user_id")
-  createdBy      Int?             @map("created_by")
-  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  paidByUser     User?            @relation("InvoicePaidBy", fields: [paidBy], references: [id])
-
-  @@map("invoices")
-}
-
-model Asset {
-  id                Int              @id @default(autoincrement())
-  name              String
-  description       String?         
-  category          String           // machinery, tools, vehicles, infrastructure, irrigation_power, livestock, land_improvements
-  subcategory       String?         
-  purchaseDate      DateTime?        @map("purchase_date")
-  supplier          String?         
-  cost              Decimal          @default(0) @db.Decimal(10, 2)
-  warrantyPeriod    String?         @map("warranty_period")
-  expectedLifespan  Int              @default(10) @map("expected_lifespan")
-  depreciationMethod String          @default("straight_line") @map("depreciation_method")
-  currentCondition  String          @default("good") // excellent, good, fair, poor
-  location          String
-  assignedWorker    String?         @map("assigned_worker")
-  status            String          @default("planned") // planned, ordered, received, active, under_maintenance, damaged, retired, sold
-  model             String?         
-  serialNumber      String?         @map("serial_number")
-  powerRating        String?         @map("power_rating")
-  capacity          String?         
-  fuelType          String?         @map("fuel_type")
-  maintenanceInterval String?       @map("maintenance_interval")
-  organizationId    Int              @map("organization_id")
-  createdBy         Int              @map("created_by")
-  createdAt         DateTime         @default(now()) @map("created_at")
-  updatedAt         DateTime         @updatedAt @map("updated_at")
-
-  organization      Organization?    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-
-  @@map("assets")
 }
 
 enum UserRole {
@@ -278,43 +312,6 @@ enum InventoryType {
   OTHER
 }
 
-model Subscription {
-  id                 Int       @id @default(autoincrement())
-  userId             Int       @map("user_id")
-  organizationId     Int       @map("organization_id")
-  plan               String    // starter, growth, pro
-  status             String    // trial, active, cancelled, expired, pending
-  billingCycle       String    // monthly, annual
-  price              Decimal   @db.Decimal(10, 2)
-  paystackReference  String?   @map("paystack_reference")
-  expiresAt          DateTime? @map("expires_at")
-  activatedAt        DateTime? @map("activated_at")
-  cancelledAt        DateTime? @map("cancelled_at")
-  createdAt          DateTime  @default(now()) @map("created_at")
-  updatedAt          DateTime  @updatedAt @map("updated_at")
-  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  organization       Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-
-  @@map("subscriptions")
-}
-
-model VatRecord {
-  id              Int              @id @default(autoincrement())
-  period          String           // 'daily', 'weekly', 'monthly', 'yearly'
-  date            DateTime         @default(now()) @map("date")
-  vatAmount       Decimal          @db.Decimal(10, 2)
-  transactionCount Int               @default(0)
-  status          VatStatus        @default(PENDING) @map("status")
-  createdAt       DateTime         @default(now()) @map("created_at")
-  updatedAt       DateTime         @updatedAt @map("updated_at")
-  userId         Int              @map("user_id")
-  organizationId  Int              @map("organization_id")
-  
-  organization    Organization?          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  
-  @@map("vat_records")
-}
-
 enum VatStatus {
   PENDING
   REMITTED
@@ -324,32 +321,10 @@ enum VatStatus {
 model PasswordHistory {
   id          Int      @id @default(autoincrement())
   userId      Int      @map("user_id")
-  passwordHash String  @map("password_hash")
-  createdAt   DateTime @default(now()) @map("created_at")
-  createdBy   Int?     @map("created_by")
-  ipAddress   String?  @map("ip_address")
-  userAgent   String?  @map("user_agent")
+  hashedPassword String @map("hashed_password")
+  changedAt   DateTime @default(now()) @map("changed_at")
+  changedBy   Int?     @map("changed_by")
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("password_history")
-}
-
-model AuditLog {
-  id               Int      @id @default(autoincrement())
-  timestamp        DateTime @default(now())
-  level            String
-  action           String
-  resource         String
-  userId           Int?     @map("user_id")
-  organizationId   Int?     @map("organization_id")
-  userRole         String?  @map("user_role")
-  organizationName String?  @map("organization_name")
-  ipAddress        String?  @map("ip_address")
-  userAgent        String?  @map("user_agent")
-  resourceId       String?  @map("resource_id")
-  details          Json?
-  success          Boolean  @default(true)
-  errorMessage     String?  @map("error_message")
-
-  @@map("audit_logs")
 }
