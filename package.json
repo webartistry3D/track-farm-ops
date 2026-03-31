@@ -17,7 +17,14 @@
     "dev:frontend": "cd frontend && npm run dev",
     "dev:backend": "cd backend && npm run dev",
     "start:frontend": "cd frontend && npm run start",
-    "start:backend": "cd backend && npm run start"
+    "start:backend": "cd backend && npm run start",
+    "test:superuser": "node test-superuser-simple.js",
+    "test:superuser:full": "node test-superuser-flow.js",
+    "test:frontend": "node test-frontend-simple.js",
+    "test:tailwind": "node test-tailwind-fix.js",
+    "test:api": "node test-api-endpoints.js",
+    "debug:loading": "node debug-dashboard-loading.js",
+    "test:simple": "node test-simple-debug.js"
   },
   "keywords": [
     "farm",

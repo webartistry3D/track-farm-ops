@@ -255,6 +255,15 @@ const LoginClean = () => {
               )}
             </button>
           </div>
+
+          <div className="mt-4 text-center">
+            <Link 
+              to="/super-user-signup" 
+              className="text-xs text-gray-500 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-colors"
+            >
+              🔑 System Administrator? Create Superuser Account
+            </Link>
+          </div>
         </form>
       </div>
     </div>

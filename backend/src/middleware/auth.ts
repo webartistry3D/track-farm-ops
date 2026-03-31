@@ -5,7 +5,7 @@ import { prisma } from '../lib/prisma';
 export interface AuthUser {
   id: number;
   email: string;
-  role: string;
+  role: string; // Allow any role string including SUPERUSER
   name: string;
   organizationId?: number;
 }
@@ -57,8 +57,8 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
       return res.status(401).json({ error: 'User no longer exists' });
     }
 
-    // Validate organization membership
-    if (!currentUser.organizationId) {
+    // Validate organization membership (skip for superusers)
+    if (currentUser.role !== 'SUPERUSER' && !currentUser.organizationId) {
       console.log(`🚫 Authentication failed: User ${decoded.id} not assigned to any organization`);
       return res.status(401).json({ 
         error: 'User must be assigned to an organization',
@@ -66,8 +66,8 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
       });
     }
 
-    // Validate organization ID matches token (prevents token manipulation)
-    if (decoded.organizationId && decoded.organizationId !== currentUser.organizationId) {
+    // Validate organization ID matches token (prevents token manipulation, skip for superusers)
+    if (currentUser.role !== 'SUPERUSER' && decoded.organizationId && decoded.organizationId !== currentUser.organizationId) {
       console.log(`🚫 Authentication failed: Token organizationId ${decoded.organizationId} does not match user organizationId ${currentUser.organizationId}`);
       return res.status(401).json({ 
         error: 'Invalid token: organization mismatch',
@@ -75,11 +75,14 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
       });
     }
 
-    // Get organization details for logging
-    const organization = await prisma.organization.findUnique({
-      where: { id: currentUser.organizationId },
-      select: { name: true }
-    });
+    // Get organization details for logging (skip for superusers)
+    let organization = null;
+    if (currentUser.role !== 'SUPERUSER' && currentUser.organizationId) {
+      organization = await prisma.organization.findUnique({
+        where: { id: currentUser.organizationId },
+        select: { name: true }
+      });
+    }
 
     // Update user object with current database values
     req.user = {
@@ -87,10 +90,10 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
       email: currentUser.email,
       role: currentUser.role,
       name: currentUser.name,
-      organizationId: currentUser.organizationId
+      organizationId: currentUser.organizationId // Superusers can have null organizationId
     };
-
-    console.log(`✅ Authentication successful: ${currentUser.role} ${currentUser.name} (Org: ${organization?.name || 'Unknown'})`);
+  
+    console.log(`✅ Authentication successful: ${currentUser.role} ${currentUser.name} (Org: ${organization?.name || 'System'})`);
     next();
   } catch (error) {
     console.log('🚫 Authentication failed: Invalid or expired token');
@@ -113,10 +116,10 @@ export const authorize = (roles: string[]) => {
   };
 };
 
-// New middleware for organization-based access control
+// New middleware for organization-based access control (skip for superusers)
 export const requireOrganization = () => {
   return (req: AuthRequest, res: Response, next: NextFunction) => {
-    if (!req.user || !req.user.organizationId) {
+    if (!req.user || (req.user.role !== 'SUPERUSER' && !req.user.organizationId)) {
       return res.status(403).json({ 
         error: 'Organization membership required',
         code: 'NO_ORGANIZATION'

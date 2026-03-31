@@ -96,7 +96,7 @@ const SuperUserSignup = () => {
         newErrors.password = 'Password is required';
       } else if (formData.password.length < 12) {
         newErrors.password = 'Password must be at least 12 characters';
-      } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/.test(formData.password)) {
+      } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]/.test(formData.password)) {
         newErrors.password = 'Password must contain uppercase, lowercase, number, and special character';
       }
       if (!formData.confirmPassword) {
@@ -192,12 +192,13 @@ const SuperUserSignup = () => {
 
     try {
       const response = await api.post('/auth/superuser-signup', {
-        ...formData,
-        role: 'superuser',
-        permissions: ['all']
+        name: formData.fullName,
+        email: formData.email,
+        password: formData.password,
+        adminKey: formData.adminCode
       });
 
-      if (response.data.success) {
+      if (response.data.user) {
         setSuccess('Superuser account created successfully! Logging you in...');
         
         // Auto-login after successful signup

@@ -19,6 +19,7 @@ import financeRoutes from './routes/financeRoutes';
 import ocrRoutes from './routes/ocrRoutes';
 import subscriptionRoutes from './routes/subscription';
 import storageRoutes from './routes/storageRoutes';
+import superuserRoutes from './routes/superuser';
 import { prisma } from './lib/prisma';
 
 // Import our enhanced security middleware (temporarily disabled for compilation)
@@ -77,7 +78,9 @@ if (process.env.NODE_ENV === 'production') {
       'https://track-farm-ops.onrender.com',
       'https://www.trackfarmops.com.ng',
       'https://trackfarmops.com.ng',
-      process.env.FRONTEND_URL || 'http://localhost:5173'
+      process.env.FRONTEND_URL || 'http://localhost:5173',
+      'http://localhost:5173', // Add explicit localhost for development
+      'http://localhost:3000'  // Add backend port for testing
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
@@ -94,9 +97,25 @@ if (process.env.NODE_ENV === 'production') {
     stream: fs.createWriteStream(process.env.LOG_FILE || 'logs/app.log', { flags: 'a' })
   }));
 } else {
-  // Development configuration
-  app.use(cors());
-  app.use(morgan('combined'));
+  // Development configuration with more permissive CORS for local development
+  app.use(cors({
+    origin: [
+      'https://track-farm-ops.onrender.com',
+      'https://www.trackfarmops.com.ng',
+      'https://trackfarmops.com.ng',
+      process.env.FRONTEND_URL || 'http://localhost:5173',
+      'http://localhost:5173', // Add explicit localhost for development
+      'http://localhost:3000'  // Add backend port for testing
+    ],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    optionsSuccessStatus: 200 // Allow preflight to succeed
+  }));
+  
+  // Development logging
+  app.use(morgan('dev')); // Simple logging for development
+  console.log('🚀 Backend running in development mode with CORS for:', process.env.FRONTEND_URL || 'http://localhost:5173');
 }
 
 // Basic middleware
@@ -164,6 +183,7 @@ app.get('/api', (req, res) => {
       invoice: '/api/invoices',
       storage: '/api/storage',
       ocr: '/api/ocr',
+      superuser: '/api/superuser',
       health: '/api/health'
     }
   });
@@ -203,6 +223,7 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/finance', financeRoutes);
 app.use('/api/subscription', subscriptionRoutes);
 app.use('/api/storage', storageRoutes);
+app.use('/api/superuser', superuserRoutes);
 app.use('/ocr', ocrRoutes);
 
 // Serve static files from uploads directory

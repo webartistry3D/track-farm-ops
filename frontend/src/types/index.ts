@@ -2,7 +2,7 @@ export interface User {
   id: number;
   name: string;
   email: string;
-  role: 'OWNER' | 'MANAGER' | 'WORKER' | 'superuser';
+  role: 'OWNER' | 'MANAGER' | 'WORKER' | 'SUPERUSER';
   organizationId?: number;
   organizationName?: string;
   createdAt: string;

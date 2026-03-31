@@ -16,18 +16,56 @@ api.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+  
+  // Debug logging
+  console.log('🌐 API Request:', {
+    method: config.method?.toUpperCase(),
+    url: `${API_BASE_URL}${config.url}`,
+    hasToken: !!token,
+    headers: config.headers
+  });
+  
   return config;
 });
 
 // Handle auth errors
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // Debug logging
+    console.log('🌐 API Response:', {
+      url: response.config.url,
+      status: response.status,
+      statusText: response.statusText,
+      hasData: !!response.data,
+      dataType: typeof response.data,
+      dataKeys: response.data ? Object.keys(response.data) : null
+    });
+    
+    return response;
+  },
   (error) => {
+    console.error('🌐 API Error:', {
+      url: error.config?.url,
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      message: error.message,
+      isAxiosError: error.isAxiosError,
+      errorCode: error.code,
+      errorData: error.response?.data
+    });
+    
     if (error.response?.status === 401) {
+      console.error('🚨 AUTH ERROR: Token expired or invalid');
       localStorage.removeItem('trackfarmops_token');
       localStorage.removeItem('trackfarmops_user');
       window.location.href = '/login';
+    } else if (error.response?.status === 403) {
+      console.error('🚨 AUTH ERROR: Access forbidden');
+      // Don't redirect on 403, let user see error message
+    } else if (error.response?.status >= 500) {
+      console.error('🚨 SERVER ERROR: Backend server error');
     }
+    
     return Promise.reject(error);
   }
 );

@@ -23,6 +23,7 @@ import Privacy from './components/Privacy';
 import Terms from './components/Terms';
 import Pricing from './components/Pricing';
 import SuperUserRoutes from './components/SuperUserRoutes';
+import SuperUserSignup from './components/SuperUserSignup';
 import { useAuth } from './contexts/AuthContext';
 
 const queryClient = new QueryClient();
@@ -58,8 +59,17 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 const AppRoutes = () => {
   const { user, isLoading } = useAuth();
   
+  console.log('🚀 APP ROUTES COMPONENT MOUNTING!');
+  console.log('🔍 APP ROUTES - Auth state:', {
+    user: user,
+    userRole: user?.role,
+    isLoading: isLoading,
+    isSuperUser: user?.role === 'SUPERUSER'
+  });
+  
   // Show loading screen while auth is initializing
   if (isLoading) {
+    console.log('🔍 APP ROUTES - Showing loading screen');
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-lg">Loading...</div>
@@ -77,6 +87,7 @@ const AppRoutes = () => {
       <Route path="/privacy" element={<Privacy />} />
       <Route path="/terms" element={<Terms />} />
       <Route path="/pricing" element={<Pricing />} />
+      <Route path="/super-user-signup" element={<SuperUserSignup />} />
       
       {/* Superuser Routes - Separate from regular user routes */}
       <Route path="/super-user/*" element={<SuperUserRoutes />} />

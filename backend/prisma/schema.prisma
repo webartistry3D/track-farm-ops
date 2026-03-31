@@ -243,6 +243,7 @@ enum UserRole {
   OWNER
   MANAGER
   WORKER
+  SUPERUSER
 }
 
 enum PaymentMethod {

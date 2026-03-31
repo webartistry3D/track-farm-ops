@@ -158,6 +158,91 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// Superuser signup - system administrator account creation
+router.post('/superuser-signup', async (req, res) => {
+  try {
+    const { name, email, password, adminKey } = req.body;
+
+    // Validate admin key (this should be a secure environment variable in production)
+    const SUPERUSER_ADMIN_KEY = process.env.SUPERUSER_ADMIN_KEY || 'trackfarmops-superuser-2024';
+    
+    if (!adminKey || adminKey !== SUPERUSER_ADMIN_KEY) {
+      console.log(`🚫 Superuser signup failed: Invalid admin key for ${email}`);
+      return res.status(403).json({ 
+        error: 'Invalid admin key',
+        code: 'INVALID_ADMIN_KEY'
+      });
+    }
+
+    // Validate input
+    if (!name || !email || !password) {
+      return res.status(400).json({ 
+        error: 'Name, email, and password are required' 
+      });
+    }
+
+    // Check if user already exists
+    const existingUser = await prisma.user.findUnique({
+      where: { email }
+    });
+
+    if (existingUser) {
+      return res.status(400).json({ 
+        error: 'User with this email already exists' 
+      });
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    // Create superuser (no organization required)
+    const superuser = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+        role: 'SUPERUSER'
+        // No organizationId for superusers
+      }
+    });
+
+    console.log(`✅ Superuser created: ${superuser.name} (${superuser.email})`);
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { 
+        id: superuser.id, 
+        email: superuser.email, 
+        role: superuser.role,
+        name: superuser.name,
+        organizationId: null // Superusers don't have organizations
+      },
+      process.env.JWT_SECRET || 'fallback-secret',
+      { expiresIn: '24h' }
+    );
+
+    res.status(201).json({
+      message: 'Superuser account created successfully',
+      user: {
+        id: superuser.id,
+        name: superuser.name,
+        email: superuser.email,
+        role: superuser.role,
+        organizationId: null,
+        organizationName: null,
+        createdAt: superuser.createdAt
+      },
+      token
+    });
+
+  } catch (error) {
+    console.error('Superuser signup error:', error);
+    res.status(500).json({ 
+      error: 'Internal server error' 
+    });
+  }
+});
+
 router.post('/signup', signup);
 router.post('/setup-test-users', createTestUsers);
 
