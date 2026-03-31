@@ -1360,6 +1360,7 @@ TrackFarmOps Team`;
       });
       
       console.log('🔍 DEBUG: setVatRecords called with:', updatedRecords.length, 'records');
+      setVatRecords(updatedRecords);
       setVatSummary({
         totalVat,
         averageVat,
