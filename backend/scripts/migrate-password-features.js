@@ -196,15 +196,19 @@ class DatabaseMigrator {
   async createTrigger() {
     console.log('🔧 Creating trigger...');
     
-    const triggerSQL = `
-      DROP TRIGGER IF EXISTS trigger_password_change_count ON password_history;
+    const dropTriggerSQL = `DROP TRIGGER IF EXISTS trigger_password_change_count ON password_history`;
+    const createTriggerSQL = `
       CREATE TRIGGER trigger_password_change_count
           AFTER INSERT ON password_history
           FOR EACH ROW
           EXECUTE FUNCTION increment_password_change_count()
     `;
 
-    await this.prisma.$executeRawUnsafe(triggerSQL);
+    // Drop trigger first
+    await this.prisma.$executeRawUnsafe(dropTriggerSQL);
+    
+    // Create trigger
+    await this.prisma.$executeRawUnsafe(createTriggerSQL);
     console.log('✅ Trigger created');
   }
 
@@ -243,18 +247,18 @@ class DatabaseMigrator {
     
     try {
       // Drop triggers
-      await this.prisma.$executeRawUnsafe`DROP TRIGGER IF EXISTS trigger_password_change_count ON password_history`;
-      await this.prisma.$executeRawUnsafe`DROP FUNCTION IF EXISTS increment_password_change_count()`;
+      await this.prisma.$executeRawUnsafe('DROP TRIGGER IF EXISTS trigger_password_change_count ON password_history');
+      await this.prisma.$executeRawUnsafe('DROP FUNCTION IF EXISTS increment_password_change_count()');
       
       // Drop tables
-      await this.prisma.$executeRawUnsafe`DROP TABLE IF EXISTS audit_logs`;
-      await this.prisma.$executeRawUnsafe`DROP TABLE IF EXISTS password_history`;
+      await this.prisma.$executeRawUnsafe('DROP TABLE IF EXISTS audit_logs');
+      await this.prisma.$executeRawUnsafe('DROP TABLE IF EXISTS password_history');
       
       // Drop columns (optional - keep them for data integrity)
-      // await this.prisma.$executeRawUnsafe`ALTER TABLE users DROP COLUMN IF EXISTS last_password_change`;
-      // await this.prisma.$executeRawUnsafe`ALTER TABLE users DROP COLUMN IF EXISTS password_changed_by`;
-      // await this.prisma.$executeRawUnsafe`ALTER TABLE users DROP COLUMN IF EXISTS password_change_count`;
-      // await this.prisma.$executeRawUnsafe`ALTER TABLE users DROP COLUMN IF EXISTS requires_password_change`;
+      // await this.prisma.$executeRawUnsafe('ALTER TABLE users DROP COLUMN IF EXISTS last_password_change');
+      // await this.prisma.$executeRawUnsafe('ALTER TABLE users DROP COLUMN IF EXISTS password_changed_by');
+      // await this.prisma.$executeRawUnsafe('ALTER TABLE users DROP COLUMN IF EXISTS password_change_count');
+      // await this.prisma.$executeRawUnsafe('ALTER TABLE users DROP COLUMN IF EXISTS requires_password_change');
       
       console.log('✅ Rollback completed');
     } catch (error) {
