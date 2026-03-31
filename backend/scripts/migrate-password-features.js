@@ -92,7 +92,7 @@ class DatabaseMigrator {
 
     for (const sql of columns) {
       try {
-        await this.prisma.$executeRaw`${sql}`;
+        await this.prisma.$executeRawUnsafe(sql);
         console.log(`✅ Added column successfully`);
       } catch (error) {
         if (!error.message.includes('already exists')) {
@@ -117,7 +117,7 @@ class DatabaseMigrator {
       )
     `;
 
-    await this.prisma.$executeRaw`${createTableSQL}`;
+    await this.prisma.$executeRawUnsafe(createTableSQL);
     console.log('✅ password_history table created');
   }
 
@@ -144,7 +144,7 @@ class DatabaseMigrator {
       )
     `;
 
-    await this.prisma.$executeRaw`${createTableSQL}`;
+    await this.prisma.$executeRawUnsafe(createTableSQL);
     console.log('✅ audit_logs table created');
   }
 
@@ -163,7 +163,7 @@ class DatabaseMigrator {
 
     for (const indexSQL of indexes) {
       try {
-        await this.prisma.$executeRaw`${indexSQL}`;
+        await this.prisma.$executeRawUnsafe(indexSQL);
         console.log('✅ Index created');
       } catch (error) {
         if (!error.message.includes('already exists')) {
@@ -189,7 +189,7 @@ class DatabaseMigrator {
       $$ LANGUAGE plpgsql
     `;
 
-    await this.prisma.$executeRaw`${triggerFunctionSQL}`;
+    await this.prisma.$executeRawUnsafe(triggerFunctionSQL);
     console.log('✅ Trigger function created');
   }
 
@@ -204,7 +204,7 @@ class DatabaseMigrator {
           EXECUTE FUNCTION increment_password_change_count()
     `;
 
-    await this.prisma.$executeRaw`${triggerSQL}`;
+    await this.prisma.$executeRawUnsafe(triggerSQL);
     console.log('✅ Trigger created');
   }
 
@@ -243,18 +243,18 @@ class DatabaseMigrator {
     
     try {
       // Drop triggers
-      await this.prisma.$executeRaw`DROP TRIGGER IF EXISTS trigger_password_change_count ON password_history`;
-      await this.prisma.$executeRaw`DROP FUNCTION IF EXISTS increment_password_change_count()`;
+      await this.prisma.$executeRawUnsafe`DROP TRIGGER IF EXISTS trigger_password_change_count ON password_history`;
+      await this.prisma.$executeRawUnsafe`DROP FUNCTION IF EXISTS increment_password_change_count()`;
       
       // Drop tables
-      await this.prisma.$executeRaw`DROP TABLE IF EXISTS audit_logs`;
-      await this.prisma.$executeRaw`DROP TABLE IF EXISTS password_history`;
+      await this.prisma.$executeRawUnsafe`DROP TABLE IF EXISTS audit_logs`;
+      await this.prisma.$executeRawUnsafe`DROP TABLE IF EXISTS password_history`;
       
       // Drop columns (optional - keep them for data integrity)
-      // await this.prisma.$executeRaw`ALTER TABLE users DROP COLUMN IF EXISTS last_password_change`;
-      // await this.prisma.$executeRaw`ALTER TABLE users DROP COLUMN IF EXISTS password_changed_by`;
-      // await this.prisma.$executeRaw`ALTER TABLE users DROP COLUMN IF EXISTS password_change_count`;
-      // await this.prisma.$executeRaw`ALTER TABLE users DROP COLUMN IF EXISTS requires_password_change`;
+      // await this.prisma.$executeRawUnsafe`ALTER TABLE users DROP COLUMN IF EXISTS last_password_change`;
+      // await this.prisma.$executeRawUnsafe`ALTER TABLE users DROP COLUMN IF EXISTS password_changed_by`;
+      // await this.prisma.$executeRawUnsafe`ALTER TABLE users DROP COLUMN IF EXISTS password_change_count`;
+      // await this.prisma.$executeRawUnsafe`ALTER TABLE users DROP COLUMN IF EXISTS requires_password_change`;
       
       console.log('✅ Rollback completed');
     } catch (error) {
