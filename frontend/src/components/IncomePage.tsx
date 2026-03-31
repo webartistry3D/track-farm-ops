@@ -39,7 +39,7 @@ const formatNumberWithSeparator = (value: any): string => {
   return decimalPart ? `${integerPart}.${decimalPart}` : integerPart;
 };
 
-const EnhancedIncomePage = () => {
+const IncomePage = () => {
   const [activeTab, setActiveTab] = useState<'record' | 'invoice' | 'records' | 'invoices' | 'vat'>('record');
   const location = useLocation();
 
@@ -3720,4 +3720,4 @@ Generated on: ${new Date().toLocaleString()}
   );
 };
 
-export default EnhancedIncomePage;
+export default IncomePage;

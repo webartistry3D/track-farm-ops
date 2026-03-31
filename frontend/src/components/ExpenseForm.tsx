@@ -23,7 +23,7 @@ const expenseCategories = [
   "Feed", "Transport", "Labor", "Veterinary", "Fuel", "Equipment", "Other"
 ];
 
-const EnhancedExpenseForm = () => {
+const ExpenseForm = () => {
   const [formData, setFormData] = useState({
     amount: '',
     category: '',
@@ -429,4 +429,4 @@ const EnhancedExpenseForm = () => {
   );
 };
 
-export default EnhancedExpenseForm;
+export default ExpenseForm;

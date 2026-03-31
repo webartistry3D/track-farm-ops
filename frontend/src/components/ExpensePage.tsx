@@ -41,7 +41,7 @@ const expenseCategories = [
   "Feed", "Transport", "Labor", "Veterinary", "Fuel", "Equipment", "Other"
 ];
 
-const EnhancedExpensePage = () => {
+const ExpensePage = () => {
   const [activeTab, setActiveTab] = useState<'record' | 'records'>('record');
   const location = useLocation();
 
@@ -454,7 +454,7 @@ const EnhancedExpensePage = () => {
               {/* OCR Section */}
               {!ocrResult && (
                 <div className="mb-6 max-w-2xl">
-                  <div className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 rounded-xl border border-amber-200 dark:border-amber-700 shadow-sm">
+                  <div className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 rounded-xl dark:border-amber-700 shadow-sm">
                     <div className="p-4">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center space-x-3">
@@ -474,7 +474,7 @@ const EnhancedExpensePage = () => {
                         <button
                           onClick={handleCameraCapture}
                           disabled={isScanning}
-                          className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 bg-amber-600 dark:bg-amber-600 text-white text-sm font-medium rounded-lg hover:bg-amber-700 dark:hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md"
+                          className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 bg-amber-600 dark:bg-amber-700 text-white text-sm font-medium rounded-lg hover:bg-amber-700 dark:hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md"
                         >
                           <Camera className="h-4 w-4" />
                           {isScanning ? 'Processing...' : 'Take Photo'}
@@ -482,7 +482,7 @@ const EnhancedExpensePage = () => {
                         <button
                           onClick={handleFileUpload}
                           disabled={isScanning}
-                          className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 bg-white dark:bg-gray-800 text-amber-600 dark:text-amber-400 text-sm font-medium rounded-lg border border-amber-200 dark:border-amber-700 hover:bg-amber-50 dark:hover:bg-amber-900/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md"
+                          className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 bg-white dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-sm font-medium rounded-lg dark:border-amber-700 hover:bg-amber-50 dark:hover:bg-amber-700/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md"
                         >
                           <Upload className="h-4 w-4" />
                           {isScanning ? 'Processing...' : 'Upload Image'}
@@ -736,7 +736,7 @@ const EnhancedExpensePage = () => {
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="px-6 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="px-6 py-2 bg-amber-700 text-white rounded-lg hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     {isLoading ? 'Recording...' : 'Record Expense'}
                   </button>
@@ -1004,4 +1004,4 @@ const EnhancedExpensePage = () => {
   );
 };
 
-export default EnhancedExpensePage;
+export default ExpensePage;

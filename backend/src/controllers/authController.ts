@@ -327,7 +327,36 @@ export const getUsers = async (req: AuthRequest, res: Response) => {
 export const getProfile = async (req: AuthRequest, res: Response) => {
   try {
     const user = req.user!;
-    res.json(user);
+    
+    // Fetch fresh user data from database to ensure all fields are present
+    const freshUserData = await prisma.user.findUnique({
+      where: { id: user.id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+        lastPasswordChange: true,
+        passwordChangeCount: true,
+        requiresPasswordChange: true,
+        profileImageUrl: true,
+        organization: {
+          select: {
+            id: true,
+            name: true
+          }
+        }
+      }
+    });
+
+    if (!freshUserData) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json(freshUserData);
   } catch (error) {
     console.error('Get profile error:', error);
     res.status(500).json({ error: 'Internal server error' });

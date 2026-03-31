@@ -54,14 +54,13 @@ const Landing = () => {
 
   // Typing animation for subtitle
   const [typedText, setTypedText] = useState('');
-  const fullText = "A complete farm management system.\nTrack your income, expenses and inventory.\nMonitor day-to-day transactions from anywhere.";
+  const fullText = "A complete farm management system.\nTrack your income, expenses, inventory and assets.\nMonitor day-to-day transactions from anywhere.";
 
   // Word pop-up animation for title
   const words = ["Farm", "Operations", "Made", "Simple"];
   const [visibleWords, setVisibleWords] = useState(new Set<number>());
   const [animationStarted, setAnimationStarted] = useState(false);
   const [starsVisible, setStarsVisible] = useState(false);
-  const [simpleMorphed, setSimpleMorphed] = useState(false);
 
   useEffect(() => {
     // Start animation after 2 seconds delay
@@ -69,14 +68,8 @@ const Landing = () => {
       setAnimationStarted(true);
     }, 2000);
 
-    // Morph Simple word after 2.5 seconds from animation start
-    const morphDelay = setTimeout(() => {
-      setSimpleMorphed(true);
-    }, 3500); // 2s + 2.5s = 4.5s total
-
     return () => {
       clearTimeout(startDelay);
-      clearTimeout(morphDelay);
     };
   }, []);
 
@@ -203,7 +196,7 @@ const Landing = () => {
                       : visibleWords.has(index)
                       ? 'opacity-100 translate-x-0'
                       : 'opacity-0 translate-x-full'
-                  } ${word === 'Simple' ? (simpleMorphed ? 'text-white bg-green-600 px-3 py-1 rounded transition-all duration-500' : '') : word === 'Operations' ? 'text-green-600' : ''}`}
+                  } ${word === 'Simple' ? 'text-white bg-green-600 px-3 py-1 rounded' : word === 'Operations' ? 'text-green-600' : ''}`}
                   style={{
                     transitionDelay: animationStarted ? `${index * 200}ms` : '0ms'
                   }}
@@ -315,7 +308,7 @@ const Landing = () => {
                     transitionDelay: starsVisible ? '1700ms' : '0ms'
                   }}
                 >
-                  Trusted by farmers worldwide
+                  Trusted by farmers nationwide
                 </span>
               </div>
             </div>

@@ -46,6 +46,9 @@ const UserProfile: React.FC<UserProfileProps> = ({ className = '' }) => {
       setError(null);
       
       const response = await api.get('/auth/profile');
+      console.log('Profile data received:', response.data);
+      console.log('Created at date:', response.data.createdAt);
+      
       setProfileData(response.data);
       setEditForm({
         name: response.data.name,
@@ -53,7 +56,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ className = '' }) => {
       });
     } catch (error: any) {
       console.error('Error fetching profile:', error);
-      setError('Failed to load profile data');
+      setError(error.response?.data?.error || 'Failed to fetch profile data');
     } finally {
       setLoading(false);
     }
@@ -149,12 +152,29 @@ const UserProfile: React.FC<UserProfileProps> = ({ className = '' }) => {
     }
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
+  const formatDate = (dateString: string | null | undefined) => {
+    if (!dateString) {
+      return 'Unknown';
+    }
+    
+    try {
+      const date = new Date(dateString);
+      
+      // Check if date is valid
+      if (isNaN(date.getTime())) {
+        console.warn('Invalid date string:', dateString);
+        return 'Invalid Date';
+      }
+      
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+    } catch (error) {
+      console.error('Error formatting date:', error, 'Date string:', dateString);
+      return 'Invalid Date';
+    }
   };
 
   const getRoleColor = (role: string) => {
@@ -320,21 +340,6 @@ const UserProfile: React.FC<UserProfileProps> = ({ className = '' }) => {
                         {imageUploadLoading ? 'Uploading...' : 'Upload New Photo'}
                       </div>
                     </label>
-                    
-                    {/* Profile Actions */}
-                    <div className="flex gap-3 w-full">
-                      <button 
-                        className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled={imageUploadLoading}
-                      >
-                        Save Changes
-                      </button>
-                      <button className="flex-1 px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled={imageUploadLoading}
-                      >
-                        Cancel
-                      </button>
-                    </div>
                   </div>
                 </div>
                 

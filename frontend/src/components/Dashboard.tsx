@@ -5,10 +5,8 @@ import api from '../lib/api';
 import { formatCurrency } from '../utils/currency';
 import { TrendingUp, ShoppingCart, Calculator } from 'lucide-react';
 import { 
-  PageSkeleton, 
-  StatsCardSkeleton, 
-  ListSkeleton
-} from './SkeletonComponents';
+  DashboardSkeleton
+} from './EnhancedSkeletons';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -209,61 +207,7 @@ const Dashboard = () => {
 
   // Show skeleton while loading
   if (loading) {
-    return (
-      <PageSkeleton>
-        {/* Welcome Section Skeleton */}
-        <div className="shadow rounded-lg p-0 mb-6">
-          <div className="h-8 w-48 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
-          <div className="h-4 w-64 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-        </div>
-
-        {/* Stats Cards Skeleton */}
-        {isOwner && (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <StatsCardSkeleton />
-              <StatsCardSkeleton />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <StatsCardSkeleton />
-              <StatsCardSkeleton />
-            </div>
-          </>
-        )}
-
-        {/* Quick Stats Skeleton */}
-        <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6 mb-6">
-          <h2 className="text-xl font-poppins font-semibold text-gray-900 dark:text-white mb-4">
-            <div className="h-6 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform">
-                <div className="text-xl mb-1">
-                  <div className="w-6 h-6 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mx-auto"></div>
-                </div>
-                <div className="text-xl font-poppins font-semibold text-gray-900 dark:text-white mb-2">
-                  <div className="h-6 w-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mx-auto"></div>
-                </div>
-                <div className="text-sm font-inter text-gray-500 dark:text-gray-400">
-                  <div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mx-auto"></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Recent Activity Skeleton */}
-        <div>
-          <h2 className="text-xl font-poppins font-semibold text-gray-900 dark:text-white mb-4">
-            <div className="h-6 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-          </h2>
-          <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-            <ListSkeleton items={5} />
-          </div>
-        </div>
-      </PageSkeleton>
-    );
+    return <DashboardSkeleton />;
   }
 
   return (

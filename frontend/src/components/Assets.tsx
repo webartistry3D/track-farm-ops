@@ -7,12 +7,8 @@ import { useSubscriptionRestrictions } from '../utils/subscriptionRestrictions';
 import { Search, Plus, Edit2, Trash2, Wrench, AlertTriangle, TrendingUp, Clock, MapPin, User, QrCode, FileText, BarChart3, CheckCircle } from 'lucide-react';
 import api from '../lib/api';
 import { 
-  PageSkeleton, 
-  TabSkeleton, 
-  TableSkeleton,
-  ChartSkeleton,
-  ListSkeleton
-} from './SkeletonComponents';
+  AssetsSkeleton
+} from './EnhancedSkeletons';
 
 interface Asset {
   id: string;
@@ -420,104 +416,7 @@ const Assets = () => {
 
   // Show comprehensive skeleton while loading
   if (loading) {
-    return (
-      <PageSkeleton>
-        {/* Search and Filter Skeleton */}
-        <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
-          <div className="flex flex-col lg:flex-row gap-4">
-            <div className="flex-1">
-              <div className="h-10 w-full bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
-            </div>
-            <div className="h-10 w-32 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
-            <div className="h-10 w-32 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
-            <div className="h-10 w-32 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
-              <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
-            </div>
-          </div>
-        </div>
-
-        {/* Tab Navigation Skeleton */}
-        <TabSkeleton tabs={4} />
-
-        {/* Key Performance Indicators Skeleton - Matches actual 2x4 grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="bg-white dark:bg-gray-800 p-4 lg:p-6 rounded-lg shadow">
-              <div className="flex items-center">
-                <div className="p-2 lg:p-3 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse">
-                  <div className="w-5 h-5 lg:w-6 lg:h-6 bg-gray-300 dark:bg-gray-600 rounded animate-pulse"></div>
-                </div>
-                <div className="ml-3 lg:ml-4 flex-1">
-                  <div className="h-4 w-24 lg:h-4 lg:w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
-                  <div className="h-8 w-16 lg:h-8 lg:w-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Overview Tab Content Skeleton */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <div className="h-6 w-48 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
-              <div className="h-4 w-64 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-            </div>
-            <div className="flex gap-2">
-              <div className="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
-              <div className="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
-            </div>
-          </div>
-          
-          {/* Assets Table Skeleton */}
-          <TableSkeleton rows={10} columns={9} />
-        </div>
-
-        {/* Maintenance Schedule Skeleton */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
-          <div className="h-6 w-40 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-4"></div>
-          <ListSkeleton items={5} />
-        </div>
-
-        {/* Recent Maintenance Records Skeleton */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
-          <div className="h-6 w-48 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-4"></div>
-          <TableSkeleton rows={5} columns={4} />
-        </div>
-
-        {/* Recent Incidents Skeleton */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
-          <div className="h-6 w-36 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-4"></div>
-          <TableSkeleton rows={5} columns={4} />
-        </div>
-
-        {/* Analytics Tab Content Skeleton */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
-          <div className="h-6 w-48 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-4"></div>
-          <ChartSkeleton height="h-64" />
-        </div>
-
-        {/* Maintenance Cost Trends Skeleton */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
-          <div className="h-6 w-56 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-4"></div>
-          <ChartSkeleton height="h-64" />
-        </div>
-
-        {/* Top Assets by Cost Skeleton */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
-          <div className="h-6 w-40 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-4"></div>
-          <ListSkeleton items={5} />
-        </div>
-
-        {/* Asset ROI Analysis Skeleton */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <div className="h-6 w-36 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-4"></div>
-          <ChartSkeleton height="h-64" />
-        </div>
-      </PageSkeleton>
-    );
+    return <AssetsSkeleton />;
   }
 
   return (

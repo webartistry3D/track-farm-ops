@@ -10,10 +10,10 @@ import LoginClean from './components/LoginClean';
 import Signup from './components/Signup';
 import Dashboard from './components/Dashboard';
 import Reports from './components/Reports';
-import AnalyticsDashboard from './components/AnalyticsDashboard';
-import EnhancedIncomePage from './components/EnhancedIncomePage';
-import EnhancedExpensePage from './components/EnhancedExpensePage';
-import InventoryModernNew from './components/InventoryModernNew';
+import Analytics from './components/Analytics';
+import IncomePage from './components/IncomePage';
+import ExpensePage from './components/ExpensePage';
+import Inventory from './components/Inventory';
 import Assets from './components/Assets';
 import Settings from './components/Settings';
 import UserProfile from './components/UserProfile';
@@ -113,7 +113,7 @@ const AppRoutes = () => {
         path="/analytics" 
         element={
           <ProtectedRoute>
-            <AnalyticsDashboard />
+            <Analytics />
           </ProtectedRoute>
         } 
       />
@@ -121,7 +121,7 @@ const AppRoutes = () => {
         path="/income" 
         element={
           <ProtectedRoute>
-            <EnhancedIncomePage />
+            <IncomePage />
           </ProtectedRoute>
         } 
       />
@@ -129,7 +129,7 @@ const AppRoutes = () => {
         path="/expenses" 
         element={
           <ProtectedRoute>
-            <EnhancedExpensePage />
+            <ExpensePage />
           </ProtectedRoute>
         } 
       />
@@ -137,7 +137,7 @@ const AppRoutes = () => {
         path="/inventory" 
         element={
           <ProtectedRoute>
-            <InventoryModernNew />
+            <Inventory />
           </ProtectedRoute>
         } 
       />

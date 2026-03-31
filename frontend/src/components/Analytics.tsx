@@ -3,10 +3,12 @@ import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
 import { formatCurrency } from '../utils/currency';
 import { 
+  AnalyticsSkeleton
+} from './EnhancedSkeletons';
+import { 
   TrendingUp, 
   ShoppingCart, 
   Calendar,
-  BarChart3,
   PieChart,
   Package,
   Heart,
@@ -35,7 +37,7 @@ interface InventorySummary {
   };
 }
 
-const AnalyticsDashboard = () => {
+const Analytics = () => {
   const { user } = useAuth();
 
   // Check if user has appropriate role
@@ -376,6 +378,11 @@ const AnalyticsDashboard = () => {
       return "text-gray-600 dark:text-gray-400";
     };
 
+  // Show skeleton while loading
+  if (financialLoading || inventoryLoading) {
+    return <AnalyticsSkeleton />;
+  }
+
     return (
       <div 
         onClick={() => {
@@ -572,74 +579,7 @@ const AnalyticsDashboard = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           <div>
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-              <BarChart3 className="w-5 h-5 mr-2 text-green-500" />
               Income by Category
-            </h2>
-            {financialLoading ? (
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                <div className="h-6 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-4"></div>
-                <div className="space-y-3">
-                  {[...Array(4)].map((_, i) => (
-                    <div key={i} className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="flex justify-between items-center mb-1">
-                          <div className="h-4 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                          <div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                        </div>
-                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                          <div className="bg-gray-300 dark:bg-gray-600 h-2 rounded-full w-3/4 animate-pulse"></div>
-                        </div>
-                      </div>
-                      <div className="ml-4 h-4 w-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                {!financialSummary?.incomeByCategory || financialSummary.incomeByCategory.length === 0 ? (
-                  <div className="text-center py-8">
-                    <PieChart className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                    <p className="text-gray-500 dark:text-gray-400 text-sm">No income data available</p>
-                    <p className="text-gray-400 dark:text-gray-500 text-xs mt-1">Create income entries to see category breakdowns</p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {financialSummary.incomeByCategory.map((item, index) => {
-                      const totalIncome = financialSummary.incomeByCategory.reduce((sum, cat) => sum + cat.amount, 0);
-                      const percentage = totalIncome > 0 ? (item.amount / totalIncome) * 100 : 0;
-                      return (
-                        <div key={index} className="flex items-center justify-between">
-                          <div className="flex-1">
-                            <div className="flex justify-between items-center mb-2">
-                              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{item.category}</span>
-                              <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                                {formatCurrency(item.amount)}
-                              </span>
-                            </div>
-                            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                              <div
-                                className="bg-green-500 h-2 rounded-full transition-all duration-300"
-                                style={{ width: `${percentage}%` }}
-                              ></div>
-                            </div>
-                          </div>
-                          <div className="ml-4 text-sm text-gray-500 dark:text-gray-400 w-12 text-right">
-                            {percentage.toFixed(1)}%
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-              <PieChart className="w-5 h-5 mr-2 text-red-500" />
-              Expenses by Category
             </h2>
             {financialLoading ? (
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
@@ -752,4 +692,4 @@ const AnalyticsDashboard = () => {
   );
 };
 
-        export default AnalyticsDashboard;
+        export default Analytics;

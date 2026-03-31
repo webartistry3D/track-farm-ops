@@ -395,4 +395,46 @@ router.post('/change-password', authenticate, passwordChangeRateLimiter.middlewa
 // Profile image upload route
 router.post('/upload-profile-image', authenticate, uploadProfileImageMiddleware, uploadProfileImage);
 
+// Profile update route
+router.put('/profile', authenticate, async (req: any, res: any) => {
+  try {
+    const userId = req.user.id;
+    const { name, phone } = req.body;
+
+    // Validate input
+    if (!name || name.trim().length === 0) {
+      return res.status(400).json({ error: 'Name is required' });
+    }
+
+    // Update user profile
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        name: name.trim(),
+        phone: phone && phone.trim() ? phone.trim() : null
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        role: true,
+        profileImageUrl: true
+      }
+    });
+
+    res.json({
+      message: 'Profile updated successfully',
+      user: updatedUser
+    });
+
+  } catch (error: any) {
+    console.error('Profile update error:', error);
+    res.status(500).json({ 
+      error: 'Failed to update profile',
+      details: error.message 
+    });
+  }
+});
+
 export default router;
