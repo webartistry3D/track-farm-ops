@@ -314,10 +314,25 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
       return status.label === 'Low Stock' || status.label === 'Out of Stock';
     }).length;
     
+    // Calculate counts by type
+    const livestockItems = sortedItems.filter(item => item.type === 'LIVESTOCK').length;
+    const produceItems = sortedItems.filter(item => item.type === 'PRODUCE').length;
+    const consumablesItems = sortedItems.filter(item => 
+      item.type === 'SUPPLIES' || 
+      item.type === 'MEDICINE' || 
+      item.type === 'EQUIPMENT' || 
+      item.type === 'SEEDS' || 
+      item.type === 'FERTILIZERS' || 
+      item.type === 'PESTICIDES'
+    ).length;
+    
     return {
       totalItems,
       totalValue,
       lowStockItems,
+      livestockItems,
+      produceItems,
+      consumablesItems,
       averageValue: totalItems > 0 ? totalValue / totalItems : 0
     };
   }, [sortedItems, calculateItemValue, getStockStatus]);
@@ -905,7 +920,8 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
       
       <div className="w-full px-0 sm:px-0 lg:px-0 py-0">
         {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          {/* First Row: Items, Categories, Value (double width) */}
           <div 
             onClick={() => {
               // Navigate to items view or show all items
@@ -951,7 +967,7 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
               // Show high-value items or filter by value
               console.log('Total Value clicked');
             }}
-            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="md:col-span-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -962,6 +978,69 @@ const InventoryModernNew = ({ onDeleteClick }: InventoryListProps) => {
               </div>
               <div className="p-3 bg-green-100 dark:bg-green-900 rounded-lg">
                 <span className="text-2xl font-bold text-green-600 dark:text-green-400">₦</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Second Row: Livestock, Produce, Consumables, Low Stock */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div 
+            onClick={() => {
+              // Navigate to livestock items
+              console.log('Livestock clicked');
+            }}
+            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Livestock</p>
+                <p className="text-3xl font-poppins font-bold text-gray-900 dark:text-white">
+                  {totals.livestockItems}
+                </p>
+              </div>
+              <div className="p-3 bg-orange-100 dark:bg-orange-900 rounded-lg">
+                <span className="text-2xl">🐄</span>
+              </div>
+            </div>
+          </div>
+          
+          <div 
+            onClick={() => {
+              // Navigate to produce items
+              console.log('Produce clicked');
+            }}
+            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Produce</p>
+                <p className="text-3xl font-poppins font-bold text-gray-900 dark:text-white">
+                  {totals.produceItems}
+                </p>
+              </div>
+              <div className="p-3 bg-green-100 dark:bg-green-900 rounded-lg">
+                <span className="text-2xl">🌾</span>
+              </div>
+            </div>
+          </div>
+          
+          <div 
+            onClick={() => {
+              // Navigate to consumables items
+              console.log('Consumables clicked');
+            }}
+            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Consumables</p>
+                <p className="text-3xl font-poppins font-bold text-gray-900 dark:text-white">
+                  {totals.consumablesItems}
+                </p>
+              </div>
+              <div className="p-3 bg-indigo-100 dark:bg-indigo-900 rounded-lg">
+                <span className="text-2xl">📦</span>
               </div>
             </div>
           </div>
