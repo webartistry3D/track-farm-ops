@@ -28,6 +28,11 @@ const FirstTimePasswordPrompt: React.FC<FirstTimePasswordPromptProps> = ({
   // Check if this is truly a first-time login scenario
   const isFirstTimeLogin = !user.passwordChangeCount || user.passwordChangeCount === 0;
   const requiresPasswordChange = user.requiresPasswordChange || isFirstTimeLogin;
+  
+  // Only show modal for manager and worker roles (not for owners or superusers)
+  // Owners and superusers typically have different password management workflows
+  const shouldShowModal = requiresPasswordChange && 
+    (user.role === 'manager' || user.role === 'worker');
 
   useEffect(() => {
     if (!isOpen) {
@@ -76,15 +81,15 @@ const FirstTimePasswordPrompt: React.FC<FirstTimePasswordPromptProps> = ({
     return 'info';
   };
 
-  if (!isOpen || isDismissed) {
+  if (!isOpen || isDismissed || !shouldShowModal) {
     return null;
   }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className={`p-6 border-b ${
+        <div className={`p-4 border-b ${
           passwordChanged 
             ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800' 
             : getPromptSeverity() === 'warning'
@@ -92,7 +97,7 @@ const FirstTimePasswordPrompt: React.FC<FirstTimePasswordPromptProps> = ({
               : 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800'
         }`}>
           <div className="flex items-start justify-between">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 flex-1">
               <div className={`p-2 rounded-full ${
                 passwordChanged
                   ? 'bg-green-100 dark:bg-green-900/50'
@@ -101,47 +106,45 @@ const FirstTimePasswordPrompt: React.FC<FirstTimePasswordPromptProps> = ({
                     : 'bg-blue-100 dark:bg-blue-900/50'
               }`}>
                 {passwordChanged ? (
-                  <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400" />
+                  <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
                 ) : (
-                  <AlertTriangle className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+                  <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400" />
                 )}
               </div>
-              <div>
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              <div className="flex-1">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                   {getPromptTitle()}
                 </h2>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
                   {getPromptMessage()}
                 </p>
               </div>
             </div>
-            {!passwordChanged && !requiresPasswordChange && (
-              <button
-                onClick={handleDismiss}
-                className="p-1 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            )}
+            <button
+              onClick={passwordChanged ? onClose : handleDismiss}
+              className="p-1 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors ml-2"
+            >
+              <X className="w-4 h-4" />
+            </button>
           </div>
         </div>
 
         {/* Content */}
-        <div className="p-6">
+        <div className="p-4">
           {passwordChanged ? (
-            <div className="text-center py-8">
-              <div className="w-16 h-16 bg-green-100 dark:bg-green-900/50 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Lock className="w-8 h-8 text-green-600 dark:text-green-400" />
+            <div className="text-center py-6">
+              <div className="w-12 h-12 bg-green-100 dark:bg-green-900/50 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Lock className="w-6 h-6 text-green-600 dark:text-green-400" />
               </div>
-              <p className="text-lg text-gray-700 dark:text-gray-300 mb-2">
+              <p className="text-base text-gray-700 dark:text-gray-300 mb-2">
                 Your account is now secure!
               </p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              <p className="text-xs text-gray-600 dark:text-gray-400">
                 You can continue using all features of the application.
               </p>
               <button
                 onClick={onClose}
-                className="mt-6 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors"
+                className="mt-4 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors text-sm"
               >
                 Continue to Dashboard
               </button>
@@ -158,11 +161,11 @@ const FirstTimePasswordPrompt: React.FC<FirstTimePasswordPromptProps> = ({
 
         {/* Footer for first-time login */}
         {isFirstTimeLogin && !passwordChanged && (
-          <div className="px-6 py-4 bg-gray-50 dark:bg-gray-900/50 border-t border-gray-200 dark:border-gray-700">
-            <div className="flex items-start gap-3">
-              <Lock className="w-5 h-5 text-gray-400 mt-0.5" />
+          <div className="px-4 py-3 bg-gray-50 dark:bg-gray-900/50 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex items-start gap-2">
+              <Lock className="w-4 h-4 text-gray-400 mt-0.5" />
               <div className="flex-1">
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                <p className="text-xs text-gray-600 dark:text-gray-400">
                   <strong>Security Tip:</strong> Your password should be unique to this account and not shared with anyone. 
                   The account owner who created your account initially set up your access, but now only you will know your password.
                 </p>

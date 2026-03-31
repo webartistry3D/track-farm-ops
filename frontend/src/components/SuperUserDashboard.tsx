@@ -112,6 +112,11 @@ const SuperUserDashboard = () => {
     const { user, logout } = useAuth();
     const { isDark, toggleTheme } = useTheme();
     console.log('🔍 HOOKS CALLED SUCCESSFULLY');
+
+    const handleLogout = () => {
+      logout();
+      navigate('/login');
+    };
     
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [activeTab, setActiveTab] = useState('overview');
@@ -1303,7 +1308,7 @@ const SuperUserDashboard = () => {
                   </div>
                 </div>
                 <button
-                  onClick={logout}
+                  onClick={handleLogout}
                   className="w-full mt-2 flex items-center justify-center space-x-2 px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors duration-200 text-sm font-medium"
                 >
                   <LogOut className="w-4 h-4" />
