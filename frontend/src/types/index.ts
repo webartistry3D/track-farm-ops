@@ -6,6 +6,9 @@ export interface User {
   organizationId?: number;
   organizationName?: string;
   createdAt: string;
+  lastPasswordChange?: string;
+  passwordChangeCount?: number;
+  requiresPasswordChange?: boolean;
 }
 
 export interface LoginRequest {

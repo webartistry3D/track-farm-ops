@@ -5,7 +5,9 @@ import {
   getAllUsers, 
   getAllOrganizations, 
   toggleUserStatus, 
-  deleteUserAccount 
+  deleteUserAccount,
+  getAllSubscriptions,
+  toggleSubscriptionStatus
 } from '../controllers/superuserController';
 
 const router = Router();
@@ -31,6 +33,10 @@ router.delete('/users/:userId', deleteUserAccount);
 
 // Organization management
 router.get('/organizations', getAllOrganizations);
+
+// Subscription management
+router.get('/subscriptions', getAllSubscriptions);
+router.post('/subscriptions/:subId/:action', toggleSubscriptionStatus);
 
 // System logs (placeholder for now)
 router.get('/logs', (req: AuthRequest, res) => {

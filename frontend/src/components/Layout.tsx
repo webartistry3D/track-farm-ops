@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { SubscriptionRestrictions } from '../utils/subscriptionRestrictions';
+import FirstTimePasswordPrompt from './FirstTimePasswordPrompt';
 // import { InactivityWarning } from './InactivityWarning'; // DISABLED
 
 interface LayoutProps {
@@ -14,8 +15,9 @@ const Layout = ({ children }: LayoutProps) => {
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [subscription, setSubscription] = useState<any>(null);
+  const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
   // const [showInactivityWarning, setShowInactivityWarning] = useState(false); // DISABLED
-  const { user, logout } = useAuth();
+  const { user, logout, setUser } = useAuth();
   const { isDark, toggleTheme } = useTheme();
   const location = useLocation();
 
@@ -72,6 +74,23 @@ const Layout = ({ children }: LayoutProps) => {
         console.log('No subscription data for navbar indicator');
         // Set default subscription data
         setSubscription({ plan: 'freemium', status: 'trial' });
+      }
+
+      // Check if password prompt should be shown
+      if (user && !showPasswordPrompt) {
+        const isFirstTimeLogin = !user.passwordChangeCount || user.passwordChangeCount === 0;
+        const requiresPasswordChange = user.requiresPasswordChange || isFirstTimeLogin;
+        
+        // Don't show on profile page or password change page
+        const excludedPaths = ['/profile', '/change-password'];
+        const isExcludedPath = excludedPaths.some(path => location.pathname === path);
+        
+        if (requiresPasswordChange && !isExcludedPath) {
+          // Small delay to allow page to load first
+          setTimeout(() => {
+            setShowPasswordPrompt(true);
+          }, 1000);
+        }
       }
     };
 
@@ -359,15 +378,13 @@ const Layout = ({ children }: LayoutProps) => {
                         <p className="text-xs text-gray-500 dark:text-gray-400">{user.role}</p>
                       </div>
                       <div className="py-1">
-                        {/*
                         <Link
                           to="/profile"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                           onClick={() => setProfileDropdownOpen(false)}
                         >
                           👤 Profile
                         </Link>
-                        */}
                         {isAdmin && (
                           <Link
                             to="/settings"
@@ -413,6 +430,23 @@ const Layout = ({ children }: LayoutProps) => {
             }}
           />
         )*/}
+
+        {/* First-time password change prompt */}
+        {user && (
+          <FirstTimePasswordPrompt
+            isOpen={showPasswordPrompt}
+            onClose={() => setShowPasswordPrompt(false)}
+            user={user}
+            onSuccess={() => {
+              // Update user state to reflect password change
+              setUser({
+                ...user,
+                requiresPasswordChange: false,
+                passwordChangeCount: (user.passwordChangeCount || 0) + 1
+              });
+            }}
+          />
+        )}
       </div>
     </div>
   );

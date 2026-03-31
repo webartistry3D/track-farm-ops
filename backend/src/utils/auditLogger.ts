@@ -193,6 +193,38 @@ class AuditLogger {
   }
 
   /**
+   * Log password change events
+   */
+  logPasswordChange(
+    userId: number,
+    organizationId: number,
+    userRole: string,
+    organizationName: string,
+    success: boolean,
+    passwordStrength?: string,
+    errorMessage?: string,
+    req?: AuthRequest
+  ): void {
+    this.log({
+      level: success ? AuditLogLevel.INFO : AuditLogLevel.WARNING,
+      action: AuditAction.UPDATE,
+      resource: 'PASSWORD',
+      userId,
+      organizationId,
+      userRole,
+      organizationName,
+      ipAddress: req ? this.getClientIP(req) : undefined,
+      userAgent: req ? req.get('User-Agent') : undefined,
+      details: {
+        passwordStrength,
+        timestamp: new Date().toISOString()
+      },
+      success,
+      errorMessage: errorMessage || (success ? undefined : 'Password change failed')
+    });
+  }
+
+  /**
    * Get recent logs for monitoring
    */
   getRecentLogs(limit: number = 100, filters?: {
@@ -379,4 +411,8 @@ export const logSecurityViolation = (req: AuthRequest, resource: string, violati
 
 export const logAuth = (action: 'LOGIN' | 'LOGOUT', userId: number, organizationId: number, userRole: string, organizationName: string, success: boolean, errorMessage?: string, req?: AuthRequest) => {
   auditLogger.logAuth(action, userId, organizationId, userRole, organizationName, success, errorMessage, req);
+};
+
+export const logPasswordChange = (userId: number, organizationId: number, userRole: string, organizationName: string, success: boolean, passwordStrength?: string, errorMessage?: string, req?: AuthRequest) => {
+  auditLogger.logPasswordChange(userId, organizationId, userRole, organizationName, success, passwordStrength, errorMessage, req);
 };

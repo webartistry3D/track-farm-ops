@@ -16,7 +16,12 @@
     "seed-all-organizations": "node scripts/seed-all-organizations.js",
     "test-seeding": "ts-node -e \"import('./src/utils/seeding.js').then(m => { console.log('✅ Seeding utility loaded successfully'); })\"",
     "reset-inventory": "ts-node prisma/reset-inventory.ts",
-    "check-transactions": "ts-node prisma/check-transactions.ts"
+    "check-transactions": "ts-node prisma/check-transactions.ts",
+    "db:migrate": "node scripts/migrate-password-features.js",
+    "db:backup": "pg_dump $DATABASE_URL > backup-$(date +%Y%m%d-%H%M%S).sql",
+    "deploy:prod": "chmod +x ../deploy-production.sh && ../deploy-production.sh deploy",
+    "deploy:rollback": "chmod +x ../deploy-production.sh && ../deploy-production.sh rollback",
+    "health:check": "curl -f http://localhost:3001/api/health || exit 1"
   },
   "keywords": [],
   "author": "",

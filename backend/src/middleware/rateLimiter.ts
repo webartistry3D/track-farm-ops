@@ -176,6 +176,13 @@ export const rateLimitConfigs = {
     message: 'Too many authentication attempts, please try again later.'
   },
 
+  // Password change endpoints - very strict for security
+  passwordChange: {
+    windowMs: 15 * 60 * 1000,  // 15 minutes
+    maxRequests: 3,              // 3 password changes per 15 minutes
+    message: 'Too many password change attempts. For security reasons, please wait before trying again.'
+  },
+
   // General API endpoints
   general: {
     windowMs: 15 * 60 * 1000,  // 15 minutes
@@ -212,6 +219,7 @@ export const createRateLimiter = (config: RateLimitConfig): RateLimiter => {
 
 // Pre-configured limiters
 export const authRateLimiter = createRateLimiter(rateLimitConfigs.auth);
+export const passwordChangeRateLimiter = createRateLimiter(rateLimitConfigs.passwordChange);
 export const generalRateLimiter = createRateLimiter(rateLimitConfigs.general);
 export const dataIntensiveRateLimiter = createRateLimiter(rateLimitConfigs.dataIntensive);
 export const uploadRateLimiter = createRateLimiter(rateLimitConfigs.upload);
@@ -304,6 +312,7 @@ export class ProgressiveRateLimiter extends RateLimiter {
 export const startCleanupJob = (intervalMs: number = 5 * 60 * 1000): void => {
   setInterval(() => {
     authRateLimiter.cleanup();
+    passwordChangeRateLimiter.cleanup();
     generalRateLimiter.cleanup();
     dataIntensiveRateLimiter.cleanup();
     uploadRateLimiter.cleanup();

@@ -44,6 +44,19 @@ async function buildProductionDeploy() {
       // Don't fail the build for migration errors, but log them
       console.warn('⚠️ Migration failed - this might be expected if already applied');
     }
+
+    // Step 3.5: Run password features migration
+    console.log('🔐 Running password features migration...');
+    try {
+      execSync('node scripts/migrate-password-features.js', { 
+        stdio: 'inherit',
+        timeout: 60000 // 1 minute timeout
+      });
+      console.log('✅ Password features migration completed successfully');
+    } catch (passwordMigrationError) {
+      console.warn('⚠️ Password features migration may have already run:', passwordMigrationError.message);
+      // Don't fail the build - this is expected on subsequent deploys
+    }
     
     // Step 4: Final verification
     try {

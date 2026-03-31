@@ -4,9 +4,9 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import api from '../lib/api';
 import {
-  Users, Building, Activity, Database, Settings, Globe, TrendingUp,
+  Users, Building, Activity, Database, Settings, Globe, TrendingUp, TrendingDown,
   Eye, Lock, Unlock, Search, RefreshCw, BarChart3, LineChart,
-  UserCheck, LogOut, Bell, Menu, X, Server, FileText, Trash2, Plus
+  UserCheck, LogOut, Bell, Menu, X, Server, FileText, Trash2, Plus, CreditCard, DollarSign
 } from 'lucide-react';
 
 console.log('🔍 SUPERUSER DASHBOARD - All imports loaded successfully');
@@ -57,6 +57,26 @@ interface Organization {
   admin: string;
   contact: string;
   plan: string;
+}
+
+interface Subscription {
+  id: string;
+  userId: string;
+  userName: string;
+  userEmail: string;
+  plan: string;
+  status: 'active' | 'inactive' | 'trial' | 'cancelled' | 'expired';
+  amount: number;
+  currency: string;
+  billingCycle: 'monthly' | 'yearly';
+  startDate: string;
+  endDate: string;
+  nextBillingDate: string;
+  autoRenew: boolean;
+  paymentMethod: string;
+  lastPaymentDate: string;
+  organization: string;
+  features: string[];
 }
 
 interface SystemLog {
@@ -113,6 +133,7 @@ const SuperUserDashboard = () => {
     const [stats, setStats] = useState<SuperUserStats | null>(null);
     const [users, setUsers] = useState<User[]>([]);
     const [organizations, setOrganizations] = useState<Organization[]>([]);
+    const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
     const [systemLogs, setSystemLogs] = useState<SystemLog[]>([]);
     const [activities, setActivities] = useState<Activity[]>([]);
 
@@ -120,6 +141,7 @@ const SuperUserDashboard = () => {
       { id: 'overview', label: 'Overview', icon: BarChart3 },
       { id: 'users', label: 'Users', icon: Users },
       { id: 'organizations', label: 'Organizations', icon: Building },
+      { id: 'subscriptions', label: 'Subscriptions', icon: CreditCard },
       { id: 'activity', label: 'Activity Monitor', icon: Activity },
       { id: 'system', label: 'System Health', icon: Server },
       { id: 'logs', label: 'System Logs', icon: FileText },
@@ -151,10 +173,11 @@ const SuperUserDashboard = () => {
       
       try {
         console.log('🔍 DEBUG: Starting API calls...');
-        const [statsRes, usersRes, orgsRes, logsRes, activityRes] = await Promise.all([
+        const [statsRes, usersRes, orgsRes, subsRes, logsRes, activityRes] = await Promise.all([
           api.get('/superuser/stats'),
           api.get('/superuser/users'),
           api.get('/superuser/organizations'),
+          api.get('/superuser/subscriptions'),
           api.get('/superuser/logs'),
           api.get('/superuser/activity')
         ]);
@@ -163,6 +186,7 @@ const SuperUserDashboard = () => {
         console.log('  Stats:', statsRes);
         console.log('  Users:', usersRes);
         console.log('  Organizations:', orgsRes);
+        console.log('  Subscriptions:', subsRes);
         console.log('  Logs:', logsRes);
         console.log('  Activity:', activityRes);
 
@@ -170,13 +194,15 @@ const SuperUserDashboard = () => {
         const statsSuccess = statsRes.status === 200 && statsRes.data;
         const usersSuccess = usersRes.status === 200 && usersRes.data;
         const orgsSuccess = orgsRes.status === 200 && orgsRes.data;
+        const subsSuccess = subsRes.status === 200 && subsRes.data;
         
-        console.log('🔍 DEBUG: API Success Status:', { statsSuccess, usersSuccess, orgsSuccess });
+        console.log('🔍 DEBUG: API Success Status:', { statsSuccess, usersSuccess, orgsSuccess, subsSuccess });
         
-        if (statsSuccess && usersSuccess && orgsSuccess) {
+        if (statsSuccess && usersSuccess && orgsSuccess && subsSuccess) {
           setStats(statsRes.data);
           setUsers(usersRes.data);
           setOrganizations(orgsRes.data);
+          setSubscriptions(subsRes.data);
           setSystemLogs(logsRes.data);
           setActivities(activityRes.data);
           
@@ -264,6 +290,23 @@ const SuperUserDashboard = () => {
         await fetchDashboardData();
       } catch (error: any) {
         console.error(`❌ DEBUG: Failed to ${action} organization:`, error);
+        console.error('❌ DEBUG: Error details:', {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data
+        });
+      }
+    };
+
+    const handleSubscriptionAction = async (subId: string, action: string) => {
+      console.log(`🔍 DEBUG: handleSubscriptionAction called with subId: ${subId}, action: ${action}`);
+      try {
+        console.log(`🔍 DEBUG: Making API call to /superuser/subscriptions/${subId}/${action}`);
+        const response = await api.post(`/superuser/subscriptions/${subId}/${action}`);
+        console.log('🔍 DEBUG: Subscription action response:', response);
+        await fetchDashboardData();
+      } catch (error: any) {
+        console.error(`❌ DEBUG: Failed to ${action} subscription:`, error);
         console.error('❌ DEBUG: Error details:', {
           message: error.message,
           status: error.response?.status,
@@ -681,6 +724,196 @@ const SuperUserDashboard = () => {
     </div>
   );
 
+  const renderSubscriptions = () => {
+    // Calculate MRR and other metrics
+    const activeSubscriptions = subscriptions.filter(sub => sub.status === 'active');
+    const mrr = activeSubscriptions.reduce((total, sub) => {
+      const monthlyAmount = sub.billingCycle === 'yearly' ? sub.amount / 12 : sub.amount;
+      return total + monthlyAmount;
+    }, 0);
+    
+    const filteredSubs = subscriptions.filter(sub => 
+      sub.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      sub.userEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      sub.plan.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      sub.organization.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    if (filterStatus !== 'all') {
+      filteredSubs.filter(sub => sub.status === filterStatus);
+    }
+
+    return (
+      <div className="space-y-6">
+        {/* Subscription Metrics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-xl shadow-lg p-6 text-white">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-emerald-100 text-sm font-medium">Monthly Recurring Revenue</p>
+                <p className="text-3xl font-bold mt-2">₦{mrr.toLocaleString()}</p>
+                <p className="text-emerald-100 text-sm mt-1">From {activeSubscriptions.length} active subscriptions</p>
+              </div>
+              <TrendingUp className="w-12 h-12 text-emerald-200" />
+            </div>
+          </div>
+          
+          <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-blue-100 text-sm font-medium">Total Subscriptions</p>
+                <p className="text-3xl font-bold mt-2">{subscriptions.length}</p>
+                <p className="text-blue-100 text-sm mt-1">{activeSubscriptions.length} active</p>
+              </div>
+              <CreditCard className="w-12 h-12 text-blue-200" />
+            </div>
+          </div>
+          
+          <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl shadow-lg p-6 text-white">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-purple-100 text-sm font-medium">Churn Rate</p>
+                <p className="text-3xl font-bold mt-2">
+                  {subscriptions.length > 0 ? Math.round((subscriptions.filter(s => s.status === 'cancelled' || s.status === 'expired').length / subscriptions.length) * 100) : 0}%
+                </p>
+                <p className="text-purple-100 text-sm mt-1">This month</p>
+              </div>
+              <TrendingDown className="w-12 h-12 text-purple-200" />
+            </div>
+          </div>
+          
+          <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl shadow-lg p-6 text-white">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-orange-100 text-sm font-medium">Avg. Revenue/User</p>
+                <p className="text-3xl font-bold mt-2">
+                  ₦{activeSubscriptions.length > 0 ? Math.round(mrr / activeSubscriptions.length).toLocaleString() : 0}
+                </p>
+                <p className="text-orange-100 text-sm mt-1">Per active user</p>
+              </div>
+              <DollarSign className="w-12 h-12 text-orange-200" />
+            </div>
+          </div>
+        </div>
+
+        {/* Filters and Search */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+          <div className="flex flex-col lg:flex-row gap-4">
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  placeholder="Search subscriptions by user, email, plan, or organization..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                />
+              </div>
+            </div>
+            <select
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+            >
+              <option value="all">All Status</option>
+              <option value="active">Active</option>
+              <option value="trial">Trial</option>
+              <option value="cancelled">Cancelled</option>
+              <option value="expired">Expired</option>
+              <option value="inactive">Inactive</option>
+            </select>
+            <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center">
+              <Plus className="w-4 h-4 mr-2" />
+              Add Subscription
+            </button>
+          </div>
+        </div>
+
+        {/* Subscriptions Table */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">All Subscriptions</h3>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50 dark:bg-gray-700">
+                <tr>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">User</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Plan</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Amount</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Billing</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Next Billing</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                {filteredSubs.map(sub => (
+                  <tr key={sub.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <div>
+                        <div className="text-sm font-medium text-gray-900 dark:text-white">{sub.userName}</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">{sub.userEmail}</div>
+                        <div className="text-xs text-gray-400 dark:text-gray-500">{sub.organization}</div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <div className="text-sm text-gray-900 dark:text-white">{sub.plan}</div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">{sub.features.length} features</div>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <div className="text-sm font-medium text-gray-900 dark:text-white">₦{sub.amount.toLocaleString()}</div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">{sub.currency}</div>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        sub.billingCycle === 'monthly' 
+                          ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300'
+                          : 'bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300'
+                      }`}>
+                        {sub.billingCycle}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        sub.status === 'active' 
+                          ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300'
+                          : sub.status === 'trial'
+                          ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300'
+                          : sub.status === 'cancelled'
+                          ? 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300'
+                          : 'bg-gray-100 text-gray-800 dark:bg-gray-900/50 dark:text-gray-300'
+                      }`}>
+                        {sub.status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                      {new Date(sub.nextBillingDate).toLocaleDateString()}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm font-medium">
+                      <div className="flex items-center space-x-1">
+                        <button className="text-blue-600 hover:text-blue-900">
+                          <Eye className="w-4 h-4" />
+                        </button>
+                        <button 
+                          onClick={() => handleSubscriptionAction(sub.id, sub.status === 'active' ? 'cancel' : 'activate')}
+                          className={sub.status === 'active' ? 'text-yellow-600 hover:text-yellow-900' : 'text-green-600 hover:text-green-900'}
+                        >
+                          {sub.status === 'active' ? <Lock className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const renderActivityMonitor = () => (
     <div className="space-y-6">
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
@@ -950,6 +1183,7 @@ const SuperUserDashboard = () => {
         case 'overview': return renderOverview();
         case 'users': return renderUsers();
         case 'organizations': return renderOrganizations();
+        case 'subscriptions': return renderSubscriptions();
         case 'activity': return renderActivityMonitor();
         case 'system': return renderSystemHealth();
         case 'logs': return renderSystemLogs();

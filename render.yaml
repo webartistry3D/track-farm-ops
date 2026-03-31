@@ -1,0 +1,129 @@
+# Enhanced Render Deployment Configuration for Password Change Features
+# This configuration includes database migration and health checks
+
+services:
+  # Web Service (Frontend)
+  web:
+    type: static
+    rootDir: frontend/dist
+    buildCommand: cd frontend && npm install && npm run build
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: VITE_API_URL
+        value: https://your-backend.onrender.com
+    routes:
+      - type: rewrite
+        src: /api/*
+        dest: https://your-backend.onrender.com/api/:splat
+
+  # API Service (Backend)
+  api:
+    type: web
+    rootDir: backend
+    buildCommand: cd backend && npm run build:deploy
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGIN
+        value: https://your-frontend.onrender.com
+    healthCheckPath: /api/health
+    autoDeploy: true
+
+  # Database Migration Service (One-time execution)
+  migrate:
+    type: worker
+    rootDir: backend
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && node scripts/migrate-password-features.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+    # This service will run once and exit
+    plan: free
+
+# Database
+databases:
+  - name: track-farm-db
+    databaseName: trackfarmops
+    user: trackfarm_user
+    plan: free
+
+# Build hooks for database migration
+build:
+  preBuildCommand:
+    - echo "Starting pre-build checks..."
+    - cd backend && npm ci
+  postBuildCommand:
+    - echo "Running database migration..."
+    - cd backend && node scripts/migrate-password-features.js || echo "Migration may have already run"
+
+# Health checks
+health:
+  web:
+    path: /
+    expectedStatusCodes:
+      - 200
+      - 301
+      - 302
+  api:
+    path: /api/health
+    expectedStatusCodes:
+      - 200
+
+# Environment groups for different stages
+environments:
+  production:
+    web:
+      envVars:
+        - key: VITE_API_URL
+          value: https://track-farm-ops-api.onrender.com
+    api:
+      envVars:
+        - key: NODE_ENV
+          value: production
+        - key: LOG_LEVEL
+          value: info
+  staging:
+    web:
+      envVars:
+        - key: VITE_API_URL
+          value: https://track-farm-ops-api-staging.onrender.com
+    api:
+      envVars:
+        - key: NODE_ENV
+          value: staging
+        - key: LOG_LEVEL
+          value: debug
+
+# Scaling and performance
+scaling:
+  web:
+    minInstances: 1
+    maxInstances: 3
+    targetMemoryPercent: 70
+  api:
+    minInstances: 1
+    maxInstances: 2
+    targetMemoryPercent: 80
+
+# Monitoring and alerts
+alerts:
+  - type: restart
+    services:
+      - api
+    channels:
+      - email
+  - type: build
+    services:
+      - web
+      - api
+    channels:
+      - email

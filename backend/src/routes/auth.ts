@@ -1,9 +1,13 @@
 import { Router } from 'express';
 import { signup, createUser, getUsers, getProfile, createTestUsers, deleteUser } from '../controllers/authController';
-import { authenticate } from '../middleware/auth';
+import { authenticate, AuthRequest } from '../middleware/auth';
+import { passwordChangeRateLimiter } from '../middleware/rateLimiter';
+import { logPasswordChange } from '../utils/auditLogger';
+import { uploadProfileImage, uploadProfileImageMiddleware } from './profileImage';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { prisma } from '../lib/prisma';
+import PasswordValidator from '../utils/passwordValidation';
 
 const router = Router();
 
@@ -251,5 +255,144 @@ router.get('/profile', authenticate, getProfile);
 router.get('/users', authenticate, getUsers);
 router.post('/users', authenticate, createUser);
 router.delete('/users/:id', authenticate, deleteUser);
+
+// Change password endpoint
+router.post('/change-password', authenticate, passwordChangeRateLimiter.middleware, async (req: AuthRequest, res) => {
+  try {
+    const startTime = Date.now();
+    const requestId = `pwd_change_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    console.log(`[${requestId}] Password change request started`);
+    console.log(`[${requestId}] User ID: ${req.user?.id}`);
+    console.log(`[${requestId}] Email: ${req.user?.email}`);
+    console.log(`[${requestId}] IP: ${req.ip}`);
+
+    const { currentPassword, newPassword } = req.body;
+    const currentUser = req.user!;
+
+    // Validate input
+    if (!currentPassword || !newPassword) {
+      console.log(`[${requestId}] Missing required fields`);
+      return res.status(400).json({ 
+        error: 'Current password and new password are required',
+        requestId
+      });
+    }
+
+    // Get current user with password
+    const user = await prisma.user.findUnique({
+      where: { id: currentUser.id },
+      include: {
+        organization: {
+          select: {
+            id: true,
+            name: true
+          }
+        }
+      }
+    });
+
+    if (!user) {
+      console.log(`[${requestId}] User not found`);
+      return res.status(404).json({ 
+        error: 'User not found',
+        requestId
+      });
+    }
+
+    // Verify current password
+    const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password);
+    if (!isCurrentPasswordValid) {
+      console.log(`[${requestId}] Invalid current password`);
+      return res.status(400).json({ 
+        error: 'Current password is incorrect',
+        requestId
+      });
+    }
+
+    // Check if new password is same as current
+    const isSamePassword = await bcrypt.compare(newPassword, user.password);
+    if (isSamePassword) {
+      console.log(`[${requestId}] New password is same as current`);
+      return res.status(400).json({ 
+        error: 'New password must be different from current password',
+        requestId
+      });
+    }
+
+    // Validate new password strength
+    const passwordValidation = PasswordValidator.validate(newPassword, user.email);
+    if (!passwordValidation.isValid) {
+      console.log(`[${requestId}] Password validation failed`);
+      return res.status(400).json({ 
+        error: 'New password does not meet security requirements',
+        feedback: passwordValidation.feedback,
+        strength: passwordValidation.strength,
+        requestId
+      });
+    }
+
+    // Hash new password
+    const saltRounds = 12;
+    const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
+
+    // Update password in database
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { 
+        password: hashedNewPassword,
+        updatedAt: new Date()
+      }
+    });
+
+    // Log the password change
+    console.log(`[${requestId}] Password changed successfully for user ${user.email} (${user.name})`);
+    console.log(`[${requestId}] Password strength: ${passwordValidation.strength}`);
+    console.log(`[${requestId}] Processing time: ${Date.now() - startTime}ms`);
+
+    // Log successful password change
+    logPasswordChange(
+      user.id,
+      user.organizationId || 0,
+      user.role,
+      user.organization?.name || 'No Organization',
+      true,
+      passwordValidation.strength,
+      undefined,
+      req
+    );
+
+    res.json({
+      message: 'Password changed successfully',
+      requestId,
+      strength: passwordValidation.strength,
+      changedAt: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error('Password change error:', error);
+    
+    // Log failed password change attempt
+    const currentUser = req.user!;
+    logPasswordChange(
+      currentUser.id,
+      currentUser.organizationId || 0,
+      currentUser.role,
+      'Unknown Organization',
+      false,
+      undefined,
+      error instanceof Error ? error.message : 'Unknown error',
+      req
+    );
+    
+    res.status(500).json({ 
+      error: 'Internal server error',
+      requestId: req.body.requestId || 'unknown'
+    });
+  }
+});
+
+// Profile image upload route
+router.post('/upload-profile-image', authenticate, uploadProfileImageMiddleware, uploadProfileImage);
 
 export default router;

@@ -16,6 +16,7 @@ import EnhancedExpensePage from './components/EnhancedExpensePage';
 import InventoryModernNew from './components/InventoryModernNew';
 import Assets from './components/Assets';
 import Settings from './components/Settings';
+import UserProfile from './components/UserProfile';
 import AdminSetup from './components/AdminSetup';
 import About from './components/About';
 import Contact from './components/Contact';
@@ -153,6 +154,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <Settings />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/profile" 
+        element={
+          <ProtectedRoute>
+            <UserProfile />
           </ProtectedRoute>
         } 
       />

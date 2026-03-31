@@ -17,11 +17,17 @@ model User {
   createdBy             Int?                   @map("created_by")
   createdAt             DateTime               @default(now()) @map("created_at")
   updatedAt             DateTime               @updatedAt @map("updated_at")
+  lastPasswordChange     DateTime?              @map("last_password_change")
+  passwordChangedBy      Int?                   @map("password_changed_by")
+  passwordChangeCount   Int                    @default(0) @map("password_change_count")
+  requiresPasswordChange Boolean                @default(false) @map("requires_password_change")
+  profileImageUrl       String?                @map("profile_image_url")
   expenseEntries        ExpenseEntry[]
   incomeEntries         IncomeEntry[]
   inventoryTransactions InventoryTransaction[]
   invoices              Invoice[]
   subscriptions         Subscription[]
+  passwordHistory       PasswordHistory[]
   organization          Organization?          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   paidInvoices          Invoice[]              @relation("InvoicePaidBy")
 
@@ -313,4 +319,37 @@ enum VatStatus {
   PENDING
   REMITTED
   OVERDUE
+}
+
+model PasswordHistory {
+  id          Int      @id @default(autoincrement())
+  userId      Int      @map("user_id")
+  passwordHash String  @map("password_hash")
+  createdAt   DateTime @default(now()) @map("created_at")
+  createdBy   Int?     @map("created_by")
+  ipAddress   String?  @map("ip_address")
+  userAgent   String?  @map("user_agent")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("password_history")
+}
+
+model AuditLog {
+  id               Int      @id @default(autoincrement())
+  timestamp        DateTime @default(now())
+  level            String
+  action           String
+  resource         String
+  userId           Int?     @map("user_id")
+  organizationId   Int?     @map("organization_id")
+  userRole         String?  @map("user_role")
+  organizationName String?  @map("organization_name")
+  ipAddress        String?  @map("ip_address")
+  userAgent        String?  @map("user_agent")
+  resourceId       String?  @map("resource_id")
+  details          Json?
+  success          Boolean  @default(true)
+  errorMessage     String?  @map("error_message")
+
+  @@map("audit_logs")
 }

@@ -233,3 +233,120 @@ export const deleteUserAccount = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+export const getAllSubscriptions = async (req: AuthRequest, res: Response) => {
+  try {
+    const currentUser = req.user!;
+
+    // Only superusers can access subscriptions
+    if (currentUser.role !== 'SUPERUSER') {
+      return res.status(403).json({ error: 'Superuser access required' });
+    }
+
+    const subscriptions = await prisma.subscription.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            organization: {
+              select: {
+                name: true
+              }
+            }
+          }
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+
+    // Transform the data to match the frontend interface
+    const transformedSubscriptions = subscriptions.map(sub => ({
+      id: sub.id.toString(),
+      userId: sub.userId.toString(),
+      userName: sub.user.name,
+      userEmail: sub.user.email,
+      plan: sub.plan || 'Basic',
+      status: sub.status || 'active',
+      amount: Number(sub.price) || 0,
+      currency: 'NGN',
+      billingCycle: sub.billingCycle || 'monthly',
+      startDate: sub.activatedAt?.toISOString() || new Date().toISOString(),
+      endDate: sub.expiresAt?.toISOString() || new Date().toISOString(),
+      nextBillingDate: sub.expiresAt?.toISOString() || new Date().toISOString(),
+      autoRenew: true, // Default to true since field doesn't exist
+      paymentMethod: 'card', // Default since field doesn't exist
+      lastPaymentDate: sub.activatedAt?.toISOString() || new Date().toISOString(),
+      organization: sub.user.organization?.name || 'Unknown',
+      features: [] // Default empty array since field doesn't exist
+    }));
+
+    console.log(`📊 Superuser ${currentUser.name} fetched ${subscriptions.length} subscriptions`);
+    res.json(transformedSubscriptions);
+  } catch (error) {
+    console.error('Get all subscriptions error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const toggleSubscriptionStatus = async (req: AuthRequest, res: Response) => {
+  try {
+    const currentUser = req.user!;
+    const { subId } = req.params;
+    const { action } = req.body;
+
+    // Only superusers can manage subscriptions
+    if (currentUser.role !== 'SUPERUSER') {
+      return res.status(403).json({ error: 'Superuser access required' });
+    }
+
+    const subscription = await prisma.subscription.findUnique({
+      where: { id: parseInt(subId as string) },
+      include: {
+        user: {
+          select: {
+            name: true,
+            email: true
+          }
+        }
+      }
+    });
+
+    if (!subscription) {
+      return res.status(404).json({ error: 'Subscription not found' });
+    }
+
+    let newStatus: string;
+    switch (action) {
+      case 'activate':
+        newStatus = 'active';
+        break;
+      case 'cancel':
+        newStatus = 'cancelled';
+        break;
+      case 'suspend':
+        newStatus = 'inactive';
+        break;
+      default:
+        return res.status(400).json({ error: 'Invalid action' });
+    }
+
+    const updatedSubscription = await prisma.subscription.update({
+      where: { id: parseInt(subId as string) },
+      data: { status: newStatus }
+    });
+
+    console.log(`🔄 Superuser ${currentUser.name} ${action}d subscription for ${subscription.user.name} (${subscription.user.email})`);
+
+    res.json({
+      message: `Subscription ${action}d successfully`,
+      subscription: updatedSubscription
+    });
+  } catch (error) {
+    console.error('Toggle subscription status error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
