@@ -10,6 +10,7 @@
     "build": "node scripts/build-production.js",
     "build:types": "tsc --project ./tsconfig.json",
     "build:render": "node scripts/build-production.js",
+    "build:deploy": "node scripts/build-production-deploy.js",
     "start": "ts-node src/index.ts",
     "seed-inventory": "ts-node prisma/seed-inventory.ts",
     "seed-all-organizations": "node scripts/seed-all-organizations.js",
