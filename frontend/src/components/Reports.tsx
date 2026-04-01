@@ -108,12 +108,6 @@ const Reports: React.FC = () => {
   }
 
   const [loading, setLoading] = useState(true);
-
-  // Show skeleton while loading
-  if (loading) {
-    return <ReportsSkeleton />;
-  }
-
   const [error, setError] = useState('');
   const [allTransactions, setAllTransactions] = useState<any[]>([]);
   const [reportTab, setReportTab] = useState<'allTransactions' | 'incomeByCategory' | 'expenseByCategory'>('allTransactions');
@@ -131,6 +125,11 @@ const Reports: React.FC = () => {
   // Modal state for transaction details
   const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+
+  // Show skeleton while loading
+  if (loading) {
+    return <ReportsSkeleton />;
+  }
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
