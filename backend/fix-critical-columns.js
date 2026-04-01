@@ -13,7 +13,7 @@ async function fixCriticalColumns() {
       SELECT column_name 
       FROM information_schema.columns 
       WHERE table_name = 'users' 
-      AND column_name IN ('address', 'profile_image_url', 'last_password_change', 'password_change_count', 'requires_password_change', 'password_changed_by')
+      AND column_name IN ('address', 'phone', 'profile_image_url', 'last_password_change', 'password_change_count', 'requires_password_change', 'password_changed_by')
     `;
     
     const existingColumnNames = existingColumns.map(col => col.column_name);
@@ -22,6 +22,7 @@ async function fixCriticalColumns() {
     // Add only the critical columns needed for login
     const criticalColumns = [
       { name: 'address', sql: 'ALTER TABLE users ADD COLUMN address TEXT' },
+      { name: 'phone', sql: 'ALTER TABLE users ADD COLUMN phone TEXT' },
       { name: 'profile_image_url', sql: 'ALTER TABLE users ADD COLUMN profile_image_url TEXT' },
       { name: 'last_password_change', sql: 'ALTER TABLE users ADD COLUMN last_password_change TIMESTAMP DEFAULT CURRENT_TIMESTAMP' },
       { name: 'password_changed_by', sql: 'ALTER TABLE users ADD COLUMN password_changed_by INTEGER REFERENCES users(id)' },
@@ -66,11 +67,11 @@ async function fixCriticalColumns() {
       SELECT column_name 
       FROM information_schema.columns 
       WHERE table_name = 'users' 
-      AND column_name IN ('address', 'profile_image_url', 'last_password_change', 'password_change_count', 'requires_password_change', 'password_changed_by')
+      AND column_name IN ('address', 'phone', 'profile_image_url', 'last_password_change', 'password_change_count', 'requires_password_change', 'password_changed_by')
     `;
     
     const finalColumnNames = finalColumns.map(col => col.column_name);
-    const missingColumns = ['address', 'profile_image_url', 'last_password_change', 'password_change_count', 'requires_password_change', 'password_changed_by'].filter(col => !finalColumnNames.includes(col));
+    const missingColumns = ['address', 'phone', 'profile_image_url', 'last_password_change', 'password_change_count', 'requires_password_change', 'password_changed_by'].filter(col => !finalColumnNames.includes(col));
     
     if (missingColumns.length === 0) {
       console.log('🎉 All critical columns are present!');
