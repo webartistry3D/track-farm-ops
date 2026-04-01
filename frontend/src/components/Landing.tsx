@@ -356,9 +356,90 @@ const Landing = () => {
         </div>
       </div>
 
-      {/* Parallax Image Section */}
-      <div className="bg-gray-900">
-        <ParallaxSection />
+      {/* Image Cards Section */}
+      <div className="bg-gray-100 py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-poppins font-bold text-gray-900 mb-4">
+              Everything You Need to Manage Your Farm
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Image Card 1 */}
+            <div className="bg-white rounded-lg shadow-lg overflow-hidden h-88">
+              <div className="relative w-full h-full bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
+                {/* MacBook Frame */}
+                <div className="relative w-full h-full">
+                  {/* MacBook Screen */}
+                  <div className="absolute inset-2 bg-white rounded-t-lg border-4 border-gray-300 shadow-inner">
+                    {/* Screen Content */}
+                    <div className="p-4">
+                      {/* Dashboard Header */}
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="text-xs font-semibold text-gray-600">Track Farm Ops</div>
+                        <div className="flex space-x-1">
+                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                          <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                          <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                        </div>
+                      </div>
+                      
+                      {/* Dashboard Stats */}
+                      <div className="grid grid-cols-2 gap-3 text-xs">
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-green-600">$2,450</div>
+                          <div className="text-gray-500">Monthly Revenue</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-blue-600">147</div>
+                          <div className="text-gray-500">Active Crops</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-purple-600">89%</div>
+                          <div className="text-gray-500">Efficiency</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-orange-600">24</div>
+                          <div className="text-gray-500">Livestock</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* MacBook Bottom */}
+                  <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
+                    <div className="w-32 h-2 bg-gray-700 rounded-b-lg"></div>
+                  </div>
+                </div>
+              </div>
+              <div className="p-6">
+                <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">
+                  Complete Farm Management
+                </h3>
+                <p className="font-inter text-gray-600">
+                  Track everything from crops to livestock in one unified platform
+                </p>
+              </div>
+            </div>
+
+            {/* Image Card 2 */}
+            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+              <img 
+                src="/farm-image-2.jpg" 
+                alt="Mobile farm tracking app"
+                className="w-full h-48 object-cover"
+              />
+              <div className="p-6">
+                <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">
+                  Real-Time Analytics
+                </h3>
+                <p className="font-inter text-gray-600">
+                  Monitor your farm performance with detailed insights and reports
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Features Section */}
@@ -375,7 +456,7 @@ const Landing = () => {
               : 'opacity-0 translate-y-16'
           }`}>
             <h2 className="text-3xl md:text-4xl font-poppins font-bold text-gray-900 mb-4">
-              Everything You Need to Manage Your Farm
+              Features
             </h2>
           </div>
 
@@ -388,7 +469,7 @@ const Landing = () => {
               transitionDelay: visibleSections.has('features') ? '200ms' : '0ms'
             }}>
               <div className="text-4xl mb-4">💰</div>
-              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">Income & Expense Tracking</h3>
+              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">Income & Expense Tracker</h3>
               <p className="font-inter text-gray-600">
                 Record daily income and expenses with automatic categorization and financial summaries
               </p>
@@ -402,7 +483,7 @@ const Landing = () => {
               transitionDelay: visibleSections.has('features') ? '400ms' : '0ms'
             }}>
               <div className="text-4xl mb-4">📦</div>
-              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">Inventory Management</h3>
+              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">Inventory & Assets Manager</h3>
               <p className="font-inter text-gray-600">
                 Track livestock, feed, and produce with real-time inventory updates and low stock alerts
               </p>
@@ -514,63 +595,179 @@ const Landing = () => {
       <div 
         ref={addToRefs}
         data-section="how-it-works"
-        className="py-20 bg-gray-50"
+        className="py-20 bg-gray-50 relative overflow-hidden"
       >
+        {/* Parallax Background */}
+        <div className="absolute inset-0">
+          <div 
+            className="w-full h-full bg-cover bg-center bg-fixed"
+            style={{
+              backgroundImage: 'url("/farm-os2.png")',
+              backgroundAttachment: 'fixed',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: 'cover'
+            }}
+          >
+            {/* Overlay for text readability */}
+            <div className="absolute inset-0 bg-white bg-opacity-20"></div>
+          </div>
+        </div>
+        
+        {/* Content */}
+        <div className="relative z-10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className={`text-center mb-16 transition-all duration-1000 transform ${
+              visibleHeaders.has('how-it-works')
+                ? 'opacity-100 translate-y-0'
+                : 'opacity-0 translate-y-16'
+            }`}>
+              <div className="inline-block bg-white bg-opacity-20 backdrop-blur-md rounded-lg px-8 py-6 shadow-lg border border-white border-opacity-20">
+                <h2 className="text-3xl md:text-4xl font-poppins font-bold text-white mb-4">
+                  How It Works
+                </h2>
+                {/*<p className="text-lg text-white text-opacity-90 max-w-3xl mx-auto">
+                  Get started with Track Farm Ops in three simple steps
+                </p>*/}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className={`text-center transition-all duration-700 transform ${
+                visibleSections.has('how-it-works')
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-16'
+              }`} style={{
+                transitionDelay: visibleSections.has('how-it-works') ? '200ms' : '0ms'
+              }}>
+                <div className="bg-transparent p-6">
+                  <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span className="text-2xl font-poppins font-bold text-green-600">1</span>
+                  </div>
+                  <div className="bg-green-500 bg-opacity-20 backdrop-blur-md rounded-lg px-4 py-3 shadow-lg border border-green-400 border-opacity-20">
+                    <h3 className="text-xl font-poppins font-semibold text-white mb-2">Sign Up</h3>
+                    <p className="text-white text-opacity-90">Create an account and set up farm profile in seconds.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className={`text-center transition-all duration-700 transform ${
+                visibleSections.has('how-it-works')
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-16'
+              }`} style={{
+                transitionDelay: visibleSections.has('how-it-works') ? '400ms' : '0ms'
+              }}>
+                <div className="bg-transparent p-6">
+                  <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span className="text-2xl font-poppins font-bold text-green-600">2</span>
+                  </div>
+                  <div className="bg-blue-500 bg-opacity-20 backdrop-blur-md rounded-lg px-4 py-3 shadow-lg border border-blue-400 border-opacity-20">
+                    <h3 className="text-xl font-poppins font-semibold text-white mb-2">Add Workers</h3>
+                    <p className="text-white text-opacity-90">Add your farm workers and assign roles and responsibilities.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className={`text-center transition-all duration-700 transform ${
+                visibleSections.has('how-it-works')
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-16'
+              }`} style={{
+                transitionDelay: visibleSections.has('how-it-works') ? '600ms' : '0ms'
+              }}>
+                <div className="bg-transparent p-6">
+                  <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span className="text-2xl font-poppins font-bold text-green-600">3</span>
+                  </div>
+                  <div className="bg-purple-500 bg-opacity-20 backdrop-blur-md rounded-lg px-4 py-3 shadow-lg border border-purple-400 border-opacity-20">
+                    <h3 className="text-xl font-poppins font-semibold text-white mb-2">Start Managing</h3>
+                    <p className="text-white text-opacity-90">Begin tracking operations, assets, and optimizing your farm workflow.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Testimonials Section */}
+      <div className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className={`text-center mb-16 transition-all duration-1000 transform ${
-            visibleHeaders.has('how-it-works')
-              ? 'opacity-100 translate-y-0'
-              : 'opacity-0 translate-y-16'
-          }`}>
+          <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-poppins font-bold text-gray-900 mb-4">
-              How It Works
+              What Farmers Are Saying
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Get started with Track Farm Ops in three simple steps
+              Join farmers who trust <strong>TrackFarmOps</strong> to manage their operations
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className={`text-center transition-all duration-700 transform ${
-              visibleSections.has('how-it-works')
-                ? 'opacity-100 translate-y-0'
-                : 'opacity-0 translate-y-16'
-            }`} style={{
-              transitionDelay: visibleSections.has('how-it-works') ? '200ms' : '0ms'
-            }}>
-              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-poppins font-bold text-green-600">1</span>
+            <div className="bg-gray-50 p-6 rounded-lg">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold mr-4">
+                  JD
+                </div>
+                <div>
+                  <h3 className="font-poppins font-semibold text-gray-900">John Davis</h3>
+                  <p className="text-sm text-gray-600">Dairy Farm Owner</p>
+                </div>
               </div>
-              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">Sign Up</h3>
-              <p className="text-gray-600">Create your account and set up your farm profile in minutes.</p>
+              <p className="font-inter text-gray-700 italic">
+                "Track Farm Ops has transformed how we manage our dairy operation. The expense tracking alone has saved us thousands in just a few months."
+              </p>
+              <div className="flex mt-4">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                  </svg>
+                ))}
+              </div>
             </div>
 
-            <div className={`text-center transition-all duration-700 transform ${
-              visibleSections.has('how-it-works')
-                ? 'opacity-100 translate-y-0'
-                : 'opacity-0 translate-y-16'
-            }`} style={{
-              transitionDelay: visibleSections.has('how-it-works') ? '400ms' : '0ms'
-            }}>
-              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-poppins font-bold text-green-600">2</span>
+            <div className="bg-gray-50 p-6 rounded-lg">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-white font-bold mr-4">
+                  SM
+                </div>
+                <div>
+                  <h3 className="font-poppins font-semibold text-gray-900">Sarah Miller</h3>
+                  <p className="text-sm text-gray-600">Crop Farmer</p>
+                </div>
               </div>
-              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">Add Workers</h3>
-              <p className="text-gray-600">Add your farm workers and assign roles and responsibilities.</p>
+              <p className="font-inter text-gray-700 italic">
+                "The inventory management feature is exactly what we needed. We can now track our seed, fertilizer, and equipment in one place."
+              </p>
+              <div className="flex mt-4">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                  </svg>
+                ))}
+              </div>
             </div>
 
-            <div className={`text-center transition-all duration-700 transform ${
-              visibleSections.has('how-it-works')
-                ? 'opacity-100 translate-y-0'
-                : 'opacity-0 translate-y-16'
-            }`} style={{
-              transitionDelay: visibleSections.has('how-it-works') ? '600ms' : '0ms'
-            }}>
-              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-poppins font-bold text-green-600">3</span>
+            <div className="bg-gray-50 p-6 rounded-lg">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold mr-4">
+                  AK
+                </div>
+                <div>
+                  <h3 className="font-poppins font-semibold text-gray-900">Alex Kumar</h3>
+                  <p className="text-sm text-gray-600">Mixed Farm Owner</p>
+                </div>
               </div>
-              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">Start Managing</h3>
-              <p className="text-gray-600">Begin tracking operations, assets, and optimizing your farm workflow.</p>
+              <p className="font-inter text-gray-700 italic">
+                "The analytics dashboard gives us insights we never had before. We can make better decisions based on real data."
+              </p>
+              <div className="flex mt-4">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                  </svg>
+                ))}
+              </div>
             </div>
           </div>
         </div>

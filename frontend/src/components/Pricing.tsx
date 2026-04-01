@@ -23,10 +23,10 @@ const Pricing = () => {
       price: { monthly: 0, annual: 0 },
       features: [
         '1 farm location',
-        '1 worker',
+        '3 workers',
         'Basic income tracking',
         'Basic expense tracking',
-        'Simple dashboard',
+        'Dashboard & Financial reports',
         'Email support'
       ],
       highlighted: false,
@@ -43,7 +43,7 @@ const Pricing = () => {
         'Up to 20 workers',
         'Full inventory transactions',
         'Full Assets Management',
-        'Owner dashboard & financial reports',
+        'Dashboard & financial reports',
         'Data export (CSV / Excel)',
         'Priority email support',
         '1 - 2 farm locations',
@@ -121,15 +121,12 @@ const Pricing = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         {/* Header Section */}
         <div className="text-center mb-20">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-6">
-            <span className="text-2xl">💰</span>
-          </div>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-poppins font-bold text-gray-900 mb-6">
-            Simple, Transparent Pricing
+            Pricing
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Track your <strong className="text-green-600">income, expenses, and inventory in real time</strong>,{' '}
-            even when you're not on-site. No hidden fees, no surprises.
+            Track your <strong className="text-green-600">income, expenses, inventory and assets in real time</strong>,{' '}
+            even when you're not on-site.
           </p>
         </div>
 
@@ -330,7 +327,7 @@ const Pricing = () => {
               Why Farm Owners Choose Track-Farm-Ops
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Built for the Nigerian farmers
+              Built for Nigerian farmers
             </p>
           </div>
           
