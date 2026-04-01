@@ -82,7 +82,6 @@ const Reports: React.FC = () => {
 
   // Check subscription access first
   if (!canAccessFeature('financialReports')) {
-    console.log('Reports page - Showing upgrade message for financialReports');
     return (
       <RestrictedPageMessage
         feature="financialReports"
@@ -93,19 +92,7 @@ const Reports: React.FC = () => {
     );
   }
 
-  console.log('Reports page - Proceeding with reports access');
-  const isOwner = user?.role === 'OWNER' || user?.role === 'MANAGER';
-
-  if (!isOwner) {
-    return (
-      <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 rounded-lg p-6">
-        <h3 className="text-lg font-medium text-yellow-900 mb-2">Access Restricted</h3>
-        <p className="text-yellow-700">
-          Reports are only available to farm owners and managers.
-        </p>
-      </div>
-    );
-  }
+  console.log('🔍 Reports: Access granted - proceeding with reports');
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -126,43 +113,21 @@ const Reports: React.FC = () => {
   const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
 
-  // Show skeleton while loading
-  if (loading) {
-    return <ReportsSkeleton />;
-  }
+  console.log('🔍 Reports: State initialized, loading =', loading);
 
-  useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const transactionId = searchParams.get('transactionId');
-    const type = searchParams.get('type');
-    
-    if (transactionId && type) {
-      // Find and show the specific transaction
-      const transaction = allTransactions.find(t => 
-        t.id === transactionId && t.type.toLowerCase() === type.toLowerCase()
-      );
-      
-      if (transaction) {
-        setSelectedTransaction(transaction);
-        setShowDetailsModal(true);
-      }
-    }
-    
-    // Scroll to top on page load and navigation
-    window.scrollTo(0, 0);
-  }, [location]);
-
-  // Refetch data when date filter changes
-  useEffect(() => {
-    fetchAllTransactions();
-  }, [dateFilter, selectedMonth, selectedYear]);
-
+  // Define fetchAllTransactions BEFORE useEffect hooks
   const fetchAllTransactions = async () => {
     try {
+      console.log('🔍 Reports: Starting fetchAllTransactions');
+      console.log('🔍 Reports: Initial loading state:', loading);
       setLoading(true);
+      console.log('🔍 Reports: Set loading to true');
+      
       const today = new Date();
       let startDate = '';
       let endDate = today.toISOString().split('T')[0];
+      
+      console.log('🔍 Reports: Date filter:', dateFilter);
       
       // Calculate date range based on filter
       switch (dateFilter) {
@@ -198,13 +163,28 @@ const Reports: React.FC = () => {
           break;
       }
 
+      console.log('🔍 Reports: Date range:', { startDate, endDate });
+
+      console.log('🔍 Reports: Making API calls...');
       const [incomeResponse, expenseResponse] = await Promise.all([
         api.get(`/finance/income?startDate=${startDate}&endDate=${endDate}`),
         api.get(`/finance/expenses?startDate=${startDate}&endDate=${endDate}`)
       ]);
 
+      console.log('🔍 Reports: API responses:', {
+        incomeStatus: incomeResponse.status,
+        expenseStatus: expenseResponse.status,
+        incomeData: incomeResponse.data,
+        expenseData: expenseResponse.data
+      });
+
       const incomeData = incomeResponse.data?.entries || [];
       const expenseData = expenseResponse.data?.entries || [];
+
+      console.log('🔍 Reports: Processed data counts:', {
+        incomeCount: incomeData.length,
+        expenseCount: expenseData.length
+      });
 
       const processedIncome = incomeData.map((entry: any) => ({
         ...entry,
@@ -224,13 +204,40 @@ const Reports: React.FC = () => {
         (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
 
+      console.log('🔍 Reports: Setting allTransactions:', allData.length);
       setAllTransactions(allData);
     } catch (err: any) {
+      console.error('❌ Reports: Error in fetchAllTransactions:', err);
       setError(err.response?.data?.error || 'Failed to fetch transactions');
     } finally {
+      console.log('🔍 Reports: Setting loading to false');
       setLoading(false);
+      console.log('🔍 Reports: Final loading state:', loading);
     }
   };
+
+  // useEffect hooks AFTER function definition
+  useEffect(() => {
+    console.log('🔍 Reports: Component mounted, starting initial fetch');
+    console.log('🔍 Reports: useEffect triggered, dependencies: []');
+    fetchAllTransactions();
+  }, []); // Initial fetch on mount
+
+  useEffect(() => {
+    console.log('🔍 Reports: Date filter useEffect triggered');
+    console.log('🔍 Reports: Dependencies:', [dateFilter, selectedMonth, selectedYear]);
+    fetchAllTransactions();
+  }, [dateFilter, selectedMonth, selectedYear]);
+
+  // Show skeleton while loading - AFTER useEffect hooks
+  if (loading) {
+    console.log('🔍 Reports: Rendering skeleton, loading =', loading);
+    return <ReportsSkeleton />;
+  }
+
+  console.log('🔍 Reports: Rendering main content, loading =', loading);
+  console.log('🔍 Reports: allTransactions.length =', allTransactions.length);
+  console.log('🔍 Reports: error =', error);
 
   const filteredTransactions = allTransactions.filter(transaction => {
     if (filterType === 'all') return true;
