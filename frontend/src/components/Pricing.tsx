@@ -95,14 +95,9 @@ const Pricing = () => {
 
   const benefits = [
     {
-      emoji: '📱',
-      title: 'Low-End Android Support',
-      description: 'Works perfectly on basic Android phones'
-    },
-    {
-      emoji: '🇳🇬',
-      title: 'Built for Nigerian farmers',
-      description: 'Designed specifically for Nigerian farm realities'
+      emoji: '🌍',
+      title: 'Remote Monitoring',
+      description: 'Monitor your farm from anywhere in the world'
     },
     {
       emoji: '🔍',
@@ -110,9 +105,14 @@ const Pricing = () => {
       description: 'No deleted records — complete audit trail'
     },
     {
-      emoji: '🌍',
-      title: 'Remote Monitoring',
-      description: 'Monitor your farm from anywhere in the world'
+      emoji: '🇳🇬',
+      title: 'Built for Nigerian farmers',
+      description: 'Designed specifically for Nigerian farm realities'
+    },
+    {
+      emoji: '📱',
+      title: 'Low-End Android Support',
+      description: 'Works perfectly on basic Android phones'
     }
   ];
 
@@ -324,11 +324,8 @@ const Pricing = () => {
         <div className="mb-20">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-poppins font-bold text-gray-900 mb-4">
-              Why Farm Owners Choose Track-Farm-Ops
+              Why Choose Us
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Built for Nigerian farmers
-            </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -364,7 +361,7 @@ const Pricing = () => {
               to="/signup"
               className="bg-white text-green-600 px-8 py-4 rounded-lg font-poppins font-semibold hover:bg-gray-100 transition-all duration-200 transform hover:scale-105 shadow-lg"
             >
-              Start Free Trial
+              Sign up
             </Link>
             <Link
               to="/contact"

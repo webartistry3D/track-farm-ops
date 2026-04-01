@@ -578,9 +578,11 @@ const Landing = () => {
               }}
               className="group flex flex-col items-center text-green-600 hover:text-green-700 transition-colors duration-300"
             >
-              <span className="text-sm font-inter mb-2 opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+              {/*<span className="text-sm font-inter mb-2 opacity-80 group-hover:opacity-100 transition-opacity duration-300">
                 How does it work
-              </span>
+              </span>*/}
+              <div><br></br></div>
+              <div><br></br></div>
               <div className="animate-bounce">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
@@ -698,9 +700,9 @@ const Landing = () => {
             <h2 className="text-3xl md:text-4xl font-poppins font-bold text-gray-900 mb-4">
               What Farmers Are Saying
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            {/*<p className="text-lg text-gray-600 max-w-3xl mx-auto">
               Join farmers who trust <strong>TrackFarmOps</strong> to manage their operations
-            </p>
+            </p>*/}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -780,7 +782,7 @@ const Landing = () => {
       <footer className="bg-gray-900 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <p className="mb-4">© 2024 Track Farm Ops. All rights reserved.</p>
+            <p className="mb-4">© 2026 TrackFarmOps. Built by WebArtistry Creations. All rights reserved.</p>
             <div className="flex justify-center space-x-6">
               <Link to="/privacy" className="hover:text-green-400 transition-colors">Privacy Policy</Link>
               <Link to="/terms" className="hover:text-green-400 transition-colors">Terms of Service</Link>
