@@ -2,6 +2,7 @@
 const { PrismaClient } = require('@prisma/client');
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 
 const prisma = new PrismaClient();
 
@@ -9,6 +10,17 @@ async function runAllMigrations() {
   console.log('🚀 Running all database migrations...');
   
   try {
+    // First, fix missing columns that aren't in migration files
+    console.log('🔧 Fixing missing columns first...');
+    try {
+      execSync('node fix-missing-columns.js', { 
+        stdio: 'inherit',
+        cwd: __dirname
+      });
+      console.log('✅ Missing columns fixed!');
+    } catch (error) {
+      console.log('⚠️ Missing columns fix had issues, continuing...');
+    }
     const migrationsDir = path.join(__dirname, 'prisma/migrations');
     const migrationFiles = fs.readdirSync(migrationsDir)
       .filter(file => file.endsWith('.sql'))
