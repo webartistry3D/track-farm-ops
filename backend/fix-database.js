@@ -8,35 +8,40 @@ async function fixDatabase() {
   console.log('🔧 Fixing database schema...');
   
   try {
-    // Read and execute the correct migration
-    const migrationSQL = fs.readFileSync(
-      path.join(__dirname, 'prisma/migrations/004_add_password_change_tracking.sql'),
-      'utf8'
-    );
+    // First, check what columns exist
+    console.log('🔍 Checking existing columns...');
+    const existingColumns = await prisma.$queryRaw`
+      SELECT column_name 
+      FROM information_schema.columns 
+      WHERE table_name = 'users' 
+      AND column_name IN ('last_password_change', 'password_change_count', 'requires_password_change', 'password_changed_by')
+    `;
     
-    console.log('📝 Executing migration SQL...');
+    const existingColumnNames = existingColumns.map(col => col.column_name);
+    console.log('� Existing columns:', existingColumnNames);
     
-    // Split SQL by semicolons and execute each statement
-    const statements = migrationSQL
-      .split(';')
-      .map(stmt => stmt.trim())
-      .filter(stmt => stmt.length > 0 && !stmt.startsWith('--'));
+    // Add missing columns one by one
+    const columnsToAdd = [
+      { name: 'last_password_change', sql: 'ALTER TABLE users ADD COLUMN IF NOT EXISTS last_password_change TIMESTAMP DEFAULT CURRENT_TIMESTAMP' },
+      { name: 'password_changed_by', sql: 'ALTER TABLE users ADD COLUMN IF NOT EXISTS password_changed_by INTEGER REFERENCES users(id)' },
+      { name: 'password_change_count', sql: 'ALTER TABLE users ADD COLUMN IF NOT EXISTS password_change_count INTEGER DEFAULT 0' },
+      { name: 'requires_password_change', sql: 'ALTER TABLE users ADD COLUMN IF NOT EXISTS requires_password_change BOOLEAN DEFAULT FALSE' }
+    ];
     
-    for (const statement of statements) {
-      try {
-        await prisma.$executeRawUnsafe(statement);
-        console.log('✅ Statement executed successfully');
-      } catch (error) {
-        if (error.message.includes('already exists') || error.message.includes('duplicate')) {
-          console.log('⚠️ Statement already applied, skipping...');
-        } else {
-          console.error('❌ Statement failed:', error.message);
-          throw error;
+    for (const column of columnsToAdd) {
+      if (!existingColumnNames.includes(column.name)) {
+        try {
+          await prisma.$executeRawUnsafe(column.sql);
+          console.log(`✅ Added column: ${column.name}`);
+        } catch (error) {
+          console.error(`❌ Failed to add column ${column.name}:`, error.message);
         }
+      } else {
+        console.log(`⚠️ Column ${column.name} already exists, skipping...`);
       }
     }
     
-    console.log('✅ Database schema fixed successfully!');
+    console.log('✅ Database schema fix completed successfully!');
     
   } catch (error) {
     console.error('❌ Database fix failed:', error);
