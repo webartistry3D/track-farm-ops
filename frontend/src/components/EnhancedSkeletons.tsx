@@ -1,8 +1,7 @@
 import React from 'react';
-import { 
+import {
   getResponsiveSkeleton,
-  SKELETON_DIMENSIONS,
-  getResponsiveGrid
+  SKELETON_DIMENSIONS
 } from './SkeletonDesignSystem';
 import { 
   SkeletonElement, 

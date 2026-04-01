@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import RestrictedPageMessage from './RestrictedPageMessage';
 import { useSubscriptionRestrictions } from '../utils/subscriptionRestrictions';
@@ -77,7 +76,6 @@ const exportToPDF = (data: any[], title: string, type: string) => {
 
 const Reports: React.FC = () => {
   const { user } = useAuth();
-  const location = useLocation();
   const { canAccessFeature } = useSubscriptionRestrictions();
 
   // Check subscription access first
