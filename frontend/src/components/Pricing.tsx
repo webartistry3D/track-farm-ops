@@ -124,10 +124,10 @@ const Pricing = () => {
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-poppins font-bold text-gray-900 mb-6">
             Pricing
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          {/*<p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             Track your <strong className="text-green-600">income, expenses, inventory and assets in real time</strong>,{' '}
             even when you're not on-site.
-          </p>
+          </p>*/}
         </div>
 
         {/* Billing Toggle */}

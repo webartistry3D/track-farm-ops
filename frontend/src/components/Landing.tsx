@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
-import ParallaxSection from './ParallaxSection';
 import Pricing from './Pricing';
 import Navigation from './Navigation';
 
@@ -357,7 +356,7 @@ const Landing = () => {
       </div>
 
       {/* Image Cards Section */}
-      <div className="bg-gray-100 py-20">
+      <div className="bg-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-poppins font-bold text-gray-900 mb-4">
@@ -366,77 +365,37 @@ const Landing = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Image Card 1 */}
-            <div className="bg-white rounded-lg shadow-lg overflow-hidden h-88">
-              <div className="relative w-full h-full bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
-                {/* MacBook Frame */}
-                <div className="relative w-full h-full">
-                  {/* MacBook Screen */}
-                  <div className="absolute inset-2 bg-white rounded-t-lg border-4 border-gray-300 shadow-inner">
-                    {/* Screen Content */}
-                    <div className="p-4">
-                      {/* Dashboard Header */}
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="text-xs font-semibold text-gray-600">Track Farm Ops</div>
-                        <div className="flex space-x-1">
-                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                          <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                          <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                        </div>
-                      </div>
-                      
-                      {/* Dashboard Stats */}
-                      <div className="grid grid-cols-2 gap-3 text-xs">
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-green-600">$2,450</div>
-                          <div className="text-gray-500">Monthly Revenue</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-blue-600">147</div>
-                          <div className="text-gray-500">Active Crops</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-purple-600">89%</div>
-                          <div className="text-gray-500">Efficiency</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-orange-600">24</div>
-                          <div className="text-gray-500">Livestock</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* MacBook Bottom */}
-                  <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
-                    <div className="w-32 h-2 bg-gray-700 rounded-b-lg"></div>
-                  </div>
-                </div>
-              </div>
-              <div className="p-6">
+            <div className="bg-white rounded-lg overflow-hidden h-88">
+              <img 
+                src="/laptop-dashboard.jpg" 
+                alt="Laptop showing farm management dashboard"
+                className="w-full h-68 object-cover"
+              />
+              {/*<div className="p-6">
                 <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">
                   Complete Farm Management
                 </h3>
                 <p className="font-inter text-gray-600">
                   Track everything from crops to livestock in one unified platform
                 </p>
-              </div>
+              </div>*/}
             </div>
 
             {/* Image Card 2 */}
-            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div className="bg-white rounded-lg overflow-hidden w-2/5 mx-auto">
               <img 
-                src="/farm-image-2.jpg" 
+                src="/mobile-app.jpg" 
                 alt="Mobile farm tracking app"
-                className="w-full h-48 object-cover"
+                className="w-full h-66 object-cover"
               />
-              <div className="p-6">
+              {/*<div className="p-6">
                 <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">
                   Real-Time Analytics
                 </h3>
                 <p className="font-inter text-gray-600">
                   Monitor your farm performance with detailed insights and reports
                 </p>
-              </div>
+              </div>*/}
             </div>
           </div>
         </div>
@@ -447,7 +406,7 @@ const Landing = () => {
         id="features-section"
         ref={addToRefs}
         data-section="features"
-        className="py-20 bg-white"
+        className="py-20 bg-gray-100"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className={`text-center mb-16 transition-all duration-1000 transform ${
@@ -460,8 +419,8 @@ const Landing = () => {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className={`text-center p-1 transition-all duration-700 transform ${
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <div className={`text-center bg-white rounded-lg shadow-lg p-6 transition-all duration-700 transform ${
               visibleSections.has('features')
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-16'
@@ -475,7 +434,7 @@ const Landing = () => {
               </p>
             </div>
 
-            <div className={`text-center p-1 transition-all duration-700 transform ${
+            <div className={`text-center bg-white rounded-lg shadow-lg p-6 transition-all duration-700 transform ${
               visibleSections.has('features')
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-16'
@@ -489,7 +448,7 @@ const Landing = () => {
               </p>
             </div>
 
-            <div className={`text-center p-1 transition-all duration-700 transform ${
+            <div className={`text-center bg-white rounded-lg shadow-lg p-6 transition-all duration-700 transform ${
               visibleSections.has('features')
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-16'
@@ -503,7 +462,7 @@ const Landing = () => {
               </p>
             </div>
 
-            <div className={`text-center p-1 transition-all duration-700 transform ${
+            <div className={`text-center bg-white rounded-lg shadow-lg p-6 transition-all duration-700 transform ${
               visibleSections.has('features')
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-16'
@@ -624,14 +583,18 @@ const Landing = () => {
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-16'
             }`}>
-              <div className="inline-block bg-white bg-opacity-20 backdrop-blur-md rounded-lg px-8 py-6 shadow-lg border border-white border-opacity-20">
-                <h2 className="text-3xl md:text-4xl font-poppins font-bold text-white mb-4">
-                  How It Works
-                </h2>
-                {/*<p className="text-lg text-white text-opacity-90 max-w-3xl mx-auto">
+              <div className={`text-center mb-16 transition-all duration-1000 transform ${
+              visibleHeaders.has('how-it-works')
+                ? 'opacity-100 translate-y-0'
+                : 'opacity-0 translate-y-16'
+            }`}>
+              <h2 className="text-3xl md:text-4xl font-poppins font-bold text-black mb-4">
+                How It Works
+              </h2>
+              {/*<p className="text-lg text-white text-opacity-90 max-w-3xl mx-auto">
                   Get started with Track Farm Ops in three simple steps
                 </p>*/}
-              </div>
+            </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -647,8 +610,8 @@ const Landing = () => {
                     <span className="text-2xl font-poppins font-bold text-green-600">1</span>
                   </div>
                   <div className="bg-green-500 bg-opacity-20 backdrop-blur-md rounded-lg px-4 py-3 shadow-lg border border-green-400 border-opacity-20">
-                    <h3 className="text-xl font-poppins font-semibold text-white mb-2">Sign Up</h3>
-                    <p className="text-white text-opacity-90">Create an account and set up farm profile in seconds.</p>
+                    <h3 className="text-xl font-poppins font-semibold text-black mb-2">Sign Up</h3>
+                    <p className="text-black text-opacity-90">Create an account and set up farm profile in seconds.</p>
                   </div>
                 </div>
               </div>
@@ -665,8 +628,8 @@ const Landing = () => {
                     <span className="text-2xl font-poppins font-bold text-green-600">2</span>
                   </div>
                   <div className="bg-blue-500 bg-opacity-20 backdrop-blur-md rounded-lg px-4 py-3 shadow-lg border border-blue-400 border-opacity-20">
-                    <h3 className="text-xl font-poppins font-semibold text-white mb-2">Add Workers</h3>
-                    <p className="text-white text-opacity-90">Add your farm workers and assign roles and responsibilities.</p>
+                    <h3 className="text-xl font-poppins font-semibold text-black mb-2">Add Workers</h3>
+                    <p className="text-black text-opacity-90">Add your farm workers and assign roles and responsibilities.</p>
                   </div>
                 </div>
               </div>
@@ -683,8 +646,8 @@ const Landing = () => {
                     <span className="text-2xl font-poppins font-bold text-green-600">3</span>
                   </div>
                   <div className="bg-purple-500 bg-opacity-20 backdrop-blur-md rounded-lg px-4 py-3 shadow-lg border border-purple-400 border-opacity-20">
-                    <h3 className="text-xl font-poppins font-semibold text-white mb-2">Start Managing</h3>
-                    <p className="text-white text-opacity-90">Begin tracking operations, assets, and optimizing your farm workflow.</p>
+                    <h3 className="text-xl font-poppins font-semibold text-black mb-2">Start Managing</h3>
+                    <p className="text-black text-opacity-90">Begin tracking operations, assets, and optimizing your farm workflow.</p>
                   </div>
                 </div>
               </div>
