@@ -502,76 +502,104 @@ export const AnalyticsSkeleton: React.FC = () => (
   </PageSkeleton>
 );
 
-// Engineering-precise Reports Skeleton
+// Engineering-precise Reports Skeleton - Matches exact Reports page layout
 export const ReportsSkeleton: React.FC = () => (
   <PageSkeleton>
-    {/* Date Filter Section */}
-    <CardSkeleton className="mb-6">
-      <div className="flex flex-wrap gap-2 items-center">
-        <SkeletonElement className="h-10 w-20 rounded-lg" />
-        <SkeletonElement className="h-10 w-32 rounded-lg" />
-        <SkeletonElement className="h-10 w-32 rounded-lg" />
-        <SkeletonElement className="h-10 w-24 rounded-lg" />
-        <div className="flex space-x-2">
-          <SkeletonElement className="w-8 h-8 rounded-lg" />
-          <SkeletonElement className="w-8 h-8 rounded-lg" />
+    <div className="min-h-screen bg-gray-0 dark:bg-gray-900 py-0">
+      <div className="max-w-6xl mx-auto px-0 sm:px-0 lg:px-0">
+        {/* Report Tabs with Export Buttons */}
+        <div className="bg-white dark:bg-gray-900 shadow rounded-lg p-0 mb-6">
+          <div className="overflow-x-auto pb-0">
+            <div className="flex items-center justify-between gap-1 min-w-max border-b border-gray-200 dark:border-gray-700">
+              {/* Tab Buttons */}
+              <div className="flex items-center gap-1">
+                {[...Array(3)].map((_, i) => (
+                  <SkeletonElement key={i} className="flex-shrink-0 h-10 w-32 rounded-t-lg" />
+                ))}
+              </div>
+              
+              {/* Export Buttons */}
+              <div className="flex flex-col sm:flex-row sm:gap-2 gap-2 pb-2">
+                <div className="flex items-center gap-2 px-3 py-2 bg-green-600 rounded-lg">
+                  <SkeletonElement className="w-4 h-4" />
+                  <SkeletonElement className="h-4 w-8" />
+                </div>
+                <div className="flex items-center gap-2 px-3 py-2 bg-blue-600 rounded-lg">
+                  <SkeletonElement className="w-4 h-4" />
+                  <SkeletonElement className="h-4 w-8" />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </CardSkeleton>
 
-    {/* Report Tabs */}
-    <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 mb-6">
-      <div className="max-w-7xl mx-auto px-0 sm:px-0 lg:px-0">
-        <div className="flex overflow-x-auto justify-between">
-          <div className="flex overflow-x-auto">
-            {[...Array(3)].map((_, i) => (
-              <SkeletonElement key={i} className="h-12 w-24 mr-2 rounded-t-lg" />
-            ))}
+        {/* All Transactions Table */}
+        <div className="bg-white dark:bg-gray-900 shadow rounded-lg overflow-hidden">
+          <div className="overflow-x-auto">
+            <div className="min-w-full">
+              {/* Table Header */}
+              <div className="border-b border-gray-200 dark:border-gray-700">
+                <div className="grid gap-4 px-6 py-3" style={{ gridTemplateColumns: 'repeat(7, minmax(0, 1fr))' }}>
+                  <SkeletonElement className="h-3 w-16" />
+                  <SkeletonElement className="h-3 w-12" />
+                  <SkeletonElement className="h-3 w-20" />
+                  <SkeletonElement className="h-3 w-16" />
+                  <SkeletonElement className="h-3 w-20" />
+                  <SkeletonElement className="h-3 w-24" />
+                  <SkeletonElement className="h-3 w-20" />
+                </div>
+              </div>
+              
+              {/* Table Rows */}
+              <div className="divide-y divide-gray-200 dark:divide-gray-700">
+                {[...Array(10)].map((_, rowIndex) => (
+                  <div key={rowIndex} className="hover:bg-gray-50 dark:bg-gray-900 dark:hover:bg-gray-700 transition-colors">
+                    <div className="grid gap-4 px-6 py-4" style={{ gridTemplateColumns: 'repeat(7, minmax(0, 1fr))' }}>
+                      {/* Date Column */}
+                      <SkeletonElement className="h-4 w-20" />
+                      
+                      {/* Type Column */}
+                      <SkeletonElement className="h-6 w-16 rounded-full" />
+                      
+                      {/* Description Column */}
+                      <div className="max-w-md">
+                        <SkeletonElement className="h-4 w-32" />
+                      </div>
+                      
+                      {/* Amount Column */}
+                      <SkeletonElement className="h-4 w-16" />
+                      
+                      {/* User Column */}
+                      <div>
+                        <SkeletonElement className="h-4 w-20 mb-1" />
+                        <SkeletonElement className="h-3 w-24" />
+                      </div>
+                      
+                      {/* Category Column */}
+                      <SkeletonElement className="h-4 w-24" />
+                      
+                      {/* Actions Column */}
+                      <SkeletonElement className="h-4 w-20" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Pagination Component */}
+          <div className="mt-6 flex items-center justify-between px-6 pb-6">
+            <SkeletonElement className="h-4 w-32" />
+            <div className="flex gap-2">
+              <SkeletonElement className="w-8 h-8 rounded-lg" />
+              <SkeletonElement className="w-8 h-8 rounded-lg" />
+              <SkeletonElement className="w-8 h-8 rounded-lg" />
+              <SkeletonElement className="w-8 h-8 rounded-lg" />
+              <SkeletonElement className="w-8 h-8 rounded-lg" />
+            </div>
           </div>
         </div>
       </div>
     </div>
-
-    {/* All Transactions Table */}
-    <CardSkeleton className="mb-6">
-      <div className="flex items-center justify-between mb-6">
-        <SkeletonElement className="h-6 w-32 mb-2" />
-        <div className="flex space-x-2">
-          <SkeletonElement className="w-8 h-8 rounded-lg" />
-          <SkeletonElement className="w-8 h-8 rounded-lg" />
-        </div>
-      </div>
-      
-      {/* Table with responsive columns */}
-      <div className="overflow-x-auto">
-        <div className="min-w-full">
-          <div className="border-b border-gray-200 dark:border-gray-700">
-            <div className="grid gap-4 p-4" style={{ gridTemplateColumns: 'repeat(6, minmax(0, 1fr))' }}>
-              {[...Array(6)].map((_, i) => (
-                <SkeletonElement key={i} className="h-4" />
-              ))}
-            </div>
-          </div>
-          <div className="divide-y divide-gray-200 dark:divide-gray-700">
-            {[...Array(8)].map((_, rowIndex) => (
-              <div key={rowIndex} className="grid gap-4 p-4" style={{ gridTemplateColumns: 'repeat(6, minmax(0, 1fr))' }}>
-                {[...Array(6)].map((_, colIndex) => (
-                  <SkeletonElement key={colIndex} className="h-4" />
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-      
-      {/* Pagination Skeleton */}
-      <div className="mt-6 flex items-center justify-between">
-        <SkeletonElement className="h-4 w-32" />
-        <div className="flex gap-2">
-          <SkeletonElement className="w-8 h-8 rounded-lg" />
-          <SkeletonElement className="w-8 h-8 rounded-lg" />
-        </div>
-      </div>
-    </CardSkeleton>
   </PageSkeleton>
 );
