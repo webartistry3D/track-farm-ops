@@ -10,27 +10,14 @@ const Landing = () => {
     const style = document.createElement('style');
     style.textContent = `
       @keyframes scroll-x {
-        0% {
-          transform: translateX(0);
-        }
-        100% {
-          transform: translateX(-50%);
-        }
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
       }
       
       @keyframes starPulse {
-        0% {
-          transform: scale(0.2);
-          opacity: 0;
-        }
-        50% {
-          transform: scale(3);
-          opacity: 1;
-        }
-        100% {
-          transform: scale(1);
-          opacity: 1;
-        }
+        0% { transform: scale(0.2); opacity: 0; }
+        50% { transform: scale(3); opacity: 1; }
+        100% { transform: scale(1); opacity: 1; }
       }
       
       .animate-scroll-x {
@@ -47,6 +34,7 @@ const Landing = () => {
       document.head.removeChild(style);
     };
   }, []);
+  
   const [visibleSections, setVisibleSections] = useState(new Set());
   const [visibleHeaders, setVisibleHeaders] = useState(new Set());
   const sectionsRef = useRef<(HTMLElement | null)[]>([]);
@@ -163,30 +151,30 @@ const Landing = () => {
     }
   };
 
-  const handleScrollToFeatures = (e: React.MouseEvent) => {
-    e.preventDefault();
-    const featuresSection = document.getElementById('features-section');
-    if (featuresSection) {
-      featuresSection.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const handleScrollToPricing = (e: React.MouseEvent) => {
-    e.preventDefault();
-    // Navigate to pricing page with scroll parameter
-    window.location.href = '/pricing?scroll=pricing';
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
+    <div className="min-h-screen">
       {/* Navigation */}
       <Navigation />
 
-      {/* Hero Section */}
+      {/* Hero Section with Video Background */}
       <div className="relative overflow-hidden h-screen flex items-center">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-24 w-full">
+        {/* Video Background - Only in Hero Section */}
+        <div className="absolute inset-0 w-full h-full overflow-hidden">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover"
+          >
+            <source src="/track-farm-ops-bg.mp4" type="video/mp4" />
+          </video>
+          <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-24 w-full relative z-10">
           <div className="text-center">
-            <h1 className="text-3xl sm:text-4xl md:text-6xl font-poppins font-bold text-gray-900 mb-4 sm:mb-6 relative leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-6xl font-poppins font-bold text-white mb-4 sm:mb-6 relative leading-tight">
               {words.map((word, index) => (
                 <span
                   key={index}
@@ -205,7 +193,7 @@ const Landing = () => {
                 </span>
               ))}
             </h1>
-            <p className="text-sm font-inter text-gray-600 mb-8 max-w-3xl mx-auto h-[4.5em] leading-relaxed sm:text-base md:text-lg lg:text-lg xl:text-lg">
+            <p className="text-sm font-inter text-white mb-8 max-w-3xl mx-auto h-[4.5em] leading-relaxed sm:text-base md:text-lg lg:text-lg xl:text-lg">
               <span className="inline-block whitespace-pre-line">
                 {typedText}
               </span>
@@ -254,7 +242,7 @@ const Landing = () => {
                   </defs>
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" fill="url(#starGradient)"/>
                 </svg>
-                <span className={`ml-2 text-sm font-inter text-gray-600 transition-all duration-500 ease-out ${
+                <span className={`ml-2 text-sm font-inter text-white transition-all duration-500 ease-out ${
                   starsVisible ? 'opacity-100' : 'opacity-0'
                 }`}
                   style={{
@@ -301,7 +289,7 @@ const Landing = () => {
                     KC
                   </div>
                 </div>
-                <span className={`ml-3 text-sm font-inter text-gray-600 transition-all duration-500 ease-out ${
+                <span className={`ml-3 text-sm font-inter text-white transition-all duration-500 ease-out ${
                   starsVisible ? 'opacity-100' : 'opacity-0'
                 }`}
                   style={{
@@ -339,11 +327,11 @@ const Landing = () => {
                     requestAnimationFrame(animation);
                   }
                 }}
-                className={`font-inter bg-green-600 text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-green-700 transition-all duration-300 transform ${
+                className={`font-inter bg-green-600 text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-green-700 transition-all duration-300 transform shadow-lg hover:shadow-xl hover:scale-105 hover:-translate-y-1 ${
                   buttonVisible.includes(0)
                     ? 'opacity-100 scale-100 translate-y-0'
                     : 'opacity-0 scale-50 translate-y-4'
-                } hover:scale-105`}
+                }`}
                 style={{
                   transitionDelay: buttonVisible.includes(0) ? '1500ms' : '0ms'
                 }}
@@ -352,11 +340,11 @@ const Landing = () => {
               </button>
               <Link 
                 to="/login" 
-                className={`font-inter border-2 border-green-600 text-green-600 px-8 py-3 rounded-lg text-lg font-medium hover:bg-green-50 transition-all duration-500 transform ${
+                className={`font-inter border-2 border-green-600 text-green-600 px-8 py-3 rounded-lg text-lg font-medium hover:bg-green-50 hover:border-green-700 hover:text-green-700 transition-all duration-300 transform shadow-lg hover:shadow-xl hover:scale-105 hover:-translate-y-1 ${
                   buttonVisible.includes(1)
                     ? 'opacity-100 scale-100 translate-y-0'
                     : 'opacity-0 scale-50 translate-y-4'
-                } hover:scale-105`}
+                }`}
                 style={{
                   transitionDelay: buttonVisible.includes(1) ? '1500ms' : '0ms'
                 }}
@@ -378,7 +366,7 @@ const Landing = () => {
         id="features-section"
         ref={addToRefs}
         data-section="features"
-        className={`py-20 bg-white`}
+        className="py-20 bg-white"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className={`text-center mb-16 transition-all duration-1000 transform ${
@@ -513,19 +501,8 @@ const Landing = () => {
                 How does it work
               </span>
               <div className="animate-bounce">
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 14l-7 7m0 0l-7-7m7 7V3"
-                  />
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
               </div>
             </button>
@@ -533,11 +510,11 @@ const Landing = () => {
         </div>
       </div>
 
-      {/* How It Works */}
+      {/* How It Works Section */}
       <div 
         ref={addToRefs}
         data-section="how-it-works"
-        className={`py-20 bg-gray-50`}
+        className="py-20 bg-gray-50"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className={`text-center mb-16 transition-all duration-1000 transform ${
@@ -546,8 +523,11 @@ const Landing = () => {
               : 'opacity-0 translate-y-16'
           }`}>
             <h2 className="text-3xl md:text-4xl font-poppins font-bold text-gray-900 mb-4">
-              How Track-Farm-Ops Works
+              How It Works
             </h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Get started with Track Farm Ops in three simple steps
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -562,9 +542,21 @@ const Landing = () => {
                 <span className="text-2xl font-poppins font-bold text-green-600">1</span>
               </div>
               <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">Sign Up</h3>
-              {/*<p className="font-inter text-gray-600">
-                Create a user account and set up your farm profile in minutes
-              </p>*/}
+              <p className="text-gray-600">Create your account and set up your farm profile in minutes.</p>
+            </div>
+
+            <div className={`text-center transition-all duration-700 transform ${
+              visibleSections.has('how-it-works')
+                ? 'opacity-100 translate-y-0'
+                : 'opacity-0 translate-y-16'
+            }`} style={{
+              transitionDelay: visibleSections.has('how-it-works') ? '400ms' : '0ms'
+            }}>
+              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-poppins font-bold text-green-600">2</span>
+              </div>
+              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">Add Workers</h3>
+              <p className="text-gray-600">Add your farm workers and assign roles and responsibilities.</p>
             </div>
 
             <div className={`text-center transition-all duration-700 transform ${
@@ -575,335 +567,10 @@ const Landing = () => {
               transitionDelay: visibleSections.has('how-it-works') ? '600ms' : '0ms'
             }}>
               <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-poppins font-bold text-green-600">2</span>
-              </div>
-              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">Add Workers</h3>
-              {/*<p className="font-inter text-gray-600">
-                Add your farm workers and set up their roles and permissions
-              </p>*/}
-            </div>
-
-            <div className={`text-center transition-all duration-700 transform ${
-              visibleSections.has('how-it-works')
-                ? 'opacity-100 translate-y-0'
-                : 'opacity-0 translate-y-16'
-            }`} style={{
-              transitionDelay: visibleSections.has('how-it-works') ? '1000ms' : '0ms'
-            }}>
-              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-poppins font-bold text-green-600">3</span>
               </div>
               <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">Start Managing</h3>
-              {/*<p className="font-inter text-gray-600">
-                Begin tracking income, expenses, and inventory from day one
-              </p>*/}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Testimonials */}
-      <div 
-        ref={addToRefs}
-        data-section="testimonials"
-        className={`py-20 relative overflow-hidden`}
-        style={{
-          backgroundImage: 'url("/farm-os.png")',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundAttachment: 'fixed'
-        }}
-      >
-        <div className="absolute inset-0 bg-black bg-opacity-60"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className={`text-center mb-16 transition-all duration-1000 transform ${
-            visibleHeaders.has('testimonials')
-              ? 'opacity-100 translate-y-0'
-              : 'opacity-0 translate-y-16'
-          }`}>
-            <h2 className="text-3xl md:text-4xl font-poppins font-bold text-white mb-4">
-              Trusted by Local Farmers
-            </h2>
-          </div>
-
-          <div className={`overflow-hidden transition-all duration-1000 transform ${
-            visibleSections.has('testimonials')
-              ? 'opacity-100 translate-y-0'
-              : 'opacity-0 translate-y-16'
-          }`}>
-            <div className="relative">
-              {/* Infinite scroll container */}
-              <div className="flex animate-scroll-x" style={{ width: 'fit-content' }}>
-                {/* First set of cards */}
-                <div className="flex gap-6 px-6" style={{ width: 'fit-content' }}>
-                  <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 min-w-[350px]">
-                    <div className="flex items-center mb-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center text-white font-poppins font-bold shadow-md">
-                        JD
-                      </div>
-                      <div className="ml-4">
-                        <div className="font-poppins font-semibold text-gray-900">John D.</div>
-                        <div className="text-sm font-inter text-gray-600">Poultry Farmer, Owerri</div>
-                        <div className="flex items-center mt-1">
-                          {[1,2,3,4,5].map(i => (
-                            <svg key={i} className="w-3 h-3 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                            </svg>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <p className="font-inter text-gray-700 text-sm leading-relaxed">
-                      "Track-Farm-Ops has transformed how we manage our poultry farm. We can now track everything from our phones and the owner in Canada can see real-time updates."
-                    </p>
-                  </div>
-
-                  <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 min-w-[350px]">
-                    <div className="flex items-center mb-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center text-white font-poppins font-bold shadow-md">
-                        SA
-                      </div>
-                      <div className="ml-4">
-                        <div className="font-poppins font-semibold text-gray-900">Sarah A.</div>
-                        <div className="text-sm font-inter text-gray-600">Mixed Farm, Abia</div>
-                        <div className="flex items-center mt-1">
-                          {[1,2,3,4,5].map(i => (
-                            <svg key={i} className="w-3 h-3 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                            </svg>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <p className="font-inter text-gray-700 text-sm leading-relaxed">
-                      "The inventory management feature is amazing. We never run out of feed anymore and the low stock alerts help us plan better. Highly recommended!"
-                    </p>
-                  </div>
-
-                  <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 min-w-[350px]">
-                    <div className="flex items-center mb-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-poppins font-bold shadow-md">
-                        MO
-                      </div>
-                      <div className="ml-4">
-                        <div className="font-poppins font-semibold text-gray-900">Michael O.</div>
-                        <div className="text-sm font-inter text-gray-600">Crop Farmer, Kaduna</div>
-                        <div className="flex items-center mt-1">
-                          {[1,2,3,4,5].map(i => (
-                            <svg key={i} className="w-3 h-3 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                            </svg>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <p className="font-inter text-gray-700 text-sm leading-relaxed">
-                      "Best investment I made for my farm. The financial reports help me understand my profit margins and make better decisions."
-                    </p>
-                  </div>
-
-                  <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 min-w-[350px]">
-                    <div className="flex items-center mb-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center text-white font-poppins font-bold shadow-md">
-                        EI
-                      </div>
-                      <div className="ml-4">
-                        <div className="font-poppins font-semibold text-gray-900">Esther I.</div>
-                        <div className="text-sm font-inter text-gray-600">Fishery, Lagos</div>
-                        <div className="flex items-center mt-1">
-                          {[1,2,3,4,5].map(i => (
-                            <svg key={i} className="w-3 h-3 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                            </svg>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <p className="font-inter text-gray-700 text-sm leading-relaxed">
-                      "The mobile app works perfectly even with poor internet. I can update my fish pond records from anywhere on the farm."
-                    </p>
-                  </div>
-
-                  <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 min-w-[350px]">
-                    <div className="flex items-center mb-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-white font-poppins font-bold shadow-md">
-                        DK
-                      </div>
-                      <div className="ml-4">
-                        <div className="font-poppins font-semibold text-gray-900">David K.</div>
-                        <div className="text-sm font-inter text-gray-600">Dairy Farm, Enugu</div>
-                        <div className="flex items-center mt-1">
-                          {[1,2,3,4,5].map(i => (
-                            <svg key={i} className="w-3 h-3 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                            </svg>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <p className="font-inter text-gray-700 text-sm leading-relaxed">
-                      "Milk production tracking has never been easier. The analytics help us identify our best performing cows and optimize feeding."
-                    </p>
-                  </div>
-
-                  <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 min-w-[350px]">
-                    <div className="flex items-center mb-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full flex items-center justify-center text-white font-poppins font-bold shadow-md">
-                        RA
-                      </div>
-                      <div className="ml-4">
-                        <div className="font-poppins font-semibold text-gray-900">Ruth A.</div>
-                        <div className="text-sm font-inter text-gray-600">Vegetable Farm, Benue</div>
-                        <div className="flex items-center mt-1">
-                          {[1,2,3,4,5].map(i => (
-                            <svg key={i} className="w-3 h-3 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                            </svg>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <p className="font-inter text-gray-700 text-sm leading-relaxed">
-                      "Simple to use and very affordable. My farm workers learned it in one day and now we save so much time on paperwork."
-                    </p>
-                  </div>
-                </div>
-                
-                {/* Duplicate set for infinite scroll */}
-                <div className="flex gap-6 px-6" style={{ width: 'fit-content' }}>
-                  <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 min-w-[350px]">
-                    <div className="flex items-center mb-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center text-white font-poppins font-bold shadow-md">
-                        JD
-                      </div>
-                      <div className="ml-4">
-                        <div className="font-poppins font-semibold text-gray-900">John D.</div>
-                        <div className="text-sm font-inter text-gray-600">Poultry Farmer, Owerri</div>
-                        <div className="flex items-center mt-1">
-                          {[1,2,3,4,5].map(i => (
-                            <svg key={i} className="w-3 h-3 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                            </svg>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <p className="font-inter text-gray-700 text-sm leading-relaxed">
-                      "Track-Farm-Ops has transformed how we manage our poultry farm. We can now track everything from our phones and the owner in Canada can see real-time updates."
-                    </p>
-                  </div>
-
-                  <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 min-w-[350px]">
-                    <div className="flex items-center mb-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center text-white font-poppins font-bold shadow-md">
-                        SA
-                      </div>
-                      <div className="ml-4">
-                        <div className="font-poppins font-semibold text-gray-900">Sarah A.</div>
-                        <div className="text-sm font-inter text-gray-600">Mixed Farm, Abia</div>
-                        <div className="flex items-center mt-1">
-                          {[1,2,3,4,5].map(i => (
-                            <svg key={i} className="w-3 h-3 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                            </svg>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <p className="font-inter text-gray-700 text-sm leading-relaxed">
-                      "The inventory management feature is amazing. We never run out of feed anymore and the low stock alerts help us plan better. Highly recommended!"
-                    </p>
-                  </div>
-
-                  <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 min-w-[350px]">
-                    <div className="flex items-center mb-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-poppins font-bold shadow-md">
-                        MO
-                      </div>
-                      <div className="ml-4">
-                        <div className="font-poppins font-semibold text-gray-900">Michael O.</div>
-                        <div className="text-sm font-inter text-gray-600">Crop Farmer, Kaduna</div>
-                        <div className="flex items-center mt-1">
-                          {[1,2,3,4,5].map(i => (
-                            <svg key={i} className="w-3 h-3 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                            </svg>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <p className="font-inter text-gray-700 text-sm leading-relaxed">
-                      "Best investment I made for my farm. The financial reports help me understand my profit margins and make better decisions."
-                    </p>
-                  </div>
-
-                  <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 min-w-[350px]">
-                    <div className="flex items-center mb-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center text-white font-poppins font-bold shadow-md">
-                        EI
-                      </div>
-                      <div className="ml-4">
-                        <div className="font-poppins font-semibold text-gray-900">Esther I.</div>
-                        <div className="text-sm font-inter text-gray-600">Fishery, Lagos</div>
-                        <div className="flex items-center mt-1">
-                          {[1,2,3,4,5].map(i => (
-                            <svg key={i} className="w-3 h-3 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                            </svg>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <p className="font-inter text-gray-700 text-sm leading-relaxed">
-                      "The mobile app works perfectly even with poor internet. I can update my fish pond records from anywhere on the farm."
-                    </p>
-                  </div>
-
-                  <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 min-w-[350px]">
-                    <div className="flex items-center mb-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-white font-poppins font-bold shadow-md">
-                        DK
-                      </div>
-                      <div className="ml-4">
-                        <div className="font-poppins font-semibold text-gray-900">David K.</div>
-                        <div className="text-sm font-inter text-gray-600">Dairy Farm, Enugu</div>
-                        <div className="flex items-center mt-1">
-                          {[1,2,3,4,5].map(i => (
-                            <svg key={i} className="w-3 h-3 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                            </svg>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <p className="font-inter text-gray-700 text-sm leading-relaxed">
-                      "Milk production tracking has never been easier. The analytics help us identify our best performing cows and optimize feeding."
-                    </p>
-                  </div>
-
-                  <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 min-w-[350px]">
-                    <div className="flex items-center mb-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full flex items-center justify-center text-white font-poppins font-bold shadow-md">
-                        RA
-                      </div>
-                      <div className="ml-4">
-                        <div className="font-poppins font-semibold text-gray-900">Ruth A.</div>
-                        <div className="text-sm font-inter text-gray-600">Vegetable Farm, Benue</div>
-                        <div className="flex items-center mt-1">
-                          {[1,2,3,4,5].map(i => (
-                            <svg key={i} className="w-3 h-3 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                            </svg>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <p className="font-inter text-gray-700 text-sm leading-relaxed">
-                      "Simple to use and very affordable. My farm workers learned it in one day and now we save so much time on paperwork."
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <p className="text-gray-600">Begin tracking operations, assets, and optimizing your farm workflow.</p>
             </div>
           </div>
         </div>
@@ -912,84 +579,16 @@ const Landing = () => {
       {/* Pricing Section */}
       <Pricing />
 
-      {/* CTA Section */}
-      <div 
-        ref={addToRefs}
-        data-section="cta"
-        className={`py-20`}
-        style={{
-          backgroundColor: '#008751'
-        }}
-      >
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <div className={`transition-all duration-1000 transform ${
-            visibleHeaders.has('cta')
-              ? 'opacity-100 translate-y-0'
-              : 'opacity-0 translate-y-16'
-          }`}>
-            <h2 className="text-3xl md:text-4xl font-poppins font-bold text-white mb-4">
-              Know your numbers. Control your farm.
-            </h2>
-          </div>
-          
-          <div className={`transition-all duration-1000 transform ${
-            visibleSections.has('cta')
-              ? 'opacity-100 translate-y-0'
-              : 'opacity-0 translate-y-16'
-          }`}>
-            <p className="text-lg font-inter text-green-100 mb-8">
-              Join Nigerian farmers who are already using Track-Farm-Ops to grow their business
-            </p>
-            <Link 
-              to="/signup" 
-              className="font-inter bg-white text-green-600 px-8 py-3 rounded-lg text-lg font-medium hover:bg-gray-100 transition-all duration-300 transform hover:scale-105"
-            >
-              Get Started
-            </Link>
-          </div>
-        </div>
-      </div>
-
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <div className="text-2xl font-bold text-green-400 mb-4">🚜 Track-Farm-Ops</div>
-              <p className="text-gray-400">
-                Complete farm management system for Nigerian farms
-              </p>
+          <div className="text-center">
+            <p className="mb-4">© 2024 Track Farm Ops. All rights reserved.</p>
+            <div className="flex justify-center space-x-6">
+              <Link to="/privacy" className="hover:text-green-400 transition-colors">Privacy Policy</Link>
+              <Link to="/terms" className="hover:text-green-400 transition-colors">Terms of Service</Link>
+              <Link to="/contact" className="hover:text-green-400 transition-colors">Contact</Link>
             </div>
-            
-            <div>
-              <h3 className="font-semibold mb-4">Product</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><button onClick={handleScrollToFeatures} className="text-gray-400 hover:text-white bg-transparent border-none cursor-pointer">Features</button></li>
-                <li><button onClick={handleScrollToPricing} className="text-gray-400 hover:text-white bg-transparent border-none cursor-pointer">Pricing</button></li>
-                {/*<li><Link to="/demo" className="hover:text-white">Demo</Link></li>*/}
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="font-semibold mb-4">Company</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link to="/about" className="hover:text-white">About</Link></li>
-                <li><Link to="/contact" className="hover:text-white">Contact</Link></li>
-                {/*<li><Link to="/support" className="hover:text-white">Support</Link></li>*/}
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="font-semibold mb-4">Legal</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link to="/privacy" className="hover:text-white">Privacy</Link></li>
-                <li><Link to="/terms" className="hover:text-white">Terms</Link></li>
-              </ul>
-            </div>
-          </div>
-          
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2026 Track-Farm-Ops. Built by WebArtistry Ceations®. All rights reserved.</p>
           </div>
         </div>
       </footer>
