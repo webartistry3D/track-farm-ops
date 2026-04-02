@@ -10,7 +10,7 @@ const Landing = () => {
     style.textContent = `
       @keyframes scroll-x {
         0% { transform: translateX(0); }
-        100% { transform: translateX(-50%); }
+        100% { transform: translateX(-90%); }
       }
       
       @keyframes starPulse {
@@ -20,7 +20,7 @@ const Landing = () => {
       }
       
       .animate-scroll-x {
-        animation: scroll-x 36s linear infinite;
+        animation: scroll-x 30s linear infinite;
       }
       
       .animate-scroll-x:hover {
@@ -609,9 +609,9 @@ const Landing = () => {
                   <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                     <span className="text-2xl font-poppins font-bold text-green-600">1</span>
                   </div>
-                  <div className="bg-green-500 bg-opacity-20 backdrop-blur-md rounded-lg px-4 py-3 shadow-lg border border-green-400 border-opacity-20">
-                    <h3 className="text-xl font-poppins font-semibold text-black mb-2">Sign Up</h3>
-                    <p className="text-black text-opacity-90">Create an account and set up farm profile in seconds.</p>
+                  <div className="bg-green-100 rounded-lg px-4 py-3 shadow-lg">
+                    <h3 className="text-xl font-poppins font-semibold text-green-600 mb-2">Sign Up</h3>
+                    <p className="text-green-600">Create an account and set up farm profile in seconds.</p>
                   </div>
                 </div>
               </div>
@@ -627,9 +627,9 @@ const Landing = () => {
                   <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                     <span className="text-2xl font-poppins font-bold text-green-600">2</span>
                   </div>
-                  <div className="bg-blue-500 bg-opacity-20 backdrop-blur-md rounded-lg px-4 py-3 shadow-lg border border-blue-400 border-opacity-20">
-                    <h3 className="text-xl font-poppins font-semibold text-black mb-2">Add Workers</h3>
-                    <p className="text-black text-opacity-90">Add your farm workers and assign roles and responsibilities.</p>
+                  <div className="bg-green-100 rounded-lg px-4 py-3 shadow-lg">
+                    <h3 className="text-xl font-poppins font-semibold text-green-600 mb-2">Add Workers</h3>
+                    <p className="text-green-600">Add your farm workers and assign roles and responsibilities.</p>
                   </div>
                 </div>
               </div>
@@ -645,9 +645,9 @@ const Landing = () => {
                   <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                     <span className="text-2xl font-poppins font-bold text-green-600">3</span>
                   </div>
-                  <div className="bg-purple-500 bg-opacity-20 backdrop-blur-md rounded-lg px-4 py-3 shadow-lg border border-purple-400 border-opacity-20">
-                    <h3 className="text-xl font-poppins font-semibold text-black mb-2">Start Managing</h3>
-                    <p className="text-black text-opacity-90">Begin tracking operations, assets, and optimizing your farm workflow.</p>
+                  <div className="bg-green-100 rounded-lg px-4 py-3 shadow-lg">
+                    <h3 className="text-xl font-poppins font-semibold text-green-600 mb-2">Start Managing</h3>
+                    <p className="text-green-600">Begin tracking operations, assets, and optimizing your farm workflow.</p>
                   </div>
                 </div>
               </div>
@@ -668,70 +668,282 @@ const Landing = () => {
             </p>*/}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-gray-50 p-6 rounded-lg">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold mr-4">
-                  JD
+          <div className="relative overflow-hidden">
+            <div className="flex animate-scroll-x">
+              {/* First set of testimonials */}
+              <div className="flex space-x-8 px-4">
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold mr-4">
+                      JD
+                    </div>
+                    <div>
+                      <h3 className="font-poppins font-semibold text-gray-900">John Davis</h3>
+                      <p className="text-sm text-gray-600">Dairy Farm Owner</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "Track Farm Ops has transformed how we manage our dairy operation. The expense tracking alone has saved us thousands in just a few months."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-poppins font-semibold text-gray-900">John Davis</h3>
-                  <p className="text-sm text-gray-600">Dairy Farm Owner</p>
-                </div>
-              </div>
-              <p className="font-inter text-gray-700 italic">
-                "Track Farm Ops has transformed how we manage our dairy operation. The expense tracking alone has saved us thousands in just a few months."
-              </p>
-              <div className="flex mt-4">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                  </svg>
-                ))}
-              </div>
-            </div>
 
-            <div className="bg-gray-50 p-6 rounded-lg">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-white font-bold mr-4">
-                  SM
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-white font-bold mr-4">
+                      SM
+                    </div>
+                    <div>
+                      <h3 className="font-poppins font-semibold text-gray-900">Sarah Miller</h3>
+                      <p className="text-sm text-gray-600">Crop Farmer</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "The inventory management feature is exactly what we needed. We can now track our seed, fertilizer, and equipment in one place."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-poppins font-semibold text-gray-900">Sarah Miller</h3>
-                  <p className="text-sm text-gray-600">Crop Farmer</p>
-                </div>
-              </div>
-              <p className="font-inter text-gray-700 italic">
-                "The inventory management feature is exactly what we needed. We can now track our seed, fertilizer, and equipment in one place."
-              </p>
-              <div className="flex mt-4">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                  </svg>
-                ))}
-              </div>
-            </div>
 
-            <div className="bg-gray-50 p-6 rounded-lg">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold mr-4">
-                  AK
-                </div>
-                <div>
-                  <h3 className="font-poppins font-semibold text-gray-900">Alex Kumar</h3>
-                  <p className="text-sm text-gray-600">Mixed Farm Owner</p>
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <div className="w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold mr-4">
+                      AK
+                    </div>
+                    <div>
+                      <h3 className="font-poppins font-semibold text-gray-900">Alex Kumar</h3>
+                      <p className="text-sm text-gray-600">Mixed Farm Owner</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "The analytics dashboard gives us insights we never had before. We can make better decisions based on real data."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
                 </div>
               </div>
-              <p className="font-inter text-gray-700 italic">
-                "The analytics dashboard gives us insights we never had before. We can make better decisions based on real data."
-              </p>
-              <div className="flex mt-4">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                  </svg>
-                ))}
+
+              {/* Second set for seamless scroll */}
+              <div className="flex space-x-8 px-4">
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold mr-4">
+                      JD
+                    </div>
+                    <div>
+                      <h3 className="font-poppins font-semibold text-gray-900">John Davis</h3>
+                      <p className="text-sm text-gray-600">Dairy Farm Owner</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "Track Farm Ops has transformed how we manage our dairy operation. The expense tracking alone has saved us thousands in just a few months."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-white font-bold mr-4">
+                      SM
+                    </div>
+                    <div>
+                      <h3 className="font-poppins font-semibold text-gray-900">Sarah Miller</h3>
+                      <p className="text-sm text-gray-600">Crop Farmer</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "The inventory management feature is exactly what we needed. We can now track our seed, fertilizer, and equipment in one place."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <div className="w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold mr-4">
+                      AK
+                    </div>
+                    <div>
+                      <h3 className="font-poppins font-semibold text-gray-900">Alex Kumar</h3>
+                      <p className="text-sm text-gray-600">Mixed Farm Owner</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "The analytics dashboard gives us insights we never had before. We can make better decisions based on real data."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Third set for even smoother scroll */}
+              <div className="flex space-x-8 px-4">
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold mr-4">
+                      JD
+                    </div>
+                    <div>
+                      <h3 className="font-poppins font-semibold text-gray-900">John Davis</h3>
+                      <p className="text-sm text-gray-600">Dairy Farm Owner</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "Track Farm Ops has transformed how we manage our dairy operation. The expense tracking alone has saved us thousands in just a few months."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-white font-bold mr-4">
+                      SM
+                    </div>
+                    <div>
+                      <h3 className="font-poppins font-semibold text-gray-900">Sarah Miller</h3>
+                      <p className="text-sm text-gray-600">Crop Farmer</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "The inventory management feature is exactly what we needed. We can now track our seed, fertilizer, and equipment in one place."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <div className="w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold mr-4">
+                      AK
+                    </div>
+                    <div>
+                      <h3 className="font-poppins font-semibold text-gray-900">Alex Kumar</h3>
+                      <p className="text-sm text-gray-600">Mixed Farm Owner</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "The analytics dashboard gives us insights we never had before. We can make better decisions based on real data."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Fourth set for extra smoothness */}
+              <div className="flex space-x-8 px-4">
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold mr-4">
+                      JD
+                    </div>
+                    <div>
+                      <h3 className="font-poppins font-semibold text-gray-900">John Davis</h3>
+                      <p className="text-sm text-gray-600">Dairy Farm Owner</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "Track Farm Ops has transformed how we manage our dairy operation. The expense tracking alone has saved us thousands in just a few months."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-white font-bold mr-4">
+                      SM
+                    </div>
+                    <div>
+                      <h3 className="font-poppins font-semibold text-gray-900">Sarah Miller</h3>
+                      <p className="text-sm text-gray-600">Crop Farmer</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "The inventory management feature is exactly what we needed. We can now track our seed, fertilizer, and equipment in one place."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <div className="w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold mr-4">
+                      AK
+                    </div>
+                    <div>
+                      <h3 className="font-poppins font-semibold text-gray-900">Alex Kumar</h3>
+                      <p className="text-sm text-gray-600">Mixed Farm Owner</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "The analytics dashboard gives us insights we never had before. We can make better decisions based on real data."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
