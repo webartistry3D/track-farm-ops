@@ -56,27 +56,55 @@ const Settings = () => {
   const plans: SubscriptionPlan[] = [
     {
       id: 'freemium',
-      name: 'Free',
+      name: 'Freemium',
       price: 0,
-      features: ['1 farm location', '3 workers', 'Basic income tracking', 'Basic expense tracking', 'Simple dashboard', 'Email support'],
+      features: [
+        '1 farm location',
+        '1 Farm Owner',
+        '1 Farm Manager',
+        '1 Farm Worker',
+        'Limited Income & Expense tracking',
+        'Limited inventory transactions',
+        'Limited Assets management',
+        'Financial Reports management',
+        'Basic Analytics & trends',
+        'Email support'
+      ],
       emoji: '🆓',
-      description: 'Perfect for trying out TrackFarmOps'
+      description: 'Perfect for trying out FarmOps'
     },
     {
       id: 'growth',
       name: 'Growth',
-      price: 40000,
-      features: ['1 farm location', 'Up to 30 workers', 'Dashboard & financial reports','Inventory management', 'Asset management', 'Advanced analytics & trends', 'Data export (CSV / Excel)', 'Priority email support'],
+      price: 39000,
+      features: [
+        '1 farm location',
+        '1 Farm Owner',
+        'Up to 2 Farm Managers',
+        'Up to 18 Farm workers',
+        'Full Income & Expense tracking',
+        'Full Inventory transactions',
+        'Full Assets management',
+        'Financial Reports management',
+        'Data export (CSV / Excel)',
+        'Advanced analytics & trends',
+        'Priority support'
+      ],
       emoji: '🌾',
-      description: 'Best for growing farms expanding operations'
+      description: 'Everything in Free, plus...'
     },
     {
       id: 'pro',
-      name: 'Meta',
-      price: 100000,
-      features: ['3 farm locations', 'Up to 90 workers', 'Full inventory transactions', 'Owner dashboard & financial reports', 'Advanced analytics & trends', 'Audit logs', 'Data export (CSV / Excel)', 'Priority support'],
+      name: 'Mega',
+      price: 99000,
+      features: [
+        '3 farm locations',
+        'Up to 6 Farm managers',
+        'Up to 75 workers',
+        'Priority support'
+      ],
       emoji: '🚜',
-      description: 'Best for large scale farming operations'
+      description: 'Everything in Growth, plus...'
     }
   ];
 

@@ -264,29 +264,17 @@ const Landing = () => {
                   }}
                 >
                   {/* User 1 */}
-                  <div className="w-8 h-8 rounded-full bg-blue-500 border-2 border-white flex items-center justify-center text-white text-xs font-medium">
-                    JD
-                  </div>
+                  <img src="/Alex.jpg" alt="John Davis" className="w-8 h-8 rounded-full border-2 border-white object-cover" />
                   {/* User 2 */}
-                  <div className="w-8 h-8 rounded-full bg-green-500 border-2 border-white flex items-center justify-center text-white text-xs font-medium">
-                    SM
-                  </div>
+                  <img src="/Sarah.jpg" alt="Sarah Miller" className="w-8 h-8 rounded-full border-2 border-white object-cover" />
                   {/* User 3 */}
-                  <div className="w-8 h-8 rounded-full bg-purple-500 border-2 border-white flex items-center justify-center text-white text-xs font-medium">
-                    AK
-                  </div>
+                  <img src="/Ngozi.jpg" alt="Ngozi Okafor" className="w-8 h-8 rounded-full border-2 border-white object-cover" />
                   {/* User 4 */}
-                  <div className="w-8 h-8 rounded-full bg-orange-500 border-2 border-white flex items-center justify-center text-white text-xs font-medium">
-                    RT
-                  </div>
+                  <img src="/Uche.jpg" alt="User" className="w-8 h-8 rounded-full border-2 border-white object-cover" />
                   {/* User 5 */}
-                  <div className="w-8 h-8 rounded-full bg-pink-500 border-2 border-white flex items-center justify-center text-white text-xs font-medium">
-                    LW
-                  </div>
+                  <img src="/Amina.jpg" alt="User" className="w-8 h-8 rounded-full border-2 border-white object-cover" />
                   {/* User 6 */}
-                  <div className="w-8 h-8 rounded-full bg-indigo-500 border-2 border-white flex items-center justify-center text-white text-xs font-medium">
-                    KC
-                  </div>
+                  <img src="/Emeka.jpg" alt="User" className="w-8 h-8 rounded-full border-2 border-white object-cover" />
                 </div>
                 <span className={`ml-3 text-sm font-inter text-white transition-all duration-500 ease-out ${
                   starsVisible ? 'opacity-100' : 'opacity-0'
@@ -356,16 +344,31 @@ const Landing = () => {
       </div>
 
       {/* Image Cards Section */}
-      <div className="bg-white py-20">
+      <div 
+        id="everything-you-need-section"
+        ref={addToRefs}
+        data-section="everything-you-need"
+        className="py-20 bg-white"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
+          <div className={`text-center mb-16 transition-all duration-1000 ease-in transform ${
+            visibleHeaders.has('everything-you-need')
+              ? 'opacity-100 translate-y-0'
+              : 'opacity-0 translate-y-16'
+          }`}>
             <h2 className="text-3xl md:text-4xl font-poppins font-bold text-gray-900 mb-4">
               Everything You Need to Manage Your Farm
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Image Card 1 */}
-            <div className="bg-white rounded-lg overflow-hidden h-88">
+            <div className={`bg-white rounded-lg overflow-hidden h-88 transition-all duration-800 ease-in transform ${
+              visibleSections.has('everything-you-need')
+                ? 'opacity-100 translate-x-0'
+                : 'opacity-0 -translate-x-16'
+            }`} style={{
+              transitionDelay: visibleSections.has('everything-you-need') ? '200ms' : '0ms'
+            }}>
               <img 
                 src="/laptop-dashboard.jpg" 
                 alt="Laptop showing farm management dashboard"
@@ -382,7 +385,13 @@ const Landing = () => {
             </div>
 
             {/* Image Card 2 */}
-            <div className="bg-white rounded-lg overflow-hidden w-2/5 mx-auto">
+            <div className={`bg-white rounded-lg overflow-hidden w-2/5 mx-auto transition-all duration-800 ease-in transform ${
+              visibleSections.has('everything-you-need')
+                ? 'opacity-100 translate-x-0'
+                : 'opacity-0 translate-x-16'
+            }`} style={{
+              transitionDelay: visibleSections.has('everything-you-need') ? '400ms' : '0ms'
+            }}>
               <img 
                 src="/mobile-app.jpg" 
                 alt="Mobile farm tracking app"
@@ -674,9 +683,7 @@ const Landing = () => {
               <div className="flex space-x-8 px-4">
                 <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
                   <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold mr-4">
-                      JD
-                    </div>
+                    <img src="/Alex.jpg" alt="John Davis" className="w-12 h-12 rounded-full object-cover mr-4" />
                     <div>
                       <h3 className="font-poppins font-semibold text-gray-900">John Davis</h3>
                       <p className="text-sm text-gray-600">Dairy Farm Owner</p>
@@ -696,9 +703,7 @@ const Landing = () => {
 
                 <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
                   <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-white font-bold mr-4">
-                      SM
-                    </div>
+                    <img src="/Sarah.jpg" alt="Sarah Miller" className="w-12 h-12 rounded-full object-cover mr-4" />
                     <div>
                       <h3 className="font-poppins font-semibold text-gray-900">Sarah Miller</h3>
                       <p className="text-sm text-gray-600">Crop Farmer</p>
@@ -718,11 +723,9 @@ const Landing = () => {
 
                 <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
                   <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold mr-4">
-                      AK
-                    </div>
+                    <img src="/Ngozi.jpg" alt="Ngozi Okafor" className="w-12 h-12 rounded-full object-cover mr-4" />
                     <div>
-                      <h3 className="font-poppins font-semibold text-gray-900">Alex Kumar</h3>
+                      <h3 className="font-poppins font-semibold text-gray-900">Ngozi Okafor</h3>
                       <p className="text-sm text-gray-600">Mixed Farm Owner</p>
                     </div>
                   </div>
@@ -743,9 +746,7 @@ const Landing = () => {
               <div className="flex space-x-8 px-4">
                 <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
                   <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold mr-4">
-                      JD
-                    </div>
+                    <img src="/Alex.jpg" alt="John Davis" className="w-12 h-12 rounded-full object-cover mr-4" />
                     <div>
                       <h3 className="font-poppins font-semibold text-gray-900">John Davis</h3>
                       <p className="text-sm text-gray-600">Dairy Farm Owner</p>
@@ -765,9 +766,7 @@ const Landing = () => {
 
                 <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
                   <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-white font-bold mr-4">
-                      SM
-                    </div>
+                    <img src="/Sarah.jpg" alt="Sarah Miller" className="w-12 h-12 rounded-full object-cover mr-4" />
                     <div>
                       <h3 className="font-poppins font-semibold text-gray-900">Sarah Miller</h3>
                       <p className="text-sm text-gray-600">Crop Farmer</p>
@@ -787,9 +786,7 @@ const Landing = () => {
 
                 <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
                   <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold mr-4">
-                      AK
-                    </div>
+                    <img src="/Ngozi.jpg" alt="Alex Kumar" className="w-12 h-12 rounded-full object-cover mr-4" />
                     <div>
                       <h3 className="font-poppins font-semibold text-gray-900">Alex Kumar</h3>
                       <p className="text-sm text-gray-600">Mixed Farm Owner</p>
@@ -812,9 +809,7 @@ const Landing = () => {
               <div className="flex space-x-8 px-4">
                 <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
                   <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold mr-4">
-                      JD
-                    </div>
+                    <img src="/Alex.jpg" alt="John Davis" className="w-12 h-12 rounded-full object-cover mr-4" />
                     <div>
                       <h3 className="font-poppins font-semibold text-gray-900">John Davis</h3>
                       <p className="text-sm text-gray-600">Dairy Farm Owner</p>
@@ -834,9 +829,7 @@ const Landing = () => {
 
                 <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
                   <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-white font-bold mr-4">
-                      SM
-                    </div>
+                    <img src="/Sarah.jpg" alt="Sarah Miller" className="w-12 h-12 rounded-full object-cover mr-4" />
                     <div>
                       <h3 className="font-poppins font-semibold text-gray-900">Sarah Miller</h3>
                       <p className="text-sm text-gray-600">Crop Farmer</p>
@@ -856,9 +849,7 @@ const Landing = () => {
 
                 <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
                   <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold mr-4">
-                      AK
-                    </div>
+                    <img src="/Ngozi.jpg" alt="Alex Kumar" className="w-12 h-12 rounded-full object-cover mr-4" />
                     <div>
                       <h3 className="font-poppins font-semibold text-gray-900">Alex Kumar</h3>
                       <p className="text-sm text-gray-600">Mixed Farm Owner</p>
@@ -881,9 +872,7 @@ const Landing = () => {
               <div className="flex space-x-8 px-4">
                 <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
                   <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold mr-4">
-                      JD
-                    </div>
+                    <img src="/Alex.jpg" alt="John Davis" className="w-12 h-12 rounded-full object-cover mr-4" />
                     <div>
                       <h3 className="font-poppins font-semibold text-gray-900">John Davis</h3>
                       <p className="text-sm text-gray-600">Dairy Farm Owner</p>
@@ -903,9 +892,7 @@ const Landing = () => {
 
                 <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
                   <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-white font-bold mr-4">
-                      SM
-                    </div>
+                    <img src="/Sarah.jpg" alt="Sarah Miller" className="w-12 h-12 rounded-full object-cover mr-4" />
                     <div>
                       <h3 className="font-poppins font-semibold text-gray-900">Sarah Miller</h3>
                       <p className="text-sm text-gray-600">Crop Farmer</p>
@@ -925,9 +912,7 @@ const Landing = () => {
 
                 <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
                   <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold mr-4">
-                      AK
-                    </div>
+                    <img src="/Ngozi.jpg" alt="Alex Kumar" className="w-12 h-12 rounded-full object-cover mr-4" />
                     <div>
                       <h3 className="font-poppins font-semibold text-gray-900">Alex Kumar</h3>
                       <p className="text-sm text-gray-600">Mixed Farm Owner</p>

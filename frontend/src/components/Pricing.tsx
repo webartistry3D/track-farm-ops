@@ -81,7 +81,7 @@ const Pricing = () => {
       name: 'Extra farm location',
       emoji: '📍',
       price: '₦24,000 / month',
-      description: 'Add additional farm locations to any plan'
+      description: 'Add additional farm locations to any plan + up to 20 extra staff members'
     },
     {
       id: 'migration',
@@ -92,7 +92,7 @@ const Pricing = () => {
     },
     {
       id: 'whatsapp',
-      name: 'Dedicated WhatsApp support',
+      name: 'Dedicated support',
       emoji: '💬',
       price: '₦30,000 / month',
       description: 'Get priority support via WhatsApp'
