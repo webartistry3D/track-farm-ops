@@ -17,8 +17,8 @@ const Pricing = () => {
   const plans = [
     {
       id: 'freemium',
-      name: 'Free',
-      emoji: '�',
+      name: 'Freemium',
+      emoji: '🆓',
       description: 'Perfect for trying out FarmOps',
       price: { monthly: 0, annual: 0 },
       features: [
@@ -121,7 +121,7 @@ const Pricing = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         {/* Header Section */}
         <div className="text-center mb-20">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-poppins font-bold text-gray-900 mb-6">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-poppins font-bold text-gray-900 mb-6">
             Pricing
           </h1>
           {/*<p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
@@ -223,7 +223,7 @@ const Pricing = () => {
                       ? 'bg-green-100 text-green-700 hover:bg-green-200 border-2 border-green-300'
                       : plan.highlighted
                       ? 'bg-green-600 text-white hover:bg-green-700 shadow-lg hover:shadow-xl'
-                      : 'bg-gray-900 text-white hover:bg-gray-800'
+                      : 'bg-green-100 text-green-700 hover:bg-green-200 border-2 border-green-300'
                   }`}
                 >
                   {plan.id === 'freemium' ? 'Start Free' : 'Get Started'}

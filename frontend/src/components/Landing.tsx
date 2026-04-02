@@ -419,7 +419,7 @@ const Landing = () => {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className={`text-center bg-white rounded-lg shadow-lg p-6 transition-all duration-700 transform ${
               visibleSections.has('features')
                 ? 'opacity-100 translate-y-0'
@@ -476,7 +476,7 @@ const Landing = () => {
               </p>
             </div>
 
-            <div className={`text-center p-1 transition-all duration-700 transform ${
+            <div className={`text-center bg-white rounded-lg shadow-lg p-6 transition-all duration-700 transform ${
               visibleSections.has('features')
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-16'
@@ -490,7 +490,7 @@ const Landing = () => {
               </p>
             </div>
 
-            <div className={`text-center p-1 transition-all duration-700 transform ${
+            <div className={`text-center bg-white rounded-lg shadow-lg p-6 transition-all duration-700 transform ${
               visibleSections.has('features')
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-16'
