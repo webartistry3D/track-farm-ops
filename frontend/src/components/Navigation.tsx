@@ -6,24 +6,24 @@ const Navigation = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-12">
           <div className="flex items-center">
-            <Link to="/" className="text-xl font-bold text-white hover:text-green-300 transition-colors">
+            <Link to="/" className="text-xl font-bold text-black hover:text-green-300 transition-colors">
               🚜 Track-Farm-Ops
             </Link>
           </div>
           <div className="hidden md:flex items-center space-x-4">
-            <Link to="/about" className="text-white hover:text-green-300 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+            <Link to="/about" className="text-black hover:text-green-300 px-3 py-2 rounded-md text-sm font-medium transition-colors">
               About
             </Link>
-            <Link to="/privacy" className="text-white hover:text-green-300 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+            <Link to="/privacy" className="text-black hover:text-green-300 px-3 py-2 rounded-md text-sm font-medium transition-colors">
               Privacy
             </Link>
-            <Link to="/terms" className="text-white hover:text-green-300 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+            <Link to="/terms" className="text-black hover:text-green-300 px-3 py-2 rounded-md text-sm font-medium transition-colors">
               Terms
             </Link>
-            <Link to="/contact" className="text-white hover:text-green-300 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+            <Link to="/contact" className="text-black hover:text-green-300 px-3 py-2 rounded-md text-sm font-medium transition-colors">
               Contact
             </Link>
-            <Link to="/login" className="text-white hover:text-green-300 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+            <Link to="/login" className="text-black hover:text-green-300 px-3 py-2 rounded-md text-sm font-medium transition-colors">
               Login
             </Link>
             <Link to="/signup" className="bg-green-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-green-700 transition-all duration-300">
@@ -31,7 +31,7 @@ const Navigation = () => {
             </Link>
           </div>
           <div className="md:hidden flex items-center space-x-2">
-            <Link to="/login" className="text-white hover:text-green-300 px-2 py-2 rounded-md text-xs font-medium transition-colors">
+            <Link to="/login" className="text-black hover:text-green-300 px-2 py-2 rounded-md text-xs font-medium transition-colors">
               Login
             </Link>
             <Link to="/signup" className="bg-green-600 text-white px-3 py-2 rounded-md text-xs font-medium hover:bg-green-700 transition-all duration-300">

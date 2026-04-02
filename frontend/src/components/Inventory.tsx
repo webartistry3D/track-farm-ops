@@ -534,6 +534,8 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
     setFormattedEditItem({
       pricePerUnit: formattedPrice
     });
+    // Close view modal if open and open edit modal
+    setShowViewItemModal(false);
     setShowEditItemModal(true);
   }, []);
 
@@ -594,6 +596,10 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
         setItems(prev => prev.map(item => 
           item.id === itemToEdit.id ? response.data : item
         ));
+        // Update view modal item if it exists
+        if (itemToView && itemToView.id === itemToEdit.id) {
+          setItemToView(response.data);
+        }
         setShowEditItemModal(false);
         setItemToEdit(null);
         setEditItem({
@@ -1239,7 +1245,10 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                               <Eye className="w-4 h-4" />
                             </button>
                             <button
-                              onClick={() => handleEditClick(item)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleEditClick(item);
+                              }}
                               className="p-1 text-gray-400 hover:text-yellow-600 dark:hover:text-yellow-400 transition-colors"
                               title="Edit Item"
                             >
@@ -1448,7 +1457,10 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                                   <Eye className="w-4 h-4" />
                                 </button>
                                 <button
-                                  onClick={() => handleEditClick(item)}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleEditClick(item);
+                                  }}
                                   className="text-yellow-600 hover:text-yellow-900 dark:text-yellow-400 dark:hover:text-yellow-300"
                                   title="Edit Item"
                                 >
