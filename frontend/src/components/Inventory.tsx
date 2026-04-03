@@ -1238,7 +1238,8 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                           
                           <div className="flex items-center space-x-2">
                             <button
-                              onClick={() => {
+                              onClick={(e) => {
+                                e.stopPropagation();
                                 setItemToUse(item);
                                 setShowUsageModal(true);
                               }}
@@ -1268,7 +1269,10 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                               <Edit2 className="w-4 h-4" />
                             </button>
                             <button
-                              onClick={() => handleDeleteClick(item)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteClick(item);
+                              }}
                               className="p-1 text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
                               title="Delete Item"
                             >
@@ -1450,7 +1454,8 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                               <div className="flex items-center space-x-2">
                                 <button
-                                  onClick={() => {
+                                  onClick={(e) => {
+                                    e.stopPropagation();
                                     setItemToUse(item);
                                     setShowUsageModal(true);
                                   }}
@@ -1480,7 +1485,10 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                                   <Edit2 className="w-4 h-4" />
                                 </button>
                                 <button
-                                  onClick={() => handleDeleteClick(item)}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDeleteClick(item);
+                                  }}
                                   className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
                                   title="Delete Item"
                                 >

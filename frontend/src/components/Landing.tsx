@@ -620,7 +620,7 @@ const Landing = () => {
                   </div>
                   <div className="bg-green-100 rounded-lg px-4 py-3 shadow-lg">
                     <h3 className="text-xl font-poppins font-semibold text-green-600 mb-2">Sign Up</h3>
-                    <p className="text-green-600">Create an account and set up farm profile in seconds.</p>
+                    <p className="text-green-600">Create an account to set up your farm profile in seconds.</p>
                   </div>
                 </div>
               </div>
