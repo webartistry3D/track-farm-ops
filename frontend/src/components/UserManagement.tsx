@@ -18,6 +18,7 @@ const UserManagement = () => {
   const [loading, setLoading] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [userToDelete, setUserToDelete] = useState<any>(null);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -49,7 +50,7 @@ const UserManagement = () => {
 
     try {
       await api.post('/auth/users', formData);
-      showSuccess('User created successfully!');
+      setShowSuccessModal(true);
       setShowCreateForm(false);
       setFormData({
         name: '',
@@ -264,6 +265,39 @@ const UserManagement = () => {
                   className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex-1"
                 >
                   Delete User
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+            <div className="mt-3">
+              <div className="flex items-center mb-4">
+                <div className="flex-shrink-0 w-12 h-12 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">
+                  <svg className="h-6 w-6 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-medium text-gray-900 dark:text-white ml-4">User Created Successfully!</h3>
+              </div>
+              
+              <div className="mb-6">
+                <p className="text-gray-600 dark:text-gray-400">
+                  The user <strong>{formData.name}</strong> has been successfully created and can now access the system.
+                </p>
+              </div>
+
+              <div className="flex gap-4">
+                <button
+                  onClick={() => setShowSuccessModal(false)}
+                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex-1"
+                >
+                  Done
                 </button>
               </div>
             </div>

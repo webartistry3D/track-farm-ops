@@ -8,7 +8,6 @@ import {
 import { 
   TrendingUp, 
   ShoppingCart, 
-  Calendar,
   PieChart,
   Package,
   Heart,
@@ -55,16 +54,11 @@ const Analytics = () => {
 
   if (!isOwner) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-        <div className="max-w-md w-full bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6 text-center">
-          <div className="w-16 h-16 bg-yellow-100 dark:bg-yellow-900 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Calendar className="w-8 h-8 text-yellow-600 dark:text-yellow-400" />
-          </div>
-          <h3 className="text-lg font-semibold text-yellow-900 dark:text-yellow-100 mb-2">Access Restricted</h3>
-          <p className="text-yellow-700 dark:text-yellow-300">
-            Analytics is only available to farm owners and managers.
-          </p>
-        </div>
+      <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 rounded-lg p-6">
+        <h3 className="text-lg font-medium text-yellow-900 mb-2">Access Restricted</h3>
+        <p className="text-yellow-700">
+          Analytics is only available to farm owners and managers.
+        </p>
       </div>
     );
   }

@@ -89,13 +89,6 @@ export const signup = async (req: Request, res: Response) => {
 };
 
 export const createUser = async (req: AuthRequest, res: Response) => {
-  // 🚫 USER CREATION DISABLED - This endpoint can no longer create users
-  console.log('❌ USER CREATION DISABLED - createUser endpoint blocked');
-  return res.status(403).json({ 
-    error: 'User creation has been permanently disabled for security reasons',
-    code: 'USER_CREATION_DISABLED'
-  });
-  
   try {
     const body = getReqBody(req);
     const { name, email, password, role } = body;
@@ -364,13 +357,6 @@ export const getProfile = async (req: AuthRequest, res: Response) => {
 };
 
 export const createTestUsers = async (req: Request, res: Response) => {
-  // 🚫 USER CREATION DISABLED - This endpoint can no longer create users
-  console.log('❌ USER CREATION DISABLED - createTestUsers endpoint blocked');
-  return res.status(403).json({ 
-    error: 'User creation has been permanently disabled for security reasons',
-    code: 'USER_CREATION_DISABLED'
-  });
-  
   try {
     // Create admin user
     const adminPassword = await hashPassword('admin123');

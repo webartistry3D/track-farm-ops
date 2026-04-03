@@ -233,6 +233,19 @@ const Reports: React.FC = () => {
     return <ReportsSkeleton />;
   }
 
+  const isOwner = user?.role === 'OWNER' || user?.role === 'MANAGER';
+
+  if (!isOwner) {
+    return (
+      <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 rounded-lg p-6">
+        <h3 className="text-lg font-medium text-yellow-900 mb-2">Access Restricted</h3>
+        <p className="text-yellow-700">
+          Reports are only available to farm owners and managers.
+        </p>
+      </div>
+    );
+  }
+
   console.log('🔍 Reports: Rendering main content, loading =', loading);
   console.log('🔍 Reports: allTransactions.length =', allTransactions.length);
   console.log('🔍 Reports: error =', error);

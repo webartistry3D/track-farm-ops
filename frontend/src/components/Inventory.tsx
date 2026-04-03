@@ -815,6 +815,19 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
     return <InventorySkeleton />;
   }
 
+  const isOwner = user.role === 'OWNER' || user.role === 'MANAGER';
+
+  if (!isOwner) {
+    return (
+      <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 rounded-lg p-6">
+        <h3 className="text-lg font-medium text-yellow-900 mb-2">Access Restricted</h3>
+        <p className="text-yellow-700">
+          Inventory management is only available to farm owners and managers.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
       {/* Header */}
