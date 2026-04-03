@@ -51,7 +51,7 @@ const Contact = () => {
       <Navigation />
 
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-green-600 to-green-700 text-white py-20">
+      {/*<div className="bg-gradient-to-r from-green-600 to-green-700 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-poppins font-bold mb-4">
@@ -62,7 +62,7 @@ const Contact = () => {
             </p>
           </div>
         </div>
-      </div>
+      </div>*/}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -188,7 +188,7 @@ const Contact = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-green-600 text-white px-4 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? 'Sending...' : 'Send Message'}
               </button>
@@ -209,9 +209,9 @@ const Contact = () => {
                     Office Location
                   </h3>
                   <p className="font-inter text-gray-600">
-                    123 Farm Road, Ikeja<br />
+                    5th Avenue, F1 Close, Festac Town<br />
                     Lagos, Nigeria<br />
-                    100001
+                    102312
                   </p>
                 </div>
               </div>
@@ -223,8 +223,8 @@ const Contact = () => {
                     Phone Numbers
                   </h3>
                   <p className="font-inter text-gray-600">
-                    Main: +234 800 123 4567<br />
-                    Support: +234 800 765 4321
+                    Main: +234 701 718 8070<br />
+                    Support: +234 818 560 5747
                   </p>
                 </div>
               </div>
@@ -236,9 +236,9 @@ const Contact = () => {
                     Email Addresses
                   </h3>
                   <p className="font-inter text-gray-600">
-                    General: info@farmops.ng<br />
-                    Support: support@farmops.ng<br />
-                    Sales: sales@farmops.ng
+                    General: info@trackfarmops.ng<br />
+                    Support: support@trackfarmops.ng<br />
+                    Sales: sales@trackfarmops.ng
                   </p>
                 </div>
               </div>
@@ -250,7 +250,7 @@ const Contact = () => {
                     WhatsApp Support
                   </h3>
                   <p className="font-inter text-gray-600">
-                    Chat with us: +234 800 123 4567<br />
+                    Chat with us: +234 818 560 5747<br />
                     Available: Monday - Friday, 8am - 6pm
                   </p>
                 </div>
@@ -264,7 +264,7 @@ const Contact = () => {
                   </h3>
                   <p className="font-inter text-gray-600">
                     Monday - Friday: 8:00 AM - 6:00 PM<br />
-                    Saturday: 9:00 AM - 4:00 PM<br />
+                    Saturday: 10:00 AM - 2:00 PM<br />
                     Sunday: Closed
                   </p>
                 </div>
@@ -279,12 +279,6 @@ const Contact = () => {
                 We promise to respond to all inquiries within 24 hours during business days. 
                 For urgent matters, call our support line or message us on WhatsApp.
               </p>
-              <Link 
-                to="/signup"
-                className="inline-block bg-green-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-green-700 transition-colors duration-300"
-              >
-                Start Free Trial
-              </Link>
             </div>
           </div>
         </div>

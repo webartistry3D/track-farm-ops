@@ -41,7 +41,7 @@ const About = () => {
       <Navigation />
 
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-green-600 to-green-700 text-white py-20">
+      {/*<div className="bg-gradient-to-r from-green-600 to-green-700 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-poppins font-bold mb-4">
@@ -52,7 +52,7 @@ const About = () => {
             </p>
           </div>
         </div>
-      </div>
+      </div>*/}
 
       {/* Mission Section */}
       <div 
@@ -129,12 +129,12 @@ const About = () => {
                   but many lack access to modern management tools that could transform their operations.
                 </p>
                 <p>
-                  Founded in 2023, we set out to create a farm management system that would be 
+                  Founded in 2026, we set out to create a farm management system that would be 
                   affordable, accessible, and specifically designed for the unique challenges of 
                   Nigerian agriculture.
                 </p>
                 <p>
-                  Today, hundreds of farms across Nigeria use TrackFarmOps to track their operations, 
+                  Today, TrackFarmOps is a farm management system that enables farmers track their operations, 
                   manage their finances, and make data-driven decisions that help them grow their businesses.
                 </p>
               </div>

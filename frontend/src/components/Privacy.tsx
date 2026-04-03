@@ -15,7 +15,7 @@ const Privacy = () => {
               Privacy Policy
             </h1>
             <p className="text-xl font-inter max-w-3xl mx-auto">
-              Your privacy is important to us. Learn how we collect, use, and protect your information.
+              Learn how we collect, use, and protect your information.
             </p>
           </div>
         </div>
@@ -221,7 +221,7 @@ const Privacy = () => {
           <div className="mt-8 pt-8 border-t border-gray-200">
             <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">
               <p className="text-gray-600 font-inter text-sm">
-                © 2024 TrackFarmOps. All rights reserved.
+                © 2026 TrackFarmOps. All rights reserved.
               </p>
               <div className="flex gap-4">
                 <Link 

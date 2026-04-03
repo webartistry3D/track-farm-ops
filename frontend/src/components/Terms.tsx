@@ -101,8 +101,8 @@ const Terms = () => {
                 TrackFarmOps offers various subscription plans with different features and pricing:
               </p>
               <ul className="list-disc pl-6 space-y-2 text-gray-600 font-inter">
-                <li><strong>Growth Plan:</strong> ₦30,000 per month</li>
-                <li><strong>Pro Plan:</strong> ₦100,000 per month</li>
+                <li><strong>Growth Plan:</strong> ₦39,000 per month or ₦374,400 per year (20% off)</li>
+                <li><strong>Pro Plan:</strong> ₦99,000 per month or ₦950,400 per year (20% off)</li>
                 <li><strong>Add-ons:</strong> Additional features available for extra fees</li>
               </ul>
 
@@ -314,7 +314,7 @@ const Terms = () => {
           <div className="mt-8 pt-8 border-t border-gray-200">
             <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">
               <p className="text-gray-600 font-inter text-sm">
-                © 2024 FarmOps. All rights reserved.
+                © 2026TrackFarmOps. All rights reserved.
               </p>
               <div className="flex gap-4">
                 <Link 
