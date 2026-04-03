@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import { prisma } from '../lib/prisma';
 import { AuthRequest } from '../middleware/auth';
 import { canUserAccessRecord } from '../utils/roleAccess';
+import { NotificationService } from '../services/notificationService';
+import { notificationSSE } from '../services/notificationSSE';
 
 export const getAssets = async (req: AuthRequest, res: Response) => {
   try {
@@ -158,6 +160,31 @@ export const createAsset = async (req: AuthRequest, res: Response) => {
 
     console.log(`✅ Asset created successfully: ${asset.name} (ID: ${asset.id}) in organization ${currentUserOrg.organizationId}`);
 
+    // Create and send notification for new asset
+    try {
+      const notification = await NotificationService.createUserNotification(
+        currentUser.id,
+        currentUserOrg.organizationId,
+        'SYSTEM_UPDATE',
+        {
+          assetName: asset.name,
+          assetCategory: asset.category,
+          assetLocation: asset.location,
+          cost: asset.cost,
+          action: 'created'
+        },
+        `/assets`
+      );
+
+      // Send real-time notification via SSE
+      notificationSSE.sendToUser(currentUser.id, currentUserOrg.organizationId, notification);
+      
+      console.log('🔔 Asset notification created and sent:', notification.id);
+    } catch (notificationError) {
+      console.error('❌ Failed to create asset notification:', notificationError);
+      // Don't fail the request if notification fails
+    }
+
     res.status(201).json(asset);
   } catch (error) {
     console.error('Create asset error:', error);
@@ -259,6 +286,30 @@ export const updateAsset = async (req: AuthRequest, res: Response) => {
     });
 
     console.log('✅ Asset updated successfully:', updatedAsset);
+
+    // Create and send notification for asset update
+    try {
+      const notification = await NotificationService.createUserNotification(
+        currentUser.id,
+        currentUserOrg.organizationId,
+        'SYSTEM_UPDATE',
+        {
+          assetName: updatedAsset.name,
+          assetCategory: updatedAsset.category,
+          assetLocation: updatedAsset.location,
+          action: 'updated'
+        },
+        `/assets`
+      );
+
+      // Send real-time notification via SSE
+      notificationSSE.sendToUser(currentUser.id, currentUserOrg.organizationId, notification);
+      
+      console.log('🔔 Asset update notification created and sent:', notification.id);
+    } catch (notificationError) {
+      console.error('❌ Failed to create asset update notification:', notificationError);
+      // Don't fail the request if notification fails
+    }
 
     res.json(updatedAsset);
   } catch (error) {

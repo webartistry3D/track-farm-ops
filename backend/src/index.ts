@@ -20,6 +20,8 @@ import ocrRoutes from './routes/ocrRoutes';
 import subscriptionRoutes from './routes/subscription';
 import storageRoutes from './routes/storageRoutes';
 import superuserRoutes from './routes/superuser';
+import notificationRoutes from './routes/notificationRoutes';
+import notificationPreferencesRoutes from './routes/notificationPreferencesRoutes';
 import { prisma } from './lib/prisma';
 
 // Import our enhanced security middleware (temporarily disabled for compilation)
@@ -224,6 +226,8 @@ app.use('/api/finance', financeRoutes);
 app.use('/api/subscription', subscriptionRoutes);
 app.use('/api/storage', storageRoutes);
 app.use('/api/superuser', superuserRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/notification-preferences', notificationPreferencesRoutes);
 app.use('/ocr', ocrRoutes);
 
 // Serve static files from uploads directory

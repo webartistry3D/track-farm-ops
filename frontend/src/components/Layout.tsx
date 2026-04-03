@@ -4,6 +4,14 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { SubscriptionRestrictions } from '../utils/subscriptionRestrictions';
 import FirstTimePasswordPrompt from './FirstTimePasswordPrompt';
+import { 
+  getNotifications, 
+  markAllNotificationsAsRead, 
+  formatNotificationTime,
+  getNotificationIcon,
+  notificationRealtime,
+  type Notification 
+} from '../services/notificationService';
 // import { InactivityWarning } from './InactivityWarning'; // DISABLED
 
 interface LayoutProps {
@@ -16,6 +24,9 @@ const Layout = ({ children }: LayoutProps) => {
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [subscription, setSubscription] = useState<any>(null);
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [isLoadingNotifications, setIsLoadingNotifications] = useState(false);
   // const [showInactivityWarning, setShowInactivityWarning] = useState(false); // DISABLED
   const { user, logout, setUser } = useAuth();
   const { isDark, toggleTheme } = useTheme();
@@ -142,6 +153,7 @@ const Layout = ({ children }: LayoutProps) => {
     { name: 'Expenses', href: '/expenses', icon: '💳', current: location.pathname === '/expenses', restricted: false },
     { name: 'Inventory', href: '/inventory', icon: '📦', current: location.pathname === '/inventory', feature: 'inventoryTransactions' as const, restricted: true },
     { name: 'Assets', href: '/assets', icon: '🚜', current: location.pathname === '/assets', feature: 'inventoryTransactions' as const, restricted: true },
+    { name: 'CCTV', href: '/cctv', icon: '📹', current: location.pathname === '/cctv', feature: 'inventoryTransactions' as const, restricted: true },
     { name: 'Analytics', href: '/analytics', icon: '📊', current: location.pathname === '/analytics', feature: 'analytics' as const, restricted: true },
     { name: 'Reports', href: '/reports', icon: '📈', current: location.pathname === '/reports', feature: 'financialReports' as const, restricted: true },
   ];
@@ -150,15 +162,69 @@ const Layout = ({ children }: LayoutProps) => {
   // Restrictions will be handled at the page level with upgrade prompts
   const navigation = allNavigation;
 
-  const notifications = [
-    { id: 1, title: 'Low Stock Alert', message: 'Chicken Feed is running low', time: '2 hours ago', read: false },
-    { id: 2, title: 'New Income Recorded', message: '₦50,000 from egg sales', time: '5 hours ago', read: true },
-    { id: 3, title: 'System Update', message: 'TrackFarmOps v2.0 is now available', time: '1 day ago', read: true },
-  ];
-
   const isAdmin = user ? (user.role === 'OWNER' || user.role === 'MANAGER') : false;
 
-  const unreadCount = notifications.filter((n: any) => !n.read).length;
+  // Fetch notifications on component mount and when notifications panel is opened
+  useEffect(() => {
+    if (user && (notificationsOpen || notifications.length === 0)) {
+      fetchNotifications();
+    }
+  }, [user, notificationsOpen]);
+
+  // Set up real-time notifications
+  useEffect(() => {
+    if (user) {
+      // Connect to real-time notification service
+      notificationRealtime.connect();
+
+      // Subscribe to new notifications
+      const unsubscribeNewNotification = notificationRealtime.subscribe('notification', (notification: Notification) => {
+        setNotifications(prev => [notification, ...prev]);
+        setUnreadCount(prev => prev + 1);
+      });
+
+      // Subscribe to unread notifications (initial load)
+      const unsubscribeUnreadNotifications = notificationRealtime.subscribe('unread_notifications', (unreadNotifications: Notification[]) => {
+        setNotifications(unreadNotifications);
+        setUnreadCount(unreadNotifications.filter(n => !n.isRead).length);
+      });
+
+      // Cleanup on unmount
+      return () => {
+        unsubscribeNewNotification();
+        unsubscribeUnreadNotifications();
+        notificationRealtime.disconnect();
+      };
+    }
+  }, [user]);
+
+  const fetchNotifications = async () => {
+    if (!user) return;
+    
+    setIsLoadingNotifications(true);
+    try {
+      const response = await getNotifications({ limit: 10 });
+      setNotifications(response.notifications);
+      setUnreadCount(response.unreadCount);
+    } catch (error) {
+      console.error('Failed to fetch notifications:', error);
+    } finally {
+      setIsLoadingNotifications(false);
+    }
+  };
+
+  const handleMarkAllAsRead = async () => {
+    try {
+      await markAllNotificationsAsRead();
+      // Update local state
+      setNotifications(prev => 
+        prev.map(notification => ({ ...notification, isRead: true }))
+      );
+      setUnreadCount(0);
+    } catch (error) {
+      console.error('Failed to mark all notifications as read:', error);
+    }
+  };
 
   if (!user) {
     return <div>{children}</div>;
@@ -329,28 +395,44 @@ const Layout = ({ children }: LayoutProps) => {
                         <h3 className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white">Notifications</h3>
                       </div>
                       <div className="max-h-64 sm:max-h-80 md:max-h-96 overflow-y-auto">
-                        {notifications.map((notification) => (
-                          <div
-                            key={notification.id}
-                            className={`p-2 sm:p-3 md:p-4 hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-600 ${!notification.read ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}
-                          >
-                            <div className="flex items-start">
-                              <div className="flex-1 min-w-0">
-                                <p className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white truncate">{notification.title}</p>
-                                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-1 sm:line-clamp-2">{notification.message}</p>
-                                <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">{notification.time}</p>
-                              </div>
-                              {!notification.read && (
-                                <div className="ml-1 sm:ml-2 flex-shrink-0">
-                                  <span className="block h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-blue-400"></span>
-                                </div>
-                              )}
-                            </div>
+                        {isLoadingNotifications ? (
+                          <div className="p-4 text-center text-gray-500 dark:text-gray-400">
+                            Loading notifications...
                           </div>
-                        ))}
+                        ) : notifications.length === 0 ? (
+                          <div className="p-4 text-center text-gray-500 dark:text-gray-400">
+                            No notifications
+                          </div>
+                        ) : (
+                          notifications.map((notification) => (
+                            <div
+                              key={notification.id}
+                              className={`p-2 sm:p-3 md:p-4 hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-600 ${!notification.isRead ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}
+                            >
+                              <div className="flex items-start">
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-lg">{getNotificationIcon(notification.type)}</span>
+                                    <p className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white truncate">{notification.title}</p>
+                                  </div>
+                                  <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-1 sm:line-clamp-2">{notification.message}</p>
+                                  <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">{formatNotificationTime(notification.createdAt)}</p>
+                                </div>
+                                {!notification.isRead && (
+                                  <div className="ml-1 sm:ml-2 flex-shrink-0">
+                                    <span className="block h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-blue-400"></span>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          ))
+                        )}
                       </div>
                       <div className="p-2 sm:p-2 md:p-3 border-t border-gray-200 dark:border-gray-700">
-                        <button className="text-xs sm:text-sm text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-medium w-full text-center py-1 sm:py-1">
+                        <button 
+                          onClick={handleMarkAllAsRead}
+                          className="text-xs sm:text-sm text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-medium w-full text-center py-1 sm:py-1"
+                        >
                           Mark all as read
                         </button>
                       </div>

@@ -10,6 +10,7 @@ import LoginClean from './components/LoginClean';
 import Signup from './components/Signup';
 import Dashboard from './components/Dashboard';
 import Reports from './components/Reports';
+import CCTV from './components/CCTV';
 import Analytics from './components/Analytics';
 import IncomePage from './components/IncomePage';
 import ExpensePage from './components/ExpensePage';
@@ -146,6 +147,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <Assets />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/cctv" 
+        element={
+          <ProtectedRoute>
+            <CCTV />
           </ProtectedRoute>
         } 
       />
