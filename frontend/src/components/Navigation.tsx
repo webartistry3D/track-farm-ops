@@ -51,7 +51,7 @@ const Navigation = () => {
       </div>
       
       {/* Mobile menu */}
-      <div className={`md:hidden fixed top-12 right-0 h-fit max-h-[45vh] w-[30%] min-w-[200px] bg-white bg-opacity-10 backdrop-blur-md border-l border-white border-opacity-20 transition-transform duration-300 ease-in-out z-40 ${
+      <div className={`md:hidden fixed top-12 right-0 h-fit max-h-[45vh] w-[30%] min-w-[150px] bg-white bg-opacity-10 backdrop-blur-md border-l border-white border-opacity-20 transition-transform duration-300 ease-in-out z-40 ${
         isMenuOpen ? 'translate-x-0' : 'translate-x-full'
       }`}>
         <div className="p-4">
