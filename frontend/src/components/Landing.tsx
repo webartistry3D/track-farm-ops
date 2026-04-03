@@ -41,10 +41,10 @@ const Landing = () => {
 
   // Typing animation for subtitle
   const [typedText, setTypedText] = useState('');
-  const fullText = "A complete farm management system.\nTrack your income, expenses, inventory and assets.\nMonitor day-to-day transactions from anywhere.";
+  const fullText = "A complete farm management system.\n Keep an eye on your income, expenses, inventory and assets.\nMonitor day-to-day operations from anywhere.";
 
   // Word pop-up animation for title
-  const words = ["Farm", "Operations", "Made", "Simple"];
+  const words = ["Track", "Farm", "Operations"  ];
   const [visibleWords, setVisibleWords] = useState(new Set<number>());
   const [animationStarted, setAnimationStarted] = useState(false);
   const [starsVisible, setStarsVisible] = useState(false);
@@ -177,13 +177,13 @@ const Landing = () => {
               {words.map((word, index) => (
                 <span
                   key={index}
-                  className={`inline-block mr-1 sm:mr-2 transition-all duration-800 ease-out ${
+                  className={`inline-block mr-4 sm:mr-5 transition-all duration-800 ease-out ${
                     !animationStarted
                       ? 'opacity-0 translate-x-full'
                       : visibleWords.has(index)
                       ? 'opacity-100 translate-x-0'
                       : 'opacity-0 translate-x-full'
-                  } ${word === 'Simple' ? 'text-white bg-green-600 px-3 py-1 rounded' : word === 'Operations' ? 'text-green-600' : ''}`}
+                  } ${word === 'Simple' ? 'text-white px-3 py-1 rounded' : word === 'Operations' ? 'text-white' : ''}`}
                   style={{
                     transitionDelay: animationStarted ? `${index * 200}ms` : '0ms'
                   }}
@@ -666,7 +666,7 @@ const Landing = () => {
       </div>
 
       {/* Testimonials Section */}
-      <div className="py-20 bg-gradient-to-br from-green-300 via-white to-blue-300">
+      <div className="py-20 bg-gradient-to-br from-green-300 via-white to-orange-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-poppins font-bold text-gray-900 mb-4">
