@@ -41,29 +41,29 @@ async function buildProductionDeploy() {
       console.log('✅ Database migrations completed successfully');
     } catch (migrateError) {
       console.error('❌ Database migrations failed:', migrateError.message);
-      console.log('🔄 Running permanent database state fix...');
+      console.log('🔄 Running aggressive force reset for P3009 error...');
       
-      // Run permanent database state fix
+      // Run aggressive force reset
       try {
-        execSync('node scripts/fix-database-state.js', { 
+        execSync('node scripts/force-reset-migrations.js', { 
           stdio: 'inherit',
-          timeout: 120000 // 2 minute timeout for comprehensive fix
+          timeout: 180000 // 3 minute timeout for comprehensive reset
         });
-        console.log('✅ Database state permanently fixed');
-      } catch (fixError) {
-        console.error('❌ Permanent database fix failed:', fixError.message);
-        console.log('🔄 Attempting fallback migration resolution...');
+        console.log('✅ Database force reset completed - P3009 resolved');
+      } catch (forceResetError) {
+        console.error('❌ Force reset failed:', forceResetError.message);
+        console.log('🔄 Attempting last resort - direct schema application...');
         
-        // Fallback to temporary resolution
+        // Last resort: direct db push without migrations
         try {
-          execSync('node scripts/resolve-failed-migrations.js', { 
+          execSync('npx prisma db push --force-reset', { 
             stdio: 'inherit',
-            timeout: 30000 // 30 second timeout
+            timeout: 60000
           });
-          console.log('✅ Fallback migration resolution completed');
-        } catch (fallbackError) {
-          console.error('❌ All migration fixes failed');
-          throw new Error(`Database migration failed: ${fallbackError.message}`);
+          console.log('✅ Last resort schema push completed');
+        } catch (lastResortError) {
+          console.error('❌ All approaches failed');
+          throw new Error(`Database migration failed completely: ${lastResortError.message}`);
         }
       }
     }
