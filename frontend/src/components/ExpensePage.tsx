@@ -9,6 +9,7 @@ import { formatCurrency, parseCurrency, validateCurrencyInput } from '../utils/c
 import { Camera, Upload, Scan, CheckCircle, X, Table, Plus, Eye, Trash2 } from 'lucide-react';
 import Pagination from './Pagination';
 import ConfirmModal from './ConfirmModal';
+import SuccessModal from './SuccessModal';
 import { 
   TableSkeleton
 } from './SkeletonComponents';
@@ -60,6 +61,14 @@ const ExpensePage = () => {
   const [displayAmount, setDisplayAmount] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState<string | React.ReactNode>('');
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successModalData, setSuccessModalData] = useState({
+    title: '',
+    message: '',
+    showReceiptImage: false,
+    receiptImageUrl: '',
+    confidence: undefined as number | undefined
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [showOCRResults, setShowOCRResults] = useState(false);
@@ -249,29 +258,6 @@ const ExpensePage = () => {
         if (result.data.amount) {
           setDisplayAmount(formatCurrency(result.data.amount.toString()));
         }
-        
-        // Show success toast with receipt image
-        const successContent = (
-          <div className="flex items-center justify-between gap-4">
-            {/* Left side - Text content (50% width) */}
-            <div className="flex-1">
-              <div className="font-medium text-green-800 dark:text-green-200">
-                Receipt processed successfully!
-              </div>
-              <div className="text-sm text-green-600 dark:text-green-400">
-                {result.data.confidence}% confidence
-              </div>
-            </div>
-            
-            {/* Right side - Duplicate receipt image */}
-            <img 
-              src={receiptImageUrl} 
-              alt="Receipt" 
-              className="w-16 h-16 object-cover rounded-lg border border-gray-200 dark:border-gray-600"
-            />
-          </div>
-        );
-        setSuccess(successContent);
       } else {
         throw new Error(result.error || 'OCR processing failed');
       }
@@ -319,7 +305,14 @@ const ExpensePage = () => {
       
       await api.post<ExpenseEntry>('/finance/expenses', expenseData);
       
-      setSuccess('Expense entry recorded successfully!');
+      setSuccessModalData({
+        title: 'Expense Recorded Successfully!',
+        message: 'Your expense entry has been saved and is now available in your records.',
+        showReceiptImage: false,
+        receiptImageUrl: '',
+        confidence: undefined
+      });
+      setShowSuccessModal(true);
       resetForm();
     } catch (err: any) {
       console.error('❌ Submit error:', err);
@@ -374,9 +367,15 @@ const ExpensePage = () => {
       setShowDeleteModal(false);
       setExpenseToDelete(null);
       
-      // Show success message
-      setSuccess('Expense entry deleted successfully!');
-      setTimeout(() => setSuccess(''), 3000);
+      // Show success modal
+      setSuccessModalData({
+        title: 'Expense Deleted Successfully!',
+        message: 'The expense entry has been removed from your records.',
+        showReceiptImage: false,
+        receiptImageUrl: '',
+        confidence: undefined
+      });
+      setShowSuccessModal(true);
       
     } catch (err: any) {
       console.error('❌ Delete error:', err);
@@ -709,13 +708,14 @@ const ExpensePage = () => {
                   />
                 </div>
 
-                {/* Error/Success Messages */}
+                {/* Error Messages */}
                 {error && (
                   <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-md text-sm">
                     {error}
                   </div>
                 )}
 
+                {/* Success Messages */}
                 {success && (
                   <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-600 dark:text-green-400 px-4 py-3 rounded-md text-sm">
                     {success}
@@ -999,6 +999,18 @@ const ExpensePage = () => {
         confirmText="Delete Expense"
         cancelText="Cancel"
         type="danger"
+      />
+
+      {/* Success Modal */}
+      <SuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        title={successModalData.title}
+        message={successModalData.message}
+        showReceiptImage={successModalData.showReceiptImage}
+        receiptImageUrl={successModalData.receiptImageUrl}
+        confidence={successModalData.confidence}
+        buttonText="OK"
       />
     </div>
   );

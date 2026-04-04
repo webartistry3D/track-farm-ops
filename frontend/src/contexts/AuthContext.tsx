@@ -179,9 +179,33 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const logout = () => {
-    localStorage.removeItem('trackfarmops_token');
-    localStorage.removeItem('trackfarmops_user');
-    setUser(null);
+    try {
+      console.log('🚪 [AuthContext] Starting logout process...');
+      
+      // Clear all authentication data
+      localStorage.removeItem('trackfarmops_token');
+      localStorage.removeItem('trackfarmops_user');
+      
+      // Clear any other auth-related items
+      localStorage.removeItem('trackfarmops_notifications');
+      sessionStorage.clear();
+      
+      // Set user to null immediately
+      setUser(null);
+      
+      console.log('✅ [AuthContext] Logout completed successfully');
+      
+      // Force a small delay to ensure state updates
+      setTimeout(() => {
+        console.log('🔄 [AuthContext] Navigating to login...');
+        window.location.href = '/login';
+      }, 100);
+      
+    } catch (error) {
+      console.error('❌ [AuthContext] Logout error:', error);
+      // Fallback: force redirect anyway
+      window.location.href = '/login';
+    }
   };
 
   return (

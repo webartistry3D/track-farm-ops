@@ -114,8 +114,21 @@ const SuperUserDashboard = () => {
     console.log('🔍 HOOKS CALLED SUCCESSFULLY');
 
     const handleLogout = () => {
-      logout();
-      navigate('/login');
+      try {
+        console.log('🚪 [SuperUserDashboard] Starting logout...');
+        
+        // Call the logout function from AuthContext
+        logout();
+        
+        // Navigate to login page
+        navigate('/login');
+        
+        console.log('✅ [SuperUserDashboard] Logout initiated successfully');
+      } catch (error) {
+        console.error('❌ [SuperUserDashboard] Logout error:', error);
+        // Fallback navigation
+        window.location.href = '/login';
+      }
     };
     
     const [sidebarOpen, setSidebarOpen] = useState(true);
