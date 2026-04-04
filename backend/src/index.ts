@@ -31,8 +31,9 @@ import { prisma } from './lib/prisma';
 
 // Load environment variables
 if (process.env.NODE_ENV !== 'production') {
-  // In development, load from .env.development
-  dotenv.config({ path: '.env.development' });
+  // In development, load from .env
+  dotenv.config({ path: '.env' });
+  console.log('🔧 Development mode: Using local .env file');
 } else {
   // In production (Render), env vars come from dashboard
   // Don't load dotenv file - trust Render's environment variables
