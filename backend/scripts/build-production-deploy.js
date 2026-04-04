@@ -41,19 +41,30 @@ async function buildProductionDeploy() {
       console.log('✅ Database migrations completed successfully');
     } catch (migrateError) {
       console.error('❌ Database migrations failed:', migrateError.message);
-      // Don't fail the build for migration errors, but log them
-      console.warn('⚠️ Migration failed - this might be expected if already applied');
+      console.log('🔄 Running permanent database state fix...');
       
-      // Try to resolve failed migrations
-      console.log('🔄 Attempting to resolve failed migrations...');
+      // Run permanent database state fix
       try {
-        execSync('node scripts/resolve-failed-migrations.js', { 
+        execSync('node scripts/fix-database-state.js', { 
           stdio: 'inherit',
-          timeout: 30000 // 30 second timeout
+          timeout: 120000 // 2 minute timeout for comprehensive fix
         });
-        console.log('✅ Migration resolution completed');
-      } catch (resolveError) {
-        console.warn('⚠️ Migration resolution failed, but continuing with build');
+        console.log('✅ Database state permanently fixed');
+      } catch (fixError) {
+        console.error('❌ Permanent database fix failed:', fixError.message);
+        console.log('🔄 Attempting fallback migration resolution...');
+        
+        // Fallback to temporary resolution
+        try {
+          execSync('node scripts/resolve-failed-migrations.js', { 
+            stdio: 'inherit',
+            timeout: 30000 // 30 second timeout
+          });
+          console.log('✅ Fallback migration resolution completed');
+        } catch (fallbackError) {
+          console.error('❌ All migration fixes failed');
+          throw new Error(`Database migration failed: ${fallbackError.message}`);
+        }
       }
     }
 
