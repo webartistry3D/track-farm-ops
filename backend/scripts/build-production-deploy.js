@@ -43,6 +43,18 @@ async function buildProductionDeploy() {
       console.error('❌ Database migrations failed:', migrateError.message);
       // Don't fail the build for migration errors, but log them
       console.warn('⚠️ Migration failed - this might be expected if already applied');
+      
+      // Try to resolve failed migrations
+      console.log('🔄 Attempting to resolve failed migrations...');
+      try {
+        execSync('node scripts/resolve-failed-migrations.js', { 
+          stdio: 'inherit',
+          timeout: 30000 // 30 second timeout
+        });
+        console.log('✅ Migration resolution completed');
+      } catch (resolveError) {
+        console.warn('⚠️ Migration resolution failed, but continuing with build');
+      }
     }
 
     // Step 3.5: Run password features migration
