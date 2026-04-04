@@ -6,7 +6,9 @@ import {
   updateNotificationPreferences,
   markNotificationAsRead,
   markAllNotificationsAsRead,
-  deleteNotification
+  deleteNotification,
+  createNotification,
+  getNotificationStats
 } from '../controllers/notificationController';
 
 const router = Router();
@@ -16,6 +18,12 @@ router.use(authenticate);
 
 // Get all notifications for the user
 router.get('/', getNotifications);
+
+// Get notification statistics
+router.get('/stats', getNotificationStats);
+
+// Create a new notification
+router.post('/', createNotification);
 
 // Get notification preferences
 router.get('/preferences', getNotificationPreferences);
