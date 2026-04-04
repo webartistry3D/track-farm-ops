@@ -13,8 +13,8 @@ import {
 // Export utility functions
 const exportToCSV = (data: any[], filename: string, type: string) => {
   const headers = type === 'all' 
-    ? ['Date', 'Type', 'Description', 'Amount', 'VAT', 'Recorded By', 'Email']
-    : ['Date', 'Category', 'Description', 'Amount', 'VAT', 'Recorded By', 'Email', 'Time'];
+    ? ['Date', 'Type', 'Description', 'Amount', 'Recorded By', 'Email']
+    : ['Date', 'Category', 'Description', 'Amount', 'Recorded By', 'Email', 'Time'];
   
   const csvContent = [
     headers.join(','),
@@ -25,7 +25,6 @@ const exportToCSV = (data: any[], filename: string, type: string) => {
           item.type,
           `"${(item.description || item.category || 'No description').replace(/"/g, '""')}"`,
           item.amount,
-          item.vatAmount || 0,
           `"${(item.userName || item.user?.name || 'Unknown').replace(/"/g, '""')}"`,
           `"${(item.userEmail || item.user?.email || 'unknown@farmops.com').replace(/"/g, '""')}"` 
         ].join(',');
@@ -35,7 +34,6 @@ const exportToCSV = (data: any[], filename: string, type: string) => {
           `"${(item.category || 'General').replace(/"/g, '""')}"`,
           `"${(item.description || 'No description').replace(/"/g, '""')}"`,
           item.amount,
-          item.vatAmount || 0,
           `"${(item.userName || item.user?.name || 'Unknown').replace(/"/g, '""')}"`,
           `"${(item.userEmail || item.user?.email || 'unknown@farmops.com').replace(/"/g, '""')}"`,
           new Date(item.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -381,9 +379,6 @@ const Reports: React.FC = () => {
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-28">
                           Amount
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-24">
-                          VAT
-                        </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-32">
                           Recorded by
                         </th>
@@ -414,9 +409,6 @@ const Reports: React.FC = () => {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                             {formatCurrency(transaction.amount.toString())}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                            {formatCurrency((transaction.vatAmount || 0).toString())}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                             <div>
@@ -476,9 +468,6 @@ const Reports: React.FC = () => {
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-28">
                           Amount
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-24">
-                          VAT
-                        </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-32">
                           Recorded by
                         </th>
@@ -509,9 +498,6 @@ const Reports: React.FC = () => {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                             {formatCurrency(transaction.amount.toString())}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                            {formatCurrency((transaction.vatAmount || 0).toString())}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                             <div>
@@ -571,9 +557,6 @@ const Reports: React.FC = () => {
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-28">
                           Amount
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-24">
-                          VAT
-                        </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-32">
                           Recorded by
                         </th>
@@ -603,9 +586,6 @@ const Reports: React.FC = () => {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-red-600">
                             {formatCurrency(transaction.amount.toString())}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                            {formatCurrency((transaction.vatAmount || 0).toString())}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                             <div>
@@ -807,26 +787,6 @@ const Reports: React.FC = () => {
                       <span className="text-2xl">
                         {selectedTransaction.type === 'Income' ? '💰' : '💸'}
                       </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* VAT Card */}
-                <div className="p-6 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">VAT Amount</p>
-                      <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                        {formatCurrency((selectedTransaction.vatAmount || 0).toString())}
-                      </p>
-                      {selectedTransaction.vatRate && (
-                        <p className="text-sm text-blue-500 dark:text-blue-400 mt-1">
-                          Rate: {selectedTransaction.vatRate}%
-                        </p>
-                      )}
-                    </div>
-                    <div className="p-3 rounded-lg bg-blue-100 dark:bg-blue-900">
-                      <span className="text-2xl">🧾</span>
                     </div>
                   </div>
                 </div>

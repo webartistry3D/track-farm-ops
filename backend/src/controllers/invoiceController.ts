@@ -101,7 +101,6 @@ export const createInvoice = async (req: AuthRequest, res: Response) => {
     });
 
     console.log(`✅ Invoice created successfully: User ${currentUser.id}, Invoice: ${invoice.id}, Organization: ${currentUserOrg.organizationId}`);
-
     res.status(201).json(invoice);
   } catch (error) {
     console.error('Create invoice error:', error);

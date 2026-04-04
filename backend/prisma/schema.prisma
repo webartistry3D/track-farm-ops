@@ -31,8 +31,6 @@ model User {
   invoices              Invoice[]
   subscriptions         Subscription[]
   passwordHistory       PasswordHistory[]
-  notifications         Notification[]
-  notificationPreferences NotificationPreference[]
   organization          Organization?          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@map("users")
@@ -52,8 +50,6 @@ model Organization {
   subscriptions       Subscription[]
   users               User[]
   vatRecords          VatRecord[]
-  notifications       Notification[]
-  notificationPreferences NotificationPreference[]
 
   @@map("organizations")
 }
@@ -331,76 +327,4 @@ model PasswordHistory {
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("password_history")
-}
-
-model Notification {
-  id              Int              @id @default(autoincrement())
-  title           String
-  message         String
-  type            NotificationType
-  isRead          Boolean          @default(false) @map("is_read")
-  createdAt       DateTime         @default(now()) @map("created_at")
-  updatedAt       DateTime         @updatedAt @map("updated_at")
-  userId          Int              @map("user_id")
-  organizationId  Int              @map("organization_id")
-  metadata        Json?            @map("metadata")
-  actionUrl       String?          @map("action_url")
-  expiresAt       DateTime?        @map("expires_at")
-  priority        NotificationPriority @default(MEDIUM)
-  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  organization    Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-
-  @@index([userId, isRead])
-  @@index([type, createdAt])
-  @@index([organizationId])
-  @@map("notifications")
-}
-
-enum NotificationType {
-  LOW_STOCK
-  HIGH_STOCK
-  EXPIRY_WARNING
-  INCOME_RECORDED
-  EXPENSE_RECORDED
-  BUDGET_ALERT
-  SYSTEM_UPDATE
-  SECURITY_ALERT
-  MAINTENANCE_DUE
-  CAMERA_OFFLINE
-  MOTION_DETECTED
-  SUBSCRIPTION_EXPIRING
-  PAYMENT_RECEIVED
-  INVOICE_OVERDUE
-  ASSET_MAINTENANCE
-  WEATHER_ALERT
-  PRICE_ALERT
-  USER_INVITED
-  ROLE_CHANGED
-  BACKUP_COMPLETED
-  SYNC_COMPLETED
-}
-
-enum NotificationPriority {
-  LOW
-  MEDIUM
-  HIGH
-  URGENT
-}
-
-model NotificationPreference {
-  id              Int              @id @default(autoincrement())
-  userId          Int              @map("user_id")
-  organizationId  Int              @map("organization_id")
-  notificationType NotificationType  @map("notification_type")
-  enabled         Boolean          @default(true)
-  emailEnabled    Boolean          @default(false) @map("email_enabled")
-  pushEnabled     Boolean          @default(true) @map("push_enabled")
-  createdAt       DateTime         @default(now()) @map("created_at")
-  updatedAt       DateTime         @updatedAt @map("updated_at")
-  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  organization    Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, notificationType])
-  @@index([organizationId])
-  @@map("notification_preferences")
 }

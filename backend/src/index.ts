@@ -309,9 +309,22 @@ try {
 async function startServer() {
   try {
     console.log('🚀 Starting server binding...');
-    console.log(`🔧 Attempting to bind to PORT: ${process.env.PORT || 3001}`);
-    console.log(`🔧 PORT type: ${typeof (process.env.PORT || 3001)}`);
-    console.log(`🔧 PORT value: ${process.env.PORT || 3001}`);
+    let PORT: number;
+    
+    if (process.env.NODE_ENV === 'production') {
+      // In production (Render), always use the PORT provided by Render
+      PORT = Number(process.env.PORT) || 10000; // Fallback to 10000 if PORT is not set
+      console.log(`🔧 Production mode - Using Render's PORT: ${PORT}`);
+    } else {
+      // In development, use 3001
+      PORT = 3001;
+      console.log(`🔧 Development mode - Using default PORT: ${PORT}`);
+    }
+    
+    console.log(`🔧 Final PORT: ${PORT}`);
+    console.log(`🔧 PORT type: ${typeof PORT}`);
+    console.log(`🔧 Environment PORT: ${process.env.PORT}`);
+    console.log(`🔧 Node environment: ${process.env.NODE_ENV}`);
     
     // Test database connection before starting server
     console.log('🔍 Testing database connection...');
@@ -324,16 +337,17 @@ async function startServer() {
       process.exit(1);
     }
     
-    const server = app.listen(process.env.PORT || 3001, () => {
-      console.log(`🚀 TrackFarmOps API server running on port ${process.env.PORT || 3001}`);
+    const server = app.listen(PORT, '0.0.0.0', () => {
+      console.log(`🚀 TrackFarmOps API server running on port ${PORT}`);
       console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
-      console.log(`🏥 Health check: http://localhost:${process.env.PORT || 3001}/api/health`);
+      console.log(`🏥 Health check: http://localhost:${PORT}/api/health`);
       console.log(`🌐 Server address: ${server.address()}`);
       console.log(`🔗 Server listening: ${server.listening}`);
       
       if (process.env.NODE_ENV === 'production') {
         console.log('🔒 Production mode enabled');
         console.log(`📝 Logs: ${process.env.LOG_FILE || 'logs/app.log'}`);
+        console.log(`🌍 Render should detect port ${PORT} automatically`);
       }
     });
 
@@ -342,11 +356,11 @@ async function startServer() {
       console.error('❌ Error code:', error.code);
       console.error('❌ Error message:', error.message);
       if (error.code === 'EADDRINUSE') {
-        console.error(`Port ${process.env.PORT || 3001} is already in use`);
+        console.error(`Port ${PORT} is already in use`);
       } else if (error.code === 'EACCES') {
-        console.error(`Permission denied for port ${process.env.PORT || 3001}`);
+        console.error(`Permission denied for port ${PORT}`);
       } else if (error.code === 'EADDRNOTAVAIL') {
-        console.error(`Port ${process.env.PORT || 3001} is not available`);
+        console.error(`Port ${PORT} is not available`);
       } else {
         console.error('❌ Unknown server error:', error);
       }
@@ -355,7 +369,17 @@ async function startServer() {
 
     server.on('listening', () => {
       console.log('🎉 Server is now listening for connections');
+      console.log(`🌍 Bound to: 0.0.0.0:${PORT}`);
     });
+
+    // Add timeout to prevent hanging
+    setTimeout(() => {
+      if (!server.listening) {
+        console.error('❌ Server failed to start within 30 seconds');
+        console.error('❌ This might be due to database connection issues or port binding problems');
+        process.exit(1);
+      }
+    }, 30000);
 
   } catch (error) {
     console.error('❌ Failed to start server:', error);

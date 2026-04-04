@@ -12,7 +12,6 @@ export interface AuthUser {
 
 export interface AuthRequest extends Request {
   user?: AuthUser;
-  file?: any; // Multer file object - using any to avoid type conflicts
 }
 
 // Simple type assertion helpers for Express Request properties

@@ -2,8 +2,6 @@ import { Request, Response } from 'express';
 import { prisma } from '../lib/prisma';
 import { AuthRequest } from '../middleware/auth';
 import { buildRoleBasedWhereClause, canUserAccessRecord } from '../utils/roleAccess';
-import { NotificationService } from '../services/notificationService';
-import { notificationSSE } from '../services/notificationSSE';
 
 export const createIncomeEntry = async (req: AuthRequest, res: Response) => {
   try {
@@ -85,25 +83,6 @@ export const createIncomeEntry = async (req: AuthRequest, res: Response) => {
     });
 
     console.log('✅ Income entry created successfully:', JSON.stringify(incomeEntry, null, 2));
-
-    // Create and send notification for new income
-    try {
-      const notification = await NotificationService.notifyIncomeRecorded(
-        currentUser.id,
-        currentUserOrg.organizationId,
-        parseFloat(amount),
-        category
-      );
-
-      // Send real-time notification via SSE
-      notificationSSE.sendToUser(currentUser.id, currentUserOrg.organizationId, notification);
-      
-      console.log('🔔 Income notification created and sent:', notification.id);
-    } catch (notificationError) {
-      console.error('❌ Failed to create income notification:', notificationError);
-      // Don't fail the request if notification fails
-    }
-
     res.status(201).json(incomeEntry);
   } catch (error) {
     console.error('Create income entry error:', error);
@@ -458,25 +437,6 @@ export const createExpenseEntry = async (req: AuthRequest, res: Response) => {
     });
 
     console.log('✅ Expense entry created successfully:', JSON.stringify(expenseEntry, null, 2));
-
-    // Create and send notification for new expense
-    try {
-      const notification = await NotificationService.notifyExpenseRecorded(
-        currentUser.id,
-        currentUserOrg.organizationId,
-        parseFloat(amount),
-        category
-      );
-
-      // Send real-time notification via SSE
-      notificationSSE.sendToUser(currentUser.id, currentUserOrg.organizationId, notification);
-      
-      console.log('🔔 Expense notification created and sent:', notification.id);
-    } catch (notificationError) {
-      console.error('❌ Failed to create expense notification:', notificationError);
-      // Don't fail the request if notification fails
-    }
-
     res.status(201).json(expenseEntry);
   } catch (error) {
     console.error('❌ Create expense entry error:', error);

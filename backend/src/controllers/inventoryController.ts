@@ -2,8 +2,6 @@ import { Request, Response } from 'express';
 import { prisma } from '../lib/prisma';
 import { AuthRequest } from '../middleware/auth';
 import { buildRoleBasedWhereClause, canUserAccessRecord } from '../utils/roleAccess';
-import { NotificationService } from '../services/notificationService';
-import { notificationSSE } from '../services/notificationSSE';
 
 export const getInventorySettings = async (req: AuthRequest, res: Response) => {
   try {
@@ -459,31 +457,6 @@ export const createInventoryItem = async (req: AuthRequest, res: Response) => {
     }
 
     console.log('  📤 Sending response:', item);
-
-    // Create and send notification for new inventory item
-    try {
-      const notification = await NotificationService.createUserNotification(
-        req.user!.id,
-        currentUserOrg.organizationId,
-        'SYSTEM_UPDATE',
-        {
-          itemName: item.name,
-          itemType: item.type,
-          quantity: item.quantity,
-          action: 'created'
-        },
-        `/inventory`
-      );
-
-      // Send real-time notification via SSE
-      notificationSSE.sendToUser(req.user!.id, currentUserOrg.organizationId, notification);
-      
-      console.log('🔔 Inventory item notification created and sent:', notification.id);
-    } catch (notificationError) {
-      console.error('❌ Failed to create inventory notification:', notificationError);
-      // Don't fail the request if notification fails
-    }
-
     res.status(201).json(item);
   } catch (error) {
     console.error('Create inventory item error:', error);
@@ -561,45 +534,6 @@ export const updateInventoryQuantity = async (req: AuthRequest, res: Response) =
     });
 
     console.log(`📊 Usage tracked: ${parsedQuantityChange} ${item.unit} for ${item.name} (${usageType || 'OTHER'})`);
-
-    // Create and send notification for inventory quantity update
-    try {
-      // Get user's organization for notification
-      const currentUserOrg = await prisma.user.findUnique({
-        where: { id: req.user!.id },
-        select: { organizationId: true }
-      });
-
-      if (currentUserOrg?.organizationId) {
-        // Check if stock is low
-        const notificationType = newQuantity <= Number(item.minimumStock || 0) ? 'LOW_STOCK' : 'SYSTEM_UPDATE';
-        
-        const notification = await NotificationService.createUserNotification(
-          req.user!.id,
-          currentUserOrg.organizationId,
-          notificationType,
-          {
-            itemName: item.name,
-            itemType: item.type,
-            oldQuantity: item.quantity,
-            newQuantity: newQuantity,
-            quantityChange: parsedQuantityChange,
-            unit: item.unit,
-            reason: reason,
-            action: 'quantity_updated'
-          },
-          `/inventory`
-        );
-
-        // Send real-time notification via SSE
-        notificationSSE.sendToUser(req.user!.id, currentUserOrg.organizationId, notification);
-        
-        console.log('🔔 Inventory quantity update notification created and sent:', notification.id);
-      }
-    } catch (notificationError) {
-      console.error('❌ Failed to create inventory update notification:', notificationError);
-      // Don't fail the request if notification fails
-    }
 
     res.json({
       item: updatedItem,
