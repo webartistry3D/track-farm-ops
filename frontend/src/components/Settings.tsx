@@ -48,6 +48,23 @@ const Settings = () => {
       return () => clearTimeout(timer);
     }
   }, [error]);
+
+  // Load notification preferences on component mount
+  useEffect(() => {
+    const loadNotificationPreferences = async () => {
+      try {
+        const response = await api.get('/notifications/preferences');
+        setNotifications(response.data.preferences);
+      } catch (err: any) {
+        console.error('Failed to load notification preferences:', err);
+        // Keep default values if API fails
+      }
+    };
+
+    if (activeTab === 'notifications') {
+      loadNotificationPreferences();
+    }
+  }, [activeTab]);
   const [subscriptionData, setSubscriptionData] = useState<any>(null);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly');
   const [paystackScriptLoaded, setPaystackScriptLoaded] = useState(false);
@@ -216,7 +233,7 @@ const Settings = () => {
 
     try {
       // Real notification settings update
-      await api.put('/auth/notifications', notifications);
+      await api.put('/notifications/preferences', notifications);
       setMessage('Notification preferences updated successfully!');
     } catch (err: any) {
       setError(err.response?.data?.error || 'Failed to update notification settings');

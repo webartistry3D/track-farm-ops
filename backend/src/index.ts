@@ -8,6 +8,7 @@ import fs from 'fs';
 import path from 'path';
 
 import authRoutes from './routes/auth';
+import notificationRoutes from './routes/notificationRoutes';
 import inventoryRoutes from './routes/inventory';
 import inventoryTransactionRoutes from './routes/inventoryTransactions';
 import assetsRoutes from './routes/assets';
@@ -177,6 +178,7 @@ app.get('/api', (req, res) => {
     environment: process.env.NODE_ENV || 'development',
     endpoints: {
       auth: '/api/auth',
+      notifications: '/api/notifications',
       finance: '/api/finance',
       inventory: '/api/inventory',
       inventoryTransactions: '/api/inventory-transactions',
@@ -213,6 +215,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use('/api/auth', authRoutes);
+app.use('/api/notifications', notificationRoutes);
 app.use('/api/inventory', inventoryRoutes);
 app.use('/api/inventory-transactions', inventoryTransactionRoutes);
 app.use('/api/assets', assetsRoutes);
