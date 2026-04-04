@@ -413,7 +413,7 @@ const ExpensePage = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-0">
+    <div className="max-w-7xl mx-auto p-0">
       <div className="dark:bg-gray-900 rounded-lg p-0">
         <div className="p-0">
           {/*<h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">

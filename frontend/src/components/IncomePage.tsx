@@ -1489,7 +1489,7 @@ Generated on: ${new Date().toLocaleString()}
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-0">
+    <div className="max-w-7xl mx-auto p-0">
       <div className="rounded-lg dark:bg-gray-900 p-0">
         <div className="p-0">
           {/*<h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
