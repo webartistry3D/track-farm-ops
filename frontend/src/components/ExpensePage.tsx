@@ -581,14 +581,32 @@ const ExpensePage = () => {
                                 onLoad={() => console.log('✅ Receipt image loaded successfully')}
                                 onError={(e) => {
                                   console.error('❌ Storage URL failed to load, trying fallback:', e);
-                                  // Try to use the original blob URL as fallback
-                                  const fallbackUrl = ocrResult?.fallbackImageUrl;
-                                  if (fallbackUrl) {
-                                    console.log('🔄 Using blob URL fallback:', fallbackUrl);
-                                    e.currentTarget.src = fallbackUrl;
-                                  } else {
-                                    console.error('❌ No fallback URL available');
-                                  }
+                                  console.log('🔄 Trying to fetch via backend API...');
+                                  
+                                  // Try to fetch the image through the backend API as a fallback
+                                  const fetchImageThroughBackend = async () => {
+                                    try {
+                                      // Extract the key from the URL or use the receiptImageUrl as key
+                                      const imageKey = ocrResult.receiptImageUrl?.split('/').pop() || ocrResult.receiptImageUrl;
+                                      console.log('📥 Fetching OCR image through backend with key:', imageKey);
+                                      
+                                      const response = await fetch(`/api/storage/file/${imageKey}`);
+                                      if (response.ok) {
+                                        const blob = await response.blob();
+                                        const objectUrl = URL.createObjectURL(blob);
+                                        e.currentTarget.src = objectUrl;
+                                        console.log('✅ OCR fallback image loaded successfully');
+                                      } else {
+                                        throw new Error(`Backend fetch failed: ${response.status}`);
+                                      }
+                                    } catch (fallbackError) {
+                                      console.error('❌ OCR fallback also failed:', fallbackError);
+                                      // Final fallback to placeholder
+                                      e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDlWMTNNMTIgMTdWOU0xMiA5QzEyIDkgMTIgOSAxMiA5SDEyQzEyIDkgMTIgOSAxMiA5WiIgZmlsbD0iI0ZGNkI2QiIvPgo8L3N2Zz4K';
+                                    }
+                                  };
+                                  
+                                  fetchImageThroughBackend();
                                 }}
                               />
                             </div>
@@ -902,10 +920,35 @@ const ExpensePage = () => {
                     src={selectedExpense.receiptImageUrl}
                     alt="Receipt for expense"
                     className="w-full h-auto object-contain rounded-lg border border-gray-200 dark:border-gray-600"
+                    onLoad={() => console.log('✅ Receipt image loaded successfully')}
                     onError={(e) => {
                       console.error('❌ Failed to load receipt image:', selectedExpense.receiptImageUrl);
-                      // Fallback to placeholder
-                      e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDlWMTNNMTIgMTdWOU0xMiA5QzEyIDkgMTIgOSAxMiA5SDEyQzEyIDkgMTIgOSAxMiA5WiIgZmlsbD0iI0ZGNkI2QiIvPgo8L3N2Zz4K';
+                      console.log('🔄 Trying to fetch via backend API...');
+                      
+                      // Try to fetch the image through the backend API as a fallback
+                      const fetchImageThroughBackend = async () => {
+                        try {
+                          // Extract the key from the URL or use the receiptImageUrl as key
+                          const imageKey = selectedExpense.receiptImageUrl?.split('/').pop() || selectedExpense.receiptImageUrl;
+                          console.log('📥 Fetching image through backend with key:', imageKey);
+                          
+                          const response = await fetch(`/api/storage/file/${imageKey}`);
+                          if (response.ok) {
+                            const blob = await response.blob();
+                            const objectUrl = URL.createObjectURL(blob);
+                            e.currentTarget.src = objectUrl;
+                            console.log('✅ Fallback image loaded successfully');
+                          } else {
+                            throw new Error(`Backend fetch failed: ${response.status}`);
+                          }
+                        } catch (fallbackError) {
+                          console.error('❌ Fallback also failed:', fallbackError);
+                          // Final fallback to placeholder
+                          e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDlWMTNNMTIgMTdWOU0xMiA5QzEyIDkgMTIgOSAxMiA5SDEyQzEyIDkgMTIgOSAxMiA5WiIgZmlsbD0iI0ZGNkI2QiIvPgo8L3N2Zz4K';
+                        }
+                      };
+                      
+                      fetchImageThroughBackend();
                     }}
                   />
                 </div>
