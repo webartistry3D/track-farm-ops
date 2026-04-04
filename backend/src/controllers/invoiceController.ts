@@ -2,8 +2,6 @@ import { Request, Response } from 'express';
 import { prisma } from '../lib/prisma';
 import { AuthRequest } from '../middleware/auth';
 import { buildRoleBasedWhereClause, canUserAccessRecord, getAccessibleUserIds } from '../utils/roleAccess';
-import { NotificationService } from '../services/notificationService';
-import { notificationSSE } from '../services/notificationSSE';
 
 export const createInvoice = async (req: AuthRequest, res: Response) => {
   try {
@@ -103,29 +101,6 @@ export const createInvoice = async (req: AuthRequest, res: Response) => {
     });
 
     console.log(`✅ Invoice created successfully: User ${currentUser.id}, Invoice: ${invoice.id}, Organization: ${currentUserOrg.organizationId}`);
-
-    // Create and send notification for new invoice
-    try {
-      const notification = await NotificationService.createUserNotification(
-        currentUser.id,
-        currentUserOrg.organizationId,
-        'SYSTEM_UPDATE',
-        {
-          invoiceNumber: invoice.invoiceNumber,
-          clientName: invoice.clientName,
-          total: invoice.total
-        },
-        `/invoices/${invoice.id}`
-      );
-
-      // Send real-time notification via SSE
-      notificationSSE.sendToUser(currentUser.id, currentUserOrg.organizationId, notification);
-      
-      console.log('🔔 Invoice notification created and sent:', notification.id);
-    } catch (notificationError) {
-      console.error('❌ Failed to create invoice notification:', notificationError);
-      // Don't fail the request if notification fails
-    }
 
     res.status(201).json(invoice);
   } catch (error) {
