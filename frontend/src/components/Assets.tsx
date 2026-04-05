@@ -58,7 +58,6 @@ interface IncidentReport {
 
 const Assets = () => {
   const { user } = useAuth();
-  const { canAccessFeature } = useSubscriptionRestrictions();
   const location = useLocation();
 
   // Scroll to top when navigating to Assets page
@@ -71,7 +70,8 @@ const Assets = () => {
   }
 
   // Check subscription access and role
-  const hasSubscriptionAccess = canAccessFeature('inventoryTransactions');
+  const restrictions = useSubscriptionRestrictions();
+  const hasSubscriptionAccess = restrictions.canAccessFeature('inventoryTransactions');
   const isOwnerOrManager = user && (user.role === 'OWNER' || user.role === 'MANAGER');
   
   if (!hasSubscriptionAccess && !isOwnerOrManager) {
@@ -148,6 +148,13 @@ const Assets = () => {
     try {
       setIsSubmitting(true);
       
+      // Check subscription limits for asset creation
+      if (!restrictions.canCreateMoreAssets(assets.length)) {
+        setError(`You've reached your limit of ${restrictions.getAssetItemCreateLimit()} assets. Upgrade your plan to create more assets.`);
+        setIsSubmitting(false);
+        return;
+      }
+
       // Prepare complete asset data with default values for missing fields
       const completeAssetData = {
         ...assetData,

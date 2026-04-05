@@ -348,7 +348,7 @@ const CCTV = () => {
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => setShowAddCamera(true)}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center"
               >
                 <Camera className="h-4 w-4 mr-2" />
                 Add Camera
@@ -410,7 +410,7 @@ const CCTV = () => {
                         <p className="text-gray-500 text-sm">Configure IP Address</p>
                         <button
                           onClick={() => openSettings(camera)}
-                          className="mt-2 px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700"
+                          className="mt-2 px-3 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700"
                         >
                           Settings
                         </button>
@@ -454,7 +454,7 @@ const CCTV = () => {
                       )}
                       <button
                         onClick={() => openSettings(camera)}
-                        className="text-blue-600 hover:text-blue-800"
+                        className="text-green-600 hover:text-green-800"
                       >
                         <Settings className="h-4 w-4" />
                       </button>
@@ -528,7 +528,7 @@ const CCTV = () => {
             </p>
             <button
               onClick={fetchCameras}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
             >
               {error ? 'Retry' : 'Refresh'}
             </button>
@@ -577,7 +577,7 @@ const CCTV = () => {
                             <p className="text-gray-500">Configure IP Address</p>
                             <button
                               onClick={() => openSettings(camera)}
-                              className="mt-3 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                              className="mt-3 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
                             >
                               Configure Settings
                             </button>
@@ -824,7 +824,7 @@ const CCTV = () => {
                             setSelectedCamera(prev => prev ? { ...prev, ipAddress: newIp } : null);
                           }
                         }}
-                        className="text-blue-600 hover:text-blue-800 text-sm"
+                        className="text-green-600 hover:text-green-800 text-sm"
                       >
                         Edit
                       </button>
@@ -842,7 +842,7 @@ const CCTV = () => {
                             toggleCameraFeature(selectedCamera.id, 'nightVision');
                           }}
                           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                            selectedCamera.nightVision ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
+                            selectedCamera.nightVision ? 'bg-green-600' : 'bg-gray-200 dark:bg-gray-700'
                           }`}
                         >
                           <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
@@ -858,7 +858,7 @@ const CCTV = () => {
                             toggleCameraFeature(selectedCamera.id, 'audioEnabled');
                           }}
                           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                            selectedCamera.audioEnabled ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
+                            selectedCamera.audioEnabled ? 'bg-green-600' : 'bg-gray-200 dark:bg-gray-700'
                           }`}
                         >
                           <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
@@ -874,7 +874,7 @@ const CCTV = () => {
                             toggleCameraFeature(selectedCamera.id, 'motionDetection');
                           }}
                           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                            selectedCamera.motionDetection ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
+                            selectedCamera.motionDetection ? 'bg-green-600' : 'bg-gray-200 dark:bg-gray-700'
                           }`}
                         >
                           <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
@@ -890,7 +890,7 @@ const CCTV = () => {
                             toggleCameraFeature(selectedCamera.id, 'recordingEnabled');
                           }}
                           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                            selectedCamera.recordingEnabled ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
+                            selectedCamera.recordingEnabled ? 'bg-green-600' : 'bg-gray-200 dark:bg-gray-700'
                           }`}
                         >
                           <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
@@ -905,7 +905,7 @@ const CCTV = () => {
                 <div className="mt-6 flex justify-end">
                   <button
                     onClick={closeSettings}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                   >
                     Done
                   </button>
@@ -1016,7 +1016,7 @@ const CCTV = () => {
                         setShowAddCamera(false);
                       }
                     }}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                   >
                     Add Camera
                   </button>

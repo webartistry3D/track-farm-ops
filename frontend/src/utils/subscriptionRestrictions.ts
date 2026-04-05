@@ -1,6 +1,19 @@
 export interface SubscriptionLimits {
   farmLocations: number;
   workers: number;
+  invoices: {
+    maxCreate: number;
+    maxMarkAsPaid: number;
+  };
+  expenses: {
+    maxRecord: number;
+  };
+  inventory: {
+    maxItemsCreate: number;
+  };
+  assets: {
+    maxItemsCreate: number;
+  };
   features: {
     incomeTracking: 'basic' | 'full';
     expenseTracking: 'basic' | 'full';
@@ -18,6 +31,19 @@ export const SUBSCRIPTION_LIMITS: Record<string, SubscriptionLimits> = {
   freemium: {
     farmLocations: 1,
     workers: 1,
+    invoices: {
+      maxCreate: 6,
+      maxMarkAsPaid: 6
+    },
+    expenses: {
+      maxRecord: 6
+    },
+    inventory: {
+      maxItemsCreate: 6
+    },
+    assets: {
+      maxItemsCreate: 6
+    },
     features: {
       incomeTracking: 'basic',
       expenseTracking: 'basic',
@@ -33,6 +59,19 @@ export const SUBSCRIPTION_LIMITS: Record<string, SubscriptionLimits> = {
   trial: {
     farmLocations: 1,
     workers: 3,
+    invoices: {
+      maxCreate: 999,
+      maxMarkAsPaid: 999
+    },
+    expenses: {
+      maxRecord: 999
+    },
+    inventory: {
+      maxItemsCreate: 999
+    },
+    assets: {
+      maxItemsCreate: 999
+    },
     features: {
       incomeTracking: 'full',
       expenseTracking: 'full',
@@ -48,6 +87,19 @@ export const SUBSCRIPTION_LIMITS: Record<string, SubscriptionLimits> = {
   starter: {
     farmLocations: 1,
     workers: 3,
+    invoices: {
+      maxCreate: 999,
+      maxMarkAsPaid: 999
+    },
+    expenses: {
+      maxRecord: 999
+    },
+    inventory: {
+      maxItemsCreate: 999
+    },
+    assets: {
+      maxItemsCreate: 999
+    },
     features: {
       incomeTracking: 'full',
       expenseTracking: 'full',
@@ -63,6 +115,19 @@ export const SUBSCRIPTION_LIMITS: Record<string, SubscriptionLimits> = {
   growth: {
     farmLocations: 2,
     workers: 30,
+    invoices: {
+      maxCreate: 999,
+      maxMarkAsPaid: 999
+    },
+    expenses: {
+      maxRecord: 999
+    },
+    inventory: {
+      maxItemsCreate: 999
+    },
+    assets: {
+      maxItemsCreate: 999
+    },
     features: {
       incomeTracking: 'full',
       expenseTracking: 'full',
@@ -78,6 +143,19 @@ export const SUBSCRIPTION_LIMITS: Record<string, SubscriptionLimits> = {
   pro: {
     farmLocations: 3,
     workers: 80,
+    invoices: {
+      maxCreate: 999,
+      maxMarkAsPaid: 999
+    },
+    expenses: {
+      maxRecord: 999
+    },
+    inventory: {
+      maxItemsCreate: 999
+    },
+    assets: {
+      maxItemsCreate: 999
+    },
     features: {
       incomeTracking: 'full',
       expenseTracking: 'full',
@@ -188,6 +266,51 @@ export class SubscriptionRestrictions {
     return currentLocations < limits.farmLocations;
   }
 
+  static canCreateMoreInvoices(currentInvoices: number): boolean {
+    const limits = this.getLimits();
+    return currentInvoices < limits.invoices.maxCreate;
+  }
+
+  static canMarkMoreInvoicesAsPaid(currentPaidInvoices: number): boolean {
+    const limits = this.getLimits();
+    return currentPaidInvoices < limits.invoices.maxMarkAsPaid;
+  }
+
+  static canRecordMoreExpenses(currentExpenses: number): boolean {
+    const limits = this.getLimits();
+    return currentExpenses < limits.expenses.maxRecord;
+  }
+
+  static canCreateMoreInventoryItems(currentItems: number): boolean {
+    const limits = this.getLimits();
+    return currentItems < limits.inventory.maxItemsCreate;
+  }
+
+  static canCreateMoreAssets(currentAssets: number): boolean {
+    const limits = this.getLimits();
+    return currentAssets < limits.assets.maxItemsCreate;
+  }
+
+  static getInvoiceCreateLimit(): number {
+    return this.getLimits().invoices.maxCreate;
+  }
+
+  static getInvoiceMarkAsPaidLimit(): number {
+    return this.getLimits().invoices.maxMarkAsPaid;
+  }
+
+  static getExpenseRecordLimit(): number {
+    return this.getLimits().expenses.maxRecord;
+  }
+
+  static getInventoryItemCreateLimit(): number {
+    return this.getLimits().inventory.maxItemsCreate;
+  }
+
+  static getAssetItemCreateLimit(): number {
+    return this.getLimits().assets.maxItemsCreate;
+  }
+
   static getWorkerLimit(): number {
     return this.getLimits().workers;
   }
@@ -283,6 +406,16 @@ export const useSubscriptionRestrictions = () => {
     isSubscribed: SubscriptionRestrictions.isSubscribed.bind(SubscriptionRestrictions),
     shouldShowUpgradePrompt: SubscriptionRestrictions.shouldShowUpgradePrompt.bind(SubscriptionRestrictions),
     getUpgradeMessage: SubscriptionRestrictions.getUpgradeMessage.bind(SubscriptionRestrictions),
-    getRequiredPlanForFeature: SubscriptionRestrictions.getRequiredPlanForFeature.bind(SubscriptionRestrictions)
+    getRequiredPlanForFeature: SubscriptionRestrictions.getRequiredPlanForFeature.bind(SubscriptionRestrictions),
+    canCreateMoreInvoices: SubscriptionRestrictions.canCreateMoreInvoices.bind(SubscriptionRestrictions),
+    canMarkMoreInvoicesAsPaid: SubscriptionRestrictions.canMarkMoreInvoicesAsPaid.bind(SubscriptionRestrictions),
+    canRecordMoreExpenses: SubscriptionRestrictions.canRecordMoreExpenses.bind(SubscriptionRestrictions),
+    canCreateMoreInventoryItems: SubscriptionRestrictions.canCreateMoreInventoryItems.bind(SubscriptionRestrictions),
+    canCreateMoreAssets: SubscriptionRestrictions.canCreateMoreAssets.bind(SubscriptionRestrictions),
+    getInvoiceCreateLimit: SubscriptionRestrictions.getInvoiceCreateLimit.bind(SubscriptionRestrictions),
+    getInvoiceMarkAsPaidLimit: SubscriptionRestrictions.getInvoiceMarkAsPaidLimit.bind(SubscriptionRestrictions),
+    getExpenseRecordLimit: SubscriptionRestrictions.getExpenseRecordLimit.bind(SubscriptionRestrictions),
+    getInventoryItemCreateLimit: SubscriptionRestrictions.getInventoryItemCreateLimit.bind(SubscriptionRestrictions),
+    getAssetItemCreateLimit: SubscriptionRestrictions.getAssetItemCreateLimit.bind(SubscriptionRestrictions)
   };
 };

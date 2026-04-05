@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
 import type { IncomeEntry } from '../types';
 import { formatCurrency } from '../utils/currency';
+import { useSubscriptionRestrictions } from '../utils/subscriptionRestrictions';
 import { Plus, Table, TrendingUp, FileText, Download, Send, Calendar, Package, Trash2, Edit2, CheckCircle, ChevronDown, Eye, X, Receipt } from 'lucide-react';
 import Pagination from './Pagination';
 import jsPDF from 'jspdf';
@@ -42,6 +43,8 @@ const formatNumberWithSeparator = (value: any): string => {
 const IncomePage = () => {
   const [activeTab, setActiveTab] = useState<'record' | 'invoice' | 'records' | 'invoices' | 'vat'>('record');
   const location = useLocation();
+  const { user } = useAuth();
+  const restrictions = useSubscriptionRestrictions();
 
   // Scroll to top when navigating to Income page
   useEffect(() => {
@@ -155,8 +158,6 @@ const IncomePage = () => {
   const [totalPages, setTotalPages] = useState(0);
   const entriesPerPage = 10;
   
-  const { user } = useAuth();
-
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = () => {
@@ -481,6 +482,12 @@ const IncomePage = () => {
     try {
       setIsGeneratingInvoice(true);
       setError('');
+
+      // Check subscription limits for invoice creation
+      if (!restrictions.canCreateMoreInvoices(totalInvoices)) {
+        setError(`You've reached your limit of ${restrictions.getInvoiceCreateLimit()} invoices. Upgrade your plan to create more invoices.`);
+        return;
+      }
 
       // Validate required fields
       if (!invoiceData.clientName || !invoiceData.items || invoiceData.items.length === 0) {
@@ -1173,6 +1180,12 @@ TrackFarmOps Team`;
     try {
       if (!invoiceToMarkAsPaid) return;
       
+      // Check subscription limits for marking invoice as paid
+      if (!restrictions.canMarkMoreInvoicesAsPaid(totalInvoices)) {
+        setError(`You've reached your limit of ${restrictions.getInvoiceMarkAsPaidLimit()} invoices marked as paid. Upgrade your plan to mark more invoices as paid.`);
+        return;
+      }
+      
       console.log('💰 Confirming invoice as paid:', invoiceToMarkAsPaid.invoiceNumber);
       
       // Update inventory quantities for impacted items
@@ -1304,6 +1317,13 @@ TrackFarmOps Team`;
     setError('');
     setSuccess('');
     setIsLoading(true);
+
+    // Check subscription limits for expense recording
+    if (!restrictions.canRecordMoreExpenses(totalIncomes)) {
+      setError(`You've reached your limit of ${restrictions.getExpenseRecordLimit()} expense records. Upgrade your plan to record more expenses.`);
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const quantity = parseFloat(formData.quantity);

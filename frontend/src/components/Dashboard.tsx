@@ -399,11 +399,11 @@ const Dashboard = () => {
 
       {/* Financial Overview */}
       {/* Date Filter */}
-      <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
+      <div className="bg-white dark:bg-gray-800 shadow rounded-lg px-2 py-2 mb-6">
         <div className="flex flex-col gap-4">
-          <h3 className="text-lg font-poppins font-medium text-gray-900 dark:text-white">
+          {/*<h3 className="text-lg font-poppins font-medium text-gray-900 dark:text-white">
             Financial Overview
-          </h3>
+          </h3>*/}
           <div className="overflow-x-auto pb-2">
             <div className="flex items-center gap-2 min-w-max">
               <button

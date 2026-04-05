@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
 import { formatCurrency } from '../utils/currency';
+import { useSubscriptionRestrictions } from '../utils/subscriptionRestrictions';
 import type { InventoryItem } from '../types';
 import Pagination from './Pagination';
 import { 
@@ -46,6 +47,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
   const [sortBy, setSortBy] = useState('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const restrictions = useSubscriptionRestrictions();
   
   // Tab state management
   const [activeTab, setActiveTab] = useState<'items' | 'categories'>('items');
@@ -451,6 +453,12 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
   // Add Item Handler
   const handleAddItem = useCallback(async () => {
     try {
+      // Check subscription limits for inventory item creation
+      if (!restrictions.canCreateMoreInventoryItems(items.length)) {
+        setError(`You've reached your limit of ${restrictions.getInventoryItemCreateLimit()} inventory items. Upgrade your plan to create more items.`);
+        return;
+      }
+
       // Determine item type based on category
       const category = categories.find(cat => cat.id === Number(newItem.categoryId));
       const categoryName = category?.name?.toLowerCase() || '';
@@ -1636,26 +1644,26 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                       }}
                       className="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer"
                     >
-                      <div className="p-6">
-                        <div className="flex flex-col items-center text-center mb-6">
-                          <div className="w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-2xl flex items-center justify-center text-4xl mb-4 shadow-lg">
+                      <div className="p-4">
+                        <div className="flex flex-col items-center text-center mb-4">
+                          <div className="w-16 h-12 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-2xl flex items-center justify-center text-3xl mb-3 shadow-lg">
                             {category.icon || '📦'}
                           </div>
                           <div>
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
                               {category.name}
                             </h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-400 max-w-xs">
+                            <p className="text-xs text-gray-600 dark:text-gray-400 max-w-xs">
                               {category.description || 'No description'}
                             </p>
                           </div>
                         </div>
                         
-                        <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-                          <div className="space-y-3">
-                            <div className="flex justify-between items-center">
-                              <span className="text-sm text-gray-600 dark:text-gray-400">Items:</span>
-                              <span className={`px-3 py-1 text-sm font-medium rounded-full border ${
+                        <div className="border-t border-gray-200 dark:border-gray-700 pt-3">
+                          <div className="flex justify-between items-center">
+                            <div className="flex items-center space-x-2">
+                              <span className="text-xs text-gray-600 dark:text-gray-400">Items:</span>
+                              <span className={`px-2 py-1 text-xs font-medium rounded-full border ${
                                 itemCount > 0 
                                   ? 'bg-green-100 text-green-700 border-green-200'
                                   : 'bg-gray-100 text-gray-700 border-gray-200'
@@ -1663,17 +1671,16 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                                 {itemCount}
                               </span>
                             </div>
-                            
-                            <div className="flex justify-between items-center">
-                              <span className="text-sm text-gray-600 dark:text-gray-400">Total Value:</span>
-                              <span className="text-sm font-semibold text-gray-900 dark:text-white break-all max-w-[120px]">
+                            <div className="flex items-center space-x-2">
+                              <span className="text-xs text-gray-600 dark:text-gray-400">Total Value:</span>
+                              <span className="text-xs font-semibold text-gray-900 dark:text-white break-all max-w-[100px]">
                                 {formatCurrency(totalValue)}
                               </span>
                             </div>
                           </div>
                         </div>
                         
-                        <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                        <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
                           <div className="flex items-center space-x-2">
                             {itemCount > 0 ? (
                               <div className="flex items-center space-x-1">

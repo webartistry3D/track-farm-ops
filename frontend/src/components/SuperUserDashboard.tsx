@@ -25,6 +25,25 @@ interface SuperUserStats {
   storageTotal: number;
   apiCalls: number;
   errorRate: number;
+  // New real system metrics
+  cpuUsage: number;
+  memoryUsage: number;
+  diskUsage: number;
+  dbConnections: number;
+  maxConnections: number;
+  queryTime: number;
+  cacheHitRate: number;
+  storageUsedGB: number;
+  responseTime: number;
+  netProfit: number;
+  totalAssets: number;
+  totalInventory: number;
+  // Analytics specific fields
+  revenueGrowth: number;
+  thisMonthUsers: number;
+  lastMonthUsers: number;
+  thisMonthRevenue: number;
+  lastMonthRevenue: number;
 }
 
 interface User {
@@ -51,12 +70,15 @@ interface Organization {
   status: 'active' | 'inactive' | 'trial';
   users: number;
   revenue: number;
+  growth: number;
+  plan: string;
+  billingCycle: string;
+  amount: number;
+  expiresAt: string | null;
   createdAt: string;
-  subscription: string;
   location: string;
   admin: string;
   contact: string;
-  plan: string;
 }
 
 interface Subscription {
@@ -68,7 +90,7 @@ interface Subscription {
   status: 'active' | 'inactive' | 'trial' | 'cancelled' | 'expired';
   amount: number;
   currency: string;
-  billingCycle: 'monthly' | 'yearly';
+  billingCycle: 'monthly' | 'yearly' | 'annual';
   startDate: string;
   endDate: string;
   nextBillingDate: string;
@@ -81,13 +103,13 @@ interface Subscription {
 
 interface SystemLog {
   id: string;
-  timestamp: string;
-  level: 'info' | 'warning' | 'error' | 'critical';
+  type: string;
   message: string;
-  user?: string;
+  timestamp: string;
+  severity: 'info' | 'warning' | 'error' | 'debug' | 'critical';
   ip: string;
   action: string;
-  details: any;
+  userId?: number;
 }
 
 interface Activity {
@@ -164,6 +186,9 @@ const SuperUserDashboard = () => {
     // Organization modal states
     const [selectedOrg, setSelectedOrg] = useState<Organization | null>(null);
     const [showOrgModal, setShowOrgModal] = useState(false);
+    const [showOrgDeleteModal, setShowOrgDeleteModal] = useState(false);
+    const [showOrgSuspendModal, setShowOrgSuspendModal] = useState(false);
+    const [orgActionType, setOrgActionType] = useState<'delete' | 'suspend' | 'activate'>('delete');
     
     // Subscription modal states
     const [selectedSub, setSelectedSub] = useState<Subscription | null>(null);
@@ -173,6 +198,7 @@ const SuperUserDashboard = () => {
     const [maintenanceLoading, setMaintenanceLoading] = useState(false);
     const [backupLoading, setBackupLoading] = useState(false);
     const [cacheLoading, setCacheLoading] = useState(false);
+    const [orgActionLoading, setOrgActionLoading] = useState<string | null>(null); // Track which org is being acted upon
 
     const menuItems = [
       { id: 'overview', label: 'Overview', icon: BarChart3 },
@@ -421,19 +447,78 @@ const SuperUserDashboard = () => {
 
     const handleOrgAction = async (orgId: string, action: string) => {
       console.log(`🔍 DEBUG: handleOrgAction called with orgId: ${orgId}, action: ${action}`);
+      
+      const org = organizations.find(o => o.id === orgId);
+      if (!org) return;
+      
+      // Set selected organization and action type
+      setSelectedOrg(org);
+      setOrgActionType(action as 'delete' | 'suspend' | 'activate');
+      
+      // Open appropriate modal
+      if (action === 'delete') {
+        setShowOrgDeleteModal(true);
+      } else if (action === 'suspend' || action === 'activate') {
+        setShowOrgSuspendModal(true);
+      }
+    };
+
+    // Confirm organization action
+    const confirmOrgAction = async () => {
+      if (!selectedOrg) return;
+      
       try {
-        console.log(`🔍 DEBUG: Making API call to /superuser/organizations/${orgId}/${action}`);
-        const response = await api.post(`/superuser/organizations/${orgId}/${action}`);
+        // Set loading state
+        setOrgActionLoading(selectedOrg.id);
+        
+        const action = orgActionType;
+        console.log(`🔍 DEBUG: Making API call to /superuser/organizations/${selectedOrg.id}/${action}`);
+        
+        let response;
+        if (action === 'delete') {
+          response = await api.delete(`/superuser/organizations/${selectedOrg.id}`);
+        } else {
+          response = await api.post(`/superuser/organizations/${selectedOrg.id}/${action}`, {});
+        }
+        
         console.log('🔍 DEBUG: Organization action response:', response);
+        
+        // Show success message
+        const actionText = action === 'delete' ? 'deleted' : 
+                          action === 'suspend' ? 'suspended' : 
+                          action === 'activate' ? 'activated' : 'updated';
+        
+        // You could add a toast notification here if you have one
+        console.log(`✅ Organization successfully ${actionText}`);
+        
+        // Close modal
+        setShowOrgDeleteModal(false);
+        setShowOrgSuspendModal(false);
+        setSelectedOrg(null);
+        
         await fetchDashboardData();
       } catch (error: any) {
-        console.error(`❌ DEBUG: Failed to ${action} organization:`, error);
+        console.error(`❌ DEBUG: Failed to ${orgActionType} organization:`, error);
         console.error('❌ DEBUG: Error details:', {
           message: error.message,
           status: error.response?.status,
           data: error.response?.data
         });
+        
+        // Show error message to user
+        const errorMessage = error.response?.data?.message || `Failed to ${orgActionType} organization`;
+        alert(`Error: ${errorMessage}`);
+      } finally {
+        // Clear loading state
+        setOrgActionLoading(null);
       }
+    };
+
+    // Cancel organization action
+    const cancelOrgAction = () => {
+      setShowOrgDeleteModal(false);
+      setShowOrgSuspendModal(false);
+      setSelectedOrg(null);
     };
 
     const handleSubscriptionAction = async (subId: string, action: string) => {
@@ -478,7 +563,7 @@ const SuperUserDashboard = () => {
             </div>
             <div className="text-right">
               <p className="text-blue-100 text-xs font-medium">Total Users</p>
-              <p className="text-3xl font-bold mt-1">{stats?.totalUsers || 0}</p>
+              <p className="text-3xl font-bold text-white mt-1">{stats?.totalUsers || 0}</p>
             </div>
           </div>
           <div className="flex items-center justify-between">
@@ -499,7 +584,7 @@ const SuperUserDashboard = () => {
             </div>
             <div className="text-right">
               <p className="text-emerald-100 text-xs font-medium">Active Users</p>
-              <p className="text-3xl font-bold mt-1">{stats?.activeUsers || 0}</p>
+              <p className="text-3xl font-bold text-white mt-1">{stats?.activeUsers || 0}</p>
             </div>
           </div>
           <div className="flex items-center justify-between">
@@ -519,7 +604,7 @@ const SuperUserDashboard = () => {
             </div>
             <div className="text-right">
               <p className="text-purple-100 text-xs font-medium">Organizations</p>
-              <p className="text-3xl font-bold mt-1">{stats?.totalOrganizations || 0}</p>
+              <p className="text-3xl font-bold text-white mt-1">{stats?.totalOrganizations || 0}</p>
             </div>
           </div>
           <div className="flex items-center justify-between">
@@ -539,7 +624,7 @@ const SuperUserDashboard = () => {
             </div>
             <div className="text-right">
               <p className="text-orange-100 text-xs font-medium">System Health</p>
-              <p className="text-3xl font-bold mt-1">{stats?.systemHealth || 0}%</p>
+              <p className="text-3xl font-bold text-white mt-1">{stats?.systemHealth || 0}%</p>
             </div>
           </div>
           <div className="flex items-center justify-between">
@@ -847,6 +932,20 @@ const SuperUserDashboard = () => {
                 <span className="text-gray-500 dark:text-gray-400">Plan:</span>
                 <span className="text-gray-900 dark:text-white">{org.plan}</span>
               </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-500 dark:text-gray-400">Subscription:</span>
+                <span className="text-gray-900 dark:text-white capitalize">{org.billingCycle}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-500 dark:text-gray-400">Amount:</span>
+                <span className="text-gray-900 dark:text-white">₦{org.amount.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-500 dark:text-gray-400">Expires:</span>
+                <span className="text-gray-900 dark:text-white">
+                  {org.expiresAt ? new Date(org.expiresAt).toLocaleDateString() : 'N/A'}
+                </span>
+              </div>
             </div>
             <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
               <span className="text-xs text-gray-500 dark:text-gray-400">
@@ -857,6 +956,7 @@ const SuperUserDashboard = () => {
                   onClick={() => handleViewOrg(org)}
                   className="text-blue-600 hover:text-blue-900"
                   title="View Organization Details"
+                  disabled={orgActionLoading === org.id}
                 >
                   <Eye className="w-4 h-4" />
                 </button>
@@ -864,8 +964,25 @@ const SuperUserDashboard = () => {
                   onClick={() => handleOrgAction(org.id, org.status === 'active' ? 'suspend' : 'activate')}
                   className={org.status === 'active' ? 'text-yellow-600 hover:text-yellow-900' : 'text-green-600 hover:text-green-900'}
                   title={org.status === 'active' ? 'Suspend Organization' : 'Activate Organization'}
+                  disabled={orgActionLoading === org.id}
                 >
-                  {org.status === 'active' ? <Lock className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
+                  {orgActionLoading === org.id ? (
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                  ) : (
+                    org.status === 'active' ? <Lock className="w-4 h-4" /> : <Unlock className="w-4 h-4" />
+                  )}
+                </button>
+                <button
+                  onClick={() => handleOrgAction(org.id, 'delete')}
+                  className="text-red-600 hover:text-red-900"
+                  title="Delete Organization"
+                  disabled={orgActionLoading === org.id}
+                >
+                  {orgActionLoading === org.id ? (
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Trash2 className="w-4 h-4" />
+                  )}
                 </button>
               </div>
             </div>
@@ -881,12 +998,24 @@ const SuperUserDashboard = () => {
     
     // Calculate total annual revenue first
     const totalAnnualRevenue = activeSubscriptions.reduce((total, sub) => {
-      // Always treat amounts as yearly for consistency
-      let annualAmount = sub.amount;
+      let annualAmount = 0;
       
-      // If it's marked as monthly, convert to yearly
-      if (sub.billingCycle === 'monthly') {
-        annualAmount = sub.amount * 12;
+      // Apply correct pricing logic based on plan and billing cycle
+      if (sub.plan.toLowerCase() === 'growth') {
+        if (sub.billingCycle === 'yearly' || sub.billingCycle === 'annual') {
+          // Growth plan: ₦39,000 monthly × 12 = ₦468,000 yearly, then 20% off
+          annualAmount = 39000 * 12 * 0.8; // ₦374,400
+        } else {
+          // Growth plan monthly: ₦39,000
+          annualAmount = 39000 * 12; // ₦468,000 yearly
+        }
+      } else {
+        // Fallback for other plans - use subscription amount with billing cycle logic
+        if (sub.billingCycle === 'monthly') {
+          annualAmount = sub.amount * 12;
+        } else {
+          annualAmount = sub.amount;
+        }
       }
       
       console.log(`🔍 DEBUG - Subscription: ${sub.plan}, Cycle: ${sub.billingCycle}, Amount: ₦${sub.amount}, Annual: ₦${annualAmount}`);
@@ -1091,18 +1220,18 @@ const SuperUserDashboard = () => {
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                       {new Date(sub.nextBillingDate).toLocaleDateString()}
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm font-medium">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                       <div className="flex items-center space-x-3">
                         <button 
                           onClick={() => handleViewSub(sub)}
-                          className="text-blue-600 hover:text-blue-900"
+                          className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
                           title="View Subscription Details"
                         >
                           <Eye className="w-4 h-4" />
                         </button>
                         <button 
                           onClick={() => handleSubscriptionAction(sub.id, sub.status === 'active' ? 'cancel' : 'activate')}
-                          className={sub.status === 'active' ? 'text-yellow-600 hover:text-yellow-900' : 'text-green-600 hover:text-green-900'}
+                          className={sub.status === 'active' ? 'text-yellow-600 hover:text-yellow-900 dark:text-yellow-400 dark:hover:text-yellow-300' : 'text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300'}
                           title={sub.status === 'active' ? 'Cancel Subscription' : 'Activate Subscription'}
                         >
                           {sub.status === 'active' ? <Lock className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
@@ -1163,24 +1292,24 @@ const SuperUserDashboard = () => {
           <div className="space-y-3">
             <div className="flex justify-between">
               <span className="text-sm text-slate-600 dark:text-slate-400">CPU Usage</span>
-              <span className="text-sm font-medium text-slate-900 dark:text-white">{stats?.systemHealth || 0}%</span>
+              <span className="text-sm font-medium text-slate-900 dark:text-white">{stats?.cpuUsage || 0}%</span>
             </div>
             <div className="w-full bg-slate-200 rounded-full h-2">
-              <div className="bg-green-500 h-2 rounded-full" style={{ width: `${stats?.systemHealth || 0}%` }}></div>
+              <div className="bg-green-500 h-2 rounded-full" style={{ width: `${stats?.cpuUsage || 0}%` }}></div>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-slate-600 dark:text-slate-400">Memory</span>
-              <span className="text-sm font-medium text-slate-900 dark:text-white">{stats?.storageUsed ? Math.round((stats.storageUsed / stats.storageTotal) * 100) : 0}%</span>
+              <span className="text-sm font-medium text-slate-900 dark:text-white">{stats?.memoryUsage || 0}%</span>
             </div>
             <div className="w-full bg-slate-200 rounded-full h-2">
-              <div className="bg-yellow-500 h-2 rounded-full" style={{ width: `${stats?.storageUsed ? Math.round((stats.storageUsed / stats.storageTotal) * 100) : 0}%` }}></div>
+              <div className="bg-yellow-500 h-2 rounded-full" style={{ width: `${stats?.memoryUsage || 0}%` }}></div>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-slate-600 dark:text-slate-400">Disk Space</span>
-              <span className="text-sm font-medium text-slate-900 dark:text-white">{stats?.storageUsed ? Math.round((stats.storageUsed / stats.storageTotal) * 100) : 0}%</span>
+              <span className="text-sm font-medium text-slate-900 dark:text-white">{stats?.diskUsage || 0}%</span>
             </div>
             <div className="w-full bg-slate-200 rounded-full h-2">
-              <div className="bg-orange-500 h-2 rounded-full" style={{ width: `${stats?.storageUsed ? Math.round((stats.storageUsed / stats.storageTotal) * 100) : 0}%` }}></div>
+              <div className="bg-orange-500 h-2 rounded-full" style={{ width: `${stats?.diskUsage || 0}%` }}></div>
             </div>
           </div>
         </div>
@@ -1193,19 +1322,19 @@ const SuperUserDashboard = () => {
           <div className="space-y-3">
             <div className="flex justify-between">
               <span className="text-sm text-slate-600 dark:text-slate-400">Connections</span>
-              <span className="text-sm font-medium text-slate-900 dark:text-white">{stats?.totalUsers || 0}/100</span>
+              <span className="text-sm font-medium text-slate-900 dark:text-white">{stats?.dbConnections || 0}/{stats?.maxConnections || 100}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-slate-600 dark:text-slate-400">Query Time</span>
-              <span className="text-sm font-medium text-slate-900 dark:text-white">{stats?.serverUptime || 0}ms</span>
+              <span className="text-sm font-medium text-slate-900 dark:text-white">{stats?.queryTime || 0}ms</span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-slate-600 dark:text-slate-400">Cache Hit Rate</span>
-              <span className="text-sm font-medium text-slate-900 dark:text-white">{100 - (stats?.errorRate || 0)}%</span>
+              <span className="text-sm font-medium text-slate-900 dark:text-white">{stats?.cacheHitRate || 0}%</span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-slate-600 dark:text-slate-400">Storage</span>
-              <span className="text-sm font-medium text-slate-900 dark:text-white">{((stats?.storageUsed || 0) / 1024).toFixed(1)}GB</span>
+              <span className="text-sm font-medium text-slate-900 dark:text-white">{stats?.storageUsedGB || 0}GB</span>
             </div>
           </div>
         </div>
@@ -1222,15 +1351,17 @@ const SuperUserDashboard = () => {
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-slate-600 dark:text-slate-400">Response Time</span>
-              <span className="text-sm font-medium text-slate-900 dark:text-white">{stats?.serverUptime || 0}ms</span>
+              <span className="text-sm font-medium text-slate-900 dark:text-white">{stats?.responseTime || 0}ms</span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-slate-600 dark:text-slate-400">Error Rate</span>
-              <span className="text-sm font-medium text-slate-900 dark:text-white">{stats?.errorRate || 0}%</span>
+              <span className={`text-sm font-medium ${(stats?.errorRate || 0) > 5 ? 'text-red-600' : 'text-slate-900 dark:text-white'}`}>
+                {stats?.errorRate || 0}%
+              </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Uptime</span>
-              <span className="text-sm font-medium text-gray-900 dark:text-white">99.9%</span>
+              <span className="text-sm text-slate-600 dark:text-slate-400">Uptime</span>
+              <span className="text-sm font-medium text-slate-900 dark:text-white">{stats?.serverUptime || 0}%</span>
             </div>
           </div>
         </div>
@@ -1246,9 +1377,10 @@ const SuperUserDashboard = () => {
           {systemLogs.map(log => (
             <div key={log.id} className="flex items-start space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
               <div className={`w-2 h-2 rounded-full mt-2 ${
-                log.level === 'critical' ? 'bg-red-500' :
-                log.level === 'error' ? 'bg-red-400' :
-                log.level === 'warning' ? 'bg-yellow-500' :
+                log.severity === 'critical' ? 'bg-red-500' :
+                log.severity === 'error' ? 'bg-red-400' :
+                log.severity === 'warning' ? 'bg-yellow-500' :
+                log.severity === 'debug' ? 'bg-gray-500' :
                 'bg-blue-500'
               }`}></div>
               <div className="flex-1">
@@ -1260,13 +1392,13 @@ const SuperUserDashboard = () => {
                 </div>
                 <div className="flex items-center space-x-4 mt-1">
                   <span className="text-xs text-gray-500 dark:text-gray-400">
-                    {log.user ? `User: ${log.user}` : 'System'}
-                  </span>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">
-                    IP: {log.ip}
+                    Type: {log.type}
                   </span>
                   <span className="text-xs text-gray-500 dark:text-gray-400">
                     Action: {log.action}
+                  </span>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                    IP: {log.ip}
                   </span>
                 </div>
               </div>
@@ -1293,7 +1425,19 @@ const SuperUserDashboard = () => {
             </div>
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600 dark:text-gray-400">Growth Rate</span>
-              <span className="text-2xl font-bold text-emerald-600">+{stats?.monthlyGrowth || 0}%</span>
+              <span className={`text-2xl font-bold ${(stats?.monthlyGrowth || 0) >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
+                {(stats?.monthlyGrowth || 0) >= 0 ? '+' : ''}{(stats?.monthlyGrowth || 0).toFixed(1)}%
+              </span>
+            </div>
+            <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-gray-500 dark:text-gray-400">This Month</span>
+                <span className="font-medium">{(stats?.thisMonthUsers || 0).toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between items-center text-sm mt-1">
+                <span className="text-gray-500 dark:text-gray-400">Last Month</span>
+                <span className="font-medium">{(stats?.lastMonthUsers || 0).toLocaleString()}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -1306,7 +1450,81 @@ const SuperUserDashboard = () => {
             </div>
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600 dark:text-gray-400">Monthly Growth</span>
-              <span className="text-2xl font-bold text-emerald-600">+{stats?.monthlyGrowth || 0}%</span>
+              <span className={`text-2xl font-bold ${(stats?.revenueGrowth || 0) >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
+                {(stats?.revenueGrowth || 0) >= 0 ? '+' : ''}{(stats?.revenueGrowth || 0).toFixed(1)}%
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-600 dark:text-gray-400">Net Profit</span>
+              <span className={`text-2xl font-bold ${(stats?.netProfit || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                ₦{Number(stats?.netProfit || 0).toLocaleString()}
+              </span>
+            </div>
+            <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-gray-500 dark:text-gray-400">This Month</span>
+                <span className="font-medium">₦{Number(stats?.thisMonthRevenue || 0).toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between items-center text-sm mt-1">
+                <span className="text-gray-500 dark:text-gray-400">Last Month</span>
+                <span className="font-medium">₦{Number(stats?.lastMonthRevenue || 0).toLocaleString()}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Additional Analytics Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Organizations</h4>
+            <Building className="w-6 h-6 text-blue-500" />
+          </div>
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600 dark:text-gray-400">Total</span>
+              <span className="text-xl font-bold">{(stats?.totalOrganizations || 0).toLocaleString()}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600 dark:text-gray-400">Active</span>
+              <span className="text-xl font-bold text-green-600">{(stats?.activeOrganizations || 0).toLocaleString()}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Assets</h4>
+            <Activity className="w-6 h-6 text-purple-500" />
+          </div>
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600 dark:text-gray-400">Total Assets</span>
+              <span className="text-xl font-bold">{(stats?.totalAssets || 0).toLocaleString()}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600 dark:text-gray-400">Inventory Items</span>
+              <span className="text-xl font-bold text-orange-600">{(stats?.totalInventory || 0).toLocaleString()}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h4 className="text-lg font-semibold text-gray-900 dark:text-white">System Health</h4>
+            <Server className="w-6 h-6 text-green-500" />
+          </div>
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600 dark:text-gray-400">Health Score</span>
+              <span className={`text-xl font-bold ${(stats?.systemHealth || 0) > 80 ? 'text-green-600' : (stats?.systemHealth || 0) > 60 ? 'text-yellow-600' : 'text-red-600'}`}>
+                {(stats?.systemHealth || 0).toFixed(1)}%
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600 dark:text-gray-400">Uptime</span>
+              <span className="text-xl font-bold text-blue-600">{(stats?.serverUptime || 0).toFixed(1)}%</span>
             </div>
           </div>
         </div>
@@ -1431,14 +1649,42 @@ const SuperUserDashboard = () => {
 
     if (loading) {
       return (
-        <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center">
-          <div className="text-center">
-            <div className="relative">
-              <div className="w-16 h-16 border-4 border-gray-200 dark:border-gray-700 rounded-full"></div>
-              <div className="w-16 h-16 border-4 border-green-500 border-t-transparent rounded-full animate-spin absolute top-0 left-0"></div>
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+          {/* Sidebar (always visible during loading) */}
+          <div className="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0">
+            <div className="flex items-center justify-between h-16 px-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center">
+                  <Server className="w-5 h-5 text-white" />
+                </div>
+                <h1 className="text-xl font-bold text-slate-900 dark:text-white">SuperUser</h1>
+              </div>
             </div>
-            <p className="mt-6 text-lg font-medium text-gray-600 dark:text-gray-400">Loading dashboard...</p>
-            <p className="mt-2 text-sm text-gray-500 dark:text-gray-500">Please wait while we fetch your data</p>
+            <nav className="mt-6 px-4">
+              <div className="space-y-2">
+                {menuItems.map((item) => (
+                  <button
+                    key={item.id}
+                    className="w-full flex items-center space-x-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700"
+                  >
+                    <item.icon className="w-5 h-5" />
+                    <span>{item.label}</span>
+                  </button>
+                ))}
+              </div>
+            </nav>
+          </div>
+
+          {/* Main Content Area with Centered Loading */}
+          <div className="lg:ml-64 flex items-center justify-center min-h-screen">
+            <div className="text-center">
+              <div className="relative">
+                <div className="w-16 h-16 border-4 border-gray-200 dark:border-gray-700 rounded-full"></div>
+                <div className="w-16 h-16 border-4 border-green-500 border-t-transparent rounded-full animate-spin absolute top-0 left-0"></div>
+              </div>
+              <p className="mt-6 text-lg font-medium text-gray-600 dark:text-gray-400">Loading dashboard...</p>
+              <p className="mt-2 text-sm text-gray-500 dark:text-gray-500">Please wait while we fetch your data</p>
+            </div>
           </div>
         </div>
       );
@@ -1782,6 +2028,194 @@ const SuperUserDashboard = () => {
                     <span className="text-sm text-gray-600 dark:text-gray-400">Created:</span>
                     <span className="ml-2 font-medium">{new Date(selectedOrg.createdAt).toLocaleDateString()}</span>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Organization Delete Confirmation Modal */}
+        {showOrgDeleteModal && selectedOrg && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                  <Trash2 className="w-5 h-5 text-red-600" />
+                  Delete Organization
+                </h3>
+                <button
+                  onClick={cancelOrgAction}
+                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+                  <p className="text-red-800 dark:text-red-200 font-medium">
+                    ⚠️ This action cannot be undone
+                  </p>
+                  <p className="text-red-700 dark:text-red-300 text-sm mt-1">
+                    Deleting "{selectedOrg.name}" will permanently remove:
+                  </p>
+                  <ul className="text-red-600 dark:text-red-400 text-sm mt-2 list-disc list-inside space-y-1">
+                    <li>All users in this organization</li>
+                    <li>All subscriptions and billing data</li>
+                    <li>All farm data, inventory, and assets</li>
+                    <li>All historical records and reports</li>
+                  </ul>
+                </div>
+                
+                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    <span className="font-medium">Organization:</span> {selectedOrg.name}
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    <span className="font-medium">ID:</span> {selectedOrg.id}
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    <span className="font-medium">Users:</span> {selectedOrg.users || 0}
+                  </p>
+                </div>
+                
+                <div className="flex justify-end space-x-3 pt-4">
+                  <button
+                    onClick={cancelOrgAction}
+                    className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={confirmOrgAction}
+                    disabled={orgActionLoading === selectedOrg.id}
+                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  >
+                    {orgActionLoading === selectedOrg.id ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 animate-spin" />
+                        Deleting...
+                      </>
+                    ) : (
+                      <>
+                        <Trash2 className="w-4 h-4" />
+                        Delete Organization
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Organization Suspend/Activate Modal */}
+        {showOrgSuspendModal && selectedOrg && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                  {orgActionType === 'suspend' ? (
+                    <>
+                      <Lock className="w-5 h-5 text-yellow-600" />
+                      Suspend Organization
+                    </>
+                  ) : (
+                    <>
+                      <Unlock className="w-5 h-5 text-green-600" />
+                      Activate Organization
+                    </>
+                  )}
+                </h3>
+                <button
+                  onClick={cancelOrgAction}
+                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                <div className={`rounded-lg p-4 ${
+                  orgActionType === 'suspend' 
+                    ? 'bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800'
+                    : 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800'
+                }`}>
+                  <p className={`font-medium ${
+                    orgActionType === 'suspend'
+                      ? 'text-yellow-800 dark:text-yellow-200'
+                      : 'text-green-800 dark:text-green-200'
+                  }`}>
+                    {orgActionType === 'suspend' ? '🔒 Suspend Organization' : '🔓 Activate Organization'}
+                  </p>
+                  <p className={`text-sm mt-1 ${
+                    orgActionType === 'suspend'
+                      ? 'text-yellow-700 dark:text-yellow-300'
+                      : 'text-green-700 dark:text-green-300'
+                  }`}>
+                    {orgActionType === 'suspend' 
+                      ? `Suspending "${selectedOrg.name}" will prevent all users from accessing the system and temporarily disable all services.`
+                      : `Activating "${selectedOrg.name}" will restore full access for all users and enable all services.`
+                    }
+                  </p>
+                </div>
+                
+                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    <span className="font-medium">Organization:</span> {selectedOrg.name}
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    <span className="font-medium">Current Status:</span> 
+                    <span className={`ml-2 px-2 py-1 text-xs font-semibold rounded-full ${
+                      selectedOrg.status === 'active' 
+                        ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300'
+                        : 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300'
+                    }`}>
+                      {selectedOrg.status}
+                    </span>
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    <span className="font-medium">Users:</span> {selectedOrg.users || 0}
+                  </p>
+                </div>
+                
+                <div className="flex justify-end space-x-3 pt-4">
+                  <button
+                    onClick={cancelOrgAction}
+                    className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={confirmOrgAction}
+                    disabled={orgActionLoading === selectedOrg.id}
+                    className={`px-4 py-2 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 ${
+                      orgActionType === 'suspend'
+                        ? 'bg-yellow-600 hover:bg-yellow-700'
+                        : 'bg-green-600 hover:bg-green-700'
+                    }`}
+                  >
+                    {orgActionLoading === selectedOrg.id ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 animate-spin" />
+                        {orgActionType === 'suspend' ? 'Suspending...' : 'Activating...'}
+                      </>
+                    ) : (
+                      <>
+                        {orgActionType === 'suspend' ? (
+                          <>
+                            <Lock className="w-4 h-4" />
+                            Suspend Organization
+                          </>
+                        ) : (
+                          <>
+                            <Unlock className="w-4 h-4" />
+                            Activate Organization
+                          </>
+                        )}
+                      </>
+                    )}
+                  </button>
                 </div>
               </div>
             </div>
