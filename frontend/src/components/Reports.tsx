@@ -325,7 +325,7 @@ const Reports: React.FC = () => {
                       : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
                   }`}
                 >
-                  Income by Category
+                  Income
                 </button>
                 <button
                   onClick={() => setReportTab('expenseByCategory')}
@@ -335,7 +335,7 @@ const Reports: React.FC = () => {
                       : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
                   }`}
                 >
-                  Expense by Category
+                  Expense
                 </button>
               </div>
               <div className="flex flex-col sm:flex-row sm:gap-2 gap-2 pb-2">

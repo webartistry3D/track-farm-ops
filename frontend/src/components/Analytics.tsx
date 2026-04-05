@@ -14,7 +14,6 @@ import {
   Apple,
   Box,
   BarChart3,
-  Activity,
   Calendar,
   Target,
   Zap,
@@ -94,11 +93,18 @@ const Analytics = () => {
   const [showEquipmentModal, setShowEquipmentModal] = useState(false);
   const [showFieldModal, setShowFieldModal] = useState(false);
 
-  // Modal Input States
+  // Farm Operations Data
+  const [crops, setCrops] = useState([
+    { id: 1, name: 'Tomatoes', zone: 'Zone A', plantingDate: '2024-03-15', expectedHarvest: '2024-06-30', status: 'Growing' },
+    { id: 2, name: 'Lettuce', zone: 'Zone B', plantingDate: '2024-04-01', expectedHarvest: '2024-05-15', status: 'Mature' },
+    { id: 3, name: 'Peppers', zone: 'Zone C', plantingDate: '2024-02-20', expectedHarvest: '2024-07-10', status: 'Seedling' }
+  ]);
+
   const [cropData, setCropData] = useState({
     newCrop: '',
     plantingDate: '',
     expectedHarvest: '',
+    zoneAssignment: '',
     notes: ''
   });
   
@@ -108,6 +114,7 @@ const Analytics = () => {
     nitrogenLevel: '',
     phosphorusLevel: '',
     potassiumLevel: '',
+    zone: '',
     treatmentType: '',
     treatmentDate: ''
   });
@@ -438,6 +445,48 @@ const Analytics = () => {
     }
   };
 
+  const handleUpdateSoilAnalysis = () => {
+    // Validate form data
+    if (!soilData.moistureLevel || !soilData.phLevel || !soilData.nitrogenLevel || !soilData.phosphorusLevel || !soilData.potassiumLevel) {
+      alert('Please fill in all required fields: Moisture Level, pH Level, and Nutrient levels');
+      return;
+    }
+
+    // Update soil analysis logic here
+    console.log('Updating soil analysis:', soilData);
+    setShowSoilModal(false);
+    
+    alert(`Soil analysis for Zone ${soilData.zone || 'Selected'} has been successfully updated!`);
+  };
+
+  const handleScheduleIrrigation = () => {
+    // Validate form data
+    if (!irrigationData.zone || !irrigationData.duration || !irrigationData.startTime || !irrigationData.waterAmount || !irrigationData.frequency) {
+      alert('Please fill in all required fields: Zone, Duration, Start Time, Water Amount, and Frequency');
+      return;
+    }
+
+    // Schedule irrigation logic here
+    console.log('Scheduling irrigation:', irrigationData);
+    setShowIrrigationModal(false);
+    
+    alert(`Irrigation has been successfully scheduled for ${irrigationData.zone || 'selected zone'}!`);
+  };
+
+  const handleCreateTreatmentPlan = () => {
+    // Validate form data
+    if (!pestData.pestType || !pestData.severity || !pestData.treatmentMethod || !pestData.applicationDate || !pestData.followUpDate) {
+      alert('Please fill in all required fields: Pest Type, Severity, Treatment Method, Application Date, and Follow-up Date');
+      return;
+    }
+
+    // Create treatment plan logic here
+    console.log('Creating pest treatment plan:', pestData);
+    setShowPestModal(false);
+    
+    alert(`Pest treatment plan has been successfully created for ${pestData.applicationDate || 'selected date'}!`);
+  };
+
   const getDateFilterLabel = () => {
     switch (dateFilter) {
       case 'today': return 'Today';
@@ -710,7 +759,7 @@ const Analytics = () => {
         </div>
 
         {/* Inventory & Efficiency Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
+        {/*<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
           <StatCard
             title="Inventory Items"
             value={inventorySummary?.totalItems?.toString() || '0'}
@@ -724,7 +773,7 @@ const Analytics = () => {
             icon={<Activity className="h-4 w-4 text-white" />}
             color="bg-purple-500"
           />
-        </div>
+        </div>*/}
 
         {/* Advanced Analytics Charts */}
         <div className="mb-8">
@@ -796,7 +845,7 @@ const Analytics = () => {
 
             {/* Quick Stats */}
             <div className="space-y-4">
-              <div className="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border border-green-200 dark:border-green-800 rounded-xl p-4">
+              <div className="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 dark:border-green-800 rounded-xl p-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">Avg Daily Revenue</p>
@@ -810,7 +859,7 @@ const Analytics = () => {
                 </div>
               </div>
 
-              <div className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4">
+              <div className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 dark:border-blue-800 rounded-xl p-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">Profit Margin</p>
@@ -827,7 +876,7 @@ const Analytics = () => {
                 </div>
               </div>
 
-              <div className="bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 border border-purple-200 dark:border-purple-800 rounded-xl p-4">
+              <div className="bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 dark:border-purple-800 rounded-xl p-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">Growth Rate</p>
@@ -845,7 +894,74 @@ const Analytics = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           <div>
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+              <TrendingUp className="w-5 h-5 mr-2 text-green-500" />
               Income by Category
+            </h2>
+            {financialLoading ? (
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                <div className="h-6 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-4"></div>
+                <div className="space-y-3">
+                  {[...Array(4)].map((_, i) => (
+                    <div key={i} className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <div className="flex justify-between items-center mb-1">
+                          <div className="h-4 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                          <div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                        </div>
+                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                          <div className="bg-gray-300 dark:bg-gray-600 h-2 rounded-full w-3/4 animate-pulse"></div>
+                        </div>
+                      </div>
+                      <div className="ml-4 h-4 w-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                {!financialSummary?.incomeByCategory || financialSummary.incomeByCategory.length === 0 ? (
+                  <div className="text-center py-8">
+                    <PieChart className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">No income data available</p>
+                    <p className="text-gray-400 dark:text-gray-500 text-xs mt-1">Create income entries to see category breakdowns</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {financialSummary.incomeByCategory.map((item, index) => {
+                      const totalIncome = financialSummary.incomeByCategory.reduce((sum, cat) => sum + cat.amount, 0);
+                      const percentage = totalIncome > 0 ? (item.amount / totalIncome) * 100 : 0;
+                      return (
+                        <div key={index} className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="flex justify-between items-center mb-2">
+                              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{item.category}</span>
+                              <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                                {formatCurrency(item.amount)}
+                              </span>
+                            </div>
+                            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                              <div
+                                className="bg-green-500 h-2 rounded-full transition-all duration-300"
+                                style={{ width: `${percentage}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                          <div className="ml-4 text-sm text-gray-500 dark:text-gray-400 w-12 text-right">
+                            {percentage.toFixed(1)}%
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+              <ShoppingCart className="w-5 h-5 mr-2 text-red-500" />
+              Expense by Category
             </h2>
             {financialLoading ? (
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
@@ -955,7 +1071,7 @@ const Analytics = () => {
         </div>
 
         {/* Agricultural Analytics Widgets */}
-        <div className="mb-8">
+        <div className="mb-8 py-8">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Farm Operations Analytics</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -1338,10 +1454,51 @@ const Analytics = () => {
                     />
                   </div>
                   <div className="mt-4 flex justify-end space-x-3">
-                    <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                    <button 
+                      onClick={() => setShowCropModal(false)}
+                      className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                    >
                       Cancel
                     </button>
-                    <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                    <button 
+                      onClick={() => {
+                        // Validate form data
+                        if (!cropData.newCrop.trim() || !cropData.plantingDate || !cropData.expectedHarvest || !cropData.zoneAssignment) {
+                          alert('Please fill in all required fields: Crop Type, Planting Date, Expected Harvest, and Zone Assignment');
+                          return;
+                        }
+
+                        // Create new crop object
+                        const newCrop = {
+                          id: crops.length + 1,
+                          name: cropData.newCrop,
+                          zone: cropData.zoneAssignment,
+                          plantingDate: cropData.plantingDate,
+                          expectedHarvest: cropData.expectedHarvest,
+                          status: 'Planned',
+                          notes: cropData.notes
+                        };
+
+                        // Add to crops array
+                        setCrops([...crops, newCrop]);
+                        
+                        // Clear form
+                        setCropData({
+                          newCrop: '',
+                          plantingDate: '',
+                          expectedHarvest: '',
+                          zoneAssignment: '',
+                          notes: ''
+                        });
+
+                        // Close modal
+                        setShowCropModal(false);
+                        
+                        console.log('✅ Crop added:', newCrop);
+                        alert(`Crop "${cropData.newCrop}" has been successfully added to the system!`);
+                      }}
+                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                    >
                       Add Crop
                     </button>
                   </div>
@@ -1498,7 +1655,10 @@ const Analytics = () => {
                     <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
                       Cancel
                     </button>
-                    <button className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors">
+                    <button 
+                      onClick={handleUpdateSoilAnalysis}
+                      className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors"
+                    >
                       Update Analysis
                     </button>
                   </div>
@@ -1533,11 +1693,21 @@ const Analytics = () => {
                     </div>
                   </div>
                   <div className="mt-4 flex justify-end space-x-3">
-                    <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                    <button 
+                      onClick={() => setShowSoilModal(false)}
+                      className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                    >
                       Cancel
                     </button>
-                    <button className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors">
-                      Schedule Treatment
+                    <button 
+                      onClick={() => {
+                        // Add soil analysis logic here
+                        console.log('Adding soil analysis:', soilData);
+                        setShowSoilModal(false);
+                      }}
+                      className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors"
+                    >
+                      Save Analysis
                     </button>
                   </div>
                 </div>
@@ -1742,10 +1912,16 @@ const Analytics = () => {
                   </div>
                   
                   <div className="mt-4 flex justify-end space-x-3">
-                    <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                    <button 
+                      onClick={() => setShowIrrigationModal(false)}
+                      className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                    >
                       Cancel
                     </button>
-                    <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                    <button 
+                      onClick={handleScheduleIrrigation}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    >
                       Schedule Irrigation
                     </button>
                   </div>
@@ -1948,10 +2124,16 @@ const Analytics = () => {
                   </div>
                   
                   <div className="mt-4 flex justify-end space-x-3">
-                    <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                    <button 
+                      onClick={() => setShowPestModal(false)}
+                      className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                    >
                       Cancel
                     </button>
-                    <button className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                    <button 
+                      onClick={handleCreateTreatmentPlan}
+                      className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                    >
                       Create Treatment Plan
                     </button>
                   </div>
