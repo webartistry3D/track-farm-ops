@@ -271,7 +271,8 @@ const CCTV = () => {
         </div>
 
         {/* Status Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          {/* First Row: Total Cameras and Online */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
             <div className="flex items-center">
               <div className="p-2 bg-green-100 dark:bg-green-900/20 rounded-lg">
@@ -296,6 +297,8 @@ const CCTV = () => {
               </div>
             </div>
           </div>
+          
+          {/* Second Row: Offline and Motion Alerts */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
             <div className="flex items-center">
               <div className="p-2 bg-red-100 dark:bg-red-900/20 rounded-lg">

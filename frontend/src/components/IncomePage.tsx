@@ -2052,7 +2052,7 @@ Generated on: ${new Date().toLocaleString()}
               {!generatedInvoice ? (
                 <form onSubmit={handleInvoiceSubmit} className="space-y-4">
                   {/* Client Information */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                           Client Name *
@@ -2101,10 +2101,10 @@ Generated on: ${new Date().toLocaleString()}
                           onChange={(e) => handleInvoiceChange('clientAddress', e.target.value)}
                         />
                       </div>
-                    </div>
+                  </div>
 
                   {/* Invoice Details */}
-                  <div className="p-4 rounded-lg">
+                  <div className="px-0 py-4 rounded-lg">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
                       <Calendar className="h-5 w-5" />
                       Invoice Details
@@ -2148,7 +2148,7 @@ Generated on: ${new Date().toLocaleString()}
                   </div>
 
                   {/* Invoice Items */}
-                  <div className="p-4 rounded-lg">
+                  <div className="px-0 py-4 rounded-lg">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                       <Package className="h-5 w-5" />
                       Invoice Items
@@ -2156,7 +2156,7 @@ Generated on: ${new Date().toLocaleString()}
                     </h3>
                     <div className="space-y-4">
                       {invoiceData.items.map((item, index) => (
-                        <div key={`invoice-item-${index}`} className="border border-gray-200 dark:border-gray-600 rounded-lg p-4">
+                        <div key={`invoice-item-${index}`} className="dark:border-gray-600 rounded-lg p-0">
                           <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
                             {/* Inventory Item Selection */}
                             <div className="md:col-span-2">
@@ -2329,46 +2329,49 @@ Generated on: ${new Date().toLocaleString()}
                     </div>
                   </div>
 
-                  {/* Payment Method */}
-                  <div className="p-6 rounded-lg">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Payment Method</h3>
-                    <select
-                      value={invoiceData.paymentMethod}
-                      onChange={(e) => handleInvoiceChange('paymentMethod', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
-                    >
-                      <option value="CASH">Cash</option>
-                      <option value="TRANSFER">Bank Transfer</option>
-                    </select>
-                  </div>
+                  {/* Bottom Row: Payment Method, Notes, and Summary */}
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    {/* Payment Method */}
+                    <div className="p-6 rounded-lg">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Payment Method</h3>
+                      <select
+                        value={invoiceData.paymentMethod}
+                        onChange={(e) => handleInvoiceChange('paymentMethod', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                      >
+                        <option value="CASH">Cash</option>
+                        <option value="TRANSFER">Bank Transfer</option>
+                      </select>
+                    </div>
 
-                  {/* Notes */}
-                  <div className="p-6 rounded-lg">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Notes</h3>
-                    <textarea
-                      rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
-                      placeholder="Additional notes or payment instructions..."
-                      value={invoiceData.notes}
-                      onChange={(e) => handleInvoiceChange('notes', e.target.value)}
-                    />
-                  </div>
+                    {/* Notes */}
+                    <div className="p-6 rounded-lg">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Notes</h3>
+                      <textarea
+                        rows={3}
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                        placeholder="Additional notes or payment instructions..."
+                        value={invoiceData.notes}
+                        onChange={(e) => handleInvoiceChange('notes', e.target.value)}
+                      />
+                    </div>
 
-                  {/* Summary */}
-                  <div className="p-6 rounded-lg">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Invoice Summary</h3>
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600 dark:text-gray-400">Subtotal:</span>
-                        <span className="font-medium text-gray-900 dark:text-white">{formatCurrency(invoiceData.subtotal)}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600 dark:text-gray-400">Tax (7.5%):</span>
-                        <span className="font-medium text-gray-900 dark:text-white">{formatCurrency(invoiceData.tax)}</span>
-                      </div>
-                      <div className="flex justify-between text-lg font-bold">
-                        <span className="text-gray-900 dark:text-white">Total:</span>
-                        <span className="text-gray-900 dark:text-white">{formatCurrency(invoiceData.total)}</span>
+                    {/* Summary */}
+                    <div className="p-6 rounded-lg">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Invoice Summary</h3>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="text-gray-600 dark:text-gray-400">Subtotal:</span>
+                          <span className="font-medium text-gray-900 dark:text-white">{formatCurrency(invoiceData.subtotal)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600 dark:text-gray-400">Tax (7.5%):</span>
+                          <span className="font-medium text-gray-900 dark:text-white">{formatCurrency(invoiceData.tax)}</span>
+                        </div>
+                        <div className="flex justify-between text-lg font-bold">
+                          <span className="text-gray-900 dark:text-white">Total:</span>
+                          <span className="text-gray-900 dark:text-white">{formatCurrency(invoiceData.total)}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -2918,7 +2921,7 @@ Generated on: ${new Date().toLocaleString()}
                             </select>
                           </div>
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-0">
                               Payment Method
                             </label>
                             <select
