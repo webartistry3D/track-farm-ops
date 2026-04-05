@@ -93,17 +93,14 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
     notes: ''
   });
 
-  // Formatted display states for edit item
+  // Formatted display states for Edit Item modal
   const [formattedEditItem, setFormattedEditItem] = useState({
     pricePerUnit: ''
   });
-  
-  // Formatted display states for thousand separators
-  const [formattedItem, setFormattedItem] = useState({
-    quantity: '',
-    pricePerUnit: '',
-    minimumStock: ''
-  });
+
+  // Timeline transactions state
+  const [itemTransactions, setItemTransactions] = useState<any[]>([]);
+  const [transactionsLoading, setTransactionsLoading] = useState(false);
 
   // Pagination states
   const [itemsCurrentPage, setItemsCurrentPage] = useState(1);
@@ -209,13 +206,59 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
     try {
       setLoading(true);
       const response = await api.get('/inventory/items');
-      setItems(response.data || []);
+      
+      // Convert PostgreSQL Decimal strings to numbers
+      const processedItems = (response.data || []).map((item: any) => ({
+        ...item,
+        quantity: Number(item.quantity),
+        minimumStock: item.minimumStock ? Number(item.minimumStock) : undefined,
+        pricePerUnit: item.pricePerUnit ? Number(item.pricePerUnit) : undefined,
+      }));
+      
+      // Debug specific item (ID 81)
+      const item81 = processedItems.find((item: any) => item.id === 81);
+      console.log('🔍 DEBUG - Item 81 after processing:', item81);
+      console.log('🔍 DEBUG - Item 81 pricePerUnit type:', typeof item81?.pricePerUnit);
+      console.log('🔍 DEBUG - Item 81 pricePerUnit value:', item81?.pricePerUnit);
+      
+      console.log('🔍 DEBUG - Processed items:', processedItems);
+      setItems(processedItems);
       setError('');
     } catch (err: any) {
       console.error('Failed to fetch inventory:', err);
       setError(err.response?.data?.error || 'Failed to load inventory');
     } finally {
       setLoading(false);
+    }
+  }, []);
+
+  // Fetch inventory transactions for a specific item
+  const fetchItemTransactions = useCallback(async (itemId: number) => {
+    try {
+      setTransactionsLoading(true);
+      console.log(`📄 Fetching transactions for item ${itemId}`);
+      
+      const response = await api.get('/inventory/transactions', {
+        params: {
+          itemId,
+          limit: 20, // Get recent transactions
+          orderBy: 'date',
+          order: 'desc'
+        }
+      });
+      
+      // Filter for SALES transactions only
+      const salesTransactions = (response.data || []).filter(
+        (transaction: any) => transaction.usageType === 'SALES'
+      );
+      
+      console.log(`📊 Found ${salesTransactions.length} sales transactions for item ${itemId}`);
+      setItemTransactions(salesTransactions);
+    } catch (error: any) {
+      console.error('Failed to fetch item transactions:', error);
+      setItemTransactions([]);
+    } finally {
+      setTransactionsLoading(false);
     }
   }, []);
 
@@ -226,7 +269,14 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
     
     // Scroll to top on page load
     window.scrollTo(0, 0);
-  }, [fetchCategories, fetchInventory]);
+  }, [fetchCategories]);
+
+  // Fetch transactions when item to view changes
+  useEffect(() => {
+    if (itemToView) {
+      fetchItemTransactions(itemToView.id);
+    }
+  }, [itemToView, fetchItemTransactions]);
 
   // Filter and sort items
   const filteredItems = useMemo(() => {
@@ -457,11 +507,6 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
           minimumStock: '',
           notes: ''
         });
-        setFormattedItem({
-          quantity: '',
-          pricePerUnit: '',
-          minimumStock: ''
-        });
         
         setNotification({
           type: 'success',
@@ -518,15 +563,26 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
 
   // Edit Item Handlers
   const handleEditClick = useCallback((item: InventoryItem) => {
+    console.log('🔍 FRONTEND DEBUG - Edit item data:', item);
+    console.log('🔍 FRONTEND DEBUG - pricePerUnit value:', item.pricePerUnit);
+    console.log('🔍 FRONTEND DEBUG - pricePerUnit type:', typeof item.pricePerUnit);
+    
     setItemToEdit(item);
-    const pricePerUnitValue = item.metadata?.pricePerUnit?.toString() || '';
+    const pricePerUnitValue = item.pricePerUnit?.toString() || '';
+    const minimumStockValue = item.minimumStock?.toString() || '';
+    
+    console.log('🔍 FRONTEND DEBUG - Extracted values:', {
+      pricePerUnitValue,
+      minimumStockValue
+    });
+    
     setEditItem({
       name: item.name,
       categoryId: item.categoryId?.toString() || '',
       quantity: item.quantity.toString(),
       unit: item.unit || 'pieces',
       pricePerUnit: pricePerUnitValue,
-      minimumStock: item.metadata?.minimumStock?.toString() || '',
+      minimumStock: minimumStockValue,
       notes: item.metadata?.notes || ''
     });
     // Set formatted display value
@@ -1916,25 +1972,12 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                   </label>
                   <input
                     type="text"
-                    value={formattedItem.quantity}
+                    value={newItem.quantity}
                     onChange={(e) => {
                       const value = e.target.value;
                       // Remove all non-numeric characters and commas
                       const cleanValue = value.replace(/[^0-9]/g, '');
-                      // Update stored value (without formatting)
                       setNewItem(prev => ({ ...prev, quantity: cleanValue }));
-                      // Update display value (with formatting)
-                      const displayValue = cleanValue === '' ? '' : Number(cleanValue).toLocaleString('en-US');
-                      setFormattedItem(prev => ({ ...prev, quantity: displayValue }));
-                    }}
-                    onFocus={() => {
-                      // Remove formatting when focused
-                      setFormattedItem(prev => ({ ...prev, quantity: newItem.quantity }));
-                    }}
-                    onBlur={() => {
-                      // Add formatting when unfocused
-                      const displayValue = newItem.quantity === '' ? '' : Number(newItem.quantity).toLocaleString('en-US');
-                      setFormattedItem(prev => ({ ...prev, quantity: displayValue }));
                     }}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                     placeholder="0"
@@ -1969,7 +2012,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                   </label>
                   <input
                     type="text"
-                    value={formattedItem.pricePerUnit ? `₦${formattedItem.pricePerUnit}` : ''}
+                    value={newItem.pricePerUnit}
                     onChange={(e) => {
                       const value = e.target.value;
                       // Remove currency symbol and non-numeric characters except decimal point
@@ -1978,21 +2021,9 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                       const formattedValue = cleanValue === '' ? '' : cleanValue.replace(/(\..*?)\./g, '$1');
                       // Update stored value (without formatting)
                       setNewItem(prev => ({ ...prev, pricePerUnit: formattedValue }));
-                      // Update display value (with formatting)
-                      const displayValue = formattedValue === '' ? '' : Number(formattedValue).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
-                      setFormattedItem(prev => ({ ...prev, pricePerUnit: displayValue }));
-                    }}
-                    onFocus={() => {
-                      // Remove formatting when focused
-                      setFormattedItem(prev => ({ ...prev, pricePerUnit: newItem.pricePerUnit }));
-                    }}
-                    onBlur={() => {
-                      // Add formatting when unfocused
-                      const displayValue = newItem.pricePerUnit === '' ? '' : Number(newItem.pricePerUnit).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
-                      setFormattedItem(prev => ({ ...prev, pricePerUnit: displayValue }));
                     }}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
-                    placeholder="₦0.00"
+                    placeholder="0.00"
                   />
                 </div>
                 
@@ -2002,25 +2033,12 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                   </label>
                   <input
                     type="text"
-                    value={formattedItem.minimumStock}
+                    value={newItem.minimumStock}
                     onChange={(e) => {
                       const value = e.target.value;
                       // Remove all non-numeric characters and commas
                       const cleanValue = value.replace(/[^0-9]/g, '');
-                      // Update stored value (without formatting)
                       setNewItem(prev => ({ ...prev, minimumStock: cleanValue }));
-                      // Update display value (with formatting)
-                      const displayValue = cleanValue === '' ? '' : Number(cleanValue).toLocaleString('en-US');
-                      setFormattedItem(prev => ({ ...prev, minimumStock: displayValue }));
-                    }}
-                    onFocus={() => {
-                      // Remove formatting when focused
-                      setFormattedItem(prev => ({ ...prev, minimumStock: newItem.minimumStock }));
-                    }}
-                    onBlur={() => {
-                      // Add formatting when unfocused
-                      const displayValue = newItem.minimumStock === '' ? '' : Number(newItem.minimumStock).toLocaleString('en-US');
-                      setFormattedItem(prev => ({ ...prev, minimumStock: displayValue }));
                     }}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                     placeholder="0"
@@ -2054,11 +2072,6 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                     pricePerUnit: '',
                     minimumStock: '',
                     notes: ''
-                  });
-                  setFormattedItem({
-                    quantity: '',
-                    pricePerUnit: '',
-                    minimumStock: ''
                   });
                 }}
                 className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
@@ -2517,7 +2530,42 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                       Timeline
                     </h4>
                   </div>
-                  <div className="p-4 space-y-4">
+                  <div className="p-4 space-y-4 max-h-64 overflow-y-auto">
+                    {/* Sales Transactions */}
+                    {itemTransactions.length > 0 && (
+                      <>
+                        {itemTransactions.slice(0, 3).map((transaction: any) => (
+                          <div key={transaction.id} className="flex items-start space-x-3">
+                            <div className="w-8 h-8 bg-orange-100 dark:bg-orange-800/30 rounded-full flex items-center justify-center flex-shrink-0">
+                              <Activity className="w-4 h-4 text-orange-600 dark:text-orange-400" />
+                            </div>
+                            <div className="flex-1">
+                              <p className="text-sm font-medium text-gray-900 dark:text-white">Sale Recorded</p>
+                              <p className="text-xs text-gray-600 dark:text-gray-400">
+                                {Math.abs(Number(transaction.quantityChange))} {itemToView.unit} sold via {transaction.relatedEntity} #{transaction.relatedEntityId}
+                              </p>
+                              <p className="text-xs text-gray-500 dark:text-gray-500">
+                                {new Date(transaction.date).toLocaleDateString('en-US', { 
+                                  weekday: 'long',
+                                  year: 'numeric', 
+                                  month: 'long', 
+                                  day: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
+                              </p>
+                              {transaction.user && (
+                                <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                                  by {transaction.user.name}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </>
+                    )}
+                    
+                    {/* Creation */}
                     <div className="flex items-start space-x-3">
                       <div className="w-8 h-8 bg-green-100 dark:bg-green-800/30 rounded-full flex items-center justify-center flex-shrink-0">
                         <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-400" />
@@ -2536,6 +2584,8 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                         </p>
                       </div>
                     </div>
+                    
+                    {/* Last Updated */}
                     <div className="flex items-start space-x-3">
                       <div className="w-8 h-8 bg-blue-100 dark:bg-blue-800/30 rounded-full flex items-center justify-center flex-shrink-0">
                         <Edit2 className="w-4 h-4 text-blue-600 dark:text-blue-400" />
@@ -2554,6 +2604,24 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                         </p>
                       </div>
                     </div>
+                    
+                    {/* No transactions message */}
+                    {itemTransactions.length === 0 && !transactionsLoading && (
+                      <div className="text-center py-4">
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          No sales recorded yet
+                        </p>
+                      </div>
+                    )}
+                    
+                    {/* Loading state */}
+                    {transactionsLoading && (
+                      <div className="text-center py-4">
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          Loading sales history...
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -2696,6 +2764,15 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                         const displayValue = formattedValue === '' ? '' : Number(formattedValue).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
                         setFormattedEditItem(prev => ({ ...prev, pricePerUnit: displayValue }));
                       }}
+                      onFocus={() => {
+                        // Remove formatting when focused
+                        setFormattedEditItem(prev => ({ ...prev, pricePerUnit: editItem.pricePerUnit }));
+                      }}
+                      onBlur={() => {
+                        // Add formatting when unfocused
+                        const displayValue = editItem.pricePerUnit === '' ? '' : Number(editItem.pricePerUnit).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+                        setFormattedEditItem(prev => ({ ...prev, pricePerUnit: displayValue }));
+                      }}
                       className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                       placeholder="₦0.00"
                     />
@@ -2744,9 +2821,6 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                         pricePerUnit: '',
                         minimumStock: '',
                         notes: ''
-                      });
-                      setFormattedEditItem({
-                        pricePerUnit: ''
                       });
                     }}
                     className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"

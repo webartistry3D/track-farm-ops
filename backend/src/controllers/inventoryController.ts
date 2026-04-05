@@ -68,6 +68,22 @@ export const updateInventoryItem = async (req: AuthRequest, res: Response) => {
       metadata 
     } = req.body;
     
+    console.log('🔍 DEBUG - Update request body:', {
+      name, 
+      type, 
+      unit, 
+      quantity, 
+      description, 
+      categoryId, 
+      location,
+      supplier,
+      purchaseDate,
+      expiryDate,
+      minimumStock,
+      pricePerUnit,
+      metadata 
+    });
+    
     if (!name || !type || !unit) {
       console.log('❌ VALIDATION FAILED: Missing required fields');
       return res.status(400).json({ error: 'Name, type, and unit are required' });
@@ -114,6 +130,15 @@ export const updateInventoryItem = async (req: AuthRequest, res: Response) => {
     }
     
     const parsedQuantity = parseFloat(quantity);
+    
+    console.log('🔍 DEBUG - Parsed values:', {
+      originalQuantity: quantity,
+      parsedQuantity,
+      originalMinimumStock: minimumStock,
+      parsedMinimumStock: minimumStock ? parseFloat(minimumStock) : null,
+      originalPricePerUnit: pricePerUnit,
+      parsedPricePerUnit: pricePerUnit ? parseFloat(pricePerUnit) : null
+    });
     
     const updatedItem = await prisma.inventoryItem.update({
       where: { id: parseInt(id as string) },
@@ -321,12 +346,10 @@ export const getInventoryItems = async (req: AuthRequest, res: Response) => {
       orderBy: { name: 'asc' }
     });
 
-    // Add pricePerUnit from metadata to each item
+    // Add pricePerUnit from direct database field (not metadata)
     const itemsWithPrice = allItems.map(item => ({
       ...item,
-      pricePerUnit: item.metadata && typeof item.metadata === 'object' 
-        ? (item.metadata as any).pricePerUnit 
-        : null
+      pricePerUnit: item.pricePerUnit  // ✅ Direct field access
     }));
 
     console.log(`📊 Found ${allItems.length} inventory items from database`);

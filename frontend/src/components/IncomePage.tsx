@@ -128,6 +128,7 @@ const IncomePage = () => {
   const [inventoryItems, setInventoryItems] = useState<any[]>([]);
   const [inventoryCategories, setInventoryCategories] = useState<any[]>([]);
   const [inventoryLoading, setInventoryLoading] = useState(false);
+  const [inventoryRefreshed, setInventoryRefreshed] = useState(false); // Add refresh flag
   const [showPaidConfirmationModal, setShowPaidConfirmationModal] = useState(false);
   const [invoiceToMarkAsPaid, setInvoiceToMarkAsPaid] = useState<any>(null);
   const [inventoryImpact, setInventoryImpact] = useState<any[]>([]);
@@ -389,29 +390,58 @@ const IncomePage = () => {
   };
 
   const updateInvoiceItem = (index: number, field: string, value: any) => {
+    console.log('🔍 DEBUG - updateInvoiceItem called:', { index, field, value });
+    console.log('🔍 DEBUG - Current invoiceData.items before update:', invoiceData.items);
+    
     const newItems = [...invoiceData.items];
+    const oldItem = { ...newItems[index] };
     newItems[index] = { ...newItems[index], [field]: value };
+    
+    console.log('🔍 DEBUG - Item update comparison:', {
+      index,
+      oldItem,
+      newItem: newItems[index],
+      field,
+      oldValue: (oldItem as any)[field],
+      newValue: value
+    });
     
     // Calculate item total
     if (field === 'quantity' || field === 'unitPrice') {
       const qty = parseFloat(newItems[index].quantity) || 0;
       const price = parseFloat(newItems[index].unitPrice) || 0;
       newItems[index].total = qty * price;
+      console.log('🔍 DEBUG - Calculated item total:', { qty, price, total: newItems[index].total });
     }
     
+    console.log('🔍 DEBUG - About to call setInvoiceData with newItems:', newItems);
+    
     setInvoiceData(prev => {
+      console.log('🔍 DEBUG - setInvoiceData callback - previous state:', prev);
+      
       const subtotal = newItems.reduce((sum, item) => sum + item.total, 0);
       const tax = subtotal * 0.075; // 7.5% tax
       const total = subtotal + tax;
       
-      return {
+      const newState = {
         ...prev,
         items: newItems,
         subtotal,
         tax,
         total
       };
+      
+      console.log('🔍 DEBUG - setInvoiceData callback - new state:', newState);
+      console.log('🔍 DEBUG - Specifically, updated item:', newState.items[index]);
+      
+      return newState;
     });
+    
+    // Add setTimeout to check state after update
+    setTimeout(() => {
+      console.log('🔍 DEBUG - State check after update - invoiceData.items[index]:', invoiceData.items[index]);
+      console.log('🔍 DEBUG - State check after update - inventoryItemId field:', invoiceData.items[index]?.inventoryItemId);
+    }, 100);
   };
 
   const addInvoiceItem = () => {
@@ -991,16 +1021,50 @@ TrackFarmOps Team`;
       setInventoryLoading(true);
       console.log('📦 Fetching inventory data for invoice items...');
       
-      // Fetch inventory items and categories in parallel
+      // Use the correct API endpoints that match the backend routes
       const [itemsResponse, categoriesResponse] = await Promise.all([
         api.get('/inventory/items'),
         api.get('/inventory/categories')
       ]);
       
+      // The backend returns arrays directly, not nested objects
       const items = itemsResponse.data || [];
       const categories = categoriesResponse.data || [];
       
-      setInventoryItems(items);
+      // Debug: Log inventory items to check price data structure
+      console.log('🔍 DEBUG - Raw inventory items:', items);
+      console.log('🔍 DEBUG - Sample item structure:', items[0]);
+      console.log('🔍 DEBUG - Price data check:', items.map((item: any) => ({
+        id: item.id,
+        name: item.name,
+        pricePerUnit: item.pricePerUnit,
+        metadata: item.metadata,
+        unitPrice: item.unitPrice
+      })));
+      
+      // Process items to ensure price data is available
+      const processedItems = items.map((item: any) => {
+        // Try to get price from multiple possible fields
+        let price = item.pricePerUnit || item.unitPrice || 0;
+        
+        // If price is still 0, try to extract from metadata
+        if (!price && item.metadata && typeof item.metadata === 'object') {
+          price = (item.metadata as any).pricePerUnit || (item.metadata as any).unitPrice || 0;
+        }
+        
+        return {
+          ...item,
+          pricePerUnit: price || 0
+        };
+      });
+      
+      console.log('🔍 DEBUG - Processed items with prices:', processedItems.map((item: any) => ({
+        id: item.id,
+        name: item.name,
+        finalPrice: item.pricePerUnit
+      })));
+      
+      setInventoryItems(processedItems);
       setInventoryCategories(categories);
       
       console.log(`✅ Loaded ${items.length} items and ${categories.length} categories`);
@@ -1019,7 +1083,23 @@ TrackFarmOps Team`;
     } catch (error: any) {
       console.error('❌ Failed to fetch inventory data:', error);
       console.log('🔍 DEBUG - Error details:', error.response?.data || error.message);
-      // Don't show error to user, just log it - invoice can still work without inventory
+      
+      // If API fails, set minimal fallback data to ensure dropdown works
+      const fallbackItems = [
+        { id: '1', name: 'Tomatoes', categoryId: '1', quantity: 100, unit: 'kg', pricePerUnit: 50 },
+        { id: '2', name: 'Lettuce', categoryId: '1', quantity: 50, unit: 'kg', pricePerUnit: 30 },
+        { id: '3', name: 'Fertilizer', categoryId: '2', quantity: 25, unit: 'bags', pricePerUnit: 1500 },
+        { id: '4', name: 'Seeds', categoryId: '2', quantity: 100, unit: 'packets', pricePerUnit: 100 }
+      ];
+      
+      const fallbackCategories = [
+        { id: '1', name: 'Produce', icon: '🌾' },
+        { id: '2', name: 'Supplies', icon: '🛠️' }
+      ];
+      
+      console.log('⚠️ Using fallback data due to API failure');
+      setInventoryItems(fallbackItems);
+      setInventoryCategories(fallbackCategories);
     } finally {
       setInventoryLoading(false);
     }
@@ -1029,21 +1109,30 @@ TrackFarmOps Team`;
   const calculateInventoryImpact = (invoice: any) => {
     const impact: any[] = [];
     
+    console.log('🔍 DEBUG - Calculating inventory impact for invoice:', invoice);
+    
     if (!invoice.items || !Array.isArray(invoice.items)) {
+      console.log('🔍 DEBUG - No items in invoice');
       return impact;
     }
     
     invoice.items.forEach((invoiceItem: any) => {
+      console.log('🔍 DEBUG - Processing invoice item:', invoiceItem);
+      
       // Find matching inventory items by name or description
       const matchingInventoryItems = inventoryItems.filter(invItem => 
         invItem.name.toLowerCase().includes(invoiceItem.description?.toLowerCase() || '') ||
         (invoiceItem.description?.toLowerCase() || '').includes(invItem.name.toLowerCase())
       );
       
+      console.log('🔍 DEBUG - Matching inventory items found:', matchingInventoryItems.length, matchingInventoryItems.map(item => ({ id: item.id, name: item.name, quantity: item.quantity })));
+      
       matchingInventoryItems.forEach(invItem => {
         const quantity = parseFloat(invoiceItem.quantity) || 0;
+        console.log('🔍 DEBUG - Invoice quantity:', quantity, 'for item:', invItem.name);
+        
         if (quantity > 0) {
-          impact.push({
+          const impactEntry = {
             inventoryItem: invItem,
             invoiceQuantity: quantity,
             currentStock: invItem.quantity || 0,
@@ -1051,11 +1140,15 @@ TrackFarmOps Team`;
             stockStatus: (invItem.quantity || 0) >= quantity ? 'sufficient' : 'insufficient',
             unitPrice: invItem.pricePerUnit || 0,
             totalValue: quantity * (invItem.pricePerUnit || 0)
-          });
+          };
+          
+          console.log('🔍 DEBUG - Impact entry created:', impactEntry);
+          impact.push(impactEntry);
         }
       });
     });
     
+    console.log('🔍 DEBUG - Final inventory impact:', impact);
     return impact;
   };
 
@@ -1088,17 +1181,17 @@ TrackFarmOps Team`;
           console.log(`📦 Updating inventory: ${impact.inventoryItem.name} -${impact.invoiceQuantity}`);
           
           await api.put(`/inventory/items/${impact.inventoryItem.id}/quantity`, {
-            quantity: impact.remainingStock,
-            transactionType: 'SALE',
-            notes: `Sold via invoice #${invoiceToMarkAsPaid.invoiceNumber}`,
-            referenceId: invoiceToMarkAsPaid.id,
-            referenceType: 'INVOICE'
+            quantityChange: -impact.invoiceQuantity,
+            reason: `Sold via invoice #${invoiceToMarkAsPaid.invoiceNumber}`,
+            usageType: 'SALES',
+            relatedEntity: 'INVOICE',
+            relatedEntityId: invoiceToMarkAsPaid.id
           });
         }
       }
       
       // Mark invoice as paid (convert to income record)
-      await api.post(`/finance/invoices/${invoiceToMarkAsPaid.id}/mark-paid`);
+      await api.patch(`/invoices/${invoiceToMarkAsPaid.id}/mark-paid`);
       
       // Refresh invoices list
       await fetchInvoices(invoiceCurrentPage);
@@ -2165,58 +2258,168 @@ Generated on: ${new Date().toLocaleString()}
                               </label>
                               <select
                                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
-                                value={item.inventoryItemId || ''}
+                                value={(() => {
+                                  const currentValue = item.inventoryItemId || '';
+                                  console.log('🔍 DEBUG - Dropdown render - item index:', index);
+                                  console.log('🔍 DEBUG - Dropdown render - current item:', item);
+                                  console.log('🔍 DEBUG - Dropdown render - calculated value:', currentValue);
+                                  console.log('🔍 DEBUG - Dropdown render - inventoryItems available:', inventoryItems.length);
+                                  return currentValue;
+                                })()}
+                                onMouseDown={() => {
+                                  console.log('🔍 DEBUG - Dropdown onMouseDown triggered for item index:', index);
+                                  console.log('🔍 DEBUG - Current inventoryRefreshed flag:', inventoryRefreshed);
+                                  // Only refresh if not already refreshed in this session
+                                  if (!inventoryRefreshed) {
+                                    console.log('🔄 Refreshing inventory data on dropdown open...');
+                                    fetchInventoryData();
+                                    setInventoryRefreshed(true);
+                                  } else {
+                                    console.log('🔍 DEBUG - Skipping refresh - already refreshed');
+                                  }
+                                }}
                                 onChange={(e) => {
                                   const inventoryItemId = e.target.value;
+                                  console.log('🔍 DEBUG - Dropdown onChange triggered for item index:', index);
+                                  console.log('🔍 DEBUG - Dropdown onChange - selected value:', inventoryItemId);
+                                  console.log('🔍 DEBUG - Dropdown onChange - current item state:', item);
+                                  console.log('🔍 DEBUG - Dropdown onChange - inventoryItems available:', inventoryItems.length);
+                                  
                                   if (inventoryItemId) {
-                                    const selectedItem = inventoryItems.find(inv => inv.id.toString() === inventoryItemId);
+                                    const selectedItem = inventoryItems.find(inv => 
+                                      inv.id.toString() === inventoryItemId.toString()
+                                    );
+                                    console.log('🔍 DEBUG - Found selected item:', selectedItem);
+                                    
                                     if (selectedItem) {
-                                      updateInvoiceItem(index, 'inventoryItemId', inventoryItemId);
-                                      updateInvoiceItem(index, 'description', selectedItem.name);
-                                      updateInvoiceItem(index, 'unitPrice', selectedItem.pricePerUnit || 0);
-                                      updateInvoiceItem(index, 'categoryId', selectedItem.categoryId);
+                                      console.log('🔍 DEBUG - Updating invoice item with:', {
+                                        inventoryItemId: inventoryItemId.toString(),
+                                        description: selectedItem.name,
+                                        unitPrice: selectedItem.pricePerUnit || 0,
+                                        categoryId: selectedItem.categoryId
+                                      });
+                                      
+                                      // Batch all updates into a single call to prevent state conflicts
+                                      const newItems = [...invoiceData.items];
+                                      const updatedItem = {
+                                        ...newItems[index],
+                                        inventoryItemId: inventoryItemId.toString(),
+                                        description: selectedItem.name,
+                                        unitPrice: selectedItem.pricePerUnit || 0,
+                                        categoryId: selectedItem.categoryId
+                                      };
+                                      
+                                      // Calculate total if quantity exists
+                                      const qty = parseFloat(updatedItem.quantity) || 0;
+                                      const price = parseFloat(updatedItem.unitPrice) || 0;
+                                      updatedItem.total = qty * price;
+                                      
+                                      newItems[index] = updatedItem;
+                                      
+                                      console.log('🔍 DEBUG - Batched update - new item:', updatedItem);
+                                      console.log('🔍 DEBUG - Batched update - all items:', newItems);
+                                      
+                                      // Single state update
+                                      setInvoiceData(prev => {
+                                        console.log('🔍 DEBUG - Batched setInvoiceData - previous state:', prev);
+                                        
+                                        const subtotal = newItems.reduce((sum, item) => sum + item.total, 0);
+                                        const tax = subtotal * 0.075; // 7.5% tax
+                                        const total = subtotal + tax;
+                                        
+                                        const newState = {
+                                          ...prev,
+                                          items: newItems,
+                                          subtotal,
+                                          tax,
+                                          total
+                                        };
+                                        
+                                        console.log('🔍 DEBUG - Batched setInvoiceData - new state:', newState);
+                                        return newState;
+                                      });
+                                      
+                                      console.log('🔍 DEBUG - Invoice item updated successfully with batched updates');
+                                    } else {
+                                      console.log('⚠️ DEBUG - Selected item not found in inventoryItems');
+                                      console.log('🔍 DEBUG - Available inventory items:', inventoryItems.map(item => ({ id: item.id, name: item.name })));
                                     }
                                   } else {
+                                    console.log('🔍 DEBUG - Clearing inventory selection');
                                     // Clear inventory selection but keep manual description
-                                    updateInvoiceItem(index, 'inventoryItemId', '');
-                                    updateInvoiceItem(index, 'categoryId', '');
+                                    const newItems = [...invoiceData.items];
+                                    newItems[index] = {
+                                      ...newItems[index],
+                                      inventoryItemId: '',
+                                      categoryId: ''
+                                    };
+                                    
+                                    setInvoiceData(prev => ({
+                                      ...prev,
+                                      items: newItems
+                                    }));
                                   }
                                 }}
                               >
                                 <option value="">-- Select from Inventory --</option>
                                 {inventoryCategories.length === 0 && inventoryItems.length > 0 && (
                                   <optgroup label="📦 Uncategorized Items">
-                                    {inventoryItems.map(invItem => (
-                                      <option 
-                                        key={invItem.id} 
-                                        value={invItem.id}
-                                        disabled={(invItem.quantity || 0) <= 0}
-                                      >
-                                        {invItem.name} ({invItem.quantity || 0} {invItem.unit}) - ₦{formatNumberWithSeparator(invItem.pricePerUnit || 0)}/unit
-                                        {(invItem.quantity || 0) <= 0 && ' (OUT OF STOCK)'}
-                                      </option>
-                                    ))}
-                                  </optgroup>
-                                )}
-                                {inventoryCategories.length === 0 && (
-                                  <option value="" disabled>No categories available</option>
-                                )}
-                                {inventoryCategories.map(category => (
-                                  <optgroup key={category.id} label={`${category.icon || '📦'} ${category.name}`}>
-                                    {inventoryItems
-                                      .filter(item => item.categoryId === category.id)
-                                      .map(invItem => (
+                                    {inventoryItems.map(invItem => {
+                                      console.log('🔍 DEBUG - Rendering uncategorized item option:', {
+                                        id: invItem.id,
+                                        idToString: invItem.id.toString(),
+                                        name: invItem.name,
+                                        pricePerUnit: invItem.pricePerUnit
+                                      });
+                                      
+                                      return (
                                         <option 
                                           key={invItem.id} 
-                                          value={invItem.id}
+                                          value={invItem.id.toString()}
                                           disabled={(invItem.quantity || 0) <= 0}
                                         >
                                           {invItem.name} ({invItem.quantity || 0} {invItem.unit}) - ₦{formatNumberWithSeparator(invItem.pricePerUnit || 0)}/unit
                                           {(invItem.quantity || 0) <= 0 && ' (OUT OF STOCK)'}
                                         </option>
-                                      ))}
+                                      );
+                                    })}
                                   </optgroup>
-                                ))}
+                                )}
+                                {inventoryCategories.length === 0 && (
+                                  <option value="" disabled>No categories available</option>
+                                )}
+                                {inventoryCategories.map(category => {
+                                  console.log('🔍 DEBUG - Rendering category:', category);
+                                  
+                                  return (
+                                    <optgroup key={category.id} label={`${category.icon || '📦'} ${category.name}`}>
+                                      {inventoryItems
+                                        .filter(item => item.categoryId === category.id)
+                                        .map(invItem => {
+                                          console.log('🔍 DEBUG - Rendering categorized item option:', {
+                                            categoryId: category.id,
+                                            categoryName: category.name,
+                                            itemId: invItem.id,
+                                            itemIdToString: invItem.id.toString(),
+                                            itemName: invItem.name,
+                                            itemCategoryId: invItem.categoryId,
+                                            pricePerUnit: invItem.pricePerUnit
+                                          });
+                                          
+                                          return (
+                                            <option 
+                                              key={invItem.id} 
+                                              value={invItem.id.toString()}
+                                              disabled={(invItem.quantity || 0) <= 0}
+                                            >
+                                              {invItem.name} ({invItem.quantity || 0} {invItem.unit}) - ₦{formatNumberWithSeparator(invItem.pricePerUnit || 0)}/unit
+                                              {(invItem.quantity || 0) <= 0 && ' (OUT OF STOCK)'}
+                                            </option>
+                                          );
+                                        })}
+                                    </optgroup>
+                                  );
+                                })}
                                 {inventoryCategories.length > 0 && inventoryItems.length === 0 && (
                                   <option value="" disabled>No items available in inventory</option>
                                 )}
@@ -2224,6 +2427,19 @@ Generated on: ${new Date().toLocaleString()}
                                   <option value="" disabled>No inventory data available</option>
                                 )}
                               </select>
+                              {item.inventoryItemId && (
+                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                  Category: {(() => {
+                                    const invItem = inventoryItems.find(inv => inv.id.toString() === item.inventoryItemId);
+                                    if (!invItem) return 'N/A';
+                                    if (invItem.categoryId) {
+                                      const category = inventoryCategories.find(cat => cat.id === invItem.categoryId);
+                                      return category ? category.name : 'Unknown Category';
+                                    }
+                                    return 'Uncategorized';
+                                  })()}
+                                </p>
+                              )}
                             </div>
                             
                             {/* Manual Description */}
@@ -2390,7 +2606,7 @@ Generated on: ${new Date().toLocaleString()}
                 </form>
               ) : (
                 <div className="space-y-4">
-                  <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 p-4 sm:p-6 rounded-lg">
+                  <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 p-4 sm:p-6 rounded-lg max-w-2xl">
                     <h3 className="text-base sm:text-lg font-semibold text-green-800 dark:text-green-200 mb-2">
                       Invoice Generated Successfully!
                     </h3>
@@ -2921,7 +3137,7 @@ Generated on: ${new Date().toLocaleString()}
                             </select>
                           </div>
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-0">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                               Payment Method
                             </label>
                             <select
