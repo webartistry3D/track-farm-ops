@@ -16,7 +16,6 @@ import {
   BarChart3,
   Activity,
   Calendar,
-  ArrowUp,
   Target,
   Zap,
   RefreshCw,
@@ -130,7 +129,7 @@ const Analytics = () => {
     notes: ''
   });
   
-  const [equipmentMaintenance, setEquipmentMaintenance] = useState({
+  const [] = useState({
     equipmentName: '',
     maintenanceType: '',
     scheduledDate: '',
@@ -139,7 +138,7 @@ const Analytics = () => {
     notes: ''
   });
   
-  const [workerAssignment, setWorkerAssignment] = useState({
+  const [] = useState({
     workerName: '',
     assignedTask: '',
     startTime: '',
