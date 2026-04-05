@@ -1078,7 +1078,7 @@ const Analytics = () => {
             {/* Crop Management Widget */}
             <div 
               onClick={() => setShowCropModal(true)}
-              className="bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-900/20 dark:to-emerald-800/20 border border-green-200 dark:border-green-800 rounded-xl p-6 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
+              className="bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-900/20 dark:to-emerald-800/20 dark:border-green-800 rounded-xl p-6 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
@@ -1116,7 +1116,7 @@ const Analytics = () => {
             {/* Soil Management Widget */}
             <div 
               onClick={() => setShowSoilModal(true)}
-              className="bg-gradient-to-br from-amber-50 to-orange-100 dark:from-amber-900/20 dark:to-orange-800/20 border border-amber-200 dark:border-amber-800 rounded-xl p-6 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
+              className="bg-gradient-to-br from-amber-50 to-orange-100 dark:from-amber-900/20 dark:to-orange-800/20 dark:border-amber-800 rounded-xl p-6 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
@@ -1154,7 +1154,7 @@ const Analytics = () => {
             {/* Weather Impact Widget */}
             <div 
               onClick={() => setShowWeatherModal(true)}
-              className="bg-gradient-to-br from-blue-50 to-sky-100 dark:from-blue-900/20 dark:to-sky-800/20 border border-blue-200 dark:border-blue-800 rounded-xl p-6 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
+              className="bg-gradient-to-br from-blue-50 to-sky-100 dark:from-blue-900/20 dark:to-sky-800/20 dark:border-blue-800 rounded-xl p-6 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
