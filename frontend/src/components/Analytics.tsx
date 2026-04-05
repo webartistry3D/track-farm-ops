@@ -92,6 +92,15 @@ const Analytics = () => {
   const [showPestModal, setShowPestModal] = useState(false);
   const [showEquipmentModal, setShowEquipmentModal] = useState(false);
   const [showFieldModal, setShowFieldModal] = useState(false);
+  const [showInventoryModal, setShowInventoryModal] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [, setShowTotalItemsModal] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [, setShowLivestockModal] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [, setShowProduceModal] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [, setShowConsumablesModal] = useState(false);
 
   // Farm Operations Data
   const [crops, setCrops] = useState([
@@ -1041,31 +1050,39 @@ const Analytics = () => {
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <StatCard
-                title="Total Items"
-                value={inventorySummary?.totalItems?.toString() || '0'}
-                icon={<Package className="w-6 h-6 text-white" />}
-                color="bg-blue-500"
-              />
-              <StatCard
-                title="Livestock"
-                value={inventorySummary?.livestock?.toString() || '0'}
-                icon={<Heart className="w-6 h-6 text-white" />}
-                color="bg-indigo-500"
-              />
-              <StatCard
-                title="Produce"
-                value={inventorySummary?.produce?.toString() || '0'}
-                icon={<Apple className="w-6 h-6 text-white" />}
-                color="bg-green-500"
-              />
-              <StatCard
-                title="Consumables"
-                value={inventorySummary?.consumables?.toString() || '0'}
-                icon={<Box className="w-6 h-6 text-white" />}
-                color="bg-orange-500"
-              />
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div onClick={() => setShowTotalItemsModal(true)} className="cursor-pointer">
+                <StatCard
+                  title="Total Items"
+                  value={inventorySummary?.totalItems?.toString() || '0'}
+                  icon={<Package className="w-6 h-6 text-white" />}
+                  color="bg-blue-500"
+                />
+              </div>
+              <div onClick={() => setShowLivestockModal(true)} className="cursor-pointer">
+                <StatCard
+                  title="Livestock"
+                  value={inventorySummary?.livestock?.toString() || '0'}
+                  icon={<Heart className="w-6 h-6 text-white" />}
+                  color="bg-indigo-500"
+                />
+              </div>
+              <div onClick={() => setShowProduceModal(true)} className="cursor-pointer">
+                <StatCard
+                  title="Produce"
+                  value={inventorySummary?.produce?.toString() || '0'}
+                  icon={<Apple className="w-6 h-6 text-white" />}
+                  color="bg-green-500"
+                />
+              </div>
+              <div onClick={() => setShowConsumablesModal(true)} className="cursor-pointer">
+                <StatCard
+                  title="Consumables"
+                  value={inventorySummary?.consumables?.toString() || '0'}
+                  icon={<Box className="w-6 h-6 text-white" />}
+                  color="bg-orange-500"
+                />
+              </div>
             </div>
           )}
         </div>
@@ -2358,6 +2375,156 @@ const Analytics = () => {
                       </div>
                     ))}
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Inventory Modal */}
+        {showInventoryModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-6xl max-h-[90vh] overflow-hidden flex flex-col">
+              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <Package className="h-8 w-8 mr-3" />
+                    <h2 className="text-2xl font-bold">Inventory Analytics Dashboard</h2>
+                  </div>
+                  <button
+                    onClick={() => setShowInventoryModal(false)}
+                    className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center hover:bg-white/30 transition-colors"
+                  >
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              
+              <div className="p-6 overflow-y-auto">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                  {/* Total Items Card */}
+                  <div className="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-800/20 border border-blue-200 dark:border-blue-800 rounded-xl p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Total Items</h3>
+                      <div className="p-3 bg-blue-500 rounded-lg">
+                        <Package className="h-6 w-6 text-white" />
+                      </div>
+                    </div>
+                    <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                      {inventorySummary?.totalItems?.toLocaleString() || '0'}
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600 dark:text-gray-400">Low Stock Items</span>
+                        <span className="font-medium text-orange-600">12</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600 dark:text-gray-400">Out of Stock</span>
+                        <span className="font-medium text-red-600">3</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Livestock Card */}
+                  <div className="bg-gradient-to-br from-indigo-50 to-purple-100 dark:from-indigo-900/20 dark:to-purple-800/20 border border-indigo-200 dark:border-indigo-800 rounded-xl p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Livestock</h3>
+                      <div className="p-3 bg-indigo-500 rounded-lg">
+                        <Heart className="h-6 w-6 text-white" />
+                      </div>
+                    </div>
+                    <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                      {inventorySummary?.livestock?.toLocaleString() || '0'}
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600 dark:text-gray-400">Healthy</span>
+                        <span className="font-medium text-green-600">85%</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600 dark:text-gray-400">Needs Attention</span>
+                        <span className="font-medium text-yellow-600">15%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                  {/* Produce Card */}
+                  <div className="bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-900/20 dark:to-emerald-800/20 border border-green-200 dark:border-green-800 rounded-xl p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Produce</h3>
+                      <div className="p-3 bg-green-500 rounded-lg">
+                        <Apple className="h-6 w-6 text-white" />
+                      </div>
+                    </div>
+                    <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                      {inventorySummary?.produce?.toLocaleString() || '0'}
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600 dark:text-gray-400">Fresh Produce</span>
+                        <span className="font-medium text-green-600">78%</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600 dark:text-gray-400">Ready for Harvest</span>
+                        <span className="font-medium text-blue-600">22%</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Consumables Card */}
+                  <div className="bg-gradient-to-br from-orange-50 to-amber-100 dark:from-orange-900/20 dark:to-amber-800/20 border border-orange-200 dark:border-orange-800 rounded-xl p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Consumables</h3>
+                      <div className="p-3 bg-orange-500 rounded-lg">
+                        <Box className="h-6 w-6 text-white" />
+                      </div>
+                    </div>
+                    <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                      {inventorySummary?.consumables?.toLocaleString() || '0'}
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600 dark:text-gray-400">Well Stocked</span>
+                        <span className="font-medium text-green-600">92%</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600 dark:text-gray-400">Expiring Soon</span>
+                        <span className="font-medium text-orange-600">8%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Inventory Trends */}
+                <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6">
+                  <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Inventory Trends</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-green-600">+12%</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">Monthly Growth</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-blue-600">₦2.5M</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">Total Value</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-purple-600">94%</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">Utilization Rate</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-end mt-6">
+                  <button 
+                    onClick={() => setShowInventoryModal(false)}
+                    className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                  >
+                    Close Dashboard
+                  </button>
                 </div>
               </div>
             </div>
