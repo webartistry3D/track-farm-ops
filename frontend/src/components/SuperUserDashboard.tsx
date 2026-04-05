@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import api from '../lib/api';
 import {
-  Users, Building, Activity, Database, Settings, Globe, TrendingUp, TrendingDown,
+  Users, Building, Activity, Database, Settings, Globe, TrendingUp,
   Eye, Lock, Unlock, Search, RefreshCw, BarChart3, LineChart,
   UserCheck, LogOut, Bell, Menu, X, Server, FileText, Trash2, Plus, CreditCard, DollarSign, Calendar
 } from 'lucide-react';
