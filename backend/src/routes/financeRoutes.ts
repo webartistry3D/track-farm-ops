@@ -812,11 +812,45 @@ router.get('/vat/records', authenticate, async (req: AuthRequest, res) => {
     
     console.log(`📅 Date filter applied:`, dateFilter);
 
-    // Fetch ALL income entries (like Income Records API) - frontend will handle VAT filtering
+    // Get current user's organization
+    const currentUserOrg = await prisma.user.findUnique({
+      where: { id: currentUser.id },
+      select: { 
+        organizationId: true,
+        organization: {
+          select: { id: true, name: true }
+        }
+      }
+    });
+    
+    if (!currentUserOrg || !currentUserOrg.organizationId) {
+      console.log('⚠️ User not assigned to any organization - access denied for VAT records');
+      return res.status(403).json({ 
+        error: 'Access denied. User must be assigned to an organization.',
+        code: 'NO_ORGANIZATION'
+      });
+    }
+
+    console.log(`🏢 User belongs to organization: ${currentUserOrg.organization?.name} (ID: ${currentUserOrg.organizationId})`);
+
+    // Fetch ALL income entries for the organization (not just current user)
     const incomeEntries = await prisma.incomeEntry.findMany({
       where: {
-        userId: currentUser.id,
+        // Filter by organization - get entries from ALL users in the same organization
+        user: {
+          organizationId: currentUserOrg.organizationId
+        },
         date: dateFilter
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true
+          }
+        }
       },
       orderBy: {
         date: 'desc'
@@ -825,54 +859,9 @@ router.get('/vat/records', authenticate, async (req: AuthRequest, res) => {
       skip: Number(offset)
     });
     
-    console.log(`🔍 Found ${incomeEntries.length} income entries with VAT for user ${currentUser.id}`);
+    console.log(`🔍 Found ${incomeEntries.length} income entries with VAT for organization ${currentUserOrg.organization?.name}`);
     
-    // Get user organization for role-based access
-    const currentUserOrg = await prisma.user.findUnique({
-      where: { id: currentUser.id },
-      select: { 
-        organizationId: true 
-      }
-    });
-    
-    // Get user IDs that current user should see within their organization
-    let userIds: number[];
-    if (currentUserOrg?.organizationId) {
-      if (currentUser.role === 'OWNER') {
-        const orgUsers = await prisma.user.findMany({
-          where: { organizationId: currentUserOrg.organizationId },
-          select: { id: true }
-        });
-        userIds = orgUsers.map(u => u.id);
-      } else if (currentUser.role === 'MANAGER') {
-        const orgUsers = await prisma.user.findMany({
-          where: { 
-            organizationId: currentUserOrg.organizationId,
-            role: { in: ['OWNER', 'MANAGER', 'WORKER'] }
-          },
-          select: { id: true }
-        });
-        userIds = orgUsers.map(u => u.id);
-      } else if (currentUser.role === 'WORKER') {
-        // WORKER can see records by OWNER, MANAGER and WORKER within their organization
-        const orgUsers = await prisma.user.findMany({
-          where: { 
-            organizationId: currentUserOrg.organizationId,
-            role: { in: ['OWNER', 'MANAGER', 'WORKER'] }
-          },
-          select: { id: true }
-        });
-        userIds = orgUsers.map(u => u.id);
-      } else {
-        // Fallback - only user's own records within organization
-        userIds = [currentUser.id];
-      }
-      
-      // Filter income entries by organization users
-      incomeEntries.filter(entry => userIds.includes(entry.userId));
-    } else {
-      console.log(`❌ User ${currentUser.id} has no organizationId`);
-    }
+    // No need for additional filtering since we already filtered by organization
     
     // Process income entries into VAT records
     const vatRecords = incomeEntries.map((entry, index) => {
