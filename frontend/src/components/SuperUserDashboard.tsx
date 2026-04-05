@@ -6,7 +6,7 @@ import api from '../lib/api';
 import {
   Users, Building, Activity, Database, Settings, Globe, TrendingUp, TrendingDown,
   Eye, Lock, Unlock, Search, RefreshCw, BarChart3, LineChart,
-  UserCheck, LogOut, Bell, Menu, X, Server, FileText, Trash2, Plus, CreditCard, DollarSign
+  UserCheck, LogOut, Bell, Menu, X, Server, FileText, Trash2, Plus, CreditCard, DollarSign, Calendar
 } from 'lucide-react';
 
 console.log('🔍 SUPERUSER DASHBOARD - All imports loaded successfully');
@@ -160,6 +160,19 @@ const SuperUserDashboard = () => {
     const [showUserModal, setShowUserModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [userToDelete, setUserToDelete] = useState<User | null>(null);
+    
+    // Organization modal states
+    const [selectedOrg, setSelectedOrg] = useState<Organization | null>(null);
+    const [showOrgModal, setShowOrgModal] = useState(false);
+    
+    // Subscription modal states
+    const [selectedSub, setSelectedSub] = useState<Subscription | null>(null);
+    const [showSubModal, setShowSubModal] = useState(false);
+    
+    // Settings operation states
+    const [maintenanceLoading, setMaintenanceLoading] = useState(false);
+    const [backupLoading, setBackupLoading] = useState(false);
+    const [cacheLoading, setCacheLoading] = useState(false);
 
     const menuItems = [
       { id: 'overview', label: 'Overview', icon: BarChart3 },
@@ -258,33 +271,72 @@ const SuperUserDashboard = () => {
     };
 
     const handleMaintenanceMode = async () => {
+    setMaintenanceLoading(true);
     try {
-      await api.post('/superuser/maintenance-mode');
-      alert('Maintenance mode toggled successfully');
-    } catch (error) {
-      console.error('Failed to toggle maintenance mode:', error);
-      alert('Failed to toggle maintenance mode');
+      const response = await api.post('/superuser/maintenance-mode');
+      console.log('Maintenance mode response:', response);
+      
+      // Show success message
+      const successMessage = response.data?.message || 'Maintenance mode toggled successfully';
+      console.log('✅ Success:', successMessage);
+      
+      // You could add a toast notification here instead of alert
+      if (response.data?.maintenanceMode) {
+        alert('✅ Maintenance mode ENABLED - Users will see maintenance page');
+      } else {
+        alert('✅ Maintenance mode DISABLED - Normal access restored');
+      }
+      
+    } catch (error: any) {
+      console.error('❌ Failed to toggle maintenance mode:', error);
+      const errorMessage = error.response?.data?.message || 'Failed to toggle maintenance mode';
+      alert(`❌ Error: ${errorMessage}`);
+    } finally {
+      setMaintenanceLoading(false);
     }
   };
 
   const handleBackupDatabase = async () => {
+    setBackupLoading(true);
     try {
       const response = await api.post('/superuser/backup-database');
-      alert('Database backup started successfully');
       console.log('Backup response:', response);
-    } catch (error) {
-      console.error('Failed to backup database:', error);
-      alert('Failed to backup database');
+      
+      // Show success message with backup details
+      const successMessage = response.data?.message || 'Database backup started successfully';
+      const backupInfo = response.data?.backupInfo || {};
+      
+      console.log('✅ Success:', successMessage);
+      alert(`✅ ${successMessage}\n\n📁 Backup File: ${backupInfo.fileName || 'Processing...'}\n📊 Size: ${backupInfo.size || 'Calculating...'}\n⏰ Started: ${new Date().toLocaleString()}`);
+      
+    } catch (error: any) {
+      console.error('❌ Failed to backup database:', error);
+      const errorMessage = error.response?.data?.message || 'Failed to backup database';
+      alert(`❌ Error: ${errorMessage}`);
+    } finally {
+      setBackupLoading(false);
     }
   };
 
   const handleClearCache = async () => {
+    setCacheLoading(true);
     try {
-      await api.post('/superuser/clear-cache');
-      alert('Cache cleared successfully');
-    } catch (error) {
-      console.error('Failed to clear cache:', error);
-      alert('Failed to clear cache');
+      const response = await api.post('/superuser/clear-cache');
+      console.log('Clear cache response:', response);
+      
+      // Show success message with cache details
+      const successMessage = response.data?.message || 'Cache cleared successfully';
+      const cacheInfo = response.data?.cacheInfo || {};
+      
+      console.log('✅ Success:', successMessage);
+      alert(`✅ ${successMessage}\n\n🗑️ Cleared: ${cacheInfo.clearedItems || 'All cache entries'}\n📦 Space freed: ${cacheInfo.spaceFreed || 'Calculating...'}\n⚡ Performance improved!`);
+      
+    } catch (error: any) {
+      console.error('❌ Failed to clear cache:', error);
+      const errorMessage = error.response?.data?.message || 'Failed to clear cache';
+      alert(`❌ Error: ${errorMessage}`);
+    } finally {
+      setCacheLoading(false);
     }
   };
 
@@ -341,6 +393,30 @@ const SuperUserDashboard = () => {
     const closeUserModal = () => {
       setShowUserModal(false);
       setSelectedUser(null);
+    };
+
+    // Handler for viewing organization details
+    const handleViewOrg = (org: Organization) => {
+      setSelectedOrg(org);
+      setShowOrgModal(true);
+    };
+
+    // Handler for closing organization modal
+    const closeOrgModal = () => {
+      setShowOrgModal(false);
+      setSelectedOrg(null);
+    };
+
+    // Handler for viewing subscription details
+    const handleViewSub = (sub: Subscription) => {
+      setSelectedSub(sub);
+      setShowSubModal(true);
+    };
+
+    // Handler for closing subscription modal
+    const closeSubModal = () => {
+      setShowSubModal(false);
+      setSelectedSub(null);
     };
 
     const handleOrgAction = async (orgId: string, action: string) => {
@@ -776,15 +852,18 @@ const SuperUserDashboard = () => {
               <span className="text-xs text-gray-500 dark:text-gray-400">
                 Created {new Date(org.createdAt).toLocaleDateString()}
               </span>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-3">
                 <button
+                  onClick={() => handleViewOrg(org)}
                   className="text-blue-600 hover:text-blue-900"
+                  title="View Organization Details"
                 >
                   <Eye className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => handleOrgAction(org.id, org.status === 'active' ? 'suspend' : 'activate')}
                   className={org.status === 'active' ? 'text-yellow-600 hover:text-yellow-900' : 'text-green-600 hover:text-green-900'}
+                  title={org.status === 'active' ? 'Suspend Organization' : 'Activate Organization'}
                 >
                   {org.status === 'active' ? <Lock className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
                 </button>
@@ -799,10 +878,25 @@ const SuperUserDashboard = () => {
   const renderSubscriptions = () => {
     // Calculate MRR and other metrics
     const activeSubscriptions = subscriptions.filter(sub => sub.status === 'active');
-    const mrr = activeSubscriptions.reduce((total, sub) => {
-      const monthlyAmount = sub.billingCycle === 'yearly' ? sub.amount / 12 : sub.amount;
-      return total + monthlyAmount;
+    
+    // Calculate total annual revenue first
+    const totalAnnualRevenue = activeSubscriptions.reduce((total, sub) => {
+      // Always treat amounts as yearly for consistency
+      let annualAmount = sub.amount;
+      
+      // If it's marked as monthly, convert to yearly
+      if (sub.billingCycle === 'monthly') {
+        annualAmount = sub.amount * 12;
+      }
+      
+      console.log(`🔍 DEBUG - Subscription: ${sub.plan}, Cycle: ${sub.billingCycle}, Amount: ₦${sub.amount}, Annual: ₦${annualAmount}`);
+      return total + annualAmount;
     }, 0);
+    
+    // MRR is always the annual amount divided by 12
+    const mrr = totalAnnualRevenue / 12;
+    
+    console.log(`🔍 DEBUG - Total Annual Revenue: ₦${totalAnnualRevenue}, MRR: ₦${mrr}`);
     
     const filteredSubs = subscriptions.filter(sub => 
       sub.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -828,32 +922,57 @@ const SuperUserDashboard = () => {
               </div>
               <TrendingUp className="w-12 h-12 text-emerald-200" />
             </div>
+            <div className="flex items-center justify-between">
+              <span className="text-emerald-100 text-xs">
+                <TrendingUp className="inline w-3 h-3 mr-1" />
+                {stats?.monthlyGrowth || 0}% growth
+              </span>
+              <div className="w-16 h-1 bg-white/30 rounded-full overflow-hidden">
+                <div className="h-full bg-white rounded-full" style={{ width: `${Math.min((stats?.monthlyGrowth || 0) * 5, 100)}%` }}></div>
+              </div>
+            </div>
           </div>
-          
+
           <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-blue-100 text-sm font-medium">Total Subscriptions</p>
-                <p className="text-3xl font-bold mt-2">{subscriptions.length}</p>
-                <p className="text-blue-100 text-sm mt-1">{activeSubscriptions.length} active</p>
+                <p className="text-blue-100 text-sm font-medium">Total Annual Revenue</p>
+                <p className="text-3xl font-bold mt-2">₦{totalAnnualRevenue.toLocaleString()}</p>
+                <p className="text-blue-100 text-sm mt-1">Yearly value of active subscriptions</p>
               </div>
-              <CreditCard className="w-12 h-12 text-blue-200" />
+              <Activity className="w-12 h-12 text-blue-200" />
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-blue-100 text-xs">
+                <Activity className="inline w-3 h-3 mr-1" />
+                All billing cycles
+              </span>
+              <div className="w-16 h-1 bg-white/30 rounded-full overflow-hidden">
+                <div className="h-full bg-white rounded-full" style={{ width: '75%' }}></div>
+              </div>
             </div>
           </div>
-          
+
           <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl shadow-lg p-6 text-white">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-purple-100 text-sm font-medium">Churn Rate</p>
-                <p className="text-3xl font-bold mt-2">
-                  {subscriptions.length > 0 ? Math.round((subscriptions.filter(s => s.status === 'cancelled' || s.status === 'expired').length / subscriptions.length) * 100) : 0}%
-                </p>
-                <p className="text-purple-100 text-sm mt-1">This month</p>
+                <p className="text-purple-100 text-sm font-medium">Active Subscriptions</p>
+                <p className="text-3xl font-bold mt-2">{activeSubscriptions.length}</p>
+                <p className="text-purple-100 text-sm mt-1">Currently active plans</p>
               </div>
-              <TrendingDown className="w-12 h-12 text-purple-200" />
+              <CreditCard className="w-12 h-12 text-purple-200" />
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-purple-100 text-xs">
+                <Users className="inline w-3 h-3 mr-1" />
+                {subscriptions.length} total subscriptions
+              </span>
+              <div className="w-16 h-1 bg-white/30 rounded-full overflow-hidden">
+                <div className="h-full bg-white rounded-full" style={{ width: `${(activeSubscriptions.length / subscriptions.length) * 100}%` }}></div>
+              </div>
             </div>
           </div>
-          
+
           <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl shadow-lg p-6 text-white">
             <div className="flex items-center justify-between">
               <div>
@@ -863,7 +982,16 @@ const SuperUserDashboard = () => {
                 </p>
                 <p className="text-orange-100 text-sm mt-1">Per active user</p>
               </div>
-              <DollarSign className="w-12 h-12 text-orange-200" />
+              <UserCheck className="w-12 h-12 text-orange-200" />
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-orange-100 text-xs">
+                <BarChart3 className="inline w-3 h-3 mr-1" />
+                Monthly average
+              </span>
+              <div className="w-16 h-1 bg-white/30 rounded-full overflow-hidden">
+                <div className="h-full bg-white rounded-full" style={{ width: '60%' }}></div>
+              </div>
             </div>
           </div>
         </div>
@@ -964,13 +1092,18 @@ const SuperUserDashboard = () => {
                       {new Date(sub.nextBillingDate).toLocaleDateString()}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-sm font-medium">
-                      <div className="flex items-center space-x-1">
-                        <button className="text-blue-600 hover:text-blue-900">
+                      <div className="flex items-center space-x-3">
+                        <button 
+                          onClick={() => handleViewSub(sub)}
+                          className="text-blue-600 hover:text-blue-900"
+                          title="View Subscription Details"
+                        >
                           <Eye className="w-4 h-4" />
                         </button>
                         <button 
                           onClick={() => handleSubscriptionAction(sub.id, sub.status === 'active' ? 'cancel' : 'activate')}
                           className={sub.status === 'active' ? 'text-yellow-600 hover:text-yellow-900' : 'text-green-600 hover:text-green-900'}
+                          title={sub.status === 'active' ? 'Cancel Subscription' : 'Activate Subscription'}
                         >
                           {sub.status === 'active' ? <Lock className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
                         </button>
@@ -1152,11 +1285,11 @@ const SuperUserDashboard = () => {
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600 dark:text-gray-400">Total Users</span>
-              <span className="text-2xl font-bold text-gray-900 dark:text-white">{stats?.totalUsers || 0}</span>
+              <span className="text-2xl font-bold text-gray-900 dark:text-white">{(stats?.totalUsers || 0).toLocaleString()}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600 dark:text-gray-400">Active Users</span>
-              <span className="text-2xl font-bold text-green-600">{stats?.activeUsers || 0}</span>
+              <span className="text-2xl font-bold text-green-600">{(stats?.activeUsers || 0).toLocaleString()}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600 dark:text-gray-400">Growth Rate</span>
@@ -1169,7 +1302,7 @@ const SuperUserDashboard = () => {
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600 dark:text-gray-400">Total Revenue</span>
-              <span className="text-2xl font-bold text-gray-900 dark:text-white">₦{(stats?.totalRevenue || 0).toLocaleString()}</span>
+              <span className="text-2xl font-bold text-gray-900 dark:text-white">₦{Number(stats?.totalRevenue || 0).toLocaleString()}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600 dark:text-gray-400">Monthly Growth</span>
@@ -1193,9 +1326,20 @@ const SuperUserDashboard = () => {
             </div>
             <button 
               onClick={handleMaintenanceMode}
-              className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+              disabled={maintenanceLoading}
+              className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
-              {loading ? 'Enabling...' : 'Enable Maintenance'}
+              {maintenanceLoading ? (
+                <>
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  Enabling...
+                </>
+              ) : (
+                <>
+                  <Settings className="w-4 h-4" />
+                  Toggle Maintenance
+                </>
+              )}
             </button>
           </div>
           <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
@@ -1205,10 +1349,20 @@ const SuperUserDashboard = () => {
             </div>
             <button 
               onClick={handleBackupDatabase}
-              disabled={loading}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+              disabled={backupLoading}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
-              {loading ? 'Backing Up...' : 'Backup Now'}
+              {backupLoading ? (
+                <>
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  Backing Up...
+                </>
+              ) : (
+                <>
+                  <Database className="w-4 h-4" />
+                  Backup Now
+                </>
+              )}
             </button>
           </div>
           <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
@@ -1218,10 +1372,20 @@ const SuperUserDashboard = () => {
             </div>
             <button 
               onClick={handleClearCache}
-              disabled={loading}
-              className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50"
+              disabled={cacheLoading}
+              className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
-              {loading ? 'Clearing...' : 'Clear Cache'}
+              {cacheLoading ? (
+                <>
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  Clearing...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="w-4 h-4" />
+                  Clear Cache
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -1531,6 +1695,217 @@ const SuperUserDashboard = () => {
                 >
                   Delete User
                 </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Organization Details Modal */}
+        {showOrgModal && selectedOrg && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-3xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Organization Details</h3>
+                <button
+                  onClick={closeOrgModal}
+                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              
+              <div className="space-y-6">
+                {/* Organization Header */}
+                <div className="flex items-center space-x-4">
+                  <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center text-white">
+                    <Building className="w-8 h-8" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-semibold text-gray-900 dark:text-white">{selectedOrg.name}</h4>
+                    <p className="text-gray-600 dark:text-gray-400">{selectedOrg.type}</p>
+                  </div>
+                </div>
+                
+                {/* Organization Stats */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Users</span>
+                      <Users className="w-4 h-4 text-gray-400" />
+                    </div>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">{selectedOrg.users}</p>
+                  </div>
+                  <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Revenue</span>
+                      <DollarSign className="w-4 h-4 text-gray-400" />
+                    </div>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">₦{selectedOrg.revenue.toLocaleString()}</p>
+                  </div>
+                  <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Status</span>
+                      <Activity className="w-4 h-4 text-gray-400" />
+                    </div>
+                    <span className={`inline-block mt-2 px-2 py-1 text-xs font-semibold rounded-full ${
+                      selectedOrg.status === 'active' ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' :
+                      selectedOrg.status === 'inactive' ? 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300' :
+                      'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300'
+                    }`}>
+                      {selectedOrg.status}
+                    </span>
+                  </div>
+                  <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Plan</span>
+                      <CreditCard className="w-4 h-4 text-gray-400" />
+                    </div>
+                    <p className="text-lg font-bold text-gray-900 dark:text-white mt-2">{selectedOrg.plan}</p>
+                  </div>
+                </div>
+                
+                {/* Organization Information */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Location:</span>
+                    <span className="ml-2 font-medium">{selectedOrg.location}</span>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Admin:</span>
+                    <span className="ml-2 font-medium">{selectedOrg.admin}</span>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Contact:</span>
+                    <span className="ml-2 font-medium">{selectedOrg.contact}</span>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Created:</span>
+                    <span className="ml-2 font-medium">{new Date(selectedOrg.createdAt).toLocaleDateString()}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Subscription Details Modal */}
+        {showSubModal && selectedSub && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Subscription Details</h3>
+                <button
+                  onClick={closeSubModal}
+                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              
+              <div className="space-y-6">
+                {/* Subscription Header */}
+                <div className="flex items-center space-x-4">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white">
+                    <CreditCard className="w-8 h-8" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-semibold text-gray-900 dark:text-white">{selectedSub.plan}</h4>
+                    <p className="text-gray-600 dark:text-gray-400">{selectedSub.userName}</p>
+                  </div>
+                </div>
+                
+                {/* Subscription Stats */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Amount</span>
+                      <DollarSign className="w-4 h-4 text-gray-400" />
+                    </div>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">₦{selectedSub.amount.toLocaleString()}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">per {selectedSub.billingCycle}</p>
+                  </div>
+                  <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Status</span>
+                      <Activity className="w-4 h-4 text-gray-400" />
+                    </div>
+                    <span className={`inline-block mt-2 px-2 py-1 text-xs font-semibold rounded-full ${
+                      selectedSub.status === 'active' ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' :
+                      selectedSub.status === 'trial' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300' :
+                      selectedSub.status === 'inactive' ? 'bg-gray-100 text-gray-800 dark:bg-gray-900/50 dark:text-gray-300' :
+                      selectedSub.status === 'cancelled' ? 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300' :
+                      'bg-orange-100 text-orange-800 dark:bg-orange-900/50 dark:text-orange-300'
+                    }`}>
+                      {selectedSub.status}
+                    </span>
+                  </div>
+                  <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Billing Cycle</span>
+                      <Calendar className="w-4 h-4 text-gray-400" />
+                    </div>
+                    <p className="text-lg font-bold text-gray-900 dark:text-white mt-2 capitalize">{selectedSub.billingCycle}</p>
+                  </div>
+                  <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">Auto Renew</span>
+                      <RefreshCw className="w-4 h-4 text-gray-400" />
+                    </div>
+                    <p className="text-lg font-bold text-gray-900 dark:text-white mt-2">
+                      {selectedSub.autoRenew ? 'Yes' : 'No'}
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Subscription Information */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">User Email:</span>
+                    <span className="ml-2 font-medium">{selectedSub.userEmail}</span>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Organization:</span>
+                    <span className="ml-2 font-medium">{selectedSub.organization}</span>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Payment Method:</span>
+                    <span className="ml-2 font-medium">{selectedSub.paymentMethod}</span>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Currency:</span>
+                    <span className="ml-2 font-medium">{selectedSub.currency}</span>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Start Date:</span>
+                    <span className="ml-2 font-medium">{new Date(selectedSub.startDate).toLocaleDateString()}</span>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">End Date:</span>
+                    <span className="ml-2 font-medium">{new Date(selectedSub.endDate).toLocaleDateString()}</span>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Next Billing:</span>
+                    <span className="ml-2 font-medium">{new Date(selectedSub.nextBillingDate).toLocaleDateString()}</span>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Last Payment:</span>
+                    <span className="ml-2 font-medium">{selectedSub.lastPaymentDate ? new Date(selectedSub.lastPaymentDate).toLocaleDateString() : 'N/A'}</span>
+                  </div>
+                </div>
+                
+                {/* Features */}
+                {selectedSub.features && selectedSub.features.length > 0 && (
+                  <div>
+                    <h5 className="text-sm font-medium text-gray-900 dark:text-white mb-3">Features</h5>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedSub.features.map((feature, index) => (
+                        <span key={index} className="px-2 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 text-xs rounded-full">
+                          {feature}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
