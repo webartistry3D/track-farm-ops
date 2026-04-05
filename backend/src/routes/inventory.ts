@@ -42,4 +42,57 @@ router.get('/transactions', getInventoryTransactions);
 // Inventory summary route
 router.get('/summary', getInventorySummary);
 
+// Manual seeding routes (for production/debugging)
+router.post('/seed-organization', authorize(['OWNER', 'MANAGER']), async (req, res) => {
+  try {
+    const { organizationId } = req.body;
+    const { manuallySeedOrganization } = await import('../utils/manualSeeding');
+    
+    if (!organizationId) {
+      return res.status(400).json({ error: 'Organization ID is required' });
+    }
+
+    const success = await manuallySeedOrganization(organizationId);
+    
+    if (success) {
+      res.json({ message: 'Organization seeded successfully' });
+    } else {
+      res.status(500).json({ error: 'Failed to seed organization' });
+    }
+  } catch (error) {
+    console.error('Manual seeding error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.post('/seed-all-empty', authorize(['OWNER', 'MANAGER']), async (req, res) => {
+  try {
+    const { seedAllEmptyOrganizations } = await import('../utils/manualSeeding');
+    
+    const success = await seedAllEmptyOrganizations();
+    
+    if (success) {
+      res.json({ message: 'All empty organizations seeded successfully' });
+    } else {
+      res.status(500).json({ error: 'Failed to seed some organizations' });
+    }
+  } catch (error) {
+    console.error('Seed all organizations error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.get('/status', async (req, res) => {
+  try {
+    const { getOrganizationInventoryStatus } = await import('../utils/manualSeeding');
+    
+    const organizations = await getOrganizationInventoryStatus();
+    
+    res.json({ organizations });
+  } catch (error) {
+    console.error('Get status error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 export default router;

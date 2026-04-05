@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
@@ -102,6 +102,8 @@ const IncomePage = () => {
     dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 7 days from now
     items: [
       {
+        inventoryItemId: '', // Link to inventory item
+        categoryId: '', // Link to inventory category
         description: '',
         quantity: '',
         unitPrice: '',
@@ -121,6 +123,14 @@ const IncomePage = () => {
   const [invoices, setInvoices] = useState<any[]>([]);
   const [invoicesLoading, setInvoicesLoading] = useState(false);
   const [invoiceCurrentPage, setInvoiceCurrentPage] = useState(1);
+  
+  // Inventory integration state
+  const [inventoryItems, setInventoryItems] = useState<any[]>([]);
+  const [inventoryCategories, setInventoryCategories] = useState<any[]>([]);
+  const [inventoryLoading, setInventoryLoading] = useState(false);
+  const [showPaidConfirmationModal, setShowPaidConfirmationModal] = useState(false);
+  const [invoiceToMarkAsPaid, setInvoiceToMarkAsPaid] = useState<any>(null);
+  const [inventoryImpact, setInventoryImpact] = useState<any[]>([]);
   const [totalInvoices, setTotalInvoices] = useState(0);
   const [invoiceTotalPages, setInvoiceTotalPages] = useState(0);
   const invoiceEntriesPerPage = 10;
@@ -182,6 +192,7 @@ const IncomePage = () => {
       fetchIncomes(1);
     } else if (activeTab === 'invoices') {
       fetchInvoices(1);
+      fetchInventoryData(); // Fetch inventory data for invoice items
     } else if (activeTab === 'vat') {
       fetchVatRecords();
     }
@@ -351,6 +362,8 @@ const IncomePage = () => {
       dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 7 days from now
       items: [
         {
+          inventoryItemId: '',
+          categoryId: '',
           description: '',
           quantity: '',
           unitPrice: '',
@@ -405,6 +418,8 @@ const IncomePage = () => {
     setInvoiceData(prev => ({
       ...prev,
       items: [...prev.items, {
+        inventoryItemId: '',
+        categoryId: '',
         description: '',
         quantity: '',
         unitPrice: '',
@@ -970,6 +985,138 @@ TrackFarmOps Team`;
     fetchInvoices(page);
   };
 
+  // Fetch inventory data for invoice items
+  const fetchInventoryData = async () => {
+    try {
+      setInventoryLoading(true);
+      console.log('📦 Fetching inventory data for invoice items...');
+      
+      // Fetch inventory items and categories in parallel
+      const [itemsResponse, categoriesResponse] = await Promise.all([
+        api.get('/inventory/items'),
+        api.get('/inventory/categories')
+      ]);
+      
+      const items = itemsResponse.data || [];
+      const categories = categoriesResponse.data || [];
+      
+      setInventoryItems(items);
+      setInventoryCategories(categories);
+      
+      console.log(`✅ Loaded ${items.length} items and ${categories.length} categories`);
+      console.log('🔍 DEBUG - Items:', items);
+      console.log('🔍 DEBUG - Categories:', categories);
+      
+      // Check if user has access to inventory
+      if (items.length === 0 && categories.length === 0) {
+        console.log('⚠️ No inventory data available - user may not have access or no items exist');
+      } else if (items.length === 0) {
+        console.log('⚠️ Categories loaded but no items available');
+      } else if (categories.length === 0) {
+        console.log('⚠️ Items loaded but no categories available');
+      }
+      
+    } catch (error: any) {
+      console.error('❌ Failed to fetch inventory data:', error);
+      console.log('🔍 DEBUG - Error details:', error.response?.data || error.message);
+      // Don't show error to user, just log it - invoice can still work without inventory
+    } finally {
+      setInventoryLoading(false);
+    }
+  };
+
+  // Calculate inventory impact for an invoice
+  const calculateInventoryImpact = (invoice: any) => {
+    const impact: any[] = [];
+    
+    if (!invoice.items || !Array.isArray(invoice.items)) {
+      return impact;
+    }
+    
+    invoice.items.forEach((invoiceItem: any) => {
+      // Find matching inventory items by name or description
+      const matchingInventoryItems = inventoryItems.filter(invItem => 
+        invItem.name.toLowerCase().includes(invoiceItem.description?.toLowerCase() || '') ||
+        (invoiceItem.description?.toLowerCase() || '').includes(invItem.name.toLowerCase())
+      );
+      
+      matchingInventoryItems.forEach(invItem => {
+        const quantity = parseFloat(invoiceItem.quantity) || 0;
+        if (quantity > 0) {
+          impact.push({
+            inventoryItem: invItem,
+            invoiceQuantity: quantity,
+            currentStock: invItem.quantity || 0,
+            remainingStock: (invItem.quantity || 0) - quantity,
+            stockStatus: (invItem.quantity || 0) >= quantity ? 'sufficient' : 'insufficient',
+            unitPrice: invItem.pricePerUnit || 0,
+            totalValue: quantity * (invItem.pricePerUnit || 0)
+          });
+        }
+      });
+    });
+    
+    return impact;
+  };
+
+  // Handle marking invoice as paid with inventory confirmation
+  const handleMarkAsPaidWithConfirmation = async (invoice: any) => {
+    try {
+      console.log('💰 Preparing to mark invoice as paid:', invoice.invoiceNumber);
+      
+      // Calculate inventory impact
+      const impact = calculateInventoryImpact(invoice);
+      setInventoryImpact(impact);
+      setInvoiceToMarkAsPaid(invoice);
+      setShowPaidConfirmationModal(true);
+    } catch (error) {
+      console.error('❌ Error preparing invoice payment:', error);
+      setError('Failed to prepare invoice payment');
+    }
+  };
+
+  // Confirm marking invoice as paid and update inventory
+  const confirmMarkAsPaid = async () => {
+    try {
+      if (!invoiceToMarkAsPaid) return;
+      
+      console.log('💰 Confirming invoice as paid:', invoiceToMarkAsPaid.invoiceNumber);
+      
+      // Update inventory quantities for impacted items
+      for (const impact of inventoryImpact) {
+        if (impact.stockStatus === 'sufficient' && impact.invoiceQuantity > 0) {
+          console.log(`📦 Updating inventory: ${impact.inventoryItem.name} -${impact.invoiceQuantity}`);
+          
+          await api.put(`/inventory/items/${impact.inventoryItem.id}/quantity`, {
+            quantity: impact.remainingStock,
+            transactionType: 'SALE',
+            notes: `Sold via invoice #${invoiceToMarkAsPaid.invoiceNumber}`,
+            referenceId: invoiceToMarkAsPaid.id,
+            referenceType: 'INVOICE'
+          });
+        }
+      }
+      
+      // Mark invoice as paid (convert to income record)
+      await api.post(`/finance/invoices/${invoiceToMarkAsPaid.id}/mark-paid`);
+      
+      // Refresh invoices list
+      await fetchInvoices(invoiceCurrentPage);
+      
+      // Show success message
+      setSuccess(`Invoice #${invoiceToMarkAsPaid.invoiceNumber} marked as paid and inventory updated successfully!`);
+      
+      // Close modal
+      setShowPaidConfirmationModal(false);
+      setInvoiceToMarkAsPaid(null);
+      setInventoryImpact([]);
+      
+    } catch (error) {
+      console.error('❌ Error marking invoice as paid:', error);
+      setError('Failed to mark invoice as paid and update inventory');
+    }
+  };
+
   const deleteInvoice = async (invoiceId: number) => {
     try {
       console.log(`🗑️ Deleting invoice ${invoiceId} for user ${user?.name}`);
@@ -1057,44 +1204,8 @@ TrackFarmOps Team`;
     setInvoiceToDelete(null);
   };
 
-  // Mark as paid function with debouncing to prevent double-clicks
-  const handleMarkAsPaid = async (invoice: any) => {
-    try {
-      console.log('💳 Marking invoice as paid:', invoice);
-
-      // Update invoice status to paid in database (backend will create income entry)
-      const invoiceResponse = await api.patch(`/invoices/${invoice.id}/mark-paid`);
-      
-      console.log('✅ Invoice marked as paid in database:', invoiceResponse.data);
-
-      // Refresh both income records and invoice list
-      fetchIncomes(1);
-      fetchInvoices(1);
-
-      setSuccess(`Invoice #${invoice.invoiceNumber} marked as paid and income entry created!`);
-      
-    } catch (error: any) {
-      console.error('❌ Failed to mark invoice as paid:', error);
-      setError(error.response?.data?.error || 'Failed to mark invoice as paid');
-    }
-  };
+    
   
-  // Simple debounce implementation
-  const debounce = (func: Function, delay: number) => {
-    let timeoutId: number;
-    return (...args: any[]) => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => func.apply(null, args), delay);
-    };
-  };
-  
-  // Debounced version to prevent double-clicks
-  const debouncedMarkAsPaid = useRef(
-    debounce((invoice: any) => {
-      handleMarkAsPaid(invoice);
-    }, 1000) // 1 second debounce
-  ).current;
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -1488,9 +1599,163 @@ Generated on: ${new Date().toLocaleString()}
     );
   }
 
+  // Confirmation Modal for Marking Invoice as Paid
+  if (showPaidConfirmationModal && invoiceToMarkAsPaid) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-3xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+          <div className="flex items-center mb-4">
+            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+              <span className="text-2xl">💰</span>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                Mark Invoice as Paid
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Invoice #{invoiceToMarkAsPaid.invoiceNumber}
+              </p>
+            </div>
+          </div>
+
+          {/* Invoice Details */}
+          <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+            <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Invoice Details</h4>
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span className="text-gray-600 dark:text-gray-400">Client:</span>
+                <span className="ml-2 font-medium">{invoiceToMarkAsPaid.clientName}</span>
+              </div>
+              <div>
+                <span className="text-gray-600 dark:text-gray-400">Total Amount:</span>
+                <span className="ml-2 font-medium">{formatCurrency(invoiceToMarkAsPaid.total)}</span>
+              </div>
+              <div>
+                <span className="text-gray-600 dark:text-gray-400">Items:</span>
+                <span className="ml-2 font-medium">{invoiceToMarkAsPaid.items?.length || 0}</span>
+              </div>
+              <div>
+                <span className="text-gray-600 dark:text-gray-400">Due Date:</span>
+                <span className="ml-2 font-medium">
+                  {invoiceToMarkAsPaid.dueDate ? new Date(invoiceToMarkAsPaid.dueDate).toLocaleDateString() : 'N/A'}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Inventory Impact */}
+          {inventoryImpact.length > 0 && (
+            <div className="mb-6">
+              <h4 className="font-semibold text-gray-900 dark:text-white mb-3">Inventory Impact</h4>
+              <div className="space-y-2">
+                {inventoryImpact.map((impact, index) => (
+                  <div key={index} className={`p-3 rounded-lg border ${
+                    impact.stockStatus === 'sufficient'
+                      ? 'bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-800'
+                      : 'bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800'
+                  }`}>
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <div className="font-medium text-gray-900 dark:text-white">
+                          {impact.inventoryItem.name}
+                        </div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400">
+                          Category: {impact.inventoryItem.category?.name || 'N/A'}
+                        </div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400">
+                          Unit: {impact.inventoryItem.unit}
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className={`text-sm font-medium ${
+                          impact.stockStatus === 'sufficient'
+                            ? 'text-green-600 dark:text-green-400'
+                            : 'text-red-600 dark:text-red-400'
+                        }`}>
+                          {impact.stockStatus === 'sufficient' ? '✅ Sufficient Stock' : '⚠️ Insufficient Stock'}
+                        </div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                          Current: {impact.currentStock}
+                        </div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                          Requested: {impact.invoiceQuantity}
+                        </div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                          Remaining: {impact.remainingStock}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Warning for insufficient stock */}
+          {inventoryImpact.some(impact => impact.stockStatus === 'insufficient') && (
+            <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 dark:bg-yellow-900/20 dark:border-yellow-800 rounded-lg">
+              <div className="flex items-center">
+                <span className="text-yellow-600 dark:text-yellow-400 mr-2">⚠️</span>
+                <div>
+                  <div className="font-medium text-yellow-800 dark:text-yellow-200">
+                    Insufficient Stock Warning
+                  </div>
+                  <div className="text-sm text-yellow-700 dark:text-yellow-300">
+                    Some items have insufficient stock. This will result in negative inventory levels.
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* User Information */}
+          <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+            <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Transaction Details</h4>
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              <div className="mb-1">
+                <span className="font-medium">Processed by:</span> {user?.name} ({user?.email})
+              </div>
+              <div className="mb-1">
+                <span className="font-medium">Organization:</span> {user?.organizationId || 'N/A'}
+              </div>
+              <div className="mb-1">
+                <span className="font-medium">Date:</span> {new Date().toLocaleString()}
+              </div>
+              <div>
+                <span className="font-medium">Transaction Type:</span> Invoice Payment → Income Record
+              </div>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex justify-end space-x-3">
+            <button
+              onClick={() => {
+                setShowPaidConfirmationModal(false);
+                setInvoiceToMarkAsPaid(null);
+                setInventoryImpact([]);
+              }}
+              className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={confirmMarkAsPaid}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
+            >
+              <CheckCircle className="h-4 w-4" />
+              Confirm Mark as Paid
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-7xl mx-auto p-0">
       <div className="rounded-lg dark:bg-gray-900 p-0">
+        {/* ... (rest of the code remains the same) */}
         <div className="p-0">
           {/*<h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
             <TrendingUp className="h-6 w-6 text-green-600" />
@@ -1887,99 +2152,179 @@ Generated on: ${new Date().toLocaleString()}
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                       <Package className="h-5 w-5" />
                       Invoice Items
+                      {inventoryLoading && <span className="text-xs text-gray-500">(Loading inventory...)</span>}
                     </h3>
                     <div className="space-y-4">
                       {invoiceData.items.map((item, index) => (
-                        <div key={`invoice-item-${index}`} className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
-                          <div className="md:col-span-2">
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                              Description *
-                            </label>
-                            <input
-                              type="text"
-                              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
-                              placeholder="Product or service description"
-                              value={item.description}
-                              onChange={(e) => updateInvoiceItem(index, 'description', e.target.value)}
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                              Quantity *
-                            </label>
-                            <input
-                              type="text"
-                              min="1"
-                              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
-                              value={formatNumberWithSeparator(item.quantity)}
-                              onChange={(e) => updateInvoiceItem(index, 'quantity', parseInt(e.target.value.replace(/[^0-9]/g, '')) || 1)}
-                              ref={(el) => {
-                                if (el) {
-                                  console.log('🔍 DEBUG - Quantity Input:', {
-                                    hasPlaceholder: el.hasAttribute('placeholder'),
-                                    placeholder: el.getAttribute('placeholder'),
-                                    value: el.value,
-                                    index: index
-                                  });
-                                  // Force remove placeholder if it exists
-                                  if (el.hasAttribute('placeholder')) {
-                                    console.log('🗑️ Removing placeholder from quantity input');
-                                    el.removeAttribute('placeholder');
+                        <div key={`invoice-item-${index}`} className="border border-gray-200 dark:border-gray-600 rounded-lg p-4">
+                          <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
+                            {/* Inventory Item Selection */}
+                            <div className="md:col-span-2">
+                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Select from Inventory
+                              </label>
+                              <select
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                                value={item.inventoryItemId || ''}
+                                onChange={(e) => {
+                                  const inventoryItemId = e.target.value;
+                                  if (inventoryItemId) {
+                                    const selectedItem = inventoryItems.find(inv => inv.id.toString() === inventoryItemId);
+                                    if (selectedItem) {
+                                      updateInvoiceItem(index, 'inventoryItemId', inventoryItemId);
+                                      updateInvoiceItem(index, 'description', selectedItem.name);
+                                      updateInvoiceItem(index, 'unitPrice', selectedItem.pricePerUnit || 0);
+                                      updateInvoiceItem(index, 'categoryId', selectedItem.categoryId);
+                                    }
+                                  } else {
+                                    // Clear inventory selection but keep manual description
+                                    updateInvoiceItem(index, 'inventoryItemId', '');
+                                    updateInvoiceItem(index, 'categoryId', '');
                                   }
-                                }
-                              }}
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                              Unit Price *
-                            </label>
-                            <input
-                              type="text"
-                              min="0"
-                              step="0.01"
-                              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
-                              value={formatNumberWithSeparator(item.unitPrice)}
-                              onChange={(e) => updateInvoiceItem(index, 'unitPrice', parseFloat(e.target.value.replace(/[^0-9.]/g, '')) || 0)}
-                              ref={(el) => {
-                                if (el) {
-                                  console.log('🔍 DEBUG - Unit Price Input:', {
-                                    hasPlaceholder: el.hasAttribute('placeholder'),
-                                    placeholder: el.getAttribute('placeholder'),
-                                    value: el.value,
-                                    index: index
-                                  });
-                                  // Force remove placeholder if it exists
-                                  if (el.hasAttribute('placeholder')) {
-                                    console.log('🗑️ Removing placeholder from unit price input');
-                                    el.removeAttribute('placeholder');
-                                  }
-                                }
-                              }}
-                            />
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <div className="text-sm font-medium text-gray-900 dark:text-white">
-                              {formatCurrency(item.total)}
-                            </div>
-                            {invoiceData.items.length > 1 && (
-                              <button
-                                type="button"
-                                onClick={() => removeInvoiceItem(index)}
-                                className="text-red-600 hover:text-red-800"
+                                }}
                               >
-                                Remove
-                              </button>
-                            )}
+                                <option value="">-- Select from Inventory --</option>
+                                {inventoryCategories.length === 0 && inventoryItems.length > 0 && (
+                                  <optgroup label="📦 Uncategorized Items">
+                                    {inventoryItems.map(invItem => (
+                                      <option 
+                                        key={invItem.id} 
+                                        value={invItem.id}
+                                        disabled={(invItem.quantity || 0) <= 0}
+                                      >
+                                        {invItem.name} ({invItem.quantity || 0} {invItem.unit}) - ₦{formatNumberWithSeparator(invItem.pricePerUnit || 0)}/unit
+                                        {(invItem.quantity || 0) <= 0 && ' (OUT OF STOCK)'}
+                                      </option>
+                                    ))}
+                                  </optgroup>
+                                )}
+                                {inventoryCategories.length === 0 && (
+                                  <option value="" disabled>No categories available</option>
+                                )}
+                                {inventoryCategories.map(category => (
+                                  <optgroup key={category.id} label={`${category.icon || '📦'} ${category.name}`}>
+                                    {inventoryItems
+                                      .filter(item => item.categoryId === category.id)
+                                      .map(invItem => (
+                                        <option 
+                                          key={invItem.id} 
+                                          value={invItem.id}
+                                          disabled={(invItem.quantity || 0) <= 0}
+                                        >
+                                          {invItem.name} ({invItem.quantity || 0} {invItem.unit}) - ₦{formatNumberWithSeparator(invItem.pricePerUnit || 0)}/unit
+                                          {(invItem.quantity || 0) <= 0 && ' (OUT OF STOCK)'}
+                                        </option>
+                                      ))}
+                                  </optgroup>
+                                ))}
+                                {inventoryCategories.length > 0 && inventoryItems.length === 0 && (
+                                  <option value="" disabled>No items available in inventory</option>
+                                )}
+                                {inventoryCategories.length === 0 && inventoryItems.length === 0 && (
+                                  <option value="" disabled>No inventory data available</option>
+                                )}
+                              </select>
+                            </div>
+                            
+                            {/* Manual Description */}
+                            <div className="md:col-span-2">
+                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Description *
+                              </label>
+                              <input
+                                type="text"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                                placeholder="Product or service description"
+                                value={item.description}
+                                onChange={(e) => updateInvoiceItem(index, 'description', e.target.value)}
+                              />
+                              {item.inventoryItemId && (
+                                <p className="text-xs text-green-600 dark:text-green-400 mt-1">
+                                  ✅ Linked to inventory item
+                                </p>
+                              )}
+                            </div>
+                            
+                            {/* Quantity */}
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Quantity *
+                              </label>
+                              <input
+                                type="text"
+                                min="1"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                                value={formatNumberWithSeparator(item.quantity)}
+                                onChange={(e) => updateInvoiceItem(index, 'quantity', parseInt(e.target.value.replace(/[^0-9]/g, '')) || 1)}
+                              />
+                              {item.inventoryItemId && (
+                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                  Available: {(() => {
+                                    const invItem = inventoryItems.find(inv => inv.id.toString() === item.inventoryItemId);
+                                    return invItem ? `${invItem.quantity || 0} ${invItem.unit}` : 'N/A';
+                                  })()}
+                                </p>
+                              )}
+                            </div>
+                            
+                            {/* Unit Price */}
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Unit Price *
+                              </label>
+                              <input
+                                type="text"
+                                min="0"
+                                step="0.01"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                                value={formatNumberWithSeparator(item.unitPrice)}
+                                onChange={(e) => updateInvoiceItem(index, 'unitPrice', parseFloat(e.target.value.replace(/[^0-9.]/g, '')) || 0)}
+                                disabled={!!item.inventoryItemId} // Disable if linked to inventory
+                              />
+                              {item.inventoryItemId && (
+                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                  From inventory price
+                                </p>
+                              )}
+                            </div>
+                            
+                            {/* Total and Actions */}
+                            <div className="flex items-center gap-2">
+                              <div className="text-sm font-medium text-gray-900 dark:text-white">
+                                {formatCurrency(item.total)}
+                              </div>
+                              {invoiceData.items.length > 1 && (
+                                <button
+                                  type="button"
+                                  onClick={() => removeInvoiceItem(index)}
+                                  className="text-red-600 hover:text-red-800"
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </button>
+                              )}
+                            </div>
                           </div>
+                          
+                          {/* Inventory Warning */}
+                          {item.inventoryItemId && (() => {
+                            const invItem = inventoryItems.find(inv => inv.id.toString() === item.inventoryItemId);
+                            const requestedQty = parseFloat(item.quantity) || 0;
+                            const availableQty = invItem ? (invItem.quantity || 0) : 0;
+                            return requestedQty > availableQty ? (
+                              <div className="mt-2 p-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded text-red-600 dark:text-red-400 text-sm">
+                                ⚠️ Requested quantity ({requestedQty}) exceeds available stock ({availableQty} {invItem?.unit})
+                              </div>
+                            ) : null;
+                          })()}
                         </div>
                       ))}
                       <button
                         type="button"
                         onClick={addInvoiceItem}
-                        className="text-green-600 hover:text-green-800 text-sm font-medium"
+                        className="text-green-600 hover:text-green-800 text-sm font-medium flex items-center gap-1"
                       >
-                        + Add Item
+                        <Plus className="h-4 w-4" />
+                        Add Item
                       </button>
                     </div>
                   </div>
@@ -2753,7 +3098,7 @@ Generated on: ${new Date().toLocaleString()}
                     {selectedInvoice.status !== 'PAID' && (
                       <button
                         onClick={() => {
-                          debouncedMarkAsPaid(selectedInvoice);
+                          handleMarkAsPaidWithConfirmation(selectedInvoice);
                           closeActionsModal();
                         }}
                         className="flex items-center gap-3 w-full px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors rounded-lg"

@@ -13,8 +13,8 @@ export async function autoSeedNigerianFarmPresets(organizationId: number, organi
   console.log(`🌾 Automatically seeding Nigerian Mixed Farm presets for new organization: ${organizationName}...`);
   
   try {
-    // Import the seeding function
-    const { seedSystemInventoryForOrganization } = require('../../prisma/seed-inventory.js');
+    // Import the seeding function from our internal utility
+    const { seedSystemInventoryForOrganization } = await import('./inventorySeeding');
     
     // Apply Nigerian Mixed Farm presets to the new organization
     const seedingSuccess = await seedSystemInventoryForOrganization(organizationId);

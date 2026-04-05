@@ -321,9 +321,17 @@ export const getInventoryItems = async (req: AuthRequest, res: Response) => {
       orderBy: { name: 'asc' }
     });
 
+    // Add pricePerUnit from metadata to each item
+    const itemsWithPrice = allItems.map(item => ({
+      ...item,
+      pricePerUnit: item.metadata && typeof item.metadata === 'object' 
+        ? (item.metadata as any).pricePerUnit 
+        : null
+    }));
+
     console.log(`📊 Found ${allItems.length} inventory items from database`);
     
-    res.json(allItems);
+    res.json(itemsWithPrice);
   } catch (error) {
     console.error('Get inventory items error:', error);
     res.status(500).json({ error: 'Internal server error' });
