@@ -154,6 +154,12 @@ const SuperUserDashboard = () => {
     const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
     const [systemLogs, setSystemLogs] = useState<SystemLog[]>([]);
     const [activities, setActivities] = useState<Activity[]>([]);
+    
+    // Modal states
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);
+    const [showUserModal, setShowUserModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [userToDelete, setUserToDelete] = useState<User | null>(null);
 
     const menuItems = [
       { id: 'overview', label: 'Overview', icon: BarChart3 },
@@ -297,6 +303,44 @@ const SuperUserDashboard = () => {
           data: error.response?.data
         });
       }
+    };
+
+    // Handler for viewing user details
+    const handleViewUser = (user: User) => {
+      setSelectedUser(user);
+      setShowUserModal(true);
+    };
+
+    // Handler for initiating user deletion
+    const handleDeleteUser = (user: User) => {
+      setUserToDelete(user);
+      setShowDeleteModal(true);
+    };
+
+    // Handler for confirming user deletion
+    const confirmDeleteUser = async () => {
+      if (!userToDelete) return;
+      
+      try {
+        await api.delete(`/superuser/users/${userToDelete.id}`);
+        setShowDeleteModal(false);
+        setUserToDelete(null);
+        await fetchDashboardData();
+      } catch (error: any) {
+        console.error('Failed to delete user:', error);
+      }
+    };
+
+    // Handler for canceling delete modal
+    const cancelDeleteUser = () => {
+      setShowDeleteModal(false);
+      setUserToDelete(null);
+    };
+
+    // Handler for closing user modal
+    const closeUserModal = () => {
+      setShowUserModal(false);
+      setSelectedUser(null);
     };
 
     const handleOrgAction = async (orgId: string, action: string) => {
@@ -619,11 +663,19 @@ const SuperUserDashboard = () => {
                     {new Date(user.createdAt).toLocaleDateString()}
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap text-sm font-medium">
-                    <div className="flex space-x-1">
+                    <div className="flex space-x-3">
+                      <button
+                        onClick={() => handleViewUser(user)}
+                        className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
+                        title="View User Details"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </button>
                       {user.status === 'active' ? (
                         <button
                           onClick={() => handleUserAction(user.id, 'suspend')}
                           className="text-amber-600 hover:text-amber-900 dark:text-amber-400 dark:hover:text-amber-300"
+                          title="Suspend User"
                         >
                           <Lock className="w-4 h-4" />
                         </button>
@@ -631,13 +683,15 @@ const SuperUserDashboard = () => {
                         <button
                           onClick={() => handleUserAction(user.id, 'activate')}
                           className="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300"
+                          title="Activate User"
                         >
                           <Unlock className="w-4 h-4" />
                         </button>
                       )}
                       <button
-                        onClick={() => handleUserAction(user.id, 'delete')}
+                        onClick={() => handleDeleteUser(user)}
                         className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                        title="Delete User"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -1383,6 +1437,104 @@ const SuperUserDashboard = () => {
             </main>
           </div>
         </div>
+
+        {/* User Details Modal */}
+        {showUserModal && selectedUser && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">User Details</h3>
+                <button
+                  onClick={closeUserModal}
+                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="flex items-center space-x-4">
+                  <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                    {selectedUser.name.charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-semibold text-gray-900 dark:text-white">{selectedUser.name}</h4>
+                    <p className="text-gray-600 dark:text-gray-400">{selectedUser.email}</p>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Role:</span>
+                    <span className="ml-2 font-medium">{selectedUser.role}</span>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Status:</span>
+                    <span className={`ml-2 px-2 py-1 text-xs font-semibold rounded-full ${
+                      selectedUser.status === 'active' 
+                        ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300'
+                        : selectedUser.status === 'inactive'
+                        ? 'bg-gray-100 text-gray-800 dark:bg-gray-900/50 dark:text-gray-300'
+                        : 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300'
+                    }`}>
+                      {selectedUser.status}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Organization:</span>
+                    <span className="ml-2 font-medium">{selectedUser.organization}</span>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Created:</span>
+                    <span className="ml-2 font-medium">{new Date(selectedUser.createdAt).toLocaleDateString()}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Delete User Confirmation Modal */}
+        {showDeleteModal && userToDelete && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Delete User</h3>
+                <button
+                  onClick={cancelDeleteUser}
+                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              
+              <div className="mb-6">
+                <p className="text-gray-600 dark:text-gray-400">
+                  Are you sure you want to delete this user? This action cannot be undone.
+                </p>
+                <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                  <p className="font-medium text-red-800 dark:text-red-300">{userToDelete.name}</p>
+                  <p className="text-sm text-red-600 dark:text-red-400">{userToDelete.email}</p>
+                </div>
+              </div>
+              
+              <div className="flex space-x-3">
+                <button
+                  onClick={cancelDeleteUser}
+                  className="flex-1 px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={confirmDeleteUser}
+                  className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                >
+                  Delete User
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
     
