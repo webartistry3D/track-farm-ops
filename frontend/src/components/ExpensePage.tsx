@@ -633,8 +633,8 @@ const ExpensePage = () => {
 
               {/* Manual Entry Form */}
               <form onSubmit={handleSubmit} className="space-y-4">
-                {/* First Row: Merchant/Supplier and Amount */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Single Row: Merchant/Supplier, Amount, Category, and Date */}
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
                   {/* Merchant Field */}
                   <div>
                     <label htmlFor="merchant" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -667,10 +667,7 @@ const ExpensePage = () => {
                       onChange={handleAmountChange}
                     />
                   </div>
-                </div>
 
-                {/* Second Row: Category and Date */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Category Field */}
                   <div>
                     <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">

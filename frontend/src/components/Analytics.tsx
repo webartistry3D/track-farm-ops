@@ -15,10 +15,8 @@ import {
   Box,
   BarChart3,
   Activity,
-  DollarSign,
   Calendar,
   ArrowUp,
-  ArrowDown,
   Target,
   Zap,
   RefreshCw,
@@ -132,7 +130,7 @@ const Analytics = () => {
     notes: ''
   });
   
-  const [] = useState({
+  const [equipmentMaintenance, setEquipmentMaintenance] = useState({
     equipmentName: '',
     maintenanceType: '',
     scheduledDate: '',
@@ -141,7 +139,7 @@ const Analytics = () => {
     notes: ''
   });
   
-  const [] = useState({
+  const [workerAssignment, setWorkerAssignment] = useState({
     workerName: '',
     assignedTask: '',
     startTime: '',
@@ -465,6 +463,7 @@ const Analytics = () => {
       if (color === "bg-blue-500") return "from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 dark:border-blue-700";
       if (color === "bg-orange-500") return "from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 dark:border-orange-700";
       if (color === "bg-indigo-500") return "from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 dark:border-indigo-700";
+      if (color === "bg-purple-500") return "from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 dark:border-purple-700";
       return "from-gray-50 to-slate-50 dark:from-gray-900/20 dark:to-slate-900/20 dark:border-gray-700";
     };
 
@@ -474,6 +473,7 @@ const Analytics = () => {
       if (color === "bg-blue-500") return "from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700";
       if (color === "bg-orange-500") return "from-orange-500 to-orange-600 dark:from-orange-600 dark:to-orange-700";
       if (color === "bg-indigo-500") return "from-indigo-500 to-indigo-600 dark:from-indigo-600 dark:to-indigo-700";
+      if (color === "bg-purple-500") return "from-purple-500 to-purple-600 dark:from-purple-600 dark:to-purple-700";
       return "from-gray-500 to-gray-600 dark:from-gray-600 dark:to-gray-700";
     };
 
@@ -483,6 +483,7 @@ const Analytics = () => {
       if (color === "bg-blue-500") return "text-blue-600 dark:text-blue-400";
       if (color === "bg-orange-500") return "text-orange-600 dark:text-orange-400";
       if (color === "bg-indigo-500") return "text-indigo-600 dark:text-indigo-400";
+      if (color === "bg-purple-500") return "text-purple-600 dark:text-purple-400";
       return "text-gray-600 dark:text-gray-400";
     };
 
@@ -568,68 +569,8 @@ const Analytics = () => {
           </div>
           
           {/* KPI Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border border-green-200 dark:border-green-800 rounded-xl p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-2 bg-green-500 rounded-lg">
-                  <DollarSign className="h-5 w-5 text-white" />
-                </div>
-                <div className="flex items-center text-green-600 text-sm">
-                  <ArrowUp className="h-3 w-3 mr-1" />
-                  <span>+12.5%</span>
-                </div>
-              </div>
-              <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Revenue</h3>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                {formatCurrency(Number(financialSummary?.totalIncome) || 0)}
-              </p>
-            </div>
-
-            <div className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border border-red-200 dark:border-red-800 rounded-xl p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-2 bg-red-500 rounded-lg">
-                  <ShoppingCart className="h-5 w-5 text-white" />
-                </div>
-                <div className="flex items-center text-red-600 text-sm">
-                  <ArrowDown className="h-3 w-3 mr-1" />
-                  <span>-8.3%</span>
-                </div>
-              </div>
-              <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Expenses</h3>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                {formatCurrency(Number(financialSummary?.totalExpenses) || 0)}
-              </p>
-            </div>
-
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border border-blue-200 dark:border-blue-800 rounded-xl p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-2 bg-blue-500 rounded-lg">
-                  <Package className="h-5 w-5 text-white" />
-                </div>
-                <div className="flex items-center text-blue-600 text-sm">
-                  <ArrowUp className="h-3 w-3 mr-1" />
-                  <span>+5.2%</span>
-                </div>
-              </div>
-              <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Inventory Items</h3>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                {inventorySummary?.totalItems || 0}
-              </p>
-            </div>
-
-            <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 border border-purple-200 dark:border-purple-800 rounded-xl p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-2 bg-purple-500 rounded-lg">
-                  <Activity className="h-5 w-5 text-white" />
-                </div>
-                <div className="flex items-center text-purple-600 text-sm">
-                  <Target className="h-3 w-3 mr-1" />
-                  <span>On Track</span>
-                </div>
-              </div>
-              <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Efficiency</h3>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">87.3%</p>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
+            {/* Inventory Items and Efficiency cards will be moved after Financial Overview */}
           </div>
         </div>
 
@@ -767,6 +708,23 @@ const Analytics = () => {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Inventory & Efficiency Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
+          <StatCard
+            title="Inventory Items"
+            value={inventorySummary?.totalItems?.toString() || '0'}
+            icon={<Package className="h-4 w-4 text-white" />}
+            color="bg-blue-500"
+          />
+
+          <StatCard
+            title="Efficiency"
+            value="87.3%"
+            icon={<Activity className="h-4 w-4 text-white" />}
+            color="bg-purple-500"
+          />
         </div>
 
         {/* Advanced Analytics Charts */}
