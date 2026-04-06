@@ -179,7 +179,7 @@ const Landing = () => {
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-24 w-full relative z-10">
           <div className="text-center">
-            <h1 className="text-6xl sm:text-8xl md:text-8xl lg:text-9xl font-poppins font-bold text-white mb-4 sm:mb-6 relative leading-tight">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-poppins font-bold text-white mb-4 sm:mb-6 relative leading-tight">
               {words.map((word, index) => (
                 <span
                   key={index}
@@ -365,7 +365,7 @@ const Landing = () => {
                 className="w-full h-68 object-cover"
               />
               {/*<div className="p-6">
-                <h3 className="text-2xl md:text-3xl font-poppins font-semibold text-gray-900 mb-2">
+                <h3 className="text-lg font-poppins font-semibold text-gray-900 mb-2">
                   Complete Farm Management
                 </h3>
                 <p className="font-inter text-gray-600">
@@ -388,7 +388,7 @@ const Landing = () => {
                 className="w-full h-66 object-cover"
               />
               {/*<div className="p-6">
-                <h3 className="text-2xl md:text-3xl font-poppins font-semibold text-gray-900 mb-2">
+                <h3 className="text-lg font-poppins font-semibold text-gray-900 mb-2">
                   Real-Time Analytics
                 </h3>
                 <p className="font-inter text-gray-600">
@@ -443,7 +443,7 @@ const Landing = () => {
               transitionDelay: visibleSections.has('features') ? '200ms' : '0ms'
             }}>
               <div className="text-4xl mb-4">₦</div>
-              <h3 className="text-2xl md:text-3xl font-poppins font-semibold text-gray-900 mb-2">Income & Expense Tracker</h3>
+              <h3 className="text-lg font-poppins font-semibold text-gray-900 mb-2">Income & Expense Tracker</h3>
               <p className="font-inter text-gray-600">
                 Record daily income and expenses with automatic categorization and financial summaries. Create and track invoices, snap to scan or upload receipts. Track all expenses and generate detailed financial reports for better farm management decisions.
               </p>
@@ -457,7 +457,7 @@ const Landing = () => {
               transitionDelay: visibleSections.has('features') ? '400ms' : '0ms'
             }}>
               <div className="text-4xl mb-4">📦</div>
-              <h3 className="text-2xl md:text-3xl font-poppins font-semibold text-gray-900 mb-2">Inventory & Assets Manager</h3>
+              <h3 className="text-lg font-poppins font-semibold text-gray-900 mb-2">Inventory & Assets Manager</h3>
               <p className="font-inter text-gray-600">
                 Track livestock, feed, and produce with real-time inventory updates and low stock alerts. Monitor equipment maintenance schedules, and manage farm supplies efficiently. Get automated notifications for reordering and optimize your farm resource allocation.
               </p>
@@ -471,7 +471,7 @@ const Landing = () => {
               transitionDelay: visibleSections.has('features') ? '600ms' : '0ms'
             }}>
               <div className="text-4xl mb-4">📊</div>
-              <h3 className="text-2xl md:text-3xl font-poppins font-semibold text-gray-900 mb-2">Analytics & Reports</h3>
+              <h3 className="text-lg font-poppins font-semibold text-gray-900 mb-2">Analytics & Reports</h3>
               <p className="font-inter text-gray-600">
                 Comprehensive dashboards and reports to monitor farm performance from anywhere. Track key metrics, analyze trends, and make data-driven decisions with real-time insights. Generate custom reports, export data, and visualize your farm's success with interactive charts and graphs.
               </p>
@@ -485,7 +485,7 @@ const Landing = () => {
               transitionDelay: visibleSections.has('features') ? '600ms' : '0ms'
             }}>
               <div className="text-4xl mb-4">👥</div>
-              <h3 className="text-2xl md:text-3xl font-poppins font-semibold text-gray-900 mb-2">Multi-User Access</h3>
+              <h3 className="text-lg font-poppins font-semibold text-gray-900 mb-2">Multi-User Access</h3>
               <p className="font-inter text-gray-600">
                 Authentication-based access control for owners, managers, and workers. Assign specific permissions and roles, manage user access levels, and ensure data security with encrypted authentication. Monitor user activity and maintain complete control over who can view, edit, and manage different aspects of your farm operations.
               </p>
@@ -499,7 +499,7 @@ const Landing = () => {
               transitionDelay: visibleSections.has('features') ? '800ms' : '0ms'
             }}>
               <div className="text-4xl mb-4">📱</div>
-              <h3 className="text-2xl md:text-3xl font-poppins font-semibold text-gray-900 mb-2">Mobile Optimized</h3>
+              <h3 className="text-lg font-poppins font-semibold text-gray-900 mb-2">Mobile Optimized</h3>
               <p className="font-inter text-gray-600">
                 Works perfectly on low-end Android phones with poor internet connectivity. Optimized for minimal data usage and offline functionality with automatic sync when connection is restored. Fast loading times and responsive design ensure smooth operation even on basic smartphones and unstable networks.
               </p>
@@ -513,7 +513,7 @@ const Landing = () => {
               transitionDelay: visibleSections.has('features') ? '1000ms' : '0ms'
             }}>
               <div className="text-4xl mb-4">🔒</div>
-              <h3 className="text-2xl md:text-3xl font-poppins font-semibold text-gray-900 mb-2">Secure & Reliable</h3>
+              <h3 className="text-lg font-poppins font-semibold text-gray-900 mb-2">Secure & Reliable</h3>
               <p className="font-inter text-gray-600">
                 Bank-level security with HTTPS and AES-256 encryption for secure data storage and backups. Regular security audits, secure data centers, and compliance with international data protection standards ensure your farm information remains confidential and protected at all times.
               </p>
