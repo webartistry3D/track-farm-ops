@@ -330,7 +330,7 @@ const Pricing = () => {
         <div className="mb-20">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-poppins font-bold text-gray-900 mb-4">
-              Why Choose Us
+              Why Choose TrackFarmOps?
             </h2>
           </div>
           
@@ -355,7 +355,7 @@ const Pricing = () => {
         </div>
 
         {/* CTA Section */}
-        <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-3xl p-12 text-center text-white">
+        <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-2xl p-6 text-center text-white max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-poppins font-bold mb-4">
             Ready to Transform Your Farm?
           </h2>
@@ -363,20 +363,15 @@ const Pricing = () => {
             Join thousands of Nigerian farmers who are already using FarmOps to grow their business
           </p>*/}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
+            <Link 
               to="/signup"
               className="bg-white text-green-600 px-8 py-4 rounded-lg font-poppins font-semibold hover:bg-gray-100 transition-all duration-200 transform hover:scale-105 shadow-lg"
-            >
-              Sign up
-            </Link>
-            <Link
-              to="/contact"
-              className="border-2 border-white text-white px-8 py-4 rounded-lg font-poppins font-semibold hover:bg-white hover:text-green-600 transition-all duration-200"
             >
               Contact Sales
             </Link>
           </div>
         </div>
+
       </div>
     </div>
   );

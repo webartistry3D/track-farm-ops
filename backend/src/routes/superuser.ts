@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { authenticate, AuthRequest } from '../middleware/auth';
+import express from 'express';
 import { 
   getSystemStats, 
   getAllUsers, 
@@ -11,6 +12,7 @@ import {
   toggleOrganizationStatus,
   deleteOrganization
 } from '../controllers/superuserController';
+import { prisma } from '../lib/prisma';
 
 const router = Router();
 
@@ -255,26 +257,159 @@ router.post('/clear-cache', async (req: AuthRequest, res) => {
   }
 });
 
-// System activity (placeholder for now)
-router.get('/activity', (req: AuthRequest, res) => {
-  res.json([
-    {
-      id: '1',
-      action: 'user_created',
-      description: 'New superuser account created',
-      timestamp: new Date().toISOString(),
-      userId: req.user?.id,
-      userName: req.user?.name
-    },
-    {
-      id: '2',
-      action: 'user_login',
-      description: 'Superuser dashboard accessed',
-      timestamp: new Date(Date.now() - 1800000).toISOString(),
-      userId: req.user?.id,
-      userName: req.user?.name
+// System activity (real activity tracking)
+router.get('/activity', async (req: AuthRequest, res) => {
+  try {
+    const currentUser = req.user!;
+    
+    // Only superusers can access system activity
+    if (currentUser.role !== 'SUPERUSER') {
+      return res.status(403).json({ error: 'Superuser access required' });
     }
-  ]);
+
+    // Get recent real activities from database
+    const [
+      recentUsers,
+      recentOrganizations,
+      recentSubscriptions,
+      totalUsers,
+      totalOrganizations
+    ] = await Promise.all([
+      // Get recently created users (last 24 hours)
+      prisma.user.findMany({
+        where: {
+          createdAt: {
+            gte: new Date(Date.now() - 24 * 60 * 60 * 1000)
+          }
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 5,
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          createdAt: true
+        }
+      }),
+      // Get recently created organizations (last 24 hours)
+      prisma.organization.findMany({
+        where: {
+          createdAt: {
+            gte: new Date(Date.now() - 24 * 60 * 60 * 1000)
+          }
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 3,
+        select: {
+          id: true,
+          name: true,
+          createdAt: true
+        }
+      }),
+      // Get recent subscriptions (last 24 hours)
+      prisma.subscription.findMany({
+        where: {
+          createdAt: {
+            gte: new Date(Date.now() - 24 * 60 * 60 * 1000)
+          }
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 3,
+        select: {
+          id: true,
+          plan: true,
+          userId: true,
+          createdAt: true,
+          user: {
+            select: {
+              name: true,
+              email: true
+            }
+          }
+        }
+      }),
+      // Get total counts for context
+      prisma.user.count(),
+      prisma.organization.count()
+    ]);
+
+    // Build activity array from real data
+    const activities = [];
+
+    // Add user creation activities
+    recentUsers.forEach(user => {
+      activities.push({
+        id: `user_${user.id}`,
+        action: 'user_created',
+        description: `New user account created: ${user.name}`,
+        user: user.name,
+        resource: 'User Account',
+        details: `Email: ${user.email}`,
+        ip: 'System',
+        timestamp: user.createdAt.toISOString()
+      });
+    });
+
+    // Add organization creation activities
+    recentOrganizations.forEach(org => {
+      activities.push({
+        id: `org_${org.id}`,
+        action: 'organization_created',
+        description: `New organization created: ${org.name}`,
+        user: 'System',
+        resource: 'Organization',
+        details: `Organization: ${org.name}`,
+        ip: 'System',
+        timestamp: org.createdAt.toISOString()
+      });
+    });
+
+    // Add subscription activities
+    recentSubscriptions.forEach(sub => {
+      activities.push({
+        id: `sub_${sub.id}`,
+        action: 'subscription_created',
+        description: `${sub.plan} plan subscription created`,
+        user: sub.user.name,
+        resource: 'Subscription',
+        details: `Plan: ${sub.plan} | User: ${sub.user.email}`,
+        ip: 'System',
+        timestamp: sub.createdAt.toISOString()
+      });
+    });
+
+    // Add current superuser login activity
+    activities.push({
+      id: `login_${currentUser.id}`,
+      action: 'superuser_login',
+      description: 'Superuser dashboard accessed',
+      user: currentUser.name,
+      resource: 'Dashboard',
+      details: 'Superuser login detected',
+      ip: req.ip || req.connection.remoteAddress || 'unknown',
+      timestamp: new Date().toISOString()
+    });
+
+    // Add system summary activities
+    activities.push({
+      id: 'system_summary',
+      action: 'system_stats',
+      description: `System currently managing ${totalUsers} users and ${totalOrganizations} organizations`,
+      user: 'System',
+      resource: 'System Overview',
+      details: `Total Users: ${totalUsers} | Organizations: ${totalOrganizations}`,
+      ip: 'localhost',
+      timestamp: new Date(Date.now() - 30 * 60 * 1000).toISOString() // 30 minutes ago
+    });
+
+    // Sort by timestamp (most recent first)
+    activities.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+    res.json(activities.slice(0, 10)); // Return top 10 most recent activities
+  } catch (error) {
+    console.error('Get system activity error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 export default router;

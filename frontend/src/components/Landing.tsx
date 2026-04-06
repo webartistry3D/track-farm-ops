@@ -9,8 +9,13 @@ const Landing = () => {
     const style = document.createElement('style');
     style.textContent = `
       @keyframes scroll-x {
-        0% { transform: translateX(0); }
-        100% { transform: translateX(-90%); }
+        0% { transform: translateX(-90%); }
+        100% { transform: translateX(0); }
+      }
+      
+      @keyframes scroll-x-reverse {
+        0% { transform: translateX(90%); }
+        100% { transform: translateX(0); }
       }
       
       @keyframes starPulse {
@@ -20,11 +25,11 @@ const Landing = () => {
       }
       
       .animate-scroll-x {
-        animation: scroll-x 30s linear infinite;
+        animation: scroll-x 15s linear infinite;
       }
       
-      .animate-scroll-x:hover {
-        animation-play-state: paused;
+      .animate-scroll-x-reverse {
+        animation: scroll-x-reverse 15s linear infinite;
       }
     `;
     document.head.appendChild(style);
@@ -129,6 +134,7 @@ const Landing = () => {
               }, 600);
             }
           }
+          // Removed reset logic - animations continue infinitely
         });
       },
       {
@@ -173,7 +179,7 @@ const Landing = () => {
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-24 w-full relative z-10">
           <div className="text-center">
-            <h1 className="text-3xl sm:text-4xl md:text-6xl font-poppins font-bold text-white mb-4 sm:mb-6 relative leading-tight">
+            <h1 className="text-6xl sm:text-8xl md:text-8xl lg:text-9xl font-poppins font-bold text-white mb-4 sm:mb-6 relative leading-tight">
               {words.map((word, index) => (
                 <span
                   key={index}
@@ -290,28 +296,12 @@ const Landing = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button 
                 onClick={() => {
-                  const imageSection = document.querySelector('.bg-gray-900');
-                  if (imageSection) {
-                    const startPosition = window.pageYOffset;
-                    const targetPosition = imageSection.getBoundingClientRect().top + window.pageYOffset;
-                    const distance = targetPosition - startPosition;
-                    const duration = 3000; // 3 seconds for super slow scroll
-                    let start: number | null = null;
-                    
-                    function animation(currentTime: number) {
-                      if (start === null) start = currentTime;
-                      const timeElapsed = currentTime - start;
-                      const progress = Math.min(timeElapsed / duration, 1);
-                      const ease = 1 - Math.pow(1 - progress, 3); // Cubic ease-out
-                      
-                      window.scrollTo(0, startPosition + (distance * ease));
-                      
-                      if (timeElapsed < duration) {
-                        requestAnimationFrame(animation);
-                      }
-                    }
-                    
-                    requestAnimationFrame(animation);
+                  const section = document.getElementById('everything-you-need-section');
+                  if (section) {
+                    section.scrollIntoView({ 
+                      behavior: 'smooth',
+                      block: 'start'
+                    });
                   }
                 }}
                 className={`font-inter bg-green-600 text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-green-700 transition-all duration-300 transform shadow-lg hover:shadow-xl hover:scale-105 hover:-translate-y-1 ${
@@ -348,21 +338,21 @@ const Landing = () => {
         id="everything-you-need-section"
         ref={addToRefs}
         data-section="everything-you-need"
-        className="py-20 bg-white"
+        className="py-20 bg-gray-100"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className={`text-center mb-16 transition-all duration-1000 ease-in transform ${
+          <div className={`text-center mb-16 transition-all duration-1000 transform ${
             visibleHeaders.has('everything-you-need')
               ? 'opacity-100 translate-y-0'
               : 'opacity-0 translate-y-16'
           }`}>
-            <h2 className="text-3xl md:text-4xl font-poppins font-bold text-gray-900 mb-4">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-poppins font-bold text-gray-900 mb-4">
               Everything You Need to Manage Your Farm
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Image Card 1 */}
-            <div className={`bg-white rounded-lg overflow-hidden h-88 transition-all duration-800 ease-in transform ${
+            <div className={`bg-gray-100 rounded-lg overflow-hidden h-88 transition-all duration-800 ease-in transform ${
               visibleSections.has('everything-you-need')
                 ? 'opacity-100 translate-x-0'
                 : 'opacity-0 -translate-x-16'
@@ -370,12 +360,12 @@ const Landing = () => {
               transitionDelay: visibleSections.has('everything-you-need') ? '200ms' : '0ms'
             }}>
               <img 
-                src="/laptop-dashboard.jpg" 
+                src="/laptop-dashboard.png" 
                 alt="Laptop showing farm management dashboard"
                 className="w-full h-68 object-cover"
               />
               {/*<div className="p-6">
-                <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">
+                <h3 className="text-2xl md:text-3xl font-poppins font-semibold text-gray-900 mb-2">
                   Complete Farm Management
                 </h3>
                 <p className="font-inter text-gray-600">
@@ -385,7 +375,7 @@ const Landing = () => {
             </div>
 
             {/* Image Card 2 */}
-            <div className={`bg-white rounded-lg overflow-hidden w-2/5 mx-auto transition-all duration-800 ease-in transform ${
+            <div className={`bg-white/90 rounded-lg overflow-hidden w-2/5 mx-auto transition-all duration-800 ease-in transform ${
               visibleSections.has('everything-you-need')
                 ? 'opacity-100 translate-x-0'
                 : 'opacity-0 translate-x-16'
@@ -393,12 +383,12 @@ const Landing = () => {
               transitionDelay: visibleSections.has('everything-you-need') ? '400ms' : '0ms'
             }}>
               <img 
-                src="/mobile-app.jpg" 
+                src="/mobile-app.png" 
                 alt="Mobile farm tracking app"
                 className="w-full h-66 object-cover"
               />
               {/*<div className="p-6">
-                <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">
+                <h3 className="text-2xl md:text-3xl font-poppins font-semibold text-gray-900 mb-2">
                   Real-Time Analytics
                 </h3>
                 <p className="font-inter text-gray-600">
@@ -415,35 +405,51 @@ const Landing = () => {
         id="features-section"
         ref={addToRefs}
         data-section="features"
-        className="py-20 bg-gray-100"
+        className="py-20 bg-gray-50 relative overflow-hidden"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Parallax Background */}
+        <div className="absolute inset-0">
+          <div 
+            className="w-full h-full bg-cover bg-center bg-fixed"
+            style={{
+              backgroundImage: 'url("/farm-os2.png")',
+              backgroundAttachment: 'fixed',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: 'cover'
+            }}
+          >
+            {/* Overlay for text readability */}
+            <div className="absolute inset-0 bg-white/30 bg-opacity-20"></div>
+          </div>
+        </div>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className={`text-center mb-16 transition-all duration-1000 transform ${
             visibleHeaders.has('features')
               ? 'opacity-100 translate-y-0'
               : 'opacity-0 translate-y-16'
           }`}>
-            <h2 className="text-3xl md:text-4xl font-poppins font-bold text-gray-900 mb-4">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-poppins font-bold text-green-600 mb-4 bg-green-100 px-4 py-2 rounded-lg inline-block">
               Features
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className={`text-center bg-white rounded-lg shadow-lg p-6 transition-all duration-700 transform ${
+            <div className={`text-center bg-white/90 rounded-lg shadow-lg p-6 transition-all duration-700 transform ${
               visibleSections.has('features')
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-16'
             }`} style={{
               transitionDelay: visibleSections.has('features') ? '200ms' : '0ms'
             }}>
-              <div className="text-4xl mb-4">💰</div>
-              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">Income & Expense Tracker</h3>
+              <div className="text-4xl mb-4">₦</div>
+              <h3 className="text-2xl md:text-3xl font-poppins font-semibold text-gray-900 mb-2">Income & Expense Tracker</h3>
               <p className="font-inter text-gray-600">
                 Record daily income and expenses with automatic categorization and financial summaries. Create and track invoices, snap to scan or upload receipts. Track all expenses and generate detailed financial reports for better farm management decisions.
               </p>
             </div>
 
-            <div className={`text-center bg-white rounded-lg shadow-lg p-6 transition-all duration-700 transform ${
+            <div className={`text-center bg-white/90 rounded-lg shadow-lg p-6 transition-all duration-700 transform ${
               visibleSections.has('features')
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-16'
@@ -451,13 +457,13 @@ const Landing = () => {
               transitionDelay: visibleSections.has('features') ? '400ms' : '0ms'
             }}>
               <div className="text-4xl mb-4">📦</div>
-              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">Inventory & Assets Manager</h3>
+              <h3 className="text-2xl md:text-3xl font-poppins font-semibold text-gray-900 mb-2">Inventory & Assets Manager</h3>
               <p className="font-inter text-gray-600">
                 Track livestock, feed, and produce with real-time inventory updates and low stock alerts. Monitor equipment maintenance schedules, and manage farm supplies efficiently. Get automated notifications for reordering and optimize your farm resource allocation.
               </p>
             </div>
 
-            <div className={`text-center bg-white rounded-lg shadow-lg p-6 transition-all duration-700 transform ${
+            <div className={`text-center bg-white/90 rounded-lg shadow-lg p-6 transition-all duration-700 transform ${
               visibleSections.has('features')
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-16'
@@ -465,49 +471,49 @@ const Landing = () => {
               transitionDelay: visibleSections.has('features') ? '600ms' : '0ms'
             }}>
               <div className="text-4xl mb-4">📊</div>
-              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">Analytics & Reports</h3>
+              <h3 className="text-2xl md:text-3xl font-poppins font-semibold text-gray-900 mb-2">Analytics & Reports</h3>
               <p className="font-inter text-gray-600">
                 Comprehensive dashboards and reports to monitor farm performance from anywhere. Track key metrics, analyze trends, and make data-driven decisions with real-time insights. Generate custom reports, export data, and visualize your farm's success with interactive charts and graphs.
               </p>
             </div>
 
-            <div className={`text-center bg-white rounded-lg shadow-lg p-6 transition-all duration-700 transform ${
+            <div className={`text-center bg-white/90 rounded-lg shadow-lg p-6 transition-all duration-700 transform ${
+              visibleSections.has('features')
+                ? 'opacity-100 translate-y-0'
+                : 'opacity-0 translate-y-16'
+            }`} style={{
+              transitionDelay: visibleSections.has('features') ? '600ms' : '0ms'
+            }}>
+              <div className="text-4xl mb-4">👥</div>
+              <h3 className="text-2xl md:text-3xl font-poppins font-semibold text-gray-900 mb-2">Multi-User Access</h3>
+              <p className="font-inter text-gray-600">
+                Authentication-based access control for owners, managers, and workers. Assign specific permissions and roles, manage user access levels, and ensure data security with encrypted authentication. Monitor user activity and maintain complete control over who can view, edit, and manage different aspects of your farm operations.
+              </p>
+            </div>
+
+            <div className={`text-center bg-white/90 rounded-lg shadow-lg p-6 transition-all duration-700 transform ${
               visibleSections.has('features')
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-16'
             }`} style={{
               transitionDelay: visibleSections.has('features') ? '800ms' : '0ms'
             }}>
-              <div className="text-4xl mb-4">👥</div>
-              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">Multi-User Access</h3>
+              <div className="text-4xl mb-4">📱</div>
+              <h3 className="text-2xl md:text-3xl font-poppins font-semibold text-gray-900 mb-2">Mobile Optimized</h3>
               <p className="font-inter text-gray-600">
-                Authentication-based access control for owners, managers, and workers. Assign specific permissions and roles, manage user access levels, and ensure data security with encrypted authentication. Monitor user activity and maintain complete control over who can view, edit, and manage different aspects of your farm operations.
+                Works perfectly on low-end Android phones with poor internet connectivity. Optimized for minimal data usage and offline functionality with automatic sync when connection is restored. Fast loading times and responsive design ensure smooth operation even on basic smartphones and unstable networks.
               </p>
             </div>
 
-            <div className={`text-center bg-white rounded-lg shadow-lg p-6 transition-all duration-700 transform ${
+            <div className={`text-center bg-white/90 rounded-lg shadow-lg p-6 transition-all duration-700 transform ${
               visibleSections.has('features')
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-16'
             }`} style={{
               transitionDelay: visibleSections.has('features') ? '1000ms' : '0ms'
             }}>
-              <div className="text-4xl mb-4">📱</div>
-              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">Mobile Optimized</h3>
-              <p className="font-inter text-gray-600">
-                Works perfectly on low-end Android phones with poor internet connectivity. Optimized for minimal data usage and offline functionality with automatic sync when connection is restored. Fast loading times and responsive design ensure smooth operation even on basic smartphones and unstable networks.
-              </p>
-            </div>
-
-            <div className={`text-center bg-white rounded-lg shadow-lg p-6 transition-all duration-700 transform ${
-              visibleSections.has('features')
-                ? 'opacity-100 translate-y-0'
-                : 'opacity-0 translate-y-16'
-            }`} style={{
-              transitionDelay: visibleSections.has('features') ? '1200ms' : '0ms'
-            }}>
               <div className="text-4xl mb-4">🔒</div>
-              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">Secure & Reliable</h3>
+              <h3 className="text-2xl md:text-3xl font-poppins font-semibold text-gray-900 mb-2">Secure & Reliable</h3>
               <p className="font-inter text-gray-600">
                 Bank-level security with HTTPS and AES-256 encryption for secure data storage and backups. Regular security audits, secure data centers, and compliance with international data protection standards ensure your farm information remains confidential and protected at all times.
               </p>
@@ -580,7 +586,7 @@ const Landing = () => {
             }}
           >
             {/* Overlay for text readability */}
-            <div className="absolute inset-0 bg-white bg-opacity-20"></div>
+            <div className="absolute inset-0 bg-white/30 bg-opacity-20"></div>
           </div>
         </div>
         
@@ -597,7 +603,7 @@ const Landing = () => {
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-16'
             }`}>
-              <h2 className="text-3xl md:text-4xl font-poppins font-bold text-green-600 mb-4 bg-green-100 px-4 py-2 rounded-lg inline-block">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-poppins font-bold text-green-600 mb-4 bg-green-100 px-4 py-2 rounded-lg inline-block">
                 How It Works
               </h2>
               {/*<p className="text-lg text-white text-opacity-90 max-w-3xl mx-auto">
@@ -665,11 +671,154 @@ const Landing = () => {
         </div>
       </div>
 
+      {/* Benefits Section */}
+      <div 
+        id="benefits-section"
+        ref={addToRefs}
+        data-section="benefits"
+        className="py-20 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 relative overflow-hidden"
+      >
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-full h-full">
+            <div className="grid grid-cols-6 gap-4 p-8">
+              {[...Array(24)].map((_, i) => (
+                <div
+                  key={i}
+                  className="w-2 h-2 bg-green-200 rounded-full animate-pulse"
+                  style={{
+                    animationDelay: `${i * 0.2}s`,
+                    animationDuration: '3s'
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className={`text-center mb-16 transition-all duration-1000 transform ${
+            visibleHeaders.has('benefits')
+              ? 'opacity-100 translate-y-0'
+              : 'opacity-0 translate-y-16'
+          }`}>
+            <h2 className="text-3xl md:text-4xl font-poppins font-bold text-gray-900 mb-4">
+              Benefits of TrackFarmOps?
+            </h2>
+          </div>
+
+          <div className="relative overflow-hidden">
+            <div className="flex animate-scroll-x">
+              {/* Benefits Cards */}
+              <div className="flex space-x-8 px-4">
+            <div className={`bg-white rounded-xl shadow-lg p-8 transition-all duration-700 transform hover:scale-105 min-w-[350px] ${
+              visibleSections.has('benefits')
+                ? 'opacity-100 translate-y-0'
+                : 'opacity-0 translate-y-16'
+            }`} style={{
+              transitionDelay: visibleSections.has('benefits') ? '200ms' : '0ms'
+            }}>
+              <div className="text-green-600 text-4xl mb-4">🎯</div>
+              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-4">Increase Profitability</h3>
+              <p className="font-inter text-gray-600 leading-relaxed">
+                Track expenses and income in real-time to identify cost-saving opportunities. Our analytics help you make data-driven decisions that boost your farm's bottom line by up to 30%.
+              </p>
+            </div>
+
+            <div className={`bg-white rounded-xl shadow-lg p-8 transition-all duration-700 transform hover:scale-105 min-w-[350px] ${
+              visibleSections.has('benefits')
+                ? 'opacity-100 translate-y-0'
+                : 'opacity-0 translate-y-16'
+            }`} style={{
+              transitionDelay: visibleSections.has('benefits') ? '400ms' : '0ms'
+            }}>
+              <div className="text-blue-600 text-4xl mb-4">📊</div>
+              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-4">Smart Analytics</h3>
+              <p className="font-inter text-gray-600 leading-relaxed">
+                Get detailed insights into your farm operations with customizable reports and dashboards. Monitor crop performance, livestock health, and financial trends all in one place.
+              </p>
+            </div>
+
+            <div className={`bg-white rounded-xl shadow-lg p-8 transition-all duration-700 transform hover:scale-105 min-w-[350px] ${
+              visibleSections.has('benefits')
+                ? 'opacity-100 translate-y-0'
+                : 'opacity-0 translate-y-16'
+            }`} style={{
+              transitionDelay: visibleSections.has('benefits') ? '600ms' : '0ms'
+            }}>
+              <div className="text-purple-600 text-4xl mb-4">📱</div>
+              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-4">Mobile First</h3>
+              <p className="font-inter text-gray-600 leading-relaxed">
+                Manage your farm from anywhere with our mobile-optimized app. Works perfectly on low-end Android phones even with poor internet connectivity.
+              </p>
+            </div>
+
+            <div className={`bg-white rounded-xl shadow-lg p-8 transition-all duration-700 transform hover:scale-105 min-w-[350px] ${
+              visibleSections.has('benefits')
+                ? 'opacity-100 translate-y-0'
+                : 'opacity-0 translate-y-16'
+            }`} style={{
+              transitionDelay: visibleSections.has('benefits') ? '800ms' : '0ms'
+            }}>
+              <div className="text-orange-600 text-4xl mb-4">🔒</div>
+              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-4">Bank-Level Security</h3>
+              <p className="font-inter text-gray-600 leading-relaxed">
+                Your farm data is protected with AES-256 encryption and secure backups. We comply with international data protection standards to keep your information safe.
+              </p>
+            </div>
+
+            <div className={`bg-white rounded-xl shadow-lg p-8 transition-all duration-700 transform hover:scale-105 min-w-[350px] ${
+              visibleSections.has('benefits')
+                ? 'opacity-100 translate-y-0'
+                : 'opacity-0 translate-y-16'
+            }`} style={{
+              transitionDelay: visibleSections.has('benefits') ? '1000ms' : '0ms'
+            }}>
+              <div className="text-red-600 text-4xl mb-4">🌍</div>
+              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-4">Local Support</h3>
+              <p className="font-inter text-gray-600 leading-relaxed">
+                Get dedicated support from our Nigerian team who understand local farming challenges. We're here to help you succeed 24/7 with local expertise.
+              </p>
+            </div>
+
+            <div className={`bg-white rounded-xl shadow-lg p-8 transition-all duration-700 transform hover:scale-105 min-w-[350px] ${
+              visibleSections.has('benefits')
+                ? 'opacity-100 translate-y-0'
+                : 'opacity-0 translate-y-16'
+            }`} style={{
+              transitionDelay: visibleSections.has('benefits') ? '1200ms' : '0ms'
+            }}>
+              <div className="text-indigo-600 text-4xl mb-4">💰</div>
+              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-4">Affordable Pricing</h3>
+              <p className="font-inter text-gray-600 leading-relaxed">
+                Flexible pricing plans designed for Nigerian farmers. Start with our free tier and scale as your farm grows. No hidden fees or surprises.
+              </p>
+            </div>
+
+            <div className={`bg-white rounded-xl shadow-lg p-8 transition-all duration-700 transform hover:scale-105 min-w-[350px] ${
+              visibleSections.has('benefits')
+                ? 'opacity-100 translate-y-0'
+                : 'opacity-0 translate-y-16'
+            }`} style={{
+              transitionDelay: visibleSections.has('benefits') ? '1400ms' : '0ms'
+            }}>
+              <div className="text-teal-600 text-4xl mb-4">🚀</div>
+              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-4">Easy Onboarding</h3>
+              <p className="font-inter text-gray-600 leading-relaxed">
+                Get started in minutes with our intuitive interface. No technical knowledge required - just sign up and start managing your farm like a pro.
+              </p>
+            </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Testimonials Section */}
       <div className="py-20 bg-gradient-to-br from-green-300 via-white to-orange-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-poppins font-bold text-gray-900 mb-4">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-poppins font-bold text-gray-900 mb-4">
               What Farmers Are Saying
             </h2>
             {/*<p className="text-lg text-gray-600 max-w-3xl mx-auto">
@@ -678,7 +827,7 @@ const Landing = () => {
           </div>
 
           <div className="relative overflow-hidden">
-            <div className="flex animate-scroll-x">
+            <div className="flex animate-scroll-x-reverse">
               {/* First set of testimonials */}
               <div className="flex space-x-8 px-4">
                 <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
