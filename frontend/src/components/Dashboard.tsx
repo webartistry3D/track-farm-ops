@@ -24,6 +24,7 @@ const Dashboard = () => {
   const [modalData, setModalData] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  const [assets, setAssets] = useState<any[]>([]);
   const [dateFilter, setDateFilter] = useState<'today' | 'yesterday' | 'week' | 'month' | 'thisMonth' | 'thisYear' | 'customMonth' | 'customYear' | 'allTime'>('allTime');
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
@@ -98,15 +99,17 @@ const Dashboard = () => {
           startDate = endDate = today.toISOString().split('T')[0];
       }
       
-      const [incomeResponse, expenseResponse, inventoryResponse] = await Promise.all([
+      const [incomeResponse, expenseResponse, inventoryResponse, assetsResponse] = await Promise.all([
         api.get(`/finance/income${startDate ? `?startDate=${startDate}&endDate=${endDate}` : ''}`),
         api.get(`/finance/expenses${startDate ? `?startDate=${startDate}&endDate=${endDate}` : ''}`),
-        api.get('/inventory/items')
+        api.get('/inventory/items'),
+        api.get('/assets')
       ]);
       
       const incomeData = incomeResponse.data?.entries || [];
       const expenseData = expenseResponse.data?.entries || [];
       const inventoryData = inventoryResponse.data || [];
+      const assetsData = assetsResponse.data || [];
       
       // Process data to include user information
       const processedIncome = incomeData.map((entry: any) => ({
@@ -127,9 +130,16 @@ const Dashboard = () => {
         userEmail: item.createdByUser?.email || item.user?.email || 'system@trackfarmops.com'
       }));
       
+      const processedAssets = assetsData.map((asset: any) => ({
+        ...asset,
+        userName: asset.createdByUser?.name || asset.user?.name || 'System',
+        userEmail: asset.createdByUser?.email || asset.user?.email || 'system@trackfarmops.com'
+      }));
+      
       setIncomeEntries(processedIncome);
       setExpenseEntries(processedExpenses);
       setInventoryItems(processedInventory);
+      setAssets(processedAssets);
       
       // Calculate totals - ensure amounts are treated as numbers
       const incomeTotal = incomeData.reduce((sum: number, entry: any) => {
@@ -183,6 +193,12 @@ const Dashboard = () => {
           type: 'Inventory'
         }));
         break;
+      case 'assets':
+        data = assets.map(asset => ({
+          ...asset,
+          type: 'Asset'
+        }));
+        break;
       case 'transactions':
         const allTransactions = [
           ...incomeEntries.map(entry => ({ ...entry, type: 'Income' })),
@@ -215,7 +231,7 @@ const Dashboard = () => {
       {/* Welcome Section */}
       <div className="rounded-lg p-0">
         <h1 className="text-xl font-poppins font-regular text-gray-900 dark:text-white mb-0">
-          Hi, {user.name}! 
+          Hi, {user.name?.split(' ')[0]}! 
         </h1>
         <p className="font-inter text-gray-600 text-sm mt-0">
           Here is your business update..
@@ -558,14 +574,14 @@ const Dashboard = () => {
                 <div className="text-sm font-inter text-gray-500 dark:text-gray-400">Inventory Items</div>
               </div>
               <div 
-                onClick={() => handleCardClick('transactions')}
+                onClick={() => handleCardClick('assets')}
                 className="bg-white dark:bg-gray-800 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
               >
-                <div className="text-xl mb-1">🔄</div>
+                <div className="text-xl mb-1">🏗️</div>
                 <div className="text-xl font-poppins font-semibold text-gray-900 dark:text-white">
-                  {incomeEntries.length + expenseEntries.length}
+                  {assets.length}
                 </div>
-                <div className="text-sm font-inter text-gray-500 dark:text-gray-400">Transactions</div>
+                <div className="text-sm font-inter text-gray-500 dark:text-gray-400">Assets</div>
               </div>
             </div>
           </div>
@@ -627,13 +643,13 @@ const Dashboard = () => {
                       </div>
                     </Link>
                   ))}
-                {(incomeEntries.length + expenseEntries.length) > 10 && (
+                {(assets.length) > 10 && (
                   <div className="text-center pt-2">
                     <button 
-                      onClick={() => handleCardClick('transactions')}
+                      onClick={() => handleCardClick('assets')}
                       className="font-inter text-sm text-green-600 hover:text-green-700 font-medium"
                     >
-                      View all {incomeEntries.length + expenseEntries.length} transactions
+                      View all {assets.length} assets
                     </button>
                   </div>
                 )}
@@ -668,7 +684,7 @@ const Dashboard = () => {
                 {modalType === 'income' && 'Income Entries'}
                 {modalType === 'expenses' && 'Expense Entries'}
                 {modalType === 'inventory' && 'Inventory Items'}
-                {modalType === 'transactions' && 'Transactions Today'}
+                {modalType === 'assets' && 'Assets Overview'}
               </h3>
               <button
                 onClick={() => setModalOpen(false)}
@@ -699,28 +715,29 @@ const Dashboard = () => {
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
                   {modalData
                     .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
                     .map((item, index) => (
                     <tr key={index}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                         {new Date(item.createdAt || item.date).toLocaleDateString()}
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-900">
+                      <td className="px-6 py-4 text-sm text-gray-900 dark:text-white">
                         {item.description || item.name || item.category || 'No description'}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                         {item.amount ? formatCurrency(item.amount.toString()) : 'N/A'}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                         {item.userName || 'Unknown User'}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          item.type === 'Income' ? 'bg-green-100 text-green-800' : 
-                          item.type === 'Expense' ? 'bg-red-100 text-red-800' : 
-                          'bg-blue-100 text-blue-800'
+                          item.type === 'Income' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 
+                          item.type === 'Expense' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : 
+                          item.type === 'Asset' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' :
+                          'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
                         }`}>
                           {item.type}
                         </span>

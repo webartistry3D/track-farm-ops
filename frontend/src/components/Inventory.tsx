@@ -209,12 +209,14 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
       setLoading(true);
       const response = await api.get('/inventory/items');
       
-      // Convert PostgreSQL Decimal strings to numbers
+      // Convert PostgreSQL Decimal strings to numbers and add user information
       const processedItems = (response.data || []).map((item: any) => ({
         ...item,
         quantity: Number(item.quantity),
         minimumStock: item.minimumStock ? Number(item.minimumStock) : undefined,
         pricePerUnit: item.pricePerUnit ? Number(item.pricePerUnit) : undefined,
+        userName: item.createdByUser?.name || item.user?.name || 'System',
+        userEmail: item.createdByUser?.email || item.user?.email || 'system@trackfarmops.com'
       }));
       
       // Debug specific item (ID 81)
@@ -1040,7 +1042,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Consumables</p>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Edibles</p>
                 <p className="text-3xl font-poppins font-bold text-gray-900 dark:text-white">
                   {totals.consumablesItems}
                 </p>
@@ -2589,6 +2591,9 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                             minute: '2-digit'
                           })}
                         </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                          by {(itemToView as any).metadata?.createdBy || (itemToView as any).userName || 'Unknown User'}
+                        </p>
                       </div>
                     </div>
                     
@@ -2608,6 +2613,9 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                             hour: '2-digit',
                             minute: '2-digit'
                           })}
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                          by {(itemToView as any).metadata?.updatedBy || (itemToView as any).metadata?.createdBy || (itemToView as any).userName || 'Unknown User'}
                         </p>
                       </div>
                     </div>

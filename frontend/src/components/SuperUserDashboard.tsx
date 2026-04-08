@@ -1651,7 +1651,7 @@ const SuperUserDashboard = () => {
       return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
           {/* Sidebar (always visible during loading) */}
-          <div className="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0">
+          <div className="fixed inset-y-0 left-0 z-50 w-48 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0">
             <div className="flex items-center justify-between h-16 px-6 border-b border-slate-200 dark:border-slate-700">
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center">
@@ -1732,7 +1732,7 @@ const SuperUserDashboard = () => {
           <div className={`
             ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} 
             lg:translate-x-0 fixed lg:static inset-y-0 left-0 z-30
-            w-56 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700
+            w-48 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700
             transition-transform duration-300 ease-in-out
             lg:border-r lg:border-slate-200 lg:dark:border-slate-700
           `}>

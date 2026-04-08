@@ -727,7 +727,7 @@ const CCTV = () => {
                 <Camera className="h-5 w-5 text-green-600 dark:text-green-400" />
               </div>
               <div className="ml-3">
-                <p className="text-sm text-gray-600 dark:text-gray-400">Total Cameras</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Total</p>
                 <p className="text-xl font-bold text-gray-900 dark:text-white">{cameras.length}</p>
               </div>
             </div>
@@ -766,7 +766,7 @@ const CCTV = () => {
                 <AlertTriangle className="h-5 w-5 text-orange-600 dark:text-orange-400" />
               </div>
               <div className="ml-3">
-                <p className="text-sm text-gray-600 dark:text-gray-400">Motion Alerts</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Motion</p>
                 <p className="text-xl font-bold text-gray-900 dark:text-white">
                   {cameras.filter(c => c.status === 'motion').length}
                 </p>

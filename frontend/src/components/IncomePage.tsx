@@ -1675,7 +1675,12 @@ Generated on: ${new Date().toLocaleString()}
     if (!selectedVatRecord) return;
     
     try {
-      // Update the record status to 'remitted'
+      // Update record status to 'remitted' via API
+      await api.put(`/finance/vat/records/${selectedVatRecord.id}`, {
+        status: 'remitted'
+      });
+      
+      // Update local state
       setVatRecords(vatRecords.map(record => 
         record.id === selectedVatRecord.id 
           ? { ...record, status: 'remitted' }
