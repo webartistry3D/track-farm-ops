@@ -254,7 +254,7 @@ const Settings = () => {
       return;
     }
 
-    const price = billingCycle === 'annual' ? plan.price * 12 * 0.9 : plan.price; // 10% discount for annual
+    const price = billingCycle === 'annual' ? plan.price * 12 * 0.8 : plan.price; // 20% discount for annual
     
     // Validate email
     if (!user?.email) {
@@ -775,14 +775,14 @@ const Settings = () => {
                     
                     <button
                       onClick={() => handleSubscriptionPayment(plan.id)}
-                      disabled={isCurrentPlan || loading || !paystackScriptLoaded}
+                      disabled={isCurrentPlan || loading || (!paystackScriptLoaded && !subscriptionData)}
                       className={`w-full py-2 px-4 rounded-lg font-medium transition-all duration-200 ${
                         isCurrentPlan
                           ? 'bg-gray-300 dark:bg-gray-600 text-gray-600 dark:text-gray-400 cursor-not-allowed'
                           : 'bg-green-600 text-white hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed'
                       }`}
                     >
-                      {isCurrentPlan ? 'Current Plan' : loading ? 'Processing...' : !paystackScriptLoaded ? 'Loading Payment...' : `Upgrade to ${plan.name}`}
+                      {isCurrentPlan ? 'Current Plan' : loading ? 'Processing...' : (!paystackScriptLoaded && !subscriptionData) ? 'Loading Payment...' : `Upgrade to ${plan.name}`}
                     </button>
                   </div>
                 );

@@ -1045,7 +1045,7 @@ const SuperUserDashboard = () => {
           <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-xl shadow-lg p-6 text-white">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-emerald-100 text-sm font-medium">Monthly Recurring Revenue</p>
+                <p className="text-emerald-100 text-sm font-medium">MRR</p>
                 <p className="text-3xl font-bold mt-2">₦{mrr.toLocaleString()}</p>
                 <p className="text-emerald-100 text-sm mt-1">From {activeSubscriptions.length} active subscriptions</p>
               </div>
@@ -1432,11 +1432,11 @@ const SuperUserDashboard = () => {
             <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
               <div className="flex justify-between items-center text-sm">
                 <span className="text-gray-500 dark:text-gray-400">This Month</span>
-                <span className="font-medium">{(stats?.thisMonthUsers || 0).toLocaleString()}</span>
+                <span className="font-medium text-gray-900 dark:text-white">{(stats?.thisMonthUsers || 0).toLocaleString()}</span>
               </div>
               <div className="flex justify-between items-center text-sm mt-1">
                 <span className="text-gray-500 dark:text-gray-400">Last Month</span>
-                <span className="font-medium">{(stats?.lastMonthUsers || 0).toLocaleString()}</span>
+                <span className="font-medium text-gray-900 dark:text-white">{(stats?.lastMonthUsers || 0).toLocaleString()}</span>
               </div>
             </div>
           </div>
@@ -1463,11 +1463,11 @@ const SuperUserDashboard = () => {
             <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
               <div className="flex justify-between items-center text-sm">
                 <span className="text-gray-500 dark:text-gray-400">This Month</span>
-                <span className="font-medium">₦{Number(stats?.thisMonthRevenue || 0).toLocaleString()}</span>
+                <span className="font-medium text-gray-900 dark:text-white">₦{Number(stats?.thisMonthRevenue || 0).toLocaleString()}</span>
               </div>
               <div className="flex justify-between items-center text-sm mt-1">
                 <span className="text-gray-500 dark:text-gray-400">Last Month</span>
-                <span className="font-medium">₦{Number(stats?.lastMonthRevenue || 0).toLocaleString()}</span>
+                <span className="font-medium text-gray-900 dark:text-white">₦{Number(stats?.lastMonthRevenue || 0).toLocaleString()}</span>
               </div>
             </div>
           </div>
@@ -1484,7 +1484,7 @@ const SuperUserDashboard = () => {
           <div className="space-y-2">
             <div className="flex justify-between">
               <span className="text-sm text-gray-600 dark:text-gray-400">Total</span>
-              <span className="text-xl font-bold">{(stats?.totalOrganizations || 0).toLocaleString()}</span>
+              <span className="text-xl font-bold text-gray-900 dark:text-white">{(stats?.totalOrganizations || 0).toLocaleString()}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-gray-600 dark:text-gray-400">Active</span>
@@ -1501,7 +1501,7 @@ const SuperUserDashboard = () => {
           <div className="space-y-2">
             <div className="flex justify-between">
               <span className="text-sm text-gray-600 dark:text-gray-400">Total Assets</span>
-              <span className="text-xl font-bold">{(stats?.totalAssets || 0).toLocaleString()}</span>
+              <span className="text-xl font-bold text-gray-900 dark:text-white">{(stats?.totalAssets || 0).toLocaleString()}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-gray-600 dark:text-gray-400">Inventory Items</span>
@@ -2295,35 +2295,35 @@ const SuperUserDashboard = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <span className="text-sm text-gray-600 dark:text-gray-400">User Email:</span>
-                    <span className="ml-2 font-medium">{selectedSub.userEmail}</span>
+                    <span className="ml-2 font-medium text-gray-900 dark:text-white">{selectedSub.userEmail}</span>
                   </div>
                   <div>
                     <span className="text-sm text-gray-600 dark:text-gray-400">Organization:</span>
-                    <span className="ml-2 font-medium">{selectedSub.organization}</span>
+                    <span className="ml-2 font-medium text-gray-900 dark:text-white">{selectedSub.organization}</span>
                   </div>
                   <div>
                     <span className="text-sm text-gray-600 dark:text-gray-400">Payment Method:</span>
-                    <span className="ml-2 font-medium">{selectedSub.paymentMethod}</span>
+                    <span className="ml-2 font-medium text-gray-900 dark:text-white">{selectedSub.paymentMethod}</span>
                   </div>
                   <div>
                     <span className="text-sm text-gray-600 dark:text-gray-400">Currency:</span>
-                    <span className="ml-2 font-medium">{selectedSub.currency}</span>
+                    <span className="ml-2 font-medium text-gray-900 dark:text-white">{selectedSub.currency}</span>
                   </div>
                   <div>
                     <span className="text-sm text-gray-600 dark:text-gray-400">Start Date:</span>
-                    <span className="ml-2 font-medium">{new Date(selectedSub.startDate).toLocaleDateString()}</span>
+                    <span className="ml-2 font-medium text-gray-900 dark:text-white">{new Date(selectedSub.startDate).toLocaleDateString()}</span>
                   </div>
                   <div>
                     <span className="text-sm text-gray-600 dark:text-gray-400">End Date:</span>
-                    <span className="ml-2 font-medium">{new Date(selectedSub.endDate).toLocaleDateString()}</span>
+                    <span className="ml-2 font-medium text-gray-900 dark:text-white">{new Date(selectedSub.endDate).toLocaleDateString()}</span>
                   </div>
                   <div>
                     <span className="text-sm text-gray-600 dark:text-gray-400">Next Billing:</span>
-                    <span className="ml-2 font-medium">{new Date(selectedSub.nextBillingDate).toLocaleDateString()}</span>
+                    <span className="ml-2 font-medium text-gray-900 dark:text-white">{new Date(selectedSub.nextBillingDate).toLocaleDateString()}</span>
                   </div>
                   <div>
                     <span className="text-sm text-gray-600 dark:text-gray-400">Last Payment:</span>
-                    <span className="ml-2 font-medium">{selectedSub.lastPaymentDate ? new Date(selectedSub.lastPaymentDate).toLocaleDateString() : 'N/A'}</span>
+                    <span className="ml-2 font-medium text-gray-900 dark:text-white">{selectedSub.lastPaymentDate ? new Date(selectedSub.lastPaymentDate).toLocaleDateString() : 'N/A'}</span>
                   </div>
                 </div>
                 
