@@ -105,8 +105,10 @@ const ExpensePage = () => {
 
   // Auto-clear success message after 3 seconds
   useEffect(() => {
+    console.log('🔍 DEBUG: Success state changed:', { success, type: typeof success });
     if (success) {
       const timer = setTimeout(() => {
+        console.log('🔍 DEBUG: Clearing success message');
         setSuccess('');
       }, 3000); // 3 seconds
 
@@ -305,13 +307,17 @@ const ExpensePage = () => {
       
       await api.post<ExpenseEntry>('/finance/expenses', expenseData);
       
-      setSuccessModalData({
+      console.log('🔍 DEBUG: Setting success modal data for expense creation');
+      const modalData = {
         title: 'Expense Recorded Successfully!',
         message: 'Your expense entry has been saved and is now available in your records.',
         showReceiptImage: false,
         receiptImageUrl: '',
         confidence: undefined
-      });
+      };
+      console.log('🔍 DEBUG: Success modal data:', modalData);
+      setSuccessModalData(modalData);
+      console.log('🔍 DEBUG: About to show success modal');
       setShowSuccessModal(true);
       resetForm();
     } catch (err: any) {
@@ -368,13 +374,17 @@ const ExpensePage = () => {
       setExpenseToDelete(null);
       
       // Show success modal
-      setSuccessModalData({
+      console.log('🔍 DEBUG: Setting success modal data for expense deletion');
+      const deleteModalData = {
         title: 'Expense Deleted Successfully!',
         message: 'The expense entry has been removed from your records.',
         showReceiptImage: false,
         receiptImageUrl: '',
         confidence: undefined
-      });
+      };
+      console.log('🔍 DEBUG: Delete success modal data:', deleteModalData);
+      setSuccessModalData(deleteModalData);
+      console.log('🔍 DEBUG: About to show delete success modal');
       setShowSuccessModal(true);
       
     } catch (err: any) {
@@ -386,14 +396,30 @@ const ExpensePage = () => {
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     
-    if (!validateCurrencyInput(inputValue.replace(/[^\d.]/g, ''))) {
+    // Remove all non-digit characters except decimal point for validation
+    const cleanValue = inputValue.replace(/[^\d.]/g, '');
+    
+    // Allow empty input or valid decimal number
+    if (cleanValue !== '' && !validateCurrencyInput(cleanValue)) {
       return;
     }
     
-    const formatted = formatCurrency(inputValue.replace(/[^\d.]/g, ''));
-    setDisplayAmount(formatted);
+    // Format with thousand separators while typing
+    const parts = cleanValue.split('.');
+    let integerPart = parts[0] || '';
+    const decimalPart = parts[1] || '';
     
-    const numericValue = parseCurrency(inputValue.replace(/[^\d.]/g, ''));
+    // Add thousand separators to integer part
+    integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    
+    // Combine with decimal part
+    const formattedValue = decimalPart ? `${integerPart}.${decimalPart}` : integerPart;
+    
+    // Show the formatted value in the field
+    setDisplayAmount(formattedValue);
+    
+    // Parse the clean value for form data
+    const numericValue = parseFloat(cleanValue) || 0;
     setFormData({
       ...formData,
       amount: numericValue.toString()
@@ -662,7 +688,7 @@ const ExpensePage = () => {
                       name="amount"
                       required
                       className="w-full px-3 py-2 h-10 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white"
-                      placeholder="0.00"
+                      placeholder="0.00 or 1,000.00"
                       value={displayAmount}
                       onChange={handleAmountChange}
                     />
@@ -838,19 +864,13 @@ const ExpensePage = () => {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                             <div className="flex items-center space-x-4">
-                              {expense.hasReceipt ? (
-                                <button
-                                  onClick={() => handleViewReceipt(expense)}
-                                  className="text-amber-600 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-300 transition-colors"
-                                  title="View Receipt"
-                                >
-                                  <Eye className="h-4 w-4" />
-                                </button>
-                              ) : (
-                                <span className="text-gray-400 dark:text-gray-500" title="No Receipt Available">
-                                  <Eye className="h-4 w-4" />
-                                </span>
-                              )}
+                              <button
+                                onClick={() => handleViewReceipt(expense)}
+                                className="text-amber-600 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-300 transition-colors"
+                                title="View Receipt Details"
+                              >
+                                <Eye className="h-4 w-4" />
+                              </button>
                               <button
                                 onClick={() => handleDeleteExpense(expense)}
                                 className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 transition-colors"
@@ -950,14 +970,83 @@ const ExpensePage = () => {
                   />
                 </div>
               ) : (
-                <div className="bg-gray-100 dark:bg-gray-700 rounded-lg p-8 text-center">
-                  <Eye className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                  <p className="text-lg text-gray-600 dark:text-gray-400">
-                    Receipt image not available
-                  </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
-                    This expense was recorded without a receipt image
-                  </p>
+                <div className="bg-gray-100 dark:bg-gray-700 rounded-lg p-8">
+                  <div className="max-w-md mx-auto">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+                          📄 Receipt - {selectedExpense.category}
+                        </h3>
+                        <button
+                          onClick={() => setShowEditModal(false)}
+                          className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                        >
+                          <X className="h-6 w-6" />
+                        </button>
+                      </div>
+                      
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                              Merchant/Supplier
+                            </label>
+                            <p className="text-gray-900 dark:text-white font-medium">
+                              {selectedExpense.merchant || 'Manual Entry'}
+                            </p>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                              Date
+                            </label>
+                            <p className="text-gray-900 dark:text-white font-medium">
+                              {new Date(selectedExpense.date).toLocaleDateString()}
+                            </p>
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                              Category
+                            </label>
+                            <p className="text-gray-900 dark:text-white font-medium">
+                              {selectedExpense.category}
+                            </p>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                              Amount
+                            </label>
+                            <p className="text-gray-900 dark:text-white font-medium">
+                              {formatCurrency(selectedExpense.amount)}
+                            </p>
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                              Notes / Items Purchased
+                            </label>
+                            <p className="text-gray-900 dark:text-white">
+                              <div className="max-w-xs" title={selectedExpense.note || '-'}>
+                                {selectedExpense.note || '-'}
+                              </div>
+                            </p>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                              Recorded by
+                            </label>
+                            <p className="text-gray-900 dark:text-white font-medium">
+                              {selectedExpense.user?.name || 'Unknown User'}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>

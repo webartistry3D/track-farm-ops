@@ -7,6 +7,7 @@ import { formatCurrency } from '../utils/currency';
 import { useSubscriptionRestrictions } from '../utils/subscriptionRestrictions';
 import { Plus, Table, TrendingUp, FileText, Download, Send, Calendar, Package, Trash2, Edit2, CheckCircle, ChevronDown, Eye, X, Receipt } from 'lucide-react';
 import Pagination from './Pagination';
+import SuccessModal from './SuccessModal';
 import jsPDF from 'jspdf';
 
 const incomeCategories = [
@@ -150,6 +151,14 @@ const IncomePage = () => {
   
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successModalData, setSuccessModalData] = useState({
+    title: '',
+    message: '',
+    showReceiptImage: false,
+    receiptImageUrl: '',
+    confidence: undefined
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [incomes, setIncomes] = useState<IncomeEntry[]>([]);
   const [incomesLoading, setIncomesLoading] = useState(false);
@@ -1326,8 +1335,9 @@ TrackFarmOps Team`;
     }
 
     try {
-      const quantity = parseFloat(formData.quantity);
-      const unitPrice = parseFloat(formData.unitPrice);
+      // Parse currency values properly - remove commas and convert to number
+      const quantity = parseFloat(formData.quantity.toString().replace(/,/g, ''));
+      const unitPrice = parseFloat(formData.unitPrice.toString().replace(/,/g, ''));
       const subtotal = quantity * unitPrice;
       
       // Calculate VAT if enabled
@@ -1337,11 +1347,11 @@ TrackFarmOps Team`;
       const incomeData = {
         amount: subtotal.toString(),
         description: formData.description,
-        quantity: formData.quantity,
-        unitPrice: formData.unitPrice,
+        quantity: quantity.toString(), // Use parsed quantity
+        unitPrice: unitPrice.toString(), // Use parsed unitPrice
         vatRate: formData.vatRate,
         vatAmount: vatAmount,
-        totalAmount: totalAmount,
+        totalAmount: totalAmount.toString(),
         date: formData.date,
         enableVAT: formData.enableVAT,
         category: formData.category,
@@ -1353,7 +1363,14 @@ TrackFarmOps Team`;
       
       await api.post<IncomeEntry>('/finance/income', incomeData);
       
-      setSuccess('Income entry recorded successfully!');
+      setSuccessModalData({
+        title: 'Income Recorded Successfully!',
+        message: 'Your income entry has been saved and is now available in your records.',
+        showReceiptImage: false,
+        receiptImageUrl: '',
+        confidence: undefined
+      });
+      setShowSuccessModal(true);
       resetForm();
     } catch (err: any) {
       console.error('❌ Submit error:', err);
@@ -1742,19 +1759,19 @@ Generated on: ${new Date().toLocaleString()}
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <span className="text-gray-600 dark:text-gray-400">Client:</span>
-                <span className="ml-2 font-medium">{invoiceToMarkAsPaid.clientName}</span>
+                <span className="ml-2 font-medium text-gray-900 dark:text-white">{invoiceToMarkAsPaid.clientName}</span>
               </div>
               <div>
                 <span className="text-gray-600 dark:text-gray-400">Total Amount:</span>
-                <span className="ml-2 font-medium">{formatCurrency(invoiceToMarkAsPaid.total)}</span>
+                <span className="ml-2 font-medium text-gray-900 dark:text-white">{formatCurrency(invoiceToMarkAsPaid.total)}</span>
               </div>
               <div>
                 <span className="text-gray-600 dark:text-gray-400">Items:</span>
-                <span className="ml-2 font-medium">{invoiceToMarkAsPaid.items?.length || 0}</span>
+                <span className="ml-2 font-medium text-gray-900 dark:text-white">{invoiceToMarkAsPaid.items?.length || 0}</span>
               </div>
               <div>
                 <span className="text-gray-600 dark:text-gray-400">Due Date:</span>
-                <span className="ml-2 font-medium">
+                <span className="ml-2 font-medium text-gray-900 dark:text-white">
                   {invoiceToMarkAsPaid.dueDate ? new Date(invoiceToMarkAsPaid.dueDate).toLocaleDateString() : 'N/A'}
                 </span>
               </div>
@@ -3648,7 +3665,7 @@ Generated on: ${new Date().toLocaleString()}
                             {formatCurrency(income.amount, { includeSymbol: true })}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white font-mono">
-                            {income.invoiceVat ? formatCurrency(income.invoiceVat, { includeSymbol: true }) : '-'}
+                            {income.vatAmount ? formatCurrency(income.vatAmount, { includeSymbol: true }) : '-'}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                             <div className="flex items-center">
@@ -4001,6 +4018,7 @@ Generated on: ${new Date().toLocaleString()}
                         <tr>
                           <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">Date</th>
                           <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">Invoice #</th>
+                          <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">Description</th>
                           <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">Period</th>
                           {/*<th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">Old VAT</th>*/}
                           <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">VAT Amount</th>
@@ -4025,6 +4043,14 @@ Generated on: ${new Date().toLocaleString()}
                               <div className="flex items-center">
                                 <FileText className="h-4 w-4 mr-2 text-gray-400" />
                                 <span className="font-mono text-xs">{record.invoiceNumber || `INV-${record.id}`}</span>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                              <div className="flex items-center max-w-xs">
+                                <FileText className="h-4 w-4 mr-2 text-gray-400 flex-shrink-0" />
+                                <span className="truncate" title={record.description || 'Manual Income Entry'}>
+                                  {record.description || 'Manual Income Entry'}
+                                </span>
                               </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm">
@@ -4303,6 +4329,18 @@ Generated on: ${new Date().toLocaleString()}
               </div>
             </div>
           )}
+
+      {/* Success Modal */}
+      <SuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        title={successModalData.title}
+        message={successModalData.message}
+        showReceiptImage={successModalData.showReceiptImage}
+        receiptImageUrl={successModalData.receiptImageUrl}
+        confidence={successModalData.confidence}
+        buttonText="OK"
+      />
         </div>
       </div>
     </div>

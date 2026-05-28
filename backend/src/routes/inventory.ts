@@ -10,7 +10,8 @@ import {
   getInventorySummary,
   deleteInventoryItem,
   getInventoryCategories,
-  createInventoryCategory
+  createInventoryCategory,
+  updateInventoryCategory
 } from '../controllers/inventoryController';
 import { authenticate, authorize } from '../middleware/auth';
 
@@ -28,6 +29,7 @@ router.get('/units', getInventoryUnits);
 // Inventory categories routes
 router.get('/categories', getInventoryCategories);
 router.post('/categories', authorize(['OWNER', 'MANAGER']), createInventoryCategory);
+router.put('/categories/:id', authorize(['OWNER', 'MANAGER']), updateInventoryCategory);
 
 // Inventory items routes
 router.get('/items', getInventoryItems);

@@ -21,6 +21,16 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
   confidence,
   buttonText = 'OK'
 }) => {
+  console.log('🔍 DEBUG: SuccessModal props:', {
+    isOpen,
+    title,
+    message,
+    showReceiptImage,
+    receiptImageUrl,
+    confidence,
+    buttonText
+  });
+  
   if (!isOpen) return null;
 
   return (

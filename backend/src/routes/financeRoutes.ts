@@ -151,7 +151,23 @@ router.get('/income', authenticate, async (req: AuthRequest, res) => {
       },
       take: limit ? parseInt(limit as string) : undefined,
       skip: offset ? parseInt(offset as string) : undefined,
-      include: {
+      select: {
+        id: true,
+        amount: true,
+        category: true,
+        paymentMethod: true,
+        date: true,
+        description: true,
+        quantity: true,
+        unitPrice: true,
+        enableVAT: true,
+        vatRate: true,
+        vatAmount: true,
+        subtotal: true,
+        createdAt: true,
+        updatedAt: true,
+        userId: true,
+        organizationId: true,
         user: {
           select: { id: true, name: true, email: true }
         }
@@ -159,6 +175,16 @@ router.get('/income', authenticate, async (req: AuthRequest, res) => {
     });
     
     console.log(`🔍 DEBUG: Found ${incomeEntries.length} income entries in database`);
+    
+    // Debug: Check VAT data in recent entries
+    const recentVatEntries = incomeEntries.slice(0, 3).map(entry => ({
+      id: entry.id,
+      description: entry.description?.substring(0, 30) + '...',
+      enableVAT: entry.enableVAT,
+      vatAmount: entry.vatAmount,
+      amount: entry.amount
+    }));
+    console.log('🔍 DEBUG: Recent VAT entries:', recentVatEntries);
     
     // Debug: Check for KEL-11116 entries specifically
     const kel11116Entries = incomeEntries.filter(entry => 
@@ -434,10 +460,16 @@ router.post('/income', authenticate, async (req: AuthRequest, res) => {
       description,
       quantity,
       unitPrice,
-      invoiceCreator
+      invoiceCreator,
+      enableVAT,
+      vatRate,
+      vatAmount,
+      totalAmount,
+      subtotal
     } = req.body;
     
     console.log(`🔍 DEBUG: Creating income entry with description: "${description}"`);
+    console.log(`🔍 DEBUG: VAT Data - enableVAT: ${enableVAT}, vatRate: ${vatRate}, vatAmount: ${vatAmount}, totalAmount: ${totalAmount}, subtotal: ${subtotal}`);
     
     // Check for duplicate invoice-based income entries
     if (description?.includes('Payment for invoice #')) {
@@ -481,7 +513,12 @@ router.post('/income', authenticate, async (req: AuthRequest, res) => {
         quantity: quantity ? parseFloat(quantity) : null,
         unitPrice: unitPrice ? parseFloat(unitPrice) : null,
         userId: currentUser.id,
-        organizationId: currentUserOrg.organizationId
+        organizationId: currentUserOrg.organizationId,
+        // Add VAT fields
+        enableVAT: enableVAT || false,
+        vatRate: vatRate ? parseFloat(vatRate) : 7.5,
+        vatAmount: vatAmount ? parseFloat(vatAmount) : 0,
+        subtotal: subtotal ? parseFloat(subtotal) : parseFloat(amount)
       },
       include: {
         user: {
@@ -495,6 +532,7 @@ router.post('/income', authenticate, async (req: AuthRequest, res) => {
     });
     
     console.log('✅ Income entry created:', incomeEntry);
+    console.log('✅ VAT Data Stored - enableVAT:', incomeEntry.enableVAT, 'vatRate:', incomeEntry.vatRate, 'vatAmount:', incomeEntry.vatAmount, 'subtotal:', incomeEntry.subtotal);
     
     res.json({
       success: true,
@@ -893,6 +931,7 @@ router.get('/vat/records', authenticate, async (req: AuthRequest, res) => {
         id: entry.id,
         period,
         date: entry.date,
+        description: entry.description, // Add description field
         vatAmount: entry.vatAmount || 0, // VAT amount from income entry
         transactionCount: 1, // Each income entry is one transaction
         status: 'pending', // All VAT entries start as pending

@@ -51,6 +51,9 @@
     "aws-sdk": "^2.1490.0",
     "ts-node": "^10.9.2"
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.19",

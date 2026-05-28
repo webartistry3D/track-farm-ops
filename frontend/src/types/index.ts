@@ -36,7 +36,12 @@ export interface IncomeEntry {
   description?: string;
   quantity?: string;
   unitPrice?: string;
-  invoiceVat?: number; // VAT from corresponding invoice record
+  // VAT fields from database
+  enableVAT?: boolean;
+  vatRate?: number;
+  vatAmount?: number;
+  subtotal?: number;
+  invoiceVat?: number; // VAT from corresponding invoice record (legacy)
   userId: number;
   createdAt: string;
   user: {

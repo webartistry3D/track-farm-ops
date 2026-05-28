@@ -261,6 +261,77 @@ export const createInventoryCategory = async (req: AuthRequest, res: Response) =
   }
 };
 
+export const updateInventoryCategory = async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+    const currentUser = req.user!;
+    console.log('ð BACKEND UPDATE INVENTORY CATEGORY DEBUG:');
+    console.log('  Category ID:', id);
+    console.log('  Request body:', req.body);
+    
+    // Get user's organization for data protection
+    const currentUserOrg = await prisma.user.findUnique({
+      where: { id: currentUser.id },
+      select: { 
+        organizationId: true,
+        organization: {
+          select: { id: true, name: true }
+        }
+      }
+    });
+    
+    console.log('ð User organization data for category update:', currentUserOrg);
+    
+    if (!currentUserOrg || !currentUserOrg.organizationId) {
+      console.log('â User not assigned to any organization - access denied for category update');
+      return res.status(403).json({ 
+        error: 'Access denied. User must be assigned to an organization to update inventory categories.',
+        code: 'NO_ORGANIZATION'
+      });
+    }
+    
+    // First check if category exists and user has access
+    const categoryId = Array.isArray(id) ? parseInt(id[0]) : parseInt(id);
+    const existingCategory = await prisma.inventoryCategory.findFirst({
+      where: {
+        id: categoryId,
+        organizationId: currentUserOrg.organizationId
+      }
+    });
+    
+    if (!existingCategory) {
+      console.log('â Category not found or access denied');
+      return res.status(404).json({ 
+        error: 'Category not found or access denied',
+        code: 'CATEGORY_NOT_FOUND'
+      });
+    }
+    
+    console.log(`ð Updating category for organization: ${currentUserOrg.organization?.name || 'Unknown'} (ID: ${currentUserOrg.organizationId})`);
+    
+    const { name, description, icon, color, parentId, isSubcategory, metadata } = req.body;
+    
+    const category = await prisma.inventoryCategory.update({
+      where: { id: categoryId },
+      data: {
+        name: name?.trim() || existingCategory.name,
+        description: description?.trim() || existingCategory.description,
+        icon: icon !== undefined ? icon : existingCategory.icon,
+        color: color !== undefined ? color : existingCategory.color,
+        parentId: parentId !== undefined ? parentId : existingCategory.parentId,
+        isSubcategory: isSubcategory !== undefined ? isSubcategory : existingCategory.isSubcategory,
+        metadata: metadata !== undefined ? metadata : existingCategory.metadata
+      }
+    });
+    
+    console.log('  â Category updated:', category);
+    res.json(category);
+  } catch (error) {
+    console.error('Update inventory category error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 export const getInventoryItems = async (req: AuthRequest, res: Response) => {
   try {
     const { type, categoryId, search } = req.query;

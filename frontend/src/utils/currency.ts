@@ -50,6 +50,6 @@ export const parseCurrency = (formattedValue: string): number => {
 };
 
 export const validateCurrencyInput = (value: string): boolean => {
-  // Allow only numbers and decimal point
-  return /^\d*\.?\d*$/.test(value) || value === '';
+  // Allow only numbers, decimal point, and commas (for thousand separators)
+  return /^[\d,]*\.?\d*$/.test(value) || value === '';
 };

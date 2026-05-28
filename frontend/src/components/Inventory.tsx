@@ -23,6 +23,12 @@ const formatNumber = (value: string | number | null | undefined): string => {
   return numValue.toLocaleString('en-US');
 };
 
+// Use database icon directly (like edit mode)
+const getCategoryIcon = (category: any) => {
+  const icon = category.icon || 'ð¦';
+  return <span className="text-2xl">{icon}</span>;
+};
+
 interface InventoryListProps {
   onDeleteClick?: (item: InventoryItem) => void;
 }
@@ -1648,8 +1654,8 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                     >
                       <div className="p-4">
                         <div className="flex flex-col items-center text-center mb-4">
-                          <div className="w-16 h-12 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-2xl flex items-center justify-center text-3xl mb-3 shadow-lg">
-                            {category.icon || '📦'}
+                          <div className="w-16 h-12 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-2xl flex items-center justify-center mb-3 shadow-lg">
+                            {getCategoryIcon(category)}
                           </div>
                           <div>
                             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
@@ -1780,8 +1786,8 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                           <tr key={category.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="flex items-center">
-                                <div className="w-12 h-12 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-xl flex items-center justify-center text-2xl mr-4 shadow-md">
-                                  {category.icon || '📦'}
+                                <div className="w-12 h-12 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-xl flex items-center justify-center mr-4 shadow-md">
+                                  {getCategoryIcon(category)}
                                 </div>
                                 <div>
                                   <div className="text-sm font-medium text-gray-900 dark:text-white">
@@ -2714,7 +2720,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                       <option value="">Select category</option>
                       {categories.map((category) => (
                         <option key={category.id} value={category.id}>
-                          {category.icon} {category.name}
+                          {category.name}
                         </option>
                       ))}
                     </select>
@@ -3003,8 +3009,8 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
             <div className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-600 px-8 py-6 border-b border-gray-200 dark:border-gray-600">
               <div className="flex items-start justify-between">
                 <div className="flex items-center space-x-6">
-                  <div className={`w-16 h-16 ${categoryToView.color || 'bg-gray-100 text-gray-700'} rounded-2xl flex items-center justify-center text-3xl shadow-lg border border-gray-200 dark:border-gray-600`}>
-                    {categoryToView.icon || '📦'}
+                  <div className={`w-16 h-16 ${categoryToView.color || 'bg-gray-100 text-gray-700'} rounded-2xl flex items-center justify-center shadow-lg border border-gray-200 dark:border-gray-600`}>
+                    {getCategoryIcon(categoryToView)}
                   </div>
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{categoryToView.name}</h2>

@@ -31,6 +31,7 @@ model User {
   invoices              Invoice[]
   subscriptions         Subscription[]
   passwordHistory       PasswordHistory[]
+  cctvCameras           CctvCamera[]
   organization          Organization?          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@map("users")
@@ -50,6 +51,13 @@ model Organization {
   subscriptions       Subscription[]
   users               User[]
   vatRecords          VatRecord[]
+  cctvCameras         CctvCamera[]
+  crops               Crop[]
+  equipmentStatus      EquipmentStatus[]
+  fieldActivities     FieldActivity[]
+  soilAnalyses       SoilAnalysis[]
+  irrigationSchedules IrrigationSchedule[]
+  pestControl         PestControl[]
 
   @@map("organizations")
 }
@@ -227,6 +235,7 @@ model Asset {
   createdAt           DateTime     @default(now()) @map("created_at")
   updatedAt           DateTime     @updatedAt @map("updated_at")
   organization        Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  equipmentStatus     EquipmentStatus[]
 
   @@map("assets")
 }
@@ -327,4 +336,202 @@ model PasswordHistory {
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("password_history")
+}
+
+model CctvCamera {
+  id          Int      @id @default(autoincrement())
+  name        String
+  location    String
+  ipAddress   String?  @map("ip_address")
+  resolution  String?  @default("1080p")
+  status      String   @default("offline") // online, offline, maintenance
+  recording   Boolean  @default(false)
+  lastActive  DateTime @default(now()) @map("last_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  organizationId Int?   @map("organization_id")
+  createdBy   Int?     @map("created_by")
+  
+  organization Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  creator     User?          @relation(fields: [createdBy], references: [id])
+
+  @@map("cctv_cameras")
+}
+
+// Crops Management
+model Crop {
+  id              Int         @id @default(autoincrement())
+  name            String
+  variety         String?
+  plantingDate    DateTime     @map("planting_date")
+  expectedHarvest DateTime     @map("expected_harvest")
+  actualHarvest  DateTime?    @map("actual_harvest")
+  status          CropStatus   @default(GROWING)
+  zone            String
+  field           String?
+  area            Float?       // in hectares
+  yield           Float?       // expected yield in kg
+  actualYield     Float?       @map("actual_yield")
+  notes           String?
+  organizationId  Int          @map("organization_id")
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @updatedAt @map("updated_at")
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("crops")
+}
+
+enum CropStatus {
+  PLANNING
+  PLANTED
+  GROWING
+  MATURE
+  HARVESTED
+  FAILED
+}
+
+// Equipment Monitoring
+model EquipmentStatus {
+  id              Int               @id @default(autoincrement())
+  equipmentId     Int               @map("equipment_id")
+  name            String
+  type            String
+  status          EquipmentStatusType @default(OPERATIONAL)
+  lastMaintenance DateTime?          @map("last_maintenance")
+  nextMaintenance DateTime?          @map("next_maintenance")
+  operatingHours  Float?            @map("operating_hours")
+  location        String?
+  assignedWorker  String?           @map("assigned_worker")
+  fuelLevel       Float?            @map("fuel_level")
+  condition       String            @default("good")
+  organizationId  Int               @map("organization_id")
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+  equipment       Asset?            @relation(fields: [equipmentId], references: [id])
+  organization    Organization?     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("equipment_status")
+}
+
+enum EquipmentStatusType {
+  OPERATIONAL
+  MAINTENANCE
+  REPAIR
+  OUT_OF_SERVICE
+}
+
+// Field Activities
+model FieldActivity {
+  id              Int            @id @default(autoincrement())
+  workerName      String         @map("worker_name")
+  task            String
+  startTime       DateTime       @map("start_time")
+  endTime         DateTime?      @map("end_time")
+  duration        Float?         // in hours
+  progress        Float          @default(0) // percentage
+  priority        Priority       @default(MEDIUM)
+  status          ActivityStatus @default(IN_PROGRESS)
+  zone            String?
+  field           String?
+  notes           String?
+  organizationId  Int            @map("organization_id")
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+  organization    Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("field_activities")
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum ActivityStatus {
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+  PAUSED
+  CANCELLED
+}
+
+// Soil Analysis
+model SoilAnalysis {
+  id              Int      @id @default(autoincrement())
+  zone            String
+  field           String?
+  sampleDate      DateTime @map("sample_date")
+  moistureLevel    Float    @map("moisture_level")
+  phLevel         Float    @map("ph_level")
+  nitrogenLevel   Float    @map("nitrogen_level")
+  phosphorusLevel Float    @map("phosphorus_level")
+  potassiumLevel  Float    @map("potassium_level")
+  organicMatter  Float    @map("organic_matter")
+  texture         String?
+  recommendation  String?
+  treatmentType   String?  @map("treatment_type")
+  treatmentDate   DateTime? @map("treatment_date")
+  organizationId  Int      @map("organization_id")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("soil_analyses")
+}
+
+// Irrigation Scheduling
+model IrrigationSchedule {
+  id              Int              @id @default(autoincrement())
+  zone            String
+  field           String?
+  startTime       DateTime         @map("start_time")
+  endTime         DateTime         @map("end_time")
+  duration        Float            // in minutes
+  waterAmount     Float            @map("water_amount") // in liters
+  frequency       String
+  lastRun         DateTime?        @map("last_run")
+  nextRun         DateTime?        @map("next_run")
+  status          IrrigationStatus @default(SCHEDULED)
+  pumpStatus      String?          @map("pump_status")
+  flowRate        Float?           @map("flow_rate")
+  organizationId  Int              @map("organization_id")
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+  organization    Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("irrigation_schedules")
+}
+
+enum IrrigationStatus {
+  SCHEDULED
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+// Pest Control Management
+model PestControl {
+  id                Int      @id @default(autoincrement())
+  pestType          String   @map("pest_type")
+  severity          String
+  affectedArea      String?  @map("affected_area")
+  treatmentMethod   String   @map("treatment_method")
+  applicationDate   DateTime @map("application_date")
+  followUpDate      DateTime? @map("follow_up_date")
+  threatLevel       String   @default("LOW")
+  treatmentEfficacy Float    @default(0) @map("treatment_efficacy")
+  nextSpray        DateTime? @map("next_spray")
+  lastCheck         DateTime @default(now()) @map("last_check")
+  chemicalsUsed     Json?    @map("chemicals_used")
+  cost              Float?
+  notes             String?
+  organizationId    Int      @map("organization_id")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+  organization      Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("pest_control")
 }
