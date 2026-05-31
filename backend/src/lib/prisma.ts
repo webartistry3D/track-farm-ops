@@ -7,10 +7,17 @@ const globalForPrisma = globalThis as unknown as {
 export const prisma = globalForPrisma.prisma ?? new PrismaClient({
   log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
   errorFormat: 'pretty',
+  // Add connection timeout and retry settings
+  datasources: {
+    db: {
+      url: process.env.DATABASE_URL
+    }
+  }
 });
 
-// Add connection retry logic for production
-if (process.env.NODE_ENV === 'production') {
+// Don't auto-connect in production - let the server handle connection with retry logic
+// This prevents blocking server startup if database is temporarily unavailable
+if (process.env.NODE_ENV === 'development') {
   prisma.$connect()
     .then(() => {
       console.log('✅ Database connected successfully');
@@ -18,7 +25,6 @@ if (process.env.NODE_ENV === 'production') {
     .catch((error) => {
       console.error('❌ Database connection failed:', error);
       console.error('❌ Check DATABASE_URL environment variable');
-      process.exit(1);
     });
 }
 

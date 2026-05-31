@@ -1,17 +1,15 @@
 # Render Deployment Fix Guide
 
-## 🚨 Current Issue
+## 🚨 Current Issues
 The backend deployment on Render is failing with:
-```
-> node fix-critical-columns.js && ts-node src/index.ts
-❌ Critical columns fix failed: PrismaClientInitializationError: 
-Server has closed the connection.
-```
+1. **Database connection errors**: "Server has closed the connection" during migrations
+2. **Port binding issues**: "No open ports detected, continuing to scan..." and "Exited with status 1"
 
-## 🔧 Root Cause
-1. **Non-existent script**: `fix-critical-columns.js` doesn't exist in the backend directory
-2. **Database connection**: Database connection is failing during startup
-3. **Old start script**: Deployed version has outdated package.json with problematic start command
+## 🔧 Root Cause Analysis
+1. **Migration scripts blocking startup**: Database migrations failing during build phase
+2. **Database connection timing**: Database not ready when migrations run
+3. **Port binding issues**: Server not binding to Render's PORT correctly
+4. **Prisma client blocking**: Auto-connection blocking server startup
 
 ## ✅ Fixes Applied
 
@@ -31,26 +29,63 @@ Server has closed the connection.
 export const prisma = globalForPrisma.prisma ?? new PrismaClient({
   log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
   errorFormat: 'pretty',
+  datasources: {
+    db: {
+      url: process.env.DATABASE_URL
+    }
+  }
 });
 
-// Add connection retry logic for production
-if (process.env.NODE_ENV === 'production') {
+// Don't auto-connect in production - let the server handle connection with retry logic
+if (process.env.NODE_ENV === 'development') {
   prisma.$connect()
     .then(() => {
       console.log('✅ Database connected successfully');
     })
     .catch((error) => {
       console.error('❌ Database connection failed:', error);
-      console.error('❌ Check DATABASE_URL environment variable');
-      process.exit(1);
     });
 }
 ```
 
-### 4. Enhanced Server Startup
-- Database connection testing before server start
-- Proper error handling and logging
-- Graceful shutdown handling
+### 4. Enhanced Server Startup with Retry Logic
+```typescript
+// Database connection with retry logic
+let dbConnected = false;
+let retryCount = 0;
+const maxRetries = 5;
+
+while (!dbConnected && retryCount < maxRetries) {
+  try {
+    await prisma.$connect();
+    console.log('✅ Database connection successful');
+    dbConnected = true;
+  } catch (dbError: any) {
+    retryCount++;
+    console.error(`❌ Database connection attempt ${retryCount}/${maxRetries} failed:`, dbError.message);
+    
+    if (retryCount < maxRetries) {
+      console.log(`⏳ Retrying in 5 seconds...`);
+      await new Promise(resolve => setTimeout(resolve, 5000));
+    } else {
+      console.error('❌ All database connection attempts failed');
+      console.error('❌ Server will start but database features may not work');
+      // Don't exit - let server start anyway for health checks
+    }
+  }
+}
+
+// ALWAYS use the PORT provided by Render
+const PORT = Number(process.env.PORT) || 3001;
+const server = app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 TrackFarmOps API server running on port ${PORT}`);
+});
+```
+
+### 5. Updated Build Script
+- Skipped migrations during build phase
+- Let application handle database connection at runtime
+- Prevents build failures due to database issues
 
 ## 🚀 Deployment Steps
 
@@ -58,7 +93,7 @@ if (process.env.NODE_ENV === 'production') {
 Ensure these are set in Render dashboard:
 ```
 NODE_ENV=production
-PORT=3001
+PORT=3001 (or let Render set it automatically)
 DATABASE_URL=postgresql://farmops_prod_user:oXkNxZdBXLXM7wxVOs9VhWj1o77Ap8gr@dpg-d6ute1hj16oc738tee1g-a.oregon-postgres.render.com:5432/farmops_prod
 JWT_SECRET=your-strong-secret
 FRONTEND_URL=https://track-farm-ops.onrender.com
@@ -86,21 +121,24 @@ cd backend && npm run start:render
 ### Database Connection Issues
 If database connection fails:
 1. Check DATABASE_URL is correct
-2. Verify database is accessible
+2. Verify database is accessible from Render's IP
 3. Check database credentials
-4. Ensure database allows connections from Render's IP
+4. Ensure database allows SSL connections
+5. The server will now retry 5 times before continuing
 
-### Port Issues
+### Port Binding Issues
 If port binding fails:
-1. Ensure PORT is set to 3001 or let Render set it automatically
-2. Check for port conflicts
-3. Verify firewall settings
+1. Let Render set PORT automatically (don't hardcode)
+2. Ensure server binds to '0.0.0.0'
+3. Check for port conflicts
+4. Verify firewall settings
 
 ### Build Issues
 If build fails:
 1. Check Node.js version (should be 20.19.6)
 2. Ensure all dependencies are installed
 3. Check TypeScript compilation errors
+4. Migrations are now skipped during build
 
 ## 📊 Monitoring
 
@@ -122,16 +160,18 @@ Expected response:
 
 ### Logs
 Monitor Render logs for:
-- ✅ "Database connected successfully"
-- ✅ "Server running on port 3001"
+- ✅ "Using PORT: [port number]"
+- ✅ "Database connection successful" or retry messages
+- ✅ "Server running on port [port]"
+- ✅ "Server is now listening for connections"
 - ❌ Any error messages
 
 ## 🎯 Success Indicators
 
 Deployment is successful when:
 1. Build completes without errors
-2. Server starts successfully
-3. Database connection established
+2. Server starts and binds to port
+3. Database connection established (or retries exhausted)
 4. Health check endpoint returns 200 OK
 5. API endpoints are accessible
 
@@ -143,9 +183,11 @@ If deployment fails:
 3. Investigate logs for root cause
 4. Apply fixes and redeploy
 
-## 📝 Notes
+## 📝 Key Changes
 
-- The fix-critical-columns.js script was removed as it doesn't exist
-- Database connection is now handled by the application itself
-- Migration scripts are optional and won't block startup
-- Enhanced error logging for better debugging
+- **Migrations skipped during build**: Prevents build failures due to database issues
+- **Database retry logic**: 5 attempts with 5-second delays
+- **Server starts even without DB**: Health checks work even if DB fails
+- **Port binding fixed**: Always uses Render's PORT environment variable
+- **Prisma client non-blocking**: Doesn't auto-connect in production
+- **Better error logging**: Clear messages for debugging

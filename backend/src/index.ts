@@ -312,32 +312,38 @@ try {
 async function startServer() {
   try {
     console.log('🚀 Starting server binding...');
-    let PORT: number;
     
-    if (process.env.NODE_ENV === 'production') {
-      // In production (Render), always use the PORT provided by Render
-      PORT = Number(process.env.PORT) || 10000; // Fallback to 10000 if PORT is not set
-      console.log(`🔧 Production mode - Using Render's PORT: ${PORT}`);
-    } else {
-      // In development, use 3001
-      PORT = 3001;
-      console.log(`🔧 Development mode - Using default PORT: ${PORT}`);
-    }
+    // ALWAYS use the PORT provided by Render (or fallback to 3001 for local dev)
+    const PORT = Number(process.env.PORT) || 3001;
     
-    console.log(`🔧 Final PORT: ${PORT}`);
-    console.log(`🔧 PORT type: ${typeof PORT}`);
+    console.log(`🔧 Using PORT: ${PORT}`);
     console.log(`🔧 Environment PORT: ${process.env.PORT}`);
     console.log(`🔧 Node environment: ${process.env.NODE_ENV}`);
     
-    // Test database connection before starting server
+    // Database connection with retry logic
     console.log('🔍 Testing database connection...');
-    try {
-      await prisma.$connect();
-      console.log('✅ Database connection successful');
-    } catch (dbError) {
-      console.error('❌ Database connection failed:', dbError);
-      console.error('❌ Server cannot start without database');
-      process.exit(1);
+    let dbConnected = false;
+    let retryCount = 0;
+    const maxRetries = 5;
+    
+    while (!dbConnected && retryCount < maxRetries) {
+      try {
+        await prisma.$connect();
+        console.log('✅ Database connection successful');
+        dbConnected = true;
+      } catch (dbError: any) {
+        retryCount++;
+        console.error(`❌ Database connection attempt ${retryCount}/${maxRetries} failed:`, dbError.message);
+        
+        if (retryCount < maxRetries) {
+          console.log(`⏳ Retrying in 5 seconds...`);
+          await new Promise(resolve => setTimeout(resolve, 5000));
+        } else {
+          console.error('❌ All database connection attempts failed');
+          console.error('❌ Server will start but database features may not work');
+          // Don't exit - let server start anyway for health checks
+        }
+      }
     }
     
     const server = app.listen(PORT, '0.0.0.0', () => {
