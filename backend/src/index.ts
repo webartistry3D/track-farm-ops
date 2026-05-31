@@ -324,7 +324,8 @@ async function startServer() {
     console.log('🔍 Testing database connection...');
     let dbConnected = false;
     let retryCount = 0;
-    const maxRetries = 5;
+    const maxRetries = 10;
+    const baseDelay = 2000; // 2 seconds
     
     while (!dbConnected && retryCount < maxRetries) {
       try {
@@ -336,8 +337,10 @@ async function startServer() {
         console.error(`❌ Database connection attempt ${retryCount}/${maxRetries} failed:`, dbError.message);
         
         if (retryCount < maxRetries) {
-          console.log(`⏳ Retrying in 5 seconds...`);
-          await new Promise(resolve => setTimeout(resolve, 5000));
+          // Exponential backoff: delay = baseDelay * 2^(retryCount - 1)
+          const delay = baseDelay * Math.pow(2, retryCount - 1);
+          console.log(`⏳ Retrying in ${delay / 1000} seconds...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
         } else {
           console.error('❌ All database connection attempts failed');
           console.error('❌ Server will start but database features may not work');

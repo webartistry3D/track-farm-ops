@@ -31,23 +31,17 @@ async function buildProductionDeploy() {
       throw new Error(`Prisma client generation failed: ${prismaError.message}`);
     }
     
-    // Step 3: Skip Prisma migrations (use custom migration instead)
-    console.log('🔄 Skipping Prisma migrations - using custom migration for production...');
-    console.log('📝 Prisma migrations cause issues with existing production databases');
-    console.log('� Using custom password features migration instead');
-
-    // Step 3.5: Run password features migration
-    console.log('🔐 Running password features migration...');
+    // Step 3: Run Prisma migrations
+    console.log('🔄 Running Prisma migrations...');
     try {
-      execSync('node scripts/migrate-password-features.js', { 
+      execSync('npx prisma migrate deploy', { 
         stdio: 'inherit',
-        timeout: 60000 // 1 minute timeout
+        timeout: 120000 // 2 minute timeout
       });
-      console.log('✅ Password features migration completed successfully');
-    } catch (passwordMigrationError) {
-      console.warn('⚠️ Password features migration failed:', passwordMigrationError.message);
-      console.log('📝 Continuing with deployment despite password migration failure');
-      // Don't fail the build - this is expected on subsequent deploys
+      console.log('✅ Prisma migrations completed successfully');
+    } catch (migrationError) {
+      console.error('❌ Prisma migrations failed:', migrationError.message);
+      throw new Error(`Prisma migrations failed: ${migrationError.message}`);
     }
     
     // Step 4: Final verification
@@ -64,7 +58,7 @@ async function buildProductionDeploy() {
     
     console.log('🎉 Production deployment build completed successfully!');
     console.log('📊 Build completed at:', new Date().toISOString());
-    console.log('🚀 Backend is ready for deployment with superuser functionality');
+    console.log('🚀 Backend is ready for deployment');
     
   } catch (error) {
     console.error('❌ Build failed:', error);
