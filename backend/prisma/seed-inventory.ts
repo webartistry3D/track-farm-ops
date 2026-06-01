@@ -68,60 +68,60 @@ const SYSTEM_PRESET_CATEGORIES = [
 // This is the only preset system for TrackFarmOps application
 const SYSTEM_PRESET_ITEMS = [
   // Livestock (3 items)
-  { name: 'Broiler Chickens', type: 'LIVESTOCK', unit: 'pieces', categoryId: 1, quantity: 50 },
-  { name: 'Layer Chickens', type: 'LIVESTOCK', unit: 'pieces', categoryId: 1, quantity: 30 },
-  { name: 'Goats', type: 'LIVESTOCK', unit: 'pieces', categoryId: 1, quantity: 15 },
+  { name: 'Broiler Chickens', type: 'LIVESTOCK', unit: 'pieces', categoryId: 1, quantity: 0 },
+  { name: 'Layer Chickens', type: 'LIVESTOCK', unit: 'pieces', categoryId: 1, quantity: 0 },
+  { name: 'Goats', type: 'LIVESTOCK', unit: 'pieces', categoryId: 1, quantity: 0 },
   
   // Feed & Nutrition (6 items)
-  { name: 'Broiler Feed', type: 'CONSUMABLES', unit: 'kg', categoryId: 2, quantity: 100 },
-  { name: 'Layer Feed', type: 'CONSUMABLES', unit: 'kg', categoryId: 2, quantity: 75 },
-  { name: 'Grower Feed', type: 'CONSUMABLES', unit: 'kg', categoryId: 2, quantity: 50 },
-  { name: 'Starter Feed', type: 'CONSUMABLES', unit: 'kg', categoryId: 2, quantity: 25 },
-  { name: 'Vitamin Supplements', type: 'CONSUMABLES', unit: 'liters', categoryId: 2, quantity: 10 },
-  { name: 'Mineral Blocks', type: 'CONSUMABLES', unit: 'pieces', categoryId: 2, quantity: 40 },
+  { name: 'Broiler Feed', type: 'CONSUMABLES', unit: 'kg', categoryId: 2, quantity: 0 },
+  { name: 'Layer Feed', type: 'CONSUMABLES', unit: 'kg', categoryId: 2, quantity: 0 },
+  { name: 'Grower Feed', type: 'CONSUMABLES', unit: 'kg', categoryId: 2, quantity: 0 },
+  { name: 'Starter Feed', type: 'CONSUMABLES', unit: 'kg', categoryId: 2, quantity: 0 },
+  { name: 'Vitamin Supplements', type: 'CONSUMABLES', unit: 'liters', categoryId: 2, quantity: 0 },
+  { name: 'Mineral Blocks', type: 'CONSUMABLES', unit: 'pieces', categoryId: 2, quantity: 0 },
   
   // Medicine & Health (6 items)
-  { name: 'Antibiotics', type: 'CONSUMABLES', unit: 'bottles', categoryId: 3, quantity: 20 },
-  { name: 'Vaccines', type: 'CONSUMABLES', unit: 'vials', categoryId: 3, quantity: 30 },
-  { name: 'Dewormers', type: 'CONSUMABLES', unit: 'tablets', categoryId: 3, quantity: 15 },
-  { name: 'Vitamins', type: 'CONSUMABLES', unit: 'bottles', categoryId: 3, quantity: 25 },
-  { name: 'Disinfectants', type: 'CONSUMABLES', unit: 'liters', categoryId: 3, quantity: 12 },
-  { name: 'Syringes', type: 'CONSUMABLES', unit: 'pieces', categoryId: 3, quantity: 50 },
+  { name: 'Antibiotics', type: 'CONSUMABLES', unit: 'bottles', categoryId: 3, quantity: 0 },
+  { name: 'Vaccines', type: 'CONSUMABLES', unit: 'vials', categoryId: 3, quantity: 0 },
+  { name: 'Dewormers', type: 'CONSUMABLES', unit: 'tablets', categoryId: 3, quantity: 0 },
+  { name: 'Vitamins', type: 'CONSUMABLES', unit: 'bottles', categoryId: 3, quantity: 0 },
+  { name: 'Disinfectants', type: 'CONSUMABLES', unit: 'liters', categoryId: 3, quantity: 0 },
+  { name: 'Syringes', type: 'CONSUMABLES', unit: 'pieces', categoryId: 3, quantity: 0 },
   
   // Equipment & Tools (8 items)
-  { name: 'Wheelbarrow', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 5 },
-  { name: 'Shovel', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 8 },
-  { name: 'Hoe', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 12 },
-  { name: 'Water Buckets', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 15 },
-  { name: 'Feed Troughs', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 10 },
-  { name: 'Nesting Boxes', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 25 },
-  { name: 'Watering Cans', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 10 },
-  { name: 'Cutlasses', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 20 },
+  { name: 'Wheelbarrow', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 0 },
+  { name: 'Shovel', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 0 },
+  { name: 'Hoe', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 0 },
+  { name: 'Water Buckets', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 0 },
+  { name: 'Feed Troughs', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 0 },
+  { name: 'Nesting Boxes', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 0 },
+  { name: 'Watering Cans', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 0 },
+  { name: 'Cutlasses', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 0 },
   
   // Seeds & Planting (6 items)
-  { name: 'Maize Seeds', type: 'PRODUCE', unit: 'kg', categoryId: 5, quantity: 50 },
-  { name: 'Rice Seeds', type: 'PRODUCE', unit: 'kg', categoryId: 5, quantity: 25 },
-  { name: 'Bean Seeds', type: 'PRODUCE', unit: 'kg', categoryId: 5, quantity: 30 },
-  { name: 'Tomato Seeds', type: 'PRODUCE', unit: 'packets', categoryId: 5, quantity: 20 },
-  { name: 'Pepper Seeds', type: 'PRODUCE', unit: 'packets', categoryId: 5, quantity: 15 },
-  { name: 'Vegetable Seeds', type: 'PRODUCE', unit: 'packets', categoryId: 5, quantity: 10 },
+  { name: 'Maize Seeds', type: 'PRODUCE', unit: 'kg', categoryId: 5, quantity: 0 },
+  { name: 'Rice Seeds', type: 'PRODUCE', unit: 'kg', categoryId: 5, quantity: 0 },
+  { name: 'Bean Seeds', type: 'PRODUCE', unit: 'kg', categoryId: 5, quantity: 0 },
+  { name: 'Tomato Seeds', type: 'PRODUCE', unit: 'packets', categoryId: 5, quantity: 0 },
+  { name: 'Pepper Seeds', type: 'PRODUCE', unit: 'packets', categoryId: 5, quantity: 0 },
+  { name: 'Vegetable Seeds', type: 'PRODUCE', unit: 'packets', categoryId: 5, quantity: 0 },
   
   // Fertilizers & Soil (6 items)
-  { name: 'NPK Fertilizer', type: 'CONSUMABLES', unit: 'kg', categoryId: 6, quantity: 40 },
-  { name: 'Urea', type: 'CONSUMABLES', unit: 'kg', categoryId: 6, quantity: 25 },
-  { name: 'Compost', type: 'CONSUMABLES', unit: 'kg', categoryId: 6, quantity: 100 },
-  { name: 'Manure', type: 'CONSUMABLES', unit: 'kg', categoryId: 6, quantity: 75 },
-  { name: 'Lime', type: 'CONSUMABLES', unit: 'kg', categoryId: 6, quantity: 30 },
-  { name: 'Organic Fertilizer', type: 'CONSUMABLES', unit: 'kg', categoryId: 6, quantity: 20 },
+  { name: 'NPK Fertilizer', type: 'CONSUMABLES', unit: 'kg', categoryId: 6, quantity: 0 },
+  { name: 'Urea', type: 'CONSUMABLES', unit: 'kg', categoryId: 6, quantity: 0 },
+  { name: 'Compost', type: 'CONSUMABLES', unit: 'kg', categoryId: 6, quantity: 0 },
+  { name: 'Manure', type: 'CONSUMABLES', unit: 'kg', categoryId: 6, quantity: 0 },
+  { name: 'Lime', type: 'CONSUMABLES', unit: 'kg', categoryId: 6, quantity: 0 },
+  { name: 'Organic Fertilizer', type: 'CONSUMABLES', unit: 'kg', categoryId: 6, quantity: 0 },
   
   // Harvested Produce (4 items)
-  { name: 'Fresh Tomatoes', type: 'PRODUCE', unit: 'kg', categoryId: 7, quantity: 60 },
-  { name: 'Fresh Peppers', type: 'PRODUCE', unit: 'kg', categoryId: 7, quantity: 40 },
-  { name: 'Fresh Leafy Vegetables', type: 'PRODUCE', unit: 'bunches', categoryId: 7, quantity: 25 },
-  { name: 'Fresh Maize', type: 'PRODUCE', unit: 'kg', categoryId: 7, quantity: 80 },
+  { name: 'Fresh Tomatoes', type: 'PRODUCE', unit: 'kg', categoryId: 7, quantity: 0 },
+  { name: 'Fresh Peppers', type: 'PRODUCE', unit: 'kg', categoryId: 7, quantity: 0 },
+  { name: 'Fresh Leafy Vegetables', type: 'PRODUCE', unit: 'bunches', categoryId: 7, quantity: 0 },
+  { name: 'Fresh Maize', type: 'PRODUCE', unit: 'kg', categoryId: 7, quantity: 0 },
   
   // Animal Products (1 item)
-  { name: 'Farm Eggs', type: 'PRODUCE', unit: 'crates', categoryId: 8, quantity: 50 }
+  { name: 'Farm Eggs', type: 'PRODUCE', unit: 'crates', categoryId: 8, quantity: 0 }
 ];
 
 async function seedSystemInventoryForOrganization(organizationId: number) {
@@ -275,34 +275,15 @@ async function main() {
   console.log('🚀 Starting Nigerian Mixed Farm preset seeding process...');
 
   try {
-    // Option 1: Create test organization and seed it
-    const organization = await createTestOrganization();
-    if (!organization) {
-      console.error('❌ Failed to create organization');
-      return;
-    }
-
-    // Create test users
-    const users = await createTestUsers(organization.id);
-    if (!users) {
-      console.error('❌ Failed to create users');
-      return;
-    }
-
-    // Seed Nigerian Mixed Farm inventory for the organization
-    const seedingSuccess = await seedSystemInventoryForOrganization(organization.id);
+    // Seed inventory for all existing organizations
+    const seedingSuccess = await seedAllOrganizations();
     if (!seedingSuccess) {
       console.error('❌ Failed to seed inventory');
       return;
     }
 
     console.log('\n🎊 Nigerian Mixed Farm preset seeding completed successfully!');
-    console.log('\n📋 Test Credentials:');
-    console.log('Organization: Test Farm Organization (Nigerian Mixed Farm)');
-    console.log('Owner: owner@testfarm.com (password: password123)');
-    console.log('Manager: manager@testfarm.com (password: password123)');
-    console.log('Worker: worker@testfarm.com (password: password123)');
-    console.log('\n📝 Note: Only Owner and Manager can access inventory. Worker will see access restricted message.');
+    console.log('\n� Note: All existing organizations have been updated with the new inventory preset.');
 
   } catch (error) {
     console.error('❌ Seeding failed:', error);
