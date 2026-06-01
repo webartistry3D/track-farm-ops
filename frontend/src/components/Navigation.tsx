@@ -9,8 +9,8 @@ const Navigation = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-12">
           <div className="flex items-center">
-            <Link to="/" className="text-xl font-bold text-green-500 hover:text-green-300 transition-colors">
-              🚜 Track-Farm-Ops
+            <Link to="/" className="text-xl font-bold text-white hover:text-green-300 transition-colors">
+              🚜 TrackFarmOps
             </Link>
           </div>
           <div className="hidden md:flex items-center space-x-4">
@@ -36,7 +36,7 @@ const Navigation = () => {
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-green-500 hover:text-green-300 focus:outline-none focus:text-green-300 transition-colors"
+              className="text-white hover:text-green-300 focus:outline-none focus:text-green-300 transition-colors"
             >
               <svg className="h-6 w-6" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
                 {isMenuOpen ? (

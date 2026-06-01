@@ -10,8 +10,14 @@
   "scope": "/",
   "icons": [
     {
-      "src": "/icon-96x96.png",
-      "sizes": "96x96",
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     }
@@ -24,21 +30,21 @@
       "short_name": "Dashboard",
       "description": "View farm operations dashboard",
       "url": "/dashboard",
-      "icons": [{ "src": "/icon-96x96.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
     },
     {
       "name": "Inventory",
       "short_name": "Inventory",
       "description": "Manage farm inventory",
       "url": "/inventory",
-      "icons": [{ "src": "/icon-96x96.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
     },
     {
       "name": "Finance",
       "short_name": "Finance",
       "description": "Track farm finances",
       "url": "/finance",
-      "icons": [{ "src": "/icon-96x96.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
     }
   ]
 }
