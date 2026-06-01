@@ -26,7 +26,7 @@ const Privacy = () => {
           <div className="prose prose-green max-w-none">
             <div className="mb-8">
               <p className="text-gray-600 font-inter">
-                <strong>Last updated:</strong> January 1, 2024
+                <strong>Last updated:</strong> June 1, 2026
               </p>
               <p className="text-gray-600 font-inter mt-4">
                 TrackFarmOps ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy 
@@ -210,9 +210,9 @@ const Privacy = () => {
               </p>
               <div className="bg-gray-50 rounded-lg p-4">
                 <p className="text-gray-600 font-inter">
-                  <strong>Email:</strong> privacy@farmops.ng<br />
-                  <strong>Phone:</strong> +234 800 123 4567<br />
-                  <strong>Address:</strong> 123 Farm Road, Ikeja, Lagos, Nigeria
+                  <strong>Email:</strong> info@trackfarmops.com.ng<br />
+                  <strong>Phone:</strong> +234 701 718 8070<br />
+                  <strong>Address:</strong> 123 Farm Road, Festac, Lagos, Nigeria
                 </p>
               </div>
             </section>
