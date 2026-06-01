@@ -46,7 +46,7 @@ const Landing = () => {
 
   // Typing animation for subtitle
   const [typedText, setTypedText] = useState('');
-  const fullText = "A complete farm management system.\n Track your farm income, expenses, inventory and assets.\nMonitor day-to-day operations from anywhere.";
+  const fullText = "A complete farm management system.\n Track income, expenses, inventory and assets.\nMonitor day-to-day operations from anywhere.";
 
   // Word pop-up animation for title
   const words = ["Track", "Farm", "Operations"  ];
@@ -317,7 +317,7 @@ const Landing = () => {
               </button>
               <Link 
                 to="/login" 
-                className={`font-inter border-2 border-green-600 text-green-600 px-8 py-3 rounded-lg text-lg font-medium hover:bg-green-50 hover:border-green-700 hover:text-green-700 transition-all duration-300 transform shadow-lg hover:shadow-xl hover:scale-105 hover:-translate-y-1 ${
+                className={`font-inter border-2 border-white text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-green-50 hover:border-green-700 hover:text-green-700 transition-all duration-300 transform shadow-lg hover:shadow-xl hover:scale-105 hover:-translate-y-1 ${
                   buttonVisible.includes(1)
                     ? 'opacity-100 scale-100 translate-y-0'
                     : 'opacity-0 scale-50 translate-y-4'
