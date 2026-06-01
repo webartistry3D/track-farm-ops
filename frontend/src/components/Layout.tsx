@@ -228,7 +228,7 @@ const Layout = ({ children }: LayoutProps) => {
             ✕
           </button>
           <div className="flex items-center">
-            <span className="text-white text-md font-bold">Track-Farm-Ops</span>
+            <span className="text-white text-md font-bold">TrackFarmOps</span>
           </div>
         </div>
         
@@ -286,12 +286,12 @@ const Layout = ({ children }: LayoutProps) => {
       <div className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ease-in-out ${sidebarOpen ? 'lg:ml-48' : 'lg:ml-0'}`}>
         {/* Top navigation */}
         <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 relative z-50">
-          <div className="px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16">
+          <div className="px-3 sm:px-4 md:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-14 sm:h-16">
               {/* Mobile menu button */}
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="sidebar-toggle-button lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="sidebar-toggle-button lg:hidden p-1.5 sm:p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 ☰
               </button>
@@ -299,37 +299,37 @@ const Layout = ({ children }: LayoutProps) => {
               {/* Desktop menu button */}
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="sidebar-toggle-button hidden lg:block p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="sidebar-toggle-button hidden lg:block p-1.5 sm:p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
                 title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
               >
                 {sidebarOpen ? '◀' : '☰'}
               </button>
 
               {/* Page title */}
-              <div className="flex-1 flex justify-center lg:justify-start">
-                <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
-                  {navigation.find(item => item.current)?.name || 'Track-Farm-Ops'}
+              <div className="flex-1 flex justify-center lg:justify-start px-2 sm:px-4">
+                <h1 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white truncate">
+                  {navigation.find(item => item.current)?.name || 'TrackFarmOps'}
                 </h1>
               </div>
 
               {/* Right side buttons */}
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2 sm:space-x-4">
                 {/* User Info */}
-                <div className="hidden sm:flex items-center space-x-3 text-sm">
-                  <div className="flex items-center space-x-2">
-                    <span className="font-medium text-gray-700 dark:text-gray-300">
+                <div className="hidden md:flex items-center space-x-2 sm:space-x-3 text-xs sm:text-sm">
+                  <div className="flex items-center space-x-1 sm:space-x-2">
+                    <span className="font-medium text-gray-700 dark:text-gray-300 truncate max-w-[80px] sm:max-w-none">
                       {user.role}
                     </span>
                     {user.organizationName && (
                       <>
-                        <span className="text-gray-400">•</span>
-                        <span className="text-gray-600 dark:text-gray-400">
+                        <span className="text-gray-400 hidden sm:inline">•</span>
+                        <span className="text-gray-600 dark:text-gray-400 hidden sm:inline truncate max-w-[100px]">
                           {user.organizationName}
                         </span>
                       </>
                     )}
                   </div>
-                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                  <span className={`inline-flex items-center px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium ${
                     user.role === 'OWNER' 
                       ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
                       : user.role === 'MANAGER'
@@ -340,10 +340,10 @@ const Layout = ({ children }: LayoutProps) => {
                   </span>
                   {/* Subscription Indicator */}
                   {subscription && (
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 ml-2">
-                      ⭐ {subscription.plan.charAt(0).toUpperCase() + subscription.plan.slice(1)} Plan
+                    <span className="inline-flex items-center px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 ml-1 sm:ml-2">
+                      ⭐ {subscription.plan.charAt(0).toUpperCase() + subscription.plan.slice(1)}
                       {subscription.status === 'trial' && (
-                        <span className="ml-1 text-yellow-600 dark:text-yellow-400">(Trial)</span>
+                        <span className="ml-0.5 sm:ml-1 text-yellow-600 dark:text-yellow-400 hidden sm:inline">(Trial)</span>
                       )}
                     </span>
                   )}
@@ -352,7 +352,7 @@ const Layout = ({ children }: LayoutProps) => {
                 {/* Theme Toggle */}
                 <button
                   onClick={toggleTheme}
-                  className="p-2 rounded-full text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 relative"
+                  className="p-1.5 sm:p-2 rounded-full text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 relative"
                   title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
                 >
                   {isDark ? '☀️' : '🌙'}
@@ -362,7 +362,7 @@ const Layout = ({ children }: LayoutProps) => {
                 <div className="relative notifications-dropdown">
                   <button
                     onClick={() => setNotificationsOpen(!notificationsOpen)}
-                    className="p-2 rounded-full text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 relative"
+                    className="p-1.5 sm:p-2 rounded-full text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 relative"
                   >
                     🔔
                     {unreadCount > 0 && (
@@ -371,11 +371,11 @@ const Layout = ({ children }: LayoutProps) => {
                   </button>
                   
                   {notificationsOpen && (
-                    <div className="absolute right-0 sm:right-0 mt-2 w-60 sm:w-60 md:w-60 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50 max-w-[calc(100vw-1rem)] sm:max-w-[calc(100vw-2rem)] md:max-w-none">
+                    <div className="absolute right-0 sm:right-0 mt-2 w-56 sm:w-60 md:w-60 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50 max-w-[calc(100vw-1rem)] sm:max-w-[calc(100vw-2rem)] md:max-w-none">
                       <div className="p-2 sm:p-3 md:p-4 border-b border-gray-200 dark:border-gray-700">
                         <h3 className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white">Notifications</h3>
                       </div>
-                      <div className="max-h-64 sm:max-h-80 md:max-h-96 overflow-y-auto">
+                      <div className="max-h-60 sm:max-h-80 md:max-h-96 overflow-y-auto">
                         {notifications.map((notification) => (
                           <div
                             key={notification.id}
@@ -412,25 +412,25 @@ const Layout = ({ children }: LayoutProps) => {
                 <div className="relative profile-dropdown">
                   <button
                     onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                    className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+                    className="flex items-center space-x-2 sm:space-x-3 p-1.5 sm:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
-                    <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-medium">
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-medium text-xs sm:text-sm">
                       {user.name.charAt(0).toUpperCase()}
                     </div>
-                    <span className="hidden md:block text-sm font-medium text-gray-700 dark:text-gray-300">{user.name}</span>
+                    <span className="hidden lg:block text-sm font-medium text-gray-700 dark:text-gray-300">{user.name}</span>
                   </button>
 
                   {profileDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
-                      <div className="p-3 border-b border-gray-200 dark:border-gray-700">
-                        <p className="text-sm font-medium text-gray-900 dark:text-white">{user.name}</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">{user.email}</p>
+                    <div className="absolute right-0 mt-2 w-44 sm:w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
+                      <div className="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-700">
+                        <p className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white truncate">{user.name}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user.email}</p>
                         <p className="text-xs text-gray-500 dark:text-gray-400">{user.role}</p>
                       </div>
                       <div className="py-1">
                         <Link
                           to="/profile"
-                          className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                          className="block px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                           onClick={() => setProfileDropdownOpen(false)}
                         >
                           👤 Profile
@@ -438,7 +438,7 @@ const Layout = ({ children }: LayoutProps) => {
                         {isAdmin && (
                           <Link
                             to="/settings"
-                            className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                            className="block px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                             onClick={() => setProfileDropdownOpen(false)}
                           >
                             ⚙️ Settings

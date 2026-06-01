@@ -160,4 +160,13 @@ h1, h2, h3, h4, h5, h6 {
   .card {
     @apply bg-white rounded-lg shadow-md p-6 dark:bg-gray-800;
   }
+  
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }

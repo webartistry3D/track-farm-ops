@@ -379,18 +379,18 @@ const Settings = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Settings</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-1">Manage your account and application preferences</p>
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Settings</h1>
+        {/*<p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-1">Manage your account and application preferences</p>*/}
       </div>
 
       {/* Tabs */}
       <div className="border-b border-gray-200 dark:border-gray-700 mb-6">
-        <nav className="-mb-px flex space-x-8">
+        <nav className="-mb-px flex overflow-x-auto space-x-4 sm:space-x-8 scrollbar-hide">
           <button
             onClick={() => setActiveTab('profile')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`py-2 px-3 sm:px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
               activeTab === 'profile'
                 ? 'border-green-500 text-green-600 dark:text-green-400'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
@@ -400,7 +400,7 @@ const Settings = () => {
           </button>
           <button
             onClick={() => setActiveTab('notifications')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`py-2 px-3 sm:px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
               activeTab === 'notifications'
                 ? 'border-green-500 text-green-600 dark:text-green-400'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
@@ -411,7 +411,7 @@ const Settings = () => {
           {user?.role === 'OWNER' && (
             <button
               onClick={() => setActiveTab('workers')}
-              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+              className={`py-2 px-3 sm:px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
                 activeTab === 'workers'
                   ? 'border-green-500 text-green-600 dark:text-green-400'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
@@ -422,7 +422,7 @@ const Settings = () => {
           )}
           <button
             onClick={() => setActiveTab('subscription')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`py-2 px-3 sm:px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
               activeTab === 'subscription'
                 ? 'border-green-500 text-green-600 dark:text-green-400'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
@@ -432,7 +432,7 @@ const Settings = () => {
           </button>
           <button
             onClick={() => setActiveTab('system')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`py-2 px-3 sm:px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
               activeTab === 'system'
                 ? 'border-green-500 text-green-600 dark:text-green-400'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
@@ -444,25 +444,25 @@ const Settings = () => {
       </div>
 
       {/* Tab Content */}
-      <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+      <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4 sm:p-6">
         {message && (
-          <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-600 dark:text-green-400 px-4 py-3 rounded-md mb-4">
+          <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-600 dark:text-green-400 px-3 sm:px-4 py-2 sm:py-3 rounded-md mb-3 sm:mb-4 text-sm sm:text-base">
             {message}
           </div>
         )}
 
         {error && (
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-md mb-4">
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-3 sm:px-4 py-2 sm:py-3 rounded-md mb-3 sm:mb-4 text-sm sm:text-base">
             {error}
           </div>
         )}
 
         {activeTab === 'profile' && (
-          <form onSubmit={handleProfileSubmit} className="space-y-6">
+          <form onSubmit={handleProfileSubmit} className="space-y-4 sm:space-y-6">
             <div>
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Profile Information</h3>
+              <h3 className="text-base sm:text-lg font-medium text-gray-900 dark:text-white mb-3 sm:mb-4">Profile Information</h3>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Full Name
@@ -472,7 +472,7 @@ const Settings = () => {
                     id="name"
                     value={formData.name}
                     onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white text-sm sm:text-base"
                     required
                   />
                 </div>
@@ -486,7 +486,7 @@ const Settings = () => {
                     id="email"
                     value={formData.email}
                     onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white text-sm sm:text-base"
                     required
                   />
                 </div>
@@ -494,9 +494,9 @@ const Settings = () => {
             </div>
 
             <div>
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Change Password</h3>
+              <h3 className="text-base sm:text-lg font-medium text-gray-900 dark:text-white mb-3 sm:mb-4">Change Password</h3>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
                 <div>
                   <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Current Password
@@ -506,7 +506,7 @@ const Settings = () => {
                     id="currentPassword"
                     value={formData.currentPassword}
                     onChange={(e) => setFormData(prev => ({ ...prev, currentPassword: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white text-sm sm:text-base"
                   />
                 </div>
 
@@ -519,7 +519,7 @@ const Settings = () => {
                     id="newPassword"
                     value={formData.newPassword}
                     onChange={(e) => setFormData(prev => ({ ...prev, newPassword: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white text-sm sm:text-base"
                   />
                 </div>
 
@@ -532,7 +532,7 @@ const Settings = () => {
                     id="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white text-sm sm:text-base"
                   />
                 </div>
               </div>
@@ -542,7 +542,7 @@ const Settings = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
               >
                 {loading ? 'Saving...' : 'Save Changes'}
               </button>
@@ -551,14 +551,14 @@ const Settings = () => {
         )}
 
         {activeTab === 'notifications' && (
-          <form onSubmit={handleNotificationSubmit} className="space-y-6">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Notification Preferences</h3>
+          <form onSubmit={handleNotificationSubmit} className="space-y-4 sm:space-y-6">
+            <h3 className="text-base sm:text-lg font-medium text-gray-900 dark:text-white mb-3 sm:mb-4">Notification Preferences</h3>
             
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-medium text-gray-900 dark:text-white">Email Notifications</div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">Receive important updates via email</div>
+                <div className="flex-1 pr-4">
+                  <div className="font-medium text-gray-900 dark:text-white text-sm sm:text-base">Email Notifications</div>
+                  <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Receive important updates via email</div>
                 </div>
                 <button
                   type="button"
@@ -576,9 +576,9 @@ const Settings = () => {
               </div>
 
               <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-medium text-gray-900 dark:text-white">Low Stock Alerts</div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">Get notified when inventory items are running low</div>
+                <div className="flex-1 pr-4">
+                  <div className="font-medium text-gray-900 dark:text-white text-sm sm:text-base">Low Stock Alerts</div>
+                  <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Get notified when inventory items are running low</div>
                 </div>
                 <button
                   type="button"
@@ -596,9 +596,9 @@ const Settings = () => {
               </div>
 
               <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-medium text-gray-900 dark:text-white">Daily Reports</div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">Receive daily summary of farm operations</div>
+                <div className="flex-1 pr-4">
+                  <div className="font-medium text-gray-900 dark:text-white text-sm sm:text-base">Daily Reports</div>
+                  <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Receive daily summary of farm operations</div>
                 </div>
                 <button
                   type="button"
@@ -616,9 +616,9 @@ const Settings = () => {
               </div>
 
               <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-medium text-gray-900 dark:text-white">Weekly Reports</div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">Receive weekly comprehensive reports</div>
+                <div className="flex-1 pr-4">
+                  <div className="font-medium text-gray-900 dark:text-white text-sm sm:text-base">Weekly Reports</div>
+                  <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Receive weekly comprehensive reports</div>
                 </div>
                 <button
                   type="button"
@@ -640,7 +640,7 @@ const Settings = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
               >
                 {loading ? 'Saving...' : 'Save Preferences'}
               </button>
@@ -653,14 +653,14 @@ const Settings = () => {
         )}
 
         {activeTab === 'subscription' && (
-          <div className="space-y-6">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Subscription Management</h3>
+          <div className="space-y-4 sm:space-y-1">
+            <h3 className="text-base sm:text-lg font-medium text-gray-900 dark:text-white mb-3 sm:mb-4">Subscription Management</h3>
             
             {/* Manual Refresh Button */}
-            <div className="flex justify-end mb-4">
+            <div className="flex justify-end mb-3 sm:mb-4">
               <button
                 onClick={handleRefreshSubscription}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 text-sm font-medium"
+                className="px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 text-xs sm:text-sm font-medium"
               >
                 🔄 Refresh Status
               </button>
@@ -668,20 +668,20 @@ const Settings = () => {
             
             {/* Current Subscription Status */}
             {subscriptionData && (
-              <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-lg p-6 border border-green-200 dark:border-green-800">
-                <div className="flex items-center justify-between mb-4">
+              <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-lg p-4 sm:p-6 border border-green-200 dark:border-green-800">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3 sm:mb-4 gap-3">
                   <div>
-                    <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                    <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-1">
                       Current Plan: <span className="text-green-600 dark:text-green-400 capitalize">{subscriptionData.plan}</span>
                     </h4>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                       Status: <span className="font-medium capitalize">{subscriptionData.status}</span>
                     </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                       {subscriptionData.expiresAt ? `Expires: ${new Date(subscriptionData.expiresAt).toLocaleDateString()}` : 'No expiration date'}
                     </p>
                   </div>
-                  <div className="text-4xl">
+                  <div className="text-3xl sm:text-4xl text-center sm:text-right">
                     {plans.find(p => p.id === subscriptionData.plan)?.emoji || '📦'}
                   </div>
                 </div>
@@ -690,7 +690,7 @@ const Settings = () => {
                   <button
                     onClick={handleCancelSubscription}
                     disabled={loading}
-                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
                   >
                     {loading ? 'Processing...' : 'Cancel Subscription'}
                   </button>
@@ -703,7 +703,7 @@ const Settings = () => {
               <div className="inline-flex items-center bg-gray-100 dark:bg-gray-700 rounded-full p-1">
                 <button
                   onClick={() => setBillingCycle('monthly')}
-                  className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                  className={`px-4 sm:px-6 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 ${
                     billingCycle === 'monthly'
                       ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
                       : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
@@ -713,7 +713,7 @@ const Settings = () => {
                 </button>
                 <button
                   onClick={() => setBillingCycle('annual')}
-                  className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-200 relative ${
+                  className={`px-4 sm:px-6 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 relative ${
                     billingCycle === 'annual'
                       ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
                       : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
@@ -728,7 +728,7 @@ const Settings = () => {
             </div>
 
             {/* Available Plans */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
               {plans.map((plan) => {
                 const isCurrentPlan = subscriptionData?.plan === plan.id;
                 const price = billingCycle === 'annual' ? plan.price * 12 * 0.8 : plan.price;
@@ -737,35 +737,35 @@ const Settings = () => {
                 return (
                   <div
                     key={plan.id}
-                    className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border-2 ${
+                    className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6 border-2 ${
                       isCurrentPlan
                         ? 'border-green-500 dark:border-green-400'
                         : 'border-gray-200 dark:border-gray-700'
                     }`}
                   >
-                    <div className="text-center mb-4">
-                      <div className="text-3xl mb-2">{plan.emoji}</div>
-                      <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">{plan.name}</h4>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{plan.description}</p>
-                      <div className="mb-2">
-                        <span className="text-2xl font-bold text-gray-900 dark:text-white">
+                    <div className="text-center mb-3 sm:mb-4">
+                      <div className="text-2xl sm:text-3xl mb-2">{plan.emoji}</div>
+                      <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-1">{plan.name}</h4>
+                      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-2 sm:mb-3">{plan.description}</p>
+                      <div className="mb-1 sm:mb-2">
+                        <span className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                           {formatCurrency(price.toString())}
                         </span>
-                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                        <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                           /{billingCycle === 'monthly' ? 'month' : 'year'}
                         </span>
                       </div>
                       {savings > 0 && (
-                        <div className="text-sm text-green-600 dark:text-green-400 font-medium">
+                        <div className="text-xs sm:text-sm text-green-600 dark:text-green-400 font-medium">
                           Save {formatCurrency(savings.toString())}
                         </div>
                       )}
                     </div>
                     
-                    <ul className="space-y-2 mb-4 text-sm">
+                    <ul className="space-y-1 sm:space-y-2 mb-3 sm:mb-4 text-xs sm:text-sm">
                       {plan.features.map((feature, index) => (
                         <li key={index} className="flex items-start">
-                          <svg className="w-4 h-4 text-green-500 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <svg className="w-3 sm:w-4 h-3 sm:h-4 text-green-500 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                           </svg>
                           <span className="text-gray-700 dark:text-gray-300">{feature}</span>
@@ -776,7 +776,7 @@ const Settings = () => {
                     <button
                       onClick={() => handleSubscriptionPayment(plan.id)}
                       disabled={isCurrentPlan || loading || (!paystackScriptLoaded && !subscriptionData)}
-                      className={`w-full py-2 px-4 rounded-lg font-medium transition-all duration-200 ${
+                      className={`w-full py-2 px-3 sm:px-4 rounded-lg font-medium transition-all duration-200 text-xs sm:text-sm ${
                         isCurrentPlan
                           ? 'bg-gray-300 dark:bg-gray-600 text-gray-600 dark:text-gray-400 cursor-not-allowed'
                           : 'bg-green-600 text-white hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed'
@@ -806,40 +806,40 @@ const Settings = () => {
         )}
 
         {activeTab === 'system' && (
-          <div className="space-y-6">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">System Information</h3>
+          <div className="space-y-4 sm:space-y-6">
+            <h3 className="text-base sm:text-lg font-medium text-gray-900 dark:text-white mb-3 sm:mb-4">System Information</h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                <div className="text-sm font-medium text-gray-500 dark:text-gray-400">Application Version</div>
-                <div className="text-lg font-semibold text-gray-900 dark:text-white">FarmOps v2.0.0</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+              <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 sm:p-4">
+                <div className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">Application Version</div>
+                <div className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">FarmOps v2.0.0</div>
               </div>
               
-              <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                <div className="text-sm font-medium text-gray-500 dark:text-gray-400">User Role</div>
-                <div className="text-lg font-semibold text-gray-900 dark:text-white">{user.role}</div>
+              <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 sm:p-4">
+                <div className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">User Role</div>
+                <div className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">{user.role}</div>
               </div>
               
-              <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                <div className="text-sm font-medium text-gray-500 dark:text-gray-400">Account Created</div>
-                <div className="text-lg font-semibold text-gray-900 dark:text-white">
+              <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 sm:p-4">
+                <div className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">Account Created</div>
+                <div className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">
                   {new Date(user.createdAt).toLocaleDateString()}
                 </div>
               </div>
               
-              <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                <div className="text-sm font-medium text-gray-500 dark:text-gray-400">Last Login</div>
-                <div className="text-lg font-semibold text-gray-900 dark:text-white">Today</div>
+              <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 sm:p-4">
+                <div className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">Last Login</div>
+                <div className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Today</div>
               </div>
             </div>
 
-            <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
-              <h4 className="text-md font-medium text-gray-900 dark:text-white mb-4">Data Management</h4>
-              <div className="space-y-3">
-                <button className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors w-full md:w-auto">
+            <div className="border-t border-gray-200 dark:border-gray-700 pt-4 sm:pt-6">
+              <h4 className="text-sm sm:text-md font-medium text-gray-900 dark:text-white mb-3 sm:mb-4">Data Management</h4>
+              <div className="space-y-2 sm:space-y-3">
+                <button className="px-3 sm:px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors w-full sm:w-auto text-xs sm:text-sm">
                   📥 Export Data
                 </button>
-                <button className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors w-full md:w-auto ml-0 md:ml-3">
+                <button className="px-3 sm:px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors w-full sm:w-auto ml-0 sm:ml-3 text-xs sm:text-sm">
                   📊 Generate Report
                 </button>
               </div>
