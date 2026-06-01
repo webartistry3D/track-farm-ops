@@ -445,7 +445,7 @@ const Landing = () => {
               <div className="text-4xl mb-4">₦</div>
               <h3 className="text-lg font-poppins font-semibold text-gray-900 mb-2">Income & Expense Tracker</h3>
               <p className="font-inter text-gray-600">
-                Record daily income and expenses with automatic categorization and financial summaries. Create and track invoices, snap to scan or upload receipts. Track all expenses and generate detailed financial reports for better farm management decisions.
+                Record daily income and expenses.<br></br>Create and track invoices.<br></br>Upload receipts.<br></br>Generate detailed financial reports.
               </p>
             </div>
 
