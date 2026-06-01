@@ -1,6 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcryptjs');
-const { seedSystemInventoryForOrganization } = require('../prisma/seed-inventory');
 
 const prisma = new PrismaClient();
 
@@ -9,47 +8,77 @@ const prisma = new PrismaClient();
 // ============================================
 
 const ORGANIZATION_CONFIG = {
-  name: 'Your Farm Name',
+  name: 'Egobam Agro-Allied and Farms Limited',
   description: 'Your farm description here',
 };
 
 const OWNER_CONFIG = {
-  name: 'Owner Name',
-  email: 'owner@yourfarm.com',
-  password: 'your-secure-password', // Change this to a secure password
+  name: 'Godwin Egbufo',
+  email:'godwin.e@egobam.com',
+  password: 'Godwinegbufo#', // Change this to a secure password
 };
 
 const MANAGERS_CONFIG = [
   {
-    name: 'Manager 1 Name',
-    email: 'manager1@yourfarm.com',
-    password: 'manager1-password', // Change this to a secure password
+    name: 'Ogechi Domenica',
+    email: 'ogechi.d@egobam.com',
+    password: 'Ogechidomenica#', // Change this to a secure password
   },
   {
-    name: 'Manager 2 Name',
-    email: 'manager2@yourfarm.com',
-    password: 'manager2-password', // Change this to a secure password
+    name: 'Kehinde David Adeniyi',
+    email: 'kehinde.a@egobam.com',
+    password: 'Kehindeadeniyi#', // Change this to a secure password
   },
   // Add more managers as needed
+{
+    name: 'Ngozi Egbufo',
+    email: 'ngozi.e@egobam.com',
+    password: 'Ngoziegbufo#', // Change this to a secure password
+  },
+  {
+    name: 'Godwin Beshelunim Iki',
+    email: 'godwin.i@egobam.com',
+    password: 'Godwiniki#', // Change this to a secure password
+  },
+  {
+    name: 'Abdulraheem Muhammad',
+    email: 'abdulraheem.m@egobam.com',
+    password: 'Abdulraheemmuhammad#', // Change this to a secure password
+  },
 ];
 
 const WORKERS_CONFIG = [
   {
-    name: 'Worker 1 Name',
-    email: 'worker1@yourfarm.com',
-    password: 'worker1-password', // Change this to a secure password
+    name: 'Chika Samuel	Anoshiri',
+    email: 'chika.a@egobam.com',
+    password: 'Chikeanoshiri#', // Change this to a secure password
   },
   {
-    name: 'Worker 2 Name',
-    email: 'worker2@yourfarm.com',
-    password: 'worker2-password', // Change this to a secure password
+    name: 'Wisdom	Onwana',
+    email: 'wisdom.o@egobam.com',
+    password: 'Wisdomonwana#', // Change this to a secure password
   },
   {
-    name: 'Worker 3 Name',
-    email: 'worker3@yourfarm.com',
-    password: 'worker3-password', // Change this to a secure password
+    name: 'Geoffrey Tyolumun	Tavershima',
+    email: 'geoffrey.t@egobam.com',
+    password: 'Geoffreytavershima#', // Change this to a secure password
   },
   // Add more workers as needed
+    {
+    name: 'Obinna Matthew	Okoro',
+    email: 'obinna.o@egobam.com',
+    password: 'Obinnaokoro#', // Change this to a secure password
+  },
+    {
+    name: 'Glory Ihiechi Okere',
+    email: 'glory.o@egobam.com',
+    password: 'Gloryokere#', // Change this to a secure password
+  },
+    {
+    name: 'Timothy Aboga',
+    email: 'timothy.a@egobam.com',
+    password: 'Timothya#', // Change this to a secure password
+  },
 ];
 
 // ============================================
@@ -155,6 +184,186 @@ async function createWorkers(organizationId) {
   }
 
   return workers;
+}
+
+async function seedSystemInventoryForOrganization(organizationId) {
+  console.log(`🌾 Seeding Nigerian Mixed Farm preset inventory for organization ${organizationId}...`);
+
+  try {
+    // Clear existing inventory for this organization to ensure clean slate
+    console.log(`🧹 Clearing existing inventory for organization ${organizationId}...`);
+    await prisma.inventoryItem.deleteMany({
+      where: { organizationId }
+    });
+    await prisma.inventoryCategory.deleteMany({
+      where: { organizationId }
+    });
+
+    // System preset categories
+    const SYSTEM_PRESET_CATEGORIES = [
+      {
+        name: 'Livestock',
+        description: 'Animals raised on the farm',
+        icon: '🐄',
+        color: 'bg-orange-100 text-orange-700 border-orange-200',
+        metadata: { keywords: ['animals', 'cattle', 'poultry', 'livestock'] }
+      },
+      {
+        name: 'Feed & Nutrition',
+        description: 'Animal feed and nutritional supplements',
+        icon: '🌾',
+        color: 'bg-green-100 text-green-700 border-green-200',
+        metadata: { keywords: ['feed', 'nutrition', 'supplements', 'fodder'] }
+      },
+      {
+        name: 'Medicine & Health',
+        description: 'Veterinary medicines and health supplies',
+        icon: '💊',
+        color: 'bg-red-100 text-red-700 border-red-200',
+        metadata: { keywords: ['medicine', 'veterinary', 'health', 'treatment'] }
+      },
+      {
+        name: 'Equipment & Tools',
+        description: 'Farm equipment and tools',
+        icon: '🔧',
+        color: 'bg-blue-100 text-blue-700 border-blue-200',
+        metadata: { keywords: ['equipment', 'tools', 'machinery', 'implements'] }
+      },
+      {
+        name: 'Seeds & Planting',
+        description: 'Seeds, seedlings, and planting materials',
+        icon: '🌱',
+        color: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+        metadata: { keywords: ['seeds', 'seedlings', 'planting', 'germination'] }
+      },
+      {
+        name: 'Fertilizers & Soil',
+        description: 'Fertilizers and soil amendments',
+        icon: '🧪',
+        color: 'bg-yellow-100 text-yellow-700 border-yellow-200',
+        metadata: { keywords: ['fertilizer', 'soil', 'amendments', 'nutrients'] }
+      },
+      {
+        name: 'Harvested Produce',
+        description: 'Freshly harvested crops and farm produce ready for market',
+        icon: '🌾',
+        color: 'bg-green-100 text-green-700 border-green-200',
+        metadata: { keywords: ['harvest', 'crops', 'produce', 'market', 'vegetables', 'fruits', 'grains'] }
+      },
+      {
+        name: 'Animal Products',
+        description: 'Products derived from farm animals including eggs, milk, and meat',
+        icon: '🥚',
+        color: 'bg-amber-100 text-amber-700 border-amber-200',
+        metadata: { keywords: ['eggs', 'milk', 'meat', 'dairy', 'animal products', 'poultry products'] }
+      }
+    ];
+
+    // System preset items
+    const SYSTEM_PRESET_ITEMS = [
+      // Livestock (3 items)
+      { name: 'Broiler Chickens', type: 'LIVESTOCK', unit: 'pieces', categoryId: 1, quantity: 0 },
+      { name: 'Layer Chickens', type: 'LIVESTOCK', unit: 'pieces', categoryId: 1, quantity: 0 },
+      { name: 'Goats', type: 'LIVESTOCK', unit: 'pieces', categoryId: 1, quantity: 0 },
+      
+      // Feed & Nutrition (6 items)
+      { name: 'Broiler Feed', type: 'CONSUMABLES', unit: 'kg', categoryId: 2, quantity: 0 },
+      { name: 'Layer Feed', type: 'CONSUMABLES', unit: 'kg', categoryId: 2, quantity: 0 },
+      { name: 'Grower Feed', type: 'CONSUMABLES', unit: 'kg', categoryId: 2, quantity: 0 },
+      { name: 'Starter Feed', type: 'CONSUMABLES', unit: 'kg', categoryId: 2, quantity: 0 },
+      { name: 'Vitamin Supplements', type: 'CONSUMABLES', unit: 'liters', categoryId: 2, quantity: 0 },
+      { name: 'Mineral Blocks', type: 'CONSUMABLES', unit: 'pieces', categoryId: 2, quantity: 0 },
+      
+      // Medicine & Health (6 items)
+      { name: 'Antibiotics', type: 'CONSUMABLES', unit: 'bottles', categoryId: 3, quantity: 0 },
+      { name: 'Vaccines', type: 'CONSUMABLES', unit: 'vials', categoryId: 3, quantity: 0 },
+      { name: 'Dewormers', type: 'CONSUMABLES', unit: 'tablets', categoryId: 3, quantity: 0 },
+      { name: 'Vitamins', type: 'CONSUMABLES', unit: 'bottles', categoryId: 3, quantity: 0 },
+      { name: 'Disinfectants', type: 'CONSUMABLES', unit: 'liters', categoryId: 3, quantity: 0 },
+      { name: 'Syringes', type: 'CONSUMABLES', unit: 'pieces', categoryId: 3, quantity: 0 },
+      
+      // Equipment & Tools (8 items)
+      { name: 'Wheelbarrow', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 0 },
+      { name: 'Shovel', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 0 },
+      { name: 'Hoe', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 0 },
+      { name: 'Water Buckets', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 0 },
+      { name: 'Feed Troughs', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 0 },
+      { name: 'Nesting Boxes', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 0 },
+      { name: 'Watering Cans', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 0 },
+      { name: 'Cutlasses', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 0 },
+      
+      // Seeds & Planting (6 items)
+      { name: 'Maize Seeds', type: 'PRODUCE', unit: 'kg', categoryId: 5, quantity: 0 },
+      { name: 'Rice Seeds', type: 'PRODUCE', unit: 'kg', categoryId: 5, quantity: 0 },
+      { name: 'Bean Seeds', type: 'PRODUCE', unit: 'kg', categoryId: 5, quantity: 0 },
+      { name: 'Tomato Seeds', type: 'PRODUCE', unit: 'packets', categoryId: 5, quantity: 0 },
+      { name: 'Pepper Seeds', type: 'PRODUCE', unit: 'packets', categoryId: 5, quantity: 0 },
+      { name: 'Vegetable Seeds', type: 'PRODUCE', unit: 'packets', categoryId: 5, quantity: 0 },
+      
+      // Fertilizers & Soil (6 items)
+      { name: 'NPK Fertilizer', type: 'CONSUMABLES', unit: 'kg', categoryId: 6, quantity: 0 },
+      { name: 'Urea', type: 'CONSUMABLES', unit: 'kg', categoryId: 6, quantity: 0 },
+      { name: 'Compost', type: 'CONSUMABLES', unit: 'kg', categoryId: 6, quantity: 0 },
+      { name: 'Manure', type: 'CONSUMABLES', unit: 'kg', categoryId: 6, quantity: 0 },
+      { name: 'Lime', type: 'CONSUMABLES', unit: 'kg', categoryId: 6, quantity: 0 },
+      { name: 'Organic Fertilizer', type: 'CONSUMABLES', unit: 'kg', categoryId: 6, quantity: 0 },
+      
+      // Harvested Produce (4 items)
+      { name: 'Fresh Tomatoes', type: 'PRODUCE', unit: 'kg', categoryId: 7, quantity: 0 },
+      { name: 'Fresh Peppers', type: 'PRODUCE', unit: 'kg', categoryId: 7, quantity: 0 },
+      { name: 'Fresh Leafy Vegetables', type: 'PRODUCE', unit: 'bunches', categoryId: 7, quantity: 0 },
+      { name: 'Fresh Maize', type: 'PRODUCE', unit: 'kg', categoryId: 7, quantity: 0 },
+      
+      // Animal Products (1 item)
+      { name: 'Farm Eggs', type: 'PRODUCE', unit: 'crates', categoryId: 8, quantity: 0 }
+    ];
+
+    // Create system preset categories
+    const createdCategories = [];
+    for (const category of SYSTEM_PRESET_CATEGORIES) {
+      const createdCategory = await prisma.inventoryCategory.create({
+        data: {
+          ...category,
+          organizationId,
+        },
+      });
+      createdCategories.push(createdCategory);
+      console.log(`  ✅ Created category: ${createdCategory.name}`);
+    }
+
+    // Create system preset items
+    for (const item of SYSTEM_PRESET_ITEMS) {
+      const category = createdCategories.find(cat => cat.name === SYSTEM_PRESET_CATEGORIES[item.categoryId - 1].name);
+      if (category) {
+        await prisma.inventoryItem.create({
+          data: {
+            name: item.name,
+            type: item.type,
+            unit: item.unit,
+            quantity: item.quantity,
+            categoryId: category.id,
+            organizationId,
+            metadata: {
+              pricePerUnit: null,
+              location: null,
+              supplier: null,
+              purchaseDate: null,
+              expiryDate: null,
+              minimumStock: null,
+              notes: `Nigerian Mixed Farm preset item for ${category.name} category`
+            }
+          },
+        });
+        console.log(`  ✅ Created item: ${item.name} in ${category.name}`);
+      }
+    }
+
+    console.log(`🎉 Successfully seeded ${SYSTEM_PRESET_CATEGORIES.length} categories and ${SYSTEM_PRESET_ITEMS.length} items for organization ${organizationId}`);
+    return true;
+  } catch (error) {
+    console.error(`❌ Error seeding inventory for organization ${organizationId}:`, error);
+    return false;
+  }
 }
 
 async function main() {
