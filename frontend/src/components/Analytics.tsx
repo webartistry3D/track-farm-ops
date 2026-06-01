@@ -103,11 +103,7 @@ const Analytics = () => {
   const [, setShowConsumablesModal] = useState(false);
 
   // Farm Operations Data
-  const [crops, setCrops] = useState([
-    { id: 1, name: 'Tomatoes', zone: 'Zone A', plantingDate: '2024-03-15', expectedHarvest: '2024-06-30', status: 'Growing' },
-    { id: 2, name: 'Lettuce', zone: 'Zone B', plantingDate: '2024-04-01', expectedHarvest: '2024-05-15', status: 'Mature' },
-    { id: 3, name: 'Peppers', zone: 'Zone C', plantingDate: '2024-02-20', expectedHarvest: '2024-07-10', status: 'Seedling' }
-  ]);
+  const [crops, setCrops] = useState<any[]>([]);
 
   const [cropData, setCropData] = useState({
     newCrop: '',
@@ -185,38 +181,21 @@ const Analytics = () => {
   });
 
   // Helper functions for live profit trend data
-  const generateProfitTrendData = () => {
+  const generateProfitTrendData = (): Array<{ label: number; profit: number; percentage: number }> => {
+    // In production, this would fetch actual historical profit data
+    // For now, return empty structure to avoid mock data
     const dataPoints = dateFilter === 'last7days' ? 7 : 12;
-    const baseProfit = (financialSummary?.netProfit || 0) / dataPoints;
-    
-    return Array.from({ length: dataPoints }, (_, index) => {
-      const variation = (Math.random() - 0.5) * 0.4; // ±20% variation
-      const profit = baseProfit * (1 + variation);
-      const maxProfit = Math.max(...Array.from({ length: dataPoints }, () => baseProfit * 1.5));
-      const percentage = Math.abs((profit / maxProfit) * 100);
-      
-      let label = '';
-      if (dateFilter === 'last7days') {
-        const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-        label = days[index];
-      } else if (dateFilter === 'allTime' || dateFilter === 'last30days') {
-        label = `${index + 1}`;
-      } else if (dateFilter === 'today') {
-        label = `${index * 2}:00`;
-      } else {
-        label = `${index + 1}`;
-      }
-      
-      return { label, profit, percentage };
-    });
+    return Array.from({ length: dataPoints }, (_, index) => ({
+      label: index + 1,
+      profit: 0,
+      percentage: 0
+    }));
   };
 
   const calculateProfitGrowth = () => {
-    const currentProfit = financialSummary?.netProfit || 0;
-    // Simulate previous period profit (in real app, this would come from historical data)
-    const previousProfit = currentProfit * 0.85; // Assume 15% growth for demo
-    const growth = previousProfit !== 0 ? ((currentProfit - previousProfit) / previousProfit) * 100 : 0;
-    return Math.round(growth * 10) / 10; // Round to 1 decimal place
+    // In production, this would calculate growth from historical data
+    // For now, return 0 to avoid mock data
+    return 0;
   };
 
   useEffect(() => {
@@ -609,8 +588,8 @@ const Analytics = () => {
       <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-0 py-0">
         {/* Key Performance Indicators */}
         <div className="mb-8">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Performance Dashboard</h2>
+          <div className="flex items-center justify-between mb-1">
+            {/*<h2 className="text-2xl font-bold text-gray-900 dark:text-white">Performance Dashboard</h2>*/}
             <div className="flex items-center space-x-2">
               <span className="text-sm text-gray-500 dark:text-gray-400">
                 {getDateFilterLabel()}
@@ -889,7 +868,9 @@ const Analytics = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">Growth Rate</p>
-                    <p className="text-xl font-bold text-gray-900 dark:text-white">+23.4%</p>
+                    <p className="text-xl font-bold text-gray-900 dark:text-white">
+                      {calculateProfitGrowth() !== 0 ? `${calculateProfitGrowth() >= 0 ? '+' : ''}${calculateProfitGrowth()}%` : 'N/A'}
+                    </p>
                   </div>
                   <div className="p-2 bg-purple-500 rounded-lg">
                     <Zap className="h-4 w-4 text-white" />
@@ -1102,29 +1083,26 @@ const Analytics = () => {
                   <Sprout className="h-5 w-5 mr-2 text-green-600" />
                   Crop Management
                 </h3>
-                <span className="text-sm text-green-600 font-medium">Active</span>
+                <span className="text-sm text-gray-500 font-medium">N/A</span>
               </div>
               
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Planted Crops</span>
-                  <span className="font-semibold text-gray-900 dark:text-white">12 Varieties</span>
+                  <span className="font-semibold text-gray-900 dark:text-white">N/A</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Health Status</span>
-                  <div className="flex items-center text-green-600">
-                    <CheckCircle className="h-4 w-4 mr-1" />
-                    <span className="font-medium">87% Healthy</span>
-                  </div>
+                  <span className="font-medium text-gray-500">N/A</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Next Harvest</span>
-                  <span className="font-semibold text-gray-900 dark:text-white">14 Days</span>
+                  <span className="font-semibold text-gray-900 dark:text-white">N/A</span>
                 </div>
                 <div className="mt-4 pt-3 border-t border-green-200 dark:border-green-800">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600 dark:text-gray-400">Yield Forecast</span>
-                    <span className="text-green-600 font-medium">+15.2% vs last</span>
+                    <span className="text-gray-500 font-medium">N/A</span>
                   </div>
                 </div>
               </div>
@@ -1140,29 +1118,26 @@ const Analytics = () => {
                   <Droplets className="h-5 w-5 mr-2 text-amber-600" />
                   Soil Management
                 </h3>
-                <span className="text-sm text-amber-600 font-medium">Optimal</span>
+                <span className="text-sm text-gray-500 font-medium">N/A</span>
               </div>
               
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Moisture Level</span>
-                  <span className="font-semibold text-gray-900 dark:text-white">68%</span>
+                  <span className="font-semibold text-gray-900 dark:text-white">N/A</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">pH Level</span>
-                  <span className="font-semibold text-gray-900 dark:text-white">6.8</span>
+                  <span className="font-semibold text-gray-900 dark:text-white">N/A</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Nutrient Status</span>
-                  <div className="flex items-center text-green-600">
-                    <CheckCircle className="h-4 w-4 mr-1" />
-                    <span className="font-medium">Balanced</span>
-                  </div>
+                  <span className="font-medium text-gray-500">N/A</span>
                 </div>
                 <div className="mt-4 pt-3 border-t border-amber-200 dark:border-amber-800">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600 dark:text-gray-400">Last Treatment</span>
-                    <span className="text-amber-600 font-medium">5 days ago</span>
+                    <span className="text-gray-500 font-medium">N/A</span>
                   </div>
                 </div>
               </div>
@@ -1178,35 +1153,35 @@ const Analytics = () => {
                   <Sun className="h-5 w-5 mr-2 text-blue-600" />
                   Weather Impact
                 </h3>
-                <span className="text-sm text-blue-600 font-medium">Favorable</span>
+                <span className="text-sm text-gray-500 font-medium">N/A</span>
               </div>
               
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Temperature</span>
                   <div className="flex items-center">
-                    <Thermometer className="h-4 w-4 mr-1 text-orange-500" />
-                    <span className="font-semibold text-gray-900 dark:text-white">28°C</span>
+                    <Thermometer className="h-4 w-4 mr-1 text-gray-500" />
+                    <span className="font-semibold text-gray-900 dark:text-white">N/A</span>
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Rainfall</span>
                   <div className="flex items-center">
-                    <Droplets className="h-4 w-4 mr-1 text-blue-500" />
-                    <span className="font-semibold text-gray-900 dark:text-white">45mm</span>
+                    <Droplets className="h-4 w-4 mr-1 text-gray-500" />
+                    <span className="font-semibold text-gray-900 dark:text-white">N/A</span>
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Wind Speed</span>
                   <div className="flex items-center">
                     <Wind className="h-4 w-4 mr-1 text-gray-500" />
-                    <span className="font-semibold text-gray-900 dark:text-white">12 km/h</span>
+                    <span className="font-semibold text-gray-900 dark:text-white">N/A</span>
                   </div>
                 </div>
                 <div className="mt-4 pt-3 border-t border-blue-200 dark:border-blue-800">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600 dark:text-gray-400">Growth Conditions</span>
-                    <span className="text-green-600 font-medium">Excellent</span>
+                    <span className="text-gray-500 font-medium">N/A</span>
                   </div>
                 </div>
               </div>
@@ -1230,21 +1205,21 @@ const Analytics = () => {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Zone A</span>
-                  <span className="text-sm font-medium text-green-600">Active</span>
+                  <span className="text-sm font-medium text-gray-500">N/A</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Zone B</span>
-                  <span className="text-sm font-medium text-gray-500">Scheduled</span>
+                  <span className="text-sm font-medium text-gray-500">N/A</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Zone C</span>
-                  <span className="text-sm font-medium text-blue-600">Running</span>
+                  <span className="text-sm font-medium text-gray-500">N/A</span>
                 </div>
               </div>
               <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-gray-500 dark:text-gray-400">Water Usage Today</span>
-                  <span className="text-sm font-semibold text-gray-900 dark:text-white">2,450L</span>
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white">N/A</span>
                 </div>
               </div>
             </div>
@@ -1258,27 +1233,27 @@ const Analytics = () => {
                 <div className="p-2 bg-red-100 dark:bg-red-900/20 rounded-lg">
                   <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400" />
                 </div>
-                <span className="text-xs text-gray-500 dark:text-gray-400">Last check: 2h ago</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">Last check: N/A</span>
               </div>
               <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Pest Control</h4>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Threat Level</span>
-                  <span className="text-sm font-medium text-yellow-600">Moderate</span>
+                  <span className="text-sm font-medium text-gray-500">N/A</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Active Treatments</span>
-                  <span className="text-sm font-semibold text-gray-900 dark:text-white">2</span>
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white">N/A</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Next Spray</span>
-                  <span className="text-sm font-medium text-blue-600">Tomorrow</span>
+                  <span className="text-sm font-medium text-gray-500">N/A</span>
                 </div>
               </div>
               <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-gray-500 dark:text-gray-400">Treatment Efficacy</span>
-                  <span className="text-sm font-semibold text-green-600">92%</span>
+                  <span className="text-sm font-semibold text-gray-500">N/A</span>
                 </div>
               </div>
             </div>
@@ -1298,21 +1273,21 @@ const Analytics = () => {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Operational</span>
-                  <span className="text-sm font-medium text-green-600">8/10</span>
+                  <span className="text-sm font-medium text-gray-500">N/A</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Maintenance</span>
-                  <span className="text-sm font-medium text-yellow-600">2</span>
+                  <span className="text-sm font-medium text-gray-500">N/A</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Utilization</span>
-                  <span className="text-sm font-semibold text-gray-900 dark:text-white">78%</span>
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white">N/A</span>
                 </div>
               </div>
               <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-gray-500 dark:text-gray-400">Next Service</span>
-                  <span className="text-sm font-medium text-orange-600">In 3 days</span>
+                  <span className="text-sm font-medium text-gray-500">N/A</span>
                 </div>
               </div>
             </div>
@@ -1332,21 +1307,21 @@ const Analytics = () => {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Active Workers</span>
-                  <span className="text-sm font-semibold text-gray-900 dark:text-white">6</span>
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white">N/A</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Tasks Today</span>
-                  <span className="text-sm font-medium text-blue-600">24/32</span>
+                  <span className="text-sm font-medium text-gray-500">N/A</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Efficiency</span>
-                  <span className="text-sm font-medium text-green-600">High</span>
+                  <span className="text-sm font-medium text-gray-500">N/A</span>
                 </div>
               </div>
               <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-gray-500 dark:text-gray-400">Productivity</span>
-                  <span className="text-sm font-semibold text-green-600">+18%</span>
+                  <span className="text-sm font-semibold text-gray-500">N/A</span>
                 </div>
               </div>
             </div>
@@ -1382,16 +1357,8 @@ const Analytics = () => {
                     <h3 className="font-semibold text-gray-900 dark:text-white mb-3">Active Crops</h3>
                     <div className="space-y-2">
                       <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-600 dark:text-gray-400">Tomatoes</span>
-                        <span className="text-sm font-medium text-green-600">Healthy</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-600 dark:text-gray-400">Maize</span>
-                        <span className="text-sm font-medium text-yellow-600">Needs Water</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-600 dark:text-gray-400">Peppers</span>
-                        <span className="text-sm font-medium text-green-600">Thriving</span>
+                        <span className="text-sm text-gray-600 dark:text-gray-400">No crops configured</span>
+                        <span className="text-sm font-medium text-gray-500">N/A</span>
                       </div>
                     </div>
                   </div>
@@ -1401,15 +1368,15 @@ const Analytics = () => {
                     <div className="space-y-2">
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-600 dark:text-gray-400">Average Growth Rate</span>
-                        <span className="text-sm font-medium text-gray-900 dark:text-white">+2.3cm/week</span>
+                        <span className="text-sm font-medium text-gray-900 dark:text-white">N/A</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-600 dark:text-gray-400">Yield Prediction</span>
-                        <span className="text-sm font-medium text-green-600">+15.2%</span>
+                        <span className="text-sm font-medium text-green-600">N/A</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-600 dark:text-gray-400">Harvest Readiness</span>
-                        <span className="text-sm font-medium text-orange-600">14 days</span>
+                        <span className="text-sm font-medium text-orange-600">N/A</span>
                       </div>
                     </div>
                   </div>
@@ -2504,15 +2471,15 @@ const Analytics = () => {
                   <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Inventory Trends</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-green-600">+12%</div>
+                      <div className="text-2xl font-bold text-green-600">N/A</div>
                       <div className="text-sm text-gray-600 dark:text-gray-400">Monthly Growth</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-blue-600">₦2.5M</div>
+                      <div className="text-2xl font-bold text-blue-600">N/A</div>
                       <div className="text-sm text-gray-600 dark:text-gray-400">Total Value</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-purple-600">94%</div>
+                      <div className="text-2xl font-bold text-purple-600">N/A</div>
                       <div className="text-sm text-gray-600 dark:text-gray-400">Utilization Rate</div>
                     </div>
                   </div>

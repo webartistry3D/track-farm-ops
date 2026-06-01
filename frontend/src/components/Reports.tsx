@@ -338,7 +338,7 @@ const Reports: React.FC = () => {
                   Expense
                 </button>
               </div>
-              <div className="flex flex-col sm:flex-row sm:gap-2 gap-2 pb-2">
+              <div className="flex flex-row sm:flex-row sm:gap-2 gap-2 pb-2">
                 <button
                   onClick={() => exportToCSV(filteredTransactions, 'all-transactions', 'all')}
                   className="flex items-center gap-2 px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors duration-200"

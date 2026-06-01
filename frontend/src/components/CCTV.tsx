@@ -24,6 +24,7 @@ import {
   WifiOff,
   Zap
 } from 'lucide-react';
+import { CCTVSkeleton } from './EnhancedSkeletons';
 
 interface Camera {
   id: string;
@@ -340,15 +341,15 @@ const CCTV = () => {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
-            <div>
+            {/*<div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
                 CCTV Camera Feeds
               </h1>
-            </div>
+            </div>*/}
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => setShowAddCamera(true)}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center"
+                className="px-4 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center"
               >
                 <Camera className="h-4 w-4 mr-2" />
                 Add Camera
@@ -365,10 +366,7 @@ const CCTV = () => {
 
         {/* Camera Grid */}
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
-            <p className="text-gray-600 dark:text-gray-400">Loading cameras...</p>
-          </div>
+          <CCTVSkeleton />
         ) : viewMode === 'grid' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {cameras.map((camera) => (

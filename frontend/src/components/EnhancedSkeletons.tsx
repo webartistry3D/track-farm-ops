@@ -603,3 +603,69 @@ export const ReportsSkeleton: React.FC = () => (
     </div>
   </PageSkeleton>
 );
+
+// Engineering-precise CCTV Skeleton - Matches exact CCTV page layout
+export const CCTVSkeleton: React.FC = () => (
+  <PageSkeleton>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex-1">
+          <SkeletonElement className="h-8 w-48 mb-2" />
+        </div>
+        <div className="flex items-center space-x-4">
+          <SkeletonElement className="h-10 w-32 rounded-lg" />
+          <SkeletonElement className="h-10 w-10 rounded-lg" />
+        </div>
+      </div>
+
+      {/* Camera Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[...Array(6)].map((_, index) => (
+          <CardSkeleton key={index} className="overflow-hidden">
+            {/* Camera Feed Skeleton */}
+            <div className="relative aspect-video bg-gray-900 dark:bg-black">
+              <SkeletonElement className="absolute inset-0" />
+              
+              {/* Status Badge Skeleton */}
+              <SkeletonElement className="absolute top-2 right-2 w-16 h-6 rounded-full" />
+              
+              {/* Recording Indicator Skeleton */}
+              <SkeletonElement className="absolute top-2 left-2 w-20 h-6 rounded" />
+            </div>
+
+            {/* Camera Info Skeleton */}
+            <div className="p-4">
+              <div className="flex items-center justify-between mb-2">
+                <SkeletonElement className="h-5 w-32" />
+                <div className="flex items-center space-x-2">
+                  <SkeletonElement className="w-5 h-5 rounded" />
+                  <SkeletonElement className="w-5 h-5 rounded" />
+                  <SkeletonElement className="w-5 h-5 rounded" />
+                </div>
+              </div>
+              
+              <div className="space-y-2 mb-4">
+                <SkeletonElement className="h-4 w-24" />
+                <SkeletonElement className="h-4 w-20" />
+              </div>
+
+              {/* Control Buttons Skeleton */}
+              <div className="flex items-center justify-between pt-3 border-t border-gray-200 dark:border-gray-700">
+                <div className="flex items-center space-x-2">
+                  <SkeletonElement className="w-8 h-8 rounded-lg" />
+                  <SkeletonElement className="w-8 h-8 rounded-lg" />
+                </div>
+                <div className="flex items-center space-x-2">
+                  <SkeletonElement className="w-8 h-8 rounded-lg" />
+                  <SkeletonElement className="w-8 h-8 rounded-lg" />
+                  <SkeletonElement className="w-8 h-8 rounded-lg" />
+                </div>
+              </div>
+            </div>
+          </CardSkeleton>
+        ))}
+      </div>
+    </div>
+  </PageSkeleton>
+);
