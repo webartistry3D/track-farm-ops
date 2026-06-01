@@ -222,7 +222,7 @@ const Layout = ({ children }: LayoutProps) => {
                       }
                     }}
                     className={`
-                      group flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors
+                      group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors
                       ${item.current
                         ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 border-l-4 border-green-600 dark:border-green-400'
                         : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
