@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { prisma } from '../lib/prisma';
 import { AuthRequest } from '../middleware/auth';
 import { buildRoleBasedWhereClause, canUserAccessRecord } from '../utils/roleAccess';
+import { createActivityNotification, NotificationActivityType, formatNotificationMessage } from '../utils/notificationHelper';
 
 export const createIncomeEntry = async (req: AuthRequest, res: Response) => {
   try {
@@ -83,6 +84,30 @@ export const createIncomeEntry = async (req: AuthRequest, res: Response) => {
     });
 
     console.log('✅ Income entry created successfully:', JSON.stringify(incomeEntry, null, 2));
+
+    // Send notification to owner/managers
+    await createActivityNotification(
+      NotificationActivityType.INCOME_CREATED,
+      currentUser.id,
+      currentUserOrg.organizationId,
+      {
+        title: 'New Income Recorded',
+        message: formatNotificationMessage(
+          NotificationActivityType.INCOME_CREATED,
+          currentUser.name,
+          description || category,
+          `₦${parseFloat(amount).toLocaleString()}`
+        ),
+        relatedEntity: 'IncomeEntry',
+        relatedEntityId: incomeEntry.id,
+        metadata: {
+          amount: parseFloat(amount),
+          category,
+          description
+        }
+      }
+    );
+
     res.status(201).json(incomeEntry);
   } catch (error) {
     console.error('Create income entry error:', error);
@@ -437,6 +462,30 @@ export const createExpenseEntry = async (req: AuthRequest, res: Response) => {
     });
 
     console.log('✅ Expense entry created successfully:', JSON.stringify(expenseEntry, null, 2));
+
+    // Send notification to owner/managers
+    await createActivityNotification(
+      NotificationActivityType.EXPENSE_CREATED,
+      currentUser.id,
+      currentUserOrg.organizationId,
+      {
+        title: 'New Expense Recorded',
+        message: formatNotificationMessage(
+          NotificationActivityType.EXPENSE_CREATED,
+          currentUser.name,
+          note || category,
+          `₦${parseFloat(amount).toLocaleString()}`
+        ),
+        relatedEntity: 'ExpenseEntry',
+        relatedEntityId: expenseEntry.id,
+        metadata: {
+          amount: parseFloat(amount),
+          category,
+          note
+        }
+      }
+    );
+
     res.status(201).json(expenseEntry);
   } catch (error) {
     console.error('❌ Create expense entry error:', error);

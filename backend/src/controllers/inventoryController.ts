@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { prisma } from '../lib/prisma';
 import { AuthRequest } from '../middleware/auth';
 import { buildRoleBasedWhereClause, canUserAccessRecord } from '../utils/roleAccess';
+import { createActivityNotification, NotificationActivityType, formatNotificationMessage } from '../utils/notificationHelper';
 
 export const getInventorySettings = async (req: AuthRequest, res: Response) => {
   try {
@@ -160,7 +161,38 @@ export const updateInventoryItem = async (req: AuthRequest, res: Response) => {
         metadata: metadata || null
       }
     });
-    
+
+    // Get organization ID for notification
+    const currentUserOrg = await prisma.user.findUnique({
+      where: { id: currentUser.id },
+      select: { organizationId: true }
+    });
+
+    // Send notification to owner/managers
+    if (currentUserOrg?.organizationId) {
+      await createActivityNotification(
+        NotificationActivityType.INVENTORY_UPDATED,
+        currentUser.id,
+        currentUserOrg.organizationId,
+        {
+          title: 'Inventory Item Updated',
+          message: formatNotificationMessage(
+            NotificationActivityType.INVENTORY_UPDATED,
+            currentUser.name,
+            name
+          ),
+          relatedEntity: 'InventoryItem',
+          relatedEntityId: updatedItem.id,
+          metadata: {
+            name,
+            type,
+            quantity: parsedQuantity,
+            unit
+          }
+        }
+      );
+    }
+
     console.log('  ✅ Item updated successfully:', updatedItem);
     res.json(updatedItem);
   } catch (error) {
@@ -557,6 +589,29 @@ export const createInventoryItem = async (req: AuthRequest, res: Response) => {
       });
       console.log('  ✅ Initial transaction created');
     }
+
+    // Send notification to owner/managers
+    await createActivityNotification(
+      NotificationActivityType.INVENTORY_CREATED,
+      req.user!.id,
+      currentUserOrg.organizationId,
+      {
+        title: 'New Inventory Item Added',
+        message: formatNotificationMessage(
+          NotificationActivityType.INVENTORY_CREATED,
+          req.user!.name,
+          name
+        ),
+        relatedEntity: 'InventoryItem',
+        relatedEntityId: item.id,
+        metadata: {
+          name,
+          type,
+          quantity: parsedQuantity,
+          unit
+        }
+      }
+    );
 
     console.log('  📤 Sending response:', item);
     res.status(201).json(item);

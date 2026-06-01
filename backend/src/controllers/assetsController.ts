@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { prisma } from '../lib/prisma';
 import { AuthRequest } from '../middleware/auth';
 import { canUserAccessRecord } from '../utils/roleAccess';
+import { createActivityNotification, NotificationActivityType, formatNotificationMessage } from '../utils/notificationHelper';
 
 export const getAssets = async (req: AuthRequest, res: Response) => {
   try {
@@ -158,6 +159,29 @@ export const createAsset = async (req: AuthRequest, res: Response) => {
 
     console.log(`✅ Asset created successfully: ${asset.name} (ID: ${asset.id}) in organization ${currentUserOrg.organizationId}`);
 
+    // Send notification to owner/managers
+    await createActivityNotification(
+      NotificationActivityType.ASSET_CREATED,
+      currentUser.id,
+      currentUserOrg.organizationId,
+      {
+        title: 'New Asset Added',
+        message: formatNotificationMessage(
+          NotificationActivityType.ASSET_CREATED,
+          currentUser.name,
+          name
+        ),
+        relatedEntity: 'Asset',
+        relatedEntityId: asset.id,
+        metadata: {
+          name,
+          category,
+          cost,
+          location
+        }
+      }
+    );
+
     res.status(201).json(asset);
   } catch (error) {
     console.error('Create asset error:', error);
@@ -259,6 +283,28 @@ export const updateAsset = async (req: AuthRequest, res: Response) => {
     });
 
     console.log('✅ Asset updated successfully:', updatedAsset);
+
+    // Send notification to owner/managers
+    await createActivityNotification(
+      NotificationActivityType.ASSET_UPDATED,
+      currentUser.id,
+      currentUserOrg.organizationId,
+      {
+        title: 'Asset Updated',
+        message: formatNotificationMessage(
+          NotificationActivityType.ASSET_UPDATED,
+          currentUser.name,
+          name || existingAsset.name
+        ),
+        relatedEntity: 'Asset',
+        relatedEntityId: updatedAsset.id,
+        metadata: {
+          name: name || existingAsset.name,
+          category: category || existingAsset.category,
+          location: location || existingAsset.location
+        }
+      }
+    );
 
     res.json(updatedAsset);
   } catch (error) {
