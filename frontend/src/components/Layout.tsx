@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { SubscriptionRestrictions } from '../utils/subscriptionRestrictions';
 import FirstTimePasswordPrompt from './FirstTimePasswordPrompt';
+import api from '../lib/api';
 // import { InactivityWarning } from './InactivityWarning'; // DISABLED
 
 interface LayoutProps {
@@ -16,6 +17,7 @@ const Layout = ({ children }: LayoutProps) => {
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [subscription, setSubscription] = useState<any>(null);
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
+  const [notifications, setNotifications] = useState<any[]>([]);
   // const [showInactivityWarning, setShowInactivityWarning] = useState(false); // DISABLED
   const { user, logout, setUser } = useAuth();
   const { isDark, toggleTheme } = useTheme();
@@ -162,15 +164,38 @@ const Layout = ({ children }: LayoutProps) => {
   // Restrictions will be handled at the page level with upgrade prompts
   const navigation = allNavigation;
 
-  const notifications = [
-    { id: 1, title: 'Low Stock Alert', message: 'Chicken Feed is running low', time: '2 hours ago', read: false },
-    { id: 2, title: 'New Income Recorded', message: '₦50,000 from egg sales', time: '5 hours ago', read: true },
-    { id: 3, title: 'System Update', message: 'TrackFarmOps v2.0 is now available', time: '1 day ago', read: true },
-  ];
-
   const isAdmin = user ? (user.role === 'OWNER' || user.role === 'MANAGER') : false;
 
   const unreadCount = notifications.filter((n: any) => !n.read).length;
+
+  // Fetch notifications from API
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      if (user) {
+        try {
+          const response = await api.get('/notifications');
+          setNotifications(response.data.notifications || []);
+        } catch (error) {
+          console.error('Failed to fetch notifications:', error);
+          // Set empty array on error to prevent UI issues
+          setNotifications([]);
+        }
+      }
+    };
+
+    fetchNotifications();
+  }, [user]);
+
+  const handleMarkAllAsRead = async () => {
+    try {
+      await api.patch('/notifications/read-all');
+      // Refetch notifications after marking as read
+      const response = await api.get('/notifications');
+      setNotifications(response.data.notifications || []);
+    } catch (error) {
+      console.error('Failed to mark all as read:', error);
+    }
+  };
 
   if (!user) {
     return <div>{children}</div>;
@@ -346,7 +371,7 @@ const Layout = ({ children }: LayoutProps) => {
                   </button>
                   
                   {notificationsOpen && (
-                    <div className="absolute right-0 sm:right-0 mt-2 w-72 sm:w-80 md:w-96 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50 max-w-[calc(100vw-1rem)] sm:max-w-[calc(100vw-2rem)] md:max-w-none">
+                    <div className="absolute right-0 sm:right-0 mt-2 w-60 sm:w-60 md:w-60 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50 max-w-[calc(100vw-1rem)] sm:max-w-[calc(100vw-2rem)] md:max-w-none">
                       <div className="p-2 sm:p-3 md:p-4 border-b border-gray-200 dark:border-gray-700">
                         <h3 className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white">Notifications</h3>
                       </div>
@@ -372,7 +397,10 @@ const Layout = ({ children }: LayoutProps) => {
                         ))}
                       </div>
                       <div className="p-2 sm:p-2 md:p-3 border-t border-gray-200 dark:border-gray-700">
-                        <button className="text-xs sm:text-sm text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-medium w-full text-center py-1 sm:py-1">
+                        <button 
+                          onClick={handleMarkAllAsRead}
+                          className="text-xs sm:text-sm text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-medium w-full text-center py-1 sm:py-1"
+                        >
                           Mark all as read
                         </button>
                       </div>

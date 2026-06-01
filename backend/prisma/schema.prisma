@@ -32,6 +32,7 @@ model User {
   subscriptions         Subscription[]
   passwordHistory       PasswordHistory[]
   cctvCameras           CctvCamera[]
+  notifications        Notification[]
   organization          Organization?          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@map("users")
@@ -534,4 +535,34 @@ model PestControl {
   organization      Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@map("pest_control")
+}
+
+// Notification System
+model Notification {
+  id              Int              @id @default(autoincrement())
+  title           String
+  message         String
+  type            NotificationType @default(INFO)
+  read            Boolean          @default(false)
+  userId          Int              @map("user_id")
+  organizationId  Int?             @map("organization_id")
+  relatedEntity   String?          @map("related_entity")
+  relatedEntityId Int?             @map("related_entity_id")
+  metadata        Json?
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+enum NotificationType {
+  INFO
+  SUCCESS
+  WARNING
+  ERROR
+  LOW_STOCK
+  INCOME_RECORDED
+  EXPENSE_RECORDED
+  SYSTEM_UPDATE
 }

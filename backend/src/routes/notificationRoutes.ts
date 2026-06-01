@@ -2,8 +2,6 @@ import { Router } from 'express';
 import { authenticate } from '../middleware/auth';
 import {
   getNotifications,
-  getNotificationPreferences,
-  updateNotificationPreferences,
   markNotificationAsRead,
   markAllNotificationsAsRead,
   deleteNotification,
@@ -24,12 +22,6 @@ router.get('/stats', getNotificationStats);
 
 // Create a new notification
 router.post('/', createNotification);
-
-// Get notification preferences
-router.get('/preferences', getNotificationPreferences);
-
-// Update notification preferences
-router.put('/preferences', updateNotificationPreferences);
 
 // Mark a specific notification as read
 router.patch('/:notificationId/read', markNotificationAsRead);
