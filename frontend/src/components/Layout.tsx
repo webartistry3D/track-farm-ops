@@ -48,11 +48,22 @@ const Layout = ({ children }: LayoutProps) => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      // Close dropdowns when clicking outside
       if (profileDropdownOpen && !(event.target as Element).closest('.profile-dropdown')) {
         setProfileDropdownOpen(false);
       }
       if (notificationsOpen && !(event.target as Element).closest('.notifications-dropdown')) {
         setNotificationsOpen(false);
+      }
+      
+      // Close mobile sidebar when clicking outside on mobile
+      if (sidebarOpen && window.innerWidth < 1024) {
+        const sidebarElement = (event.target as Element).closest('.sidebar-container');
+        const menuButton = (event.target as Element).closest('.sidebar-toggle-button');
+        
+        if (!sidebarElement && !menuButton) {
+          setSidebarOpen(false);
+        }
       }
     };
 
@@ -179,7 +190,7 @@ const Layout = ({ children }: LayoutProps) => {
 
       {/* Sidebar */}
       <div className={`
-        fixed inset-y-0 left-0 z-40 w-48 sm:w-56 md:w-64 bg-white dark:bg-gray-800 shadow-lg transform transition-transform duration-300 ease-in-out
+        sidebar-container fixed inset-y-0 left-0 z-40 w-48 sm:w-56 md:w-64 bg-white dark:bg-gray-800 shadow-lg transform transition-transform duration-300 ease-in-out
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
         lg:fixed lg:inset-y-0 lg:left-0 lg:transition-all lg:duration-300 lg:ease-in-out lg:w-48
         ${!sidebarOpen ? 'lg:w-12 lg:opacity-75' : 'lg:w-48 lg:opacity-100'}
@@ -199,7 +210,7 @@ const Layout = ({ children }: LayoutProps) => {
         {/* Sidebar content - hide when collapsed */}
         <div className={`transition-opacity duration-300 ${sidebarOpen ? 'lg:opacity-100' : 'lg:opacity-0 lg:hidden'}`}>
           <nav className="mt-8 px-4">
-            <ul className="space-y-2">
+            <ul className="space-y-1">
               {navigation.map((item) => (
                 <li key={item.name}>
                   <Link
@@ -211,7 +222,7 @@ const Layout = ({ children }: LayoutProps) => {
                       }
                     }}
                     className={`
-                      group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors
+                      group flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors
                       ${item.current
                         ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 border-l-4 border-green-600 dark:border-green-400'
                         : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
@@ -227,11 +238,21 @@ const Layout = ({ children }: LayoutProps) => {
           </nav>
 
           <div className="absolute bottom-0 left-0 right-0 p-4">
-            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 mb-3">
               <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Logged in as</div>
               <div className="text-sm font-medium text-gray-900 dark:text-white">{user.name}</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">{user.role}</div>
+              {/*<div className="text-xs text-gray-500 dark:text-gray-400">{user.role}</div>*/}
             </div>
+            <button
+              onClick={() => {
+                logout();
+                setSidebarOpen(false);
+              }}
+              className="w-full flex items-center justify-center space-x-2 px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors duration-200 text-sm font-medium"
+            >
+              <span>🚪</span>
+              <span>Logout</span>
+            </button>
           </div>
         </div>
       </div>
@@ -245,7 +266,7 @@ const Layout = ({ children }: LayoutProps) => {
               {/* Mobile menu button */}
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="sidebar-toggle-button lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 ☰
               </button>
@@ -253,7 +274,7 @@ const Layout = ({ children }: LayoutProps) => {
               {/* Desktop menu button */}
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="hidden lg:block p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="sidebar-toggle-button hidden lg:block p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
                 title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
               >
                 {sidebarOpen ? '◀' : '☰'}
@@ -395,15 +416,6 @@ const Layout = ({ children }: LayoutProps) => {
                             ⚙️ Settings
                           </Link>
                         )}
-                        <button
-                          onClick={() => {
-                            logout();
-                            setProfileDropdownOpen(false);
-                          }}
-                          className="block w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700"
-                        >
-                          🚪 Logout
-                        </button>
                       </div>
                     </div>
                   )}
