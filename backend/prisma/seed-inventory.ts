@@ -67,15 +67,10 @@ const SYSTEM_PRESET_CATEGORIES = [
 // 🌾 SOLE SYSTEM PRESET - Nigerian Mixed Farm Inventory Items
 // This is the only preset system for TrackFarmOps application
 const SYSTEM_PRESET_ITEMS = [
-  // Livestock (8 items)
+  // Livestock (3 items)
   { name: 'Broiler Chickens', type: 'LIVESTOCK', unit: 'pieces', categoryId: 1, quantity: 50 },
   { name: 'Layer Chickens', type: 'LIVESTOCK', unit: 'pieces', categoryId: 1, quantity: 30 },
   { name: 'Goats', type: 'LIVESTOCK', unit: 'pieces', categoryId: 1, quantity: 15 },
-  { name: 'Local Chickens', type: 'LIVESTOCK', unit: 'pieces', categoryId: 1, quantity: 25 },
-  { name: 'Turkeys', type: 'LIVESTOCK', unit: 'pieces', categoryId: 1, quantity: 10 },
-  { name: 'Rabbits', type: 'LIVESTOCK', unit: 'pieces', categoryId: 1, quantity: 20 },
-  { name: 'Guinea Fowls', type: 'LIVESTOCK', unit: 'pieces', categoryId: 1, quantity: 12 },
-  { name: 'Ducks', type: 'LIVESTOCK', unit: 'pieces', categoryId: 1, quantity: 8 },
   
   // Feed & Nutrition (6 items)
   { name: 'Broiler Feed', type: 'CONSUMABLES', unit: 'kg', categoryId: 2, quantity: 100 },
@@ -119,20 +114,14 @@ const SYSTEM_PRESET_ITEMS = [
   { name: 'Lime', type: 'CONSUMABLES', unit: 'kg', categoryId: 6, quantity: 30 },
   { name: 'Organic Fertilizer', type: 'CONSUMABLES', unit: 'kg', categoryId: 6, quantity: 20 },
   
-  // Harvested Produce (5 items)
+  // Harvested Produce (4 items)
   { name: 'Fresh Tomatoes', type: 'PRODUCE', unit: 'kg', categoryId: 7, quantity: 60 },
   { name: 'Fresh Peppers', type: 'PRODUCE', unit: 'kg', categoryId: 7, quantity: 40 },
   { name: 'Fresh Leafy Vegetables', type: 'PRODUCE', unit: 'bunches', categoryId: 7, quantity: 25 },
   { name: 'Fresh Maize', type: 'PRODUCE', unit: 'kg', categoryId: 7, quantity: 80 },
-  { name: 'Fresh Eggs', type: 'PRODUCE', unit: 'pieces', categoryId: 7, quantity: 100 },
   
-  // Animal Products (6 items)
-  { name: 'Farm Eggs', type: 'PRODUCE', unit: 'crates', categoryId: 8, quantity: 50 },
-  { name: 'Fresh Milk', type: 'PRODUCE', unit: 'liters', categoryId: 8, quantity: 20 },
-  { name: 'Chicken Meat', type: 'PRODUCE', unit: 'kg', categoryId: 8, quantity: 30 },
-  { name: 'Goat Meat', type: 'PRODUCE', unit: 'kg', categoryId: 8, quantity: 15 },
-  { name: 'Cheese', type: 'PRODUCE', unit: 'kg', categoryId: 8, quantity: 10 },
-  { name: 'Yogurt', type: 'PRODUCE', unit: 'liters', categoryId: 8, quantity: 5 }
+  // Animal Products (1 item)
+  { name: 'Farm Eggs', type: 'PRODUCE', unit: 'crates', categoryId: 8, quantity: 50 }
 ];
 
 async function seedSystemInventoryForOrganization(organizationId: number) {
