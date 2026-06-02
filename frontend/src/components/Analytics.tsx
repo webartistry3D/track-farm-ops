@@ -52,7 +52,7 @@ interface InventorySummary {
 const Analytics = () => {
   const { user } = useAuth();
 
-  // Check if user has appropriate role
+  // Check f user has appropriate role
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
