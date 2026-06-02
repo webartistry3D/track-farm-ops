@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import { createActivityNotification, NotificationActivityType, formatNotificationMessage } from '../utils/notificationHelper';
 
 const prisma = new PrismaClient();
 
@@ -77,6 +78,20 @@ export const createLivestock = async (req: Request, res: Response) => {
       }
     });
 
+    // Send notification to owner/managers
+    await createActivityNotification(
+      NotificationActivityType.LIVESTOCK_CREATED,
+      user.id,
+      organizationId,
+      {
+        title: 'New Livestock Added',
+        message: formatNotificationMessage(NotificationActivityType.LIVESTOCK_CREATED, user.name, name),
+        relatedEntity: 'livestock',
+        relatedEntityId: livestock.id,
+        metadata: { species, breed, tagId }
+      }
+    );
+
     res.status(201).json(livestock);
   } catch (error: any) {
     console.error('Error creating livestock:', error);
@@ -150,6 +165,20 @@ export const updateLivestock = async (req: Request, res: Response) => {
         ...(notes !== undefined && { notes })
       }
     });
+
+    // Send notification to owner/managers
+    await createActivityNotification(
+      NotificationActivityType.LIVESTOCK_UPDATED,
+      user.id,
+      organizationId,
+      {
+        title: 'Livestock Updated',
+        message: formatNotificationMessage(NotificationActivityType.LIVESTOCK_UPDATED, user.name, livestock.name),
+        relatedEntity: 'livestock',
+        relatedEntityId: livestock.id,
+        metadata: { species: livestock.species, breed: livestock.breed, tagId: livestock.tagId }
+      }
+    );
 
     res.json(livestock);
   } catch (error: any) {
@@ -284,6 +313,20 @@ export const createHealthRecord = async (req: Request, res: Response) => {
       });
     }
 
+    // Send notification to owner/managers
+    await createActivityNotification(
+      NotificationActivityType.HEALTH_RECORD_CREATED,
+      user.id,
+      organizationId,
+      {
+        title: 'Health Record Created',
+        message: formatNotificationMessage(NotificationActivityType.HEALTH_RECORD_CREATED, user.name, livestock.name),
+        relatedEntity: 'health_record',
+        relatedEntityId: healthRecord.id,
+        metadata: { recordType, veterinarian, livestockId: parseInt(livestockId) }
+      }
+    );
+
     res.status(201).json(healthRecord);
   } catch (error: any) {
     console.error('Error creating health record:', error);
@@ -362,6 +405,20 @@ export const createVaccination = async (req: Request, res: Response) => {
         organizationId
       }
     });
+
+    // Send notification to owner/managers
+    await createActivityNotification(
+      NotificationActivityType.VACCINATION_CREATED,
+      user.id,
+      organizationId,
+      {
+        title: 'Vaccination Recorded',
+        message: formatNotificationMessage(NotificationActivityType.VACCINATION_CREATED, user.name, livestock.name),
+        relatedEntity: 'vaccination',
+        relatedEntityId: vaccination.id,
+        metadata: { vaccineName, vaccineType, veterinarian, livestockId: parseInt(livestockId) }
+      }
+    );
 
     res.status(201).json(vaccination);
   } catch (error: any) {

@@ -12,6 +12,10 @@ export enum NotificationActivityType {
   INVENTORY_UPDATED = 'INVENTORY_UPDATED',
   ASSET_CREATED = 'ASSET_CREATED',
   ASSET_UPDATED = 'ASSET_UPDATED',
+  LIVESTOCK_CREATED = 'LIVESTOCK_CREATED',
+  LIVESTOCK_UPDATED = 'LIVESTOCK_UPDATED',
+  HEALTH_RECORD_CREATED = 'HEALTH_RECORD_CREATED',
+  VACCINATION_CREATED = 'VACCINATION_CREATED',
 }
 
 /**
@@ -49,27 +53,45 @@ export async function createActivityNotification(
     let recipientIds: number[] = [];
 
     if (actor.role === 'WORKER') {
-      // Worker actions: Notify all managers and owner
+      // Worker actions: Notify all managers, owner, veterinarian, and inventory manager
       const managersAndOwner = await prisma.user.findMany({
         where: {
           organizationId,
-          role: { in: ['MANAGER', 'OWNER'] }
+          role: { in: ['MANAGER', 'OWNER', 'VETERINARIAN', 'INVENTORY'] }
         },
         select: { id: true }
       });
       recipientIds = managersAndOwner.map(u => u.id);
     } else if (actor.role === 'MANAGER') {
-      // Manager actions: Notify only the owner
-      const owner = await prisma.user.findFirst({
+      // Manager actions: Notify owner, veterinarian, and inventory manager
+      const ownerAndSpecialists = await prisma.user.findMany({
         where: {
           organizationId,
-          role: 'OWNER'
+          role: { in: ['OWNER', 'VETERINARIAN', 'INVENTORY'] }
         },
         select: { id: true }
       });
-      if (owner) {
-        recipientIds = [owner.id];
-      }
+      recipientIds = ownerAndSpecialists.map(u => u.id);
+    } else if (actor.role === 'VETERINARIAN') {
+      // Veterinarian actions: Notify owner and manager
+      const ownerAndManager = await prisma.user.findMany({
+        where: {
+          organizationId,
+          role: { in: ['OWNER', 'MANAGER'] }
+        },
+        select: { id: true }
+      });
+      recipientIds = ownerAndManager.map(u => u.id);
+    } else if (actor.role === 'INVENTORY') {
+      // Inventory manager actions: Notify owner and manager
+      const ownerAndManager = await prisma.user.findMany({
+        where: {
+          organizationId,
+          role: { in: ['OWNER', 'MANAGER'] }
+        },
+        select: { id: true }
+      });
+      recipientIds = ownerAndManager.map(u => u.id);
     } else if (actor.role === 'OWNER') {
       // Owner actions: No notifications needed (owner is the top level)
       return;
@@ -120,6 +142,11 @@ function mapActivityToNotificationType(activityType: NotificationActivityType): 
     case NotificationActivityType.ASSET_CREATED:
     case NotificationActivityType.ASSET_UPDATED:
       return 'INFO';
+    case NotificationActivityType.LIVESTOCK_CREATED:
+    case NotificationActivityType.LIVESTOCK_UPDATED:
+    case NotificationActivityType.HEALTH_RECORD_CREATED:
+    case NotificationActivityType.VACCINATION_CREATED:
+      return 'INFO';
     default:
       return 'INFO';
   }
@@ -153,6 +180,14 @@ export function formatNotificationMessage(
       return `${actorName} added new asset: ${entityName}`;
     case NotificationActivityType.ASSET_UPDATED:
       return `${actorName} updated asset: ${entityName}`;
+    case NotificationActivityType.LIVESTOCK_CREATED:
+      return `${actorName} added new livestock: ${entityName}`;
+    case NotificationActivityType.LIVESTOCK_UPDATED:
+      return `${actorName} updated livestock: ${entityName}`;
+    case NotificationActivityType.HEALTH_RECORD_CREATED:
+      return `${actorName} created health record for ${entityName}`;
+    case NotificationActivityType.VACCINATION_CREATED:
+      return `${actorName} recorded vaccination for ${entityName}`;
     default:
       return `${actorName} ${action} ${entityName}`;
   }
