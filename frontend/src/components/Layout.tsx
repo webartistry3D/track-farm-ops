@@ -150,20 +150,23 @@ const Layout = ({ children }: LayoutProps) => {
   }, [profileDropdownOpen, notificationsOpen, user]); // Removed logout dependency since it's disabled
 
   const allNavigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: '📊', current: location.pathname === '/dashboard', restricted: false },
-    { name: 'Income', href: '/income', icon: '💰', current: location.pathname === '/income', restricted: false },
-    { name: 'Expenses', href: '/expenses', icon: '💳', current: location.pathname === '/expenses', restricted: false },
-    { name: 'Inventory', href: '/inventory', icon: '📦', current: location.pathname === '/inventory', feature: 'inventoryTransactions' as const, restricted: true },
-    { name: 'Assets', href: '/assets', icon: '🚜', current: location.pathname === '/assets', feature: 'inventoryTransactions' as const, restricted: true },
-    { name: 'CCTV', href: '/cctv', icon: '📹', current: location.pathname === '/cctv', feature: 'inventoryTransactions' as const, restricted: true },
-    { name: 'Livestock Health', href: '/livestock-health', icon: '🐄', current: location.pathname === '/livestock-health', feature: 'inventoryTransactions' as const, restricted: true },
-    { name: 'Analytics', href: '/analytics', icon: '📊', current: location.pathname === '/analytics', feature: 'analytics' as const, restricted: true },
-    { name: 'Reports', href: '/reports', icon: '📈', current: location.pathname === '/reports', feature: 'financialReports' as const, restricted: true },
+    { name: 'Dashboard', href: '/dashboard', icon: '📊', current: location.pathname === '/dashboard', restricted: false, allowedRoles: ['OWNER', 'MANAGER', 'WORKER', 'ACCOUNTANT'] },
+    { name: 'Income', href: '/income', icon: '💰', current: location.pathname === '/income', restricted: false, allowedRoles: ['OWNER', 'MANAGER', 'WORKER', 'ACCOUNTANT'] },
+    { name: 'Expenses', href: '/expenses', icon: '💳', current: location.pathname === '/expenses', restricted: false, allowedRoles: ['OWNER', 'MANAGER', 'WORKER', 'ACCOUNTANT'] },
+    { name: 'Inventory', href: '/inventory', icon: '📦', current: location.pathname === '/inventory', feature: 'inventoryTransactions' as const, restricted: true, allowedRoles: ['OWNER', 'MANAGER', 'ACCOUNTANT', 'INVENTORY'] },
+    { name: 'Assets', href: '/assets', icon: '🚜', current: location.pathname === '/assets', feature: 'inventoryTransactions' as const, restricted: true, allowedRoles: ['OWNER', 'MANAGER', 'ACCOUNTANT', 'INVENTORY'] },
+    { name: 'CCTV', href: '/cctv', icon: '📹', current: location.pathname === '/cctv', feature: 'inventoryTransactions' as const, restricted: true, allowedRoles: ['OWNER', 'MANAGER', 'ACCOUNTANT', 'INVENTORY'] },
+    { name: 'Livestock Health', href: '/livestock-health', icon: '🐄', current: location.pathname === '/livestock-health', feature: 'inventoryTransactions' as const, restricted: true, allowedRoles: ['OWNER', 'MANAGER', 'VETERINARIAN'] },
+    { name: 'Analytics', href: '/analytics', icon: '📊', current: location.pathname === '/analytics', feature: 'analytics' as const, restricted: true, allowedRoles: ['OWNER', 'MANAGER', 'ACCOUNTANT'] },
+    { name: 'Reports', href: '/reports', icon: '📈', current: location.pathname === '/reports', feature: 'financialReports' as const, restricted: true, allowedRoles: ['OWNER', 'ACCOUNTANT'] },
   ];
 
-  // Show all navigation items to all users (including freemium and workers)
-  // Restrictions will be handled at the page level with upgrade prompts
-  const navigation = allNavigation;
+  // Filter navigation based on user role
+  const navigation = allNavigation.filter(item => {
+    if (!user) return false;
+    if (!item.allowedRoles) return true;
+    return item.allowedRoles.includes(user.role);
+  });
 
   const isAdmin = user ? (user.role === 'OWNER' || user.role === 'MANAGER' || user.role === 'ACCOUNTANT' || user.role === 'INVENTORY' || user.role === 'VETERINARIAN') : false;
 

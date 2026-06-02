@@ -15,7 +15,7 @@ export const formatCurrency = (
   }
   
   // Convert to number for calculation
-  const numValue = typeof value === 'string' ? parseFloat(value.replace(/[^0-9.]/g, '')) : value;
+  const numValue = typeof value === 'string' ? parseFloat(value.replace(/[^0-9.-]/g, '')) : value;
   
   // Handle invalid numbers
   if (isNaN(numValue)) {

@@ -1961,7 +1961,7 @@ Generated on: ${new Date().toLocaleString()}
                 <Table className="h-4 w-4" />
                 Invoice Records
               </button>
-              {!isManager && (
+              {!isManager && user.role !== 'WORKER' && (
                 <>
                   <button
                     onClick={() => handleTabChange('records')}

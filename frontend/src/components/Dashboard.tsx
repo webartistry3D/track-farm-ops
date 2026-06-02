@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
 import { formatCurrency } from '../utils/currency';
-import { TrendingUp, ShoppingCart, Calculator } from 'lucide-react';
+import { TrendingUp, TrendingDown, ShoppingCart, Calculator } from 'lucide-react';
 import { 
   DashboardSkeleton
 } from './EnhancedSkeletons';
@@ -219,10 +219,11 @@ const Dashboard = () => {
   }
 
   const isOwner = user.role === 'OWNER' || user.role === 'ACCOUNTANT' || user.role === 'VETERINARIAN';
+  const canViewFinancials = user.role === 'OWNER' || user.role === 'ACCOUNTANT';
   const netProfit = todayIncome - todayExpenses;
 
-  // MANAGER and INVENTORY role restriction - no access to Dashboard
-  if (user.role === 'MANAGER' || user.role === 'INVENTORY') {
+  // INVENTORY role restriction - no access to Dashboard
+  if (user.role === 'INVENTORY') {
     return (
       <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 rounded-lg p-6">
         <h3 className="text-lg font-medium text-yellow-900 mb-2">Access Restricted</h3>
@@ -250,7 +251,7 @@ const Dashboard = () => {
         </p>
       </div>
 
-      {isOwner && (
+      {canViewFinancials && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div 
             onClick={() => navigate('/income')}
@@ -407,7 +408,7 @@ const Dashboard = () => {
                     netProfit >= 0 ? 'from-green-500 to-green-600 dark:from-green-600 dark:to-green-700' : 
                     'from-red-500 to-red-600 dark:from-red-600 dark:to-red-700'
                 } rounded-lg shadow-lg`}>
-                  {netProfit >= 0 ? <TrendingUp className="h-4 w-4 text-white" /> : <TrendingUp className="h-4 w-4 text-white" />}
+                  {netProfit >= 0 ? <TrendingUp className="h-4 w-4 text-white" /> : <TrendingDown className="h-4 w-4 text-white" />}
                 </div>
               </div>
             </div>

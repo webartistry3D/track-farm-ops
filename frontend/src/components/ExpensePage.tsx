@@ -487,7 +487,7 @@ const ExpensePage = () => {
                 <Plus className="h-4 w-4" />
                 Record Farm Expense
               </button>
-              {!isManager && (
+              {!isManager && user.role !== 'WORKER' && (
                 <button
                   onClick={() => handleTabChange('records')}
                   className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${

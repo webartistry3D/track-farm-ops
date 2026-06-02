@@ -454,13 +454,15 @@ const LivestockHealth = () => {
               <option value="recovery">Recovery</option>
               <option value="critical">Critical</option>
             </select>
-            <button
-              onClick={() => setShowAddLivestockModal(true)}
-              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2"
-            >
-              <Plus className="h-4 w-4" />
-              Add Livestock
-            </button>
+            {user.role === 'OWNER' && (
+              <button
+                onClick={() => setShowAddLivestockModal(true)}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2"
+              >
+                <Plus className="h-4 w-4" />
+                Add Livestock
+              </button>
+            )}
           </div>
 
           {/* Livestock Grid */}
@@ -538,15 +540,17 @@ const LivestockHealth = () => {
       {/* Health Records Tab */}
       {activeTab === 'healthRecords' && (
         <div>
-          <div className="mb-6 flex justify-end">
-            <button
-              onClick={() => setShowAddHealthRecordModal(true)}
-              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2"
-            >
-              <Plus className="h-4 w-4" />
-              Add Health Record
-            </button>
-          </div>
+          {user.role === 'OWNER' && (
+            <div className="mb-6 flex justify-end">
+              <button
+                onClick={() => setShowAddHealthRecordModal(true)}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2"
+              >
+                <Plus className="h-4 w-4" />
+                Add Health Record
+              </button>
+            </div>
+          )}
 
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-x-auto">
             <table className="w-full min-w-[600px]">
@@ -595,15 +599,17 @@ const LivestockHealth = () => {
       {/* Vaccinations Tab */}
       {activeTab === 'vaccinations' && (
         <div>
-          <div className="mb-6 flex justify-end">
-            <button
-              onClick={() => setShowAddVaccinationModal(true)}
-              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2"
-            >
-              <Plus className="h-4 w-4" />
-              Add Vaccination
-            </button>
-          </div>
+          {user.role === 'OWNER' && (
+            <div className="mb-6 flex justify-end">
+              <button
+                onClick={() => setShowAddVaccinationModal(true)}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2"
+              >
+                <Plus className="h-4 w-4" />
+                Add Vaccination
+              </button>
+            </div>
+          )}
 
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-x-auto">
             <table className="w-full min-w-[600px]">
