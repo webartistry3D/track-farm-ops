@@ -17,7 +17,6 @@ import {
   Calendar,
   Target,
   Zap,
-  RefreshCw,
   Sprout,
   Droplets,
   Sun,
