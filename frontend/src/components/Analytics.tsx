@@ -591,8 +591,8 @@ const Analytics = () => {
       <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-0 py-0">
         {/* Key Performance Indicators */}
         <div className="mb-8">
-          <div className="flex items-center justify-between mb-1">
-            {/*<h2 className="text-2xl font-bold text-gray-900 dark:text-white">Performance Dashboard</h2>*/}
+          {/*<div className="flex items-center justify-between mb-1">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Performance Dashboard</h2>
             <div className="flex items-center space-x-2">
               <span className="text-sm text-gray-500 dark:text-gray-400">
                 {getDateFilterLabel()}
@@ -605,7 +605,7 @@ const Analytics = () => {
                 Refresh
               </button>
             </div>
-          </div>
+          </div>*/}
           
           {/* KPI Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">

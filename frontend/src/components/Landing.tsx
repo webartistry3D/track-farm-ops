@@ -179,7 +179,7 @@ const Landing = () => {
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-24 w-full relative z-10">
           <div className="text-center">
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-poppins font-bold text-white mb-4 sm:mb-6 relative leading-tight">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-jetbrains-mono font-bold text-white mb-4 sm:mb-6 relative leading-tight">
               {words.map((word, index) => (
                 <span
                   key={index}
@@ -346,7 +346,7 @@ const Landing = () => {
               ? 'opacity-100 translate-y-0'
               : 'opacity-0 translate-y-16'
           }`}>
-            <h2 className="text-3xl md:text-4xl font-poppins font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-jetbrains-mono font-bold text-gray-900 mb-4">
               Everything You Need to Manage Your Farm
             </h2>
           </div>
@@ -365,7 +365,7 @@ const Landing = () => {
                 className="w-full h-68 object-cover"
               />
               {/*<div className="p-6">
-                <h3 className="text-lg font-poppins font-semibold text-gray-900 mb-2">
+                <h3 className="text-lg font-jetbrains-mono font-semibold text-gray-900 mb-2">
                   Complete Farm Management
                 </h3>
                 <p className="font-inter text-gray-600">
@@ -388,7 +388,7 @@ const Landing = () => {
                 className="w-full h-66 object-cover"
               />
               {/*<div className="p-6">
-                <h3 className="text-lg font-poppins font-semibold text-gray-900 mb-2">
+                <h3 className="text-lg font-jetbrains-mono font-semibold text-gray-900 mb-2">
                   Real-Time Analytics
                 </h3>
                 <p className="font-inter text-gray-600">
@@ -429,7 +429,7 @@ const Landing = () => {
               ? 'opacity-100 translate-y-0'
               : 'opacity-0 translate-y-16'
           }`}>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-poppins font-bold text-green-600 mb-4 bg-green-100 px-4 py-2 rounded-lg inline-block">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-jetbrains-mono font-bold text-green-600 mb-4 bg-green-100 px-4 py-2 rounded-lg inline-block">
               Features
             </h2>
           </div>
@@ -443,7 +443,7 @@ const Landing = () => {
               transitionDelay: visibleSections.has('features') ? '200ms' : '0ms'
             }}>
               <div className="text-4xl mb-4">₦</div>
-              <h3 className="text-lg font-poppins font-semibold text-gray-900 mb-2">Income & Expense Tracker</h3>
+              <h3 className="text-lg font-jetbrains-mono font-semibold text-gray-900 mb-2">Income & Expense Tracker</h3>
               <p className="font-inter text-gray-600">
                 Record daily income and expenses.<br></br>Create and track invoices.<br></br>Upload receipts.<br></br>Generate detailed financial reports.
               </p>
@@ -457,7 +457,7 @@ const Landing = () => {
               transitionDelay: visibleSections.has('features') ? '400ms' : '0ms'
             }}>
               <div className="text-4xl mb-4">📦</div>
-              <h3 className="text-lg font-poppins font-semibold text-gray-900 mb-2">Inventory & Assets Manager</h3>
+              <h3 className="text-lg font-jetbrains-mono font-semibold text-gray-900 mb-2">Inventory & Assets Manager</h3>
               <p className="font-inter text-gray-600">
                 Track livestock, feed, and produce with real-time inventory updates and low stock alerts. Monitor equipment maintenance schedules, and manage farm supplies efficiently. Get automated notifications for reordering and optimize your farm resource allocation.
               </p>
@@ -471,7 +471,7 @@ const Landing = () => {
               transitionDelay: visibleSections.has('features') ? '600ms' : '0ms'
             }}>
               <div className="text-4xl mb-4">📊</div>
-              <h3 className="text-lg font-poppins font-semibold text-gray-900 mb-2">Analytics & Reports</h3>
+              <h3 className="text-lg font-jetbrains-mono font-semibold text-gray-900 mb-2">Analytics & Reports</h3>
               <p className="font-inter text-gray-600">
                 Comprehensive dashboards and reports to monitor farm performance from anywhere. Track key metrics, analyze trends, and make data-driven decisions with real-time insights. Generate custom reports, export data, and visualize your farm's success with interactive charts and graphs.
               </p>
@@ -485,7 +485,7 @@ const Landing = () => {
               transitionDelay: visibleSections.has('features') ? '600ms' : '0ms'
             }}>
               <div className="text-4xl mb-4">👥</div>
-              <h3 className="text-lg font-poppins font-semibold text-gray-900 mb-2">Multi-User Access</h3>
+              <h3 className="text-lg font-jetbrains-mono font-semibold text-gray-900 mb-2">Multi-User Access</h3>
               <p className="font-inter text-gray-600">
                 Authentication-based access control for owners, managers, workers, accountants, inventory managers, and veterinarians. Assign specific permissions and roles, manage user access levels, and ensure data security with encrypted authentication. Monitor user activity and maintain complete control over who can view, edit, and manage different aspects of your farm operations.
               </p>
@@ -499,7 +499,7 @@ const Landing = () => {
               transitionDelay: visibleSections.has('features') ? '800ms' : '0ms'
             }}>
               <div className="text-4xl mb-4">📱</div>
-              <h3 className="text-lg font-poppins font-semibold text-gray-900 mb-2">Mobile Optimized</h3>
+              <h3 className="text-lg font-jetbrains-mono font-semibold text-gray-900 mb-2">Mobile Optimized</h3>
               <p className="font-inter text-gray-600">
                 Works perfectly on low-end Android phones with poor internet connectivity. Optimized for minimal data usage and offline functionality with automatic sync when connection is restored. Fast loading times and responsive design ensure smooth operation even on basic smartphones and unstable networks.
               </p>
@@ -513,7 +513,7 @@ const Landing = () => {
               transitionDelay: visibleSections.has('features') ? '1000ms' : '0ms'
             }}>
               <div className="text-4xl mb-4">🔒</div>
-              <h3 className="text-lg font-poppins font-semibold text-gray-900 mb-2">Secure & Reliable</h3>
+              <h3 className="text-lg font-jetbrains-mono font-semibold text-gray-900 mb-2">Secure & Reliable</h3>
               <p className="font-inter text-gray-600">
                 Bank-level security with HTTPS and AES-256 encryption for secure data storage and backups. Regular security audits, secure data centers, and compliance with international data protection standards ensure your farm information remains confidential and protected at all times.
               </p>
@@ -603,7 +603,7 @@ const Landing = () => {
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-16'
             }`}>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-poppins font-bold text-green-600 mb-4 bg-green-100 px-4 py-2 rounded-lg inline-block">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-jetbrains-mono font-bold text-green-600 mb-4 bg-green-100 px-4 py-2 rounded-lg inline-block">
                 How It Works
               </h2>
               {/*<p className="text-lg text-white text-opacity-90 max-w-3xl mx-auto">
@@ -622,10 +622,10 @@ const Landing = () => {
               }}>
                 <div className="bg-transparent p-6">
                   <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-2xl font-poppins font-bold text-green-600">1</span>
+                    <span className="text-2xl font-jetbrains-mono font-bold text-green-600">1</span>
                   </div>
                   <div className="bg-green-100 rounded-lg px-4 py-3 shadow-lg">
-                    <h3 className="text-xl font-poppins font-semibold text-green-600 mb-2">Sign Up</h3>
+                    <h3 className="text-xl font-jetbrains-mono font-semibold text-green-600 mb-2">Sign Up</h3>
                     <p className="text-green-600">Create an account to set up your farm profile in seconds.</p>
                   </div>
                 </div>
@@ -640,10 +640,10 @@ const Landing = () => {
               }}>
                 <div className="bg-transparent p-6">
                   <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-2xl font-poppins font-bold text-green-600">2</span>
+                    <span className="text-2xl font-jetbrains-mono font-bold text-green-600">2</span>
                   </div>
                   <div className="bg-green-100 rounded-lg px-4 py-3 shadow-lg">
-                    <h3 className="text-xl font-poppins font-semibold text-green-600 mb-2">Add Workers</h3>
+                    <h3 className="text-xl font-jetbrains-mono font-semibold text-green-600 mb-2">Add Workers</h3>
                     <p className="text-green-600">Add your farm workers and assign roles and responsibilities.</p>
                   </div>
                 </div>
@@ -658,10 +658,10 @@ const Landing = () => {
               }}>
                 <div className="bg-transparent p-6">
                   <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-2xl font-poppins font-bold text-green-600">3</span>
+                    <span className="text-2xl font-jetbrains-mono font-bold text-green-600">3</span>
                   </div>
                   <div className="bg-green-100 rounded-lg px-4 py-3 shadow-lg">
-                    <h3 className="text-xl font-poppins font-semibold text-green-600 mb-2">Start Managing</h3>
+                    <h3 className="text-xl font-jetbrains-mono font-semibold text-green-600 mb-2">Start Managing</h3>
                     <p className="text-green-600">Begin tracking operations, assets, and optimizing your farm workflow.</p>
                   </div>
                 </div>
@@ -702,7 +702,7 @@ const Landing = () => {
               ? 'opacity-100 translate-y-0'
               : 'opacity-0 translate-y-16'
           }`}>
-            <h2 className="text-3xl md:text-4xl font-poppins font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-jetbrains-mono font-bold text-gray-900 mb-4">
               Benefits of TrackFarmOps
             </h2>
           </div>
@@ -719,7 +719,7 @@ const Landing = () => {
               transitionDelay: visibleSections.has('benefits') ? '200ms' : '0ms'
             }}>
               <div className="text-green-600 text-4xl mb-4">🎯</div>
-              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-4">Increase Profitability</h3>
+              <h3 className="text-xl font-jetbrains-mono font-semibold text-gray-900 mb-4">Increase Profitability</h3>
               <p className="font-inter text-gray-600 leading-relaxed">
                 Track expenses and income in real-time to identify cost-saving opportunities. Our analytics help you make data-driven decisions that boost your farm's bottom line by up to 30%.
               </p>
@@ -733,7 +733,7 @@ const Landing = () => {
               transitionDelay: visibleSections.has('benefits') ? '400ms' : '0ms'
             }}>
               <div className="text-blue-600 text-4xl mb-4">📊</div>
-              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-4">Smart Analytics</h3>
+              <h3 className="text-xl font-jetbrains-mono font-semibold text-gray-900 mb-4">Smart Analytics</h3>
               <p className="font-inter text-gray-600 leading-relaxed">
                 Get detailed insights into your farm operations with customizable reports and dashboards. Monitor crop performance, livestock health, and financial trends all in one place.
               </p>
@@ -747,7 +747,7 @@ const Landing = () => {
               transitionDelay: visibleSections.has('benefits') ? '600ms' : '0ms'
             }}>
               <div className="text-purple-600 text-4xl mb-4">📱</div>
-              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-4">Mobile First</h3>
+              <h3 className="text-xl font-jetbrains-mono font-semibold text-gray-900 mb-4">Mobile First</h3>
               <p className="font-inter text-gray-600 leading-relaxed">
                 Manage your farm from anywhere with our mobile-optimized app. Works perfectly on low-end Android phones even with poor internet connectivity.
               </p>
@@ -761,7 +761,7 @@ const Landing = () => {
               transitionDelay: visibleSections.has('benefits') ? '800ms' : '0ms'
             }}>
               <div className="text-orange-600 text-4xl mb-4">🔒</div>
-              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-4">Bank-Level Security</h3>
+              <h3 className="text-xl font-jetbrains-mono font-semibold text-gray-900 mb-4">Bank-Level Security</h3>
               <p className="font-inter text-gray-600 leading-relaxed">
                 Your farm data is protected with AES-256 encryption and secure backups. We comply with international data protection standards to keep your information safe.
               </p>
@@ -775,7 +775,7 @@ const Landing = () => {
               transitionDelay: visibleSections.has('benefits') ? '1000ms' : '0ms'
             }}>
               <div className="text-red-600 text-4xl mb-4">🌍</div>
-              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-4">Local Support</h3>
+              <h3 className="text-xl font-jetbrains-mono font-semibold text-gray-900 mb-4">Local Support</h3>
               <p className="font-inter text-gray-600 leading-relaxed">
                 Get dedicated support from our Nigerian team who understand local farming challenges. We're here to help you succeed 24/7 with local expertise.
               </p>
@@ -789,7 +789,7 @@ const Landing = () => {
               transitionDelay: visibleSections.has('benefits') ? '1200ms' : '0ms'
             }}>
               <div className="text-indigo-600 text-4xl mb-4">💰</div>
-              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-4">Affordable Pricing</h3>
+              <h3 className="text-xl font-jetbrains-mono font-semibold text-gray-900 mb-4">Affordable Pricing</h3>
               <p className="font-inter text-gray-600 leading-relaxed">
                 Flexible pricing plans designed for Nigerian farmers. Start with our free tier and scale as your farm grows. No hidden fees or surprises.
               </p>
@@ -803,7 +803,7 @@ const Landing = () => {
               transitionDelay: visibleSections.has('benefits') ? '1400ms' : '0ms'
             }}>
               <div className="text-teal-600 text-4xl mb-4">🚀</div>
-              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-4">Easy Onboarding</h3>
+              <h3 className="text-xl font-jetbrains-mono font-semibold text-gray-900 mb-4">Easy Onboarding</h3>
               <p className="font-inter text-gray-600 leading-relaxed">
                 Get started in minutes with our intuitive interface. No technical knowledge required - just sign up and start managing your farm like a pro.
               </p>
@@ -818,7 +818,7 @@ const Landing = () => {
       <div className="py-20 bg-gradient-to-br from-green-300 via-white to-orange-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-poppins font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-jetbrains-mono font-bold text-gray-900 mb-4">
               What Farmers Are Saying
             </h2>
             {/*<p className="text-lg text-gray-600 max-w-3xl mx-auto">
@@ -834,7 +834,7 @@ const Landing = () => {
                   <div className="flex items-center mb-4">
                     <img src="/Alex.jpg" alt="John Davis" className="w-12 h-12 rounded-full object-cover mr-4" />
                     <div>
-                      <h3 className="font-poppins font-semibold text-gray-900">John Davis</h3>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">John Davis</h3>
                       <p className="text-sm text-gray-600">Dairy Farm Owner</p>
                     </div>
                   </div>
@@ -854,7 +854,7 @@ const Landing = () => {
                   <div className="flex items-center mb-4">
                     <img src="/Sarah.jpg" alt="Sarah Miller" className="w-12 h-12 rounded-full object-cover mr-4" />
                     <div>
-                      <h3 className="font-poppins font-semibold text-gray-900">Sarah Miller</h3>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">Sarah Miller</h3>
                       <p className="text-sm text-gray-600">Crop Farmer</p>
                     </div>
                   </div>
@@ -874,7 +874,7 @@ const Landing = () => {
                   <div className="flex items-center mb-4">
                     <img src="/Ngozi.jpg" alt="Ngozi Okafor" className="w-12 h-12 rounded-full object-cover mr-4" />
                     <div>
-                      <h3 className="font-poppins font-semibold text-gray-900">Ngozi Okafor</h3>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">Ngozi Okafor</h3>
                       <p className="text-sm text-gray-600">Mixed Farm Owner</p>
                     </div>
                   </div>
@@ -897,7 +897,7 @@ const Landing = () => {
                   <div className="flex items-center mb-4">
                     <img src="/Alex.jpg" alt="John Davis" className="w-12 h-12 rounded-full object-cover mr-4" />
                     <div>
-                      <h3 className="font-poppins font-semibold text-gray-900">John Davis</h3>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">John Davis</h3>
                       <p className="text-sm text-gray-600">Dairy Farm Owner</p>
                     </div>
                   </div>
@@ -917,7 +917,7 @@ const Landing = () => {
                   <div className="flex items-center mb-4">
                     <img src="/Sarah.jpg" alt="Sarah Miller" className="w-12 h-12 rounded-full object-cover mr-4" />
                     <div>
-                      <h3 className="font-poppins font-semibold text-gray-900">Sarah Miller</h3>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">Sarah Miller</h3>
                       <p className="text-sm text-gray-600">Crop Farmer</p>
                     </div>
                   </div>
@@ -937,7 +937,7 @@ const Landing = () => {
                   <div className="flex items-center mb-4">
                     <img src="/Ngozi.jpg" alt="Alex Kumar" className="w-12 h-12 rounded-full object-cover mr-4" />
                     <div>
-                      <h3 className="font-poppins font-semibold text-gray-900">Alex Kumar</h3>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">Alex Kumar</h3>
                       <p className="text-sm text-gray-600">Mixed Farm Owner</p>
                     </div>
                   </div>
@@ -960,7 +960,7 @@ const Landing = () => {
                   <div className="flex items-center mb-4">
                     <img src="/Alex.jpg" alt="John Davis" className="w-12 h-12 rounded-full object-cover mr-4" />
                     <div>
-                      <h3 className="font-poppins font-semibold text-gray-900">John Davis</h3>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">John Davis</h3>
                       <p className="text-sm text-gray-600">Dairy Farm Owner</p>
                     </div>
                   </div>
@@ -980,7 +980,7 @@ const Landing = () => {
                   <div className="flex items-center mb-4">
                     <img src="/Sarah.jpg" alt="Sarah Miller" className="w-12 h-12 rounded-full object-cover mr-4" />
                     <div>
-                      <h3 className="font-poppins font-semibold text-gray-900">Sarah Miller</h3>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">Sarah Miller</h3>
                       <p className="text-sm text-gray-600">Crop Farmer</p>
                     </div>
                   </div>
@@ -1000,7 +1000,7 @@ const Landing = () => {
                   <div className="flex items-center mb-4">
                     <img src="/Ngozi.jpg" alt="Alex Kumar" className="w-12 h-12 rounded-full object-cover mr-4" />
                     <div>
-                      <h3 className="font-poppins font-semibold text-gray-900">Alex Kumar</h3>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">Alex Kumar</h3>
                       <p className="text-sm text-gray-600">Mixed Farm Owner</p>
                     </div>
                   </div>
@@ -1023,7 +1023,7 @@ const Landing = () => {
                   <div className="flex items-center mb-4">
                     <img src="/Alex.jpg" alt="John Davis" className="w-12 h-12 rounded-full object-cover mr-4" />
                     <div>
-                      <h3 className="font-poppins font-semibold text-gray-900">John Davis</h3>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">John Davis</h3>
                       <p className="text-sm text-gray-600">Dairy Farm Owner</p>
                     </div>
                   </div>
@@ -1043,7 +1043,7 @@ const Landing = () => {
                   <div className="flex items-center mb-4">
                     <img src="/Sarah.jpg" alt="Sarah Miller" className="w-12 h-12 rounded-full object-cover mr-4" />
                     <div>
-                      <h3 className="font-poppins font-semibold text-gray-900">Sarah Miller</h3>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">Sarah Miller</h3>
                       <p className="text-sm text-gray-600">Crop Farmer</p>
                     </div>
                   </div>
@@ -1063,7 +1063,7 @@ const Landing = () => {
                   <div className="flex items-center mb-4">
                     <img src="/Ngozi.jpg" alt="Alex Kumar" className="w-12 h-12 rounded-full object-cover mr-4" />
                     <div>
-                      <h3 className="font-poppins font-semibold text-gray-900">Alex Kumar</h3>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">Alex Kumar</h3>
                       <p className="text-sm text-gray-600">Mixed Farm Owner</p>
                     </div>
                   </div>

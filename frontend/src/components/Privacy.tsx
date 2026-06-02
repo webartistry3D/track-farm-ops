@@ -11,7 +11,7 @@ const Privacy = () => {
       <div className="bg-gradient-to-r from-green-600 to-green-700 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-poppins font-bold mb-4">
+            <h1 className="text-4xl md:text-5xl font-jetbrains-mono font-bold mb-4">
               Privacy Policy
             </h1>
             <p className="text-xl font-inter max-w-3xl mx-auto">
@@ -36,11 +36,11 @@ const Privacy = () => {
             </div>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-poppins font-semibold text-gray-900 mb-4">
+              <h2 className="text-2xl font-jetbrains-mono font-semibold text-gray-900 mb-4">
                 1. Information We Collect
               </h2>
               
-              <h3 className="text-xl font-poppins font-medium text-gray-800 mb-3">
+              <h3 className="text-xl font-jetbrains-mono font-medium text-gray-800 mb-3">
                 Personal Information
               </h3>
               <ul className="list-disc pl-6 space-y-2 text-gray-600 font-inter">
@@ -50,7 +50,7 @@ const Privacy = () => {
                 <li>Government identification (for verification)</li>
               </ul>
 
-              <h3 className="text-xl font-poppins font-medium text-gray-800 mb-3 mt-6">
+              <h3 className="text-xl font-jetbrains-mono font-medium text-gray-800 mb-3 mt-6">
                 Farm Data
               </h3>
               <ul className="list-disc pl-6 space-y-2 text-gray-600 font-inter">
@@ -61,7 +61,7 @@ const Privacy = () => {
                 <li>Operational activities and transactions</li>
               </ul>
 
-              <h3 className="text-xl font-poppins font-medium text-gray-800 mb-3 mt-6">
+              <h3 className="text-xl font-jetbrains-mono font-medium text-gray-800 mb-3 mt-6">
                 Technical Information
               </h3>
               <ul className="list-disc pl-6 space-y-2 text-gray-600 font-inter">
@@ -73,7 +73,7 @@ const Privacy = () => {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-poppins font-semibold text-gray-900 mb-4">
+              <h2 className="text-2xl font-jetbrains-mono font-semibold text-gray-900 mb-4">
                 2. How We Use Your Information
               </h2>
               <ul className="list-disc pl-6 space-y-2 text-gray-600 font-inter">
@@ -88,18 +88,18 @@ const Privacy = () => {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-poppins font-semibold text-gray-900 mb-4">
+              <h2 className="text-2xl font-jetbrains-mono font-semibold text-gray-900 mb-4">
                 3. Information Sharing
               </h2>
               
-              <h3 className="text-xl font-poppins font-medium text-gray-800 mb-3">
+              <h3 className="text-xl font-jetbrains-mono font-medium text-gray-800 mb-3">
                 We Do Not Sell Your Data
               </h3>
               <p className="text-gray-600 font-inter">
                 TrackFarmOps never sells your personal information or farm data to third parties. Your data is yours.
               </p>
 
-              <h3 className="text-xl font-poppins font-medium text-gray-800 mb-3 mt-6">
+              <h3 className="text-xl font-jetbrains-mono font-medium text-gray-800 mb-3 mt-6">
                 Limited Sharing
               </h3>
               <p className="text-gray-600 font-inter mb-4">
@@ -114,7 +114,7 @@ const Privacy = () => {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-poppins font-semibold text-gray-900 mb-4">
+              <h2 className="text-2xl font-jetbrains-mono font-semibold text-gray-900 mb-4">
                 4. Data Security
               </h2>
               <p className="text-gray-600 font-inter mb-4">
@@ -130,7 +130,7 @@ const Privacy = () => {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-poppins font-semibold text-gray-900 mb-4">
+              <h2 className="text-2xl font-jetbrains-mono font-semibold text-gray-900 mb-4">
                 5. Your Rights
               </h2>
               <p className="text-gray-600 font-inter mb-4">
@@ -146,7 +146,7 @@ const Privacy = () => {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-poppins font-semibold text-gray-900 mb-4">
+              <h2 className="text-2xl font-jetbrains-mono font-semibold text-gray-900 mb-4">
                 6. Data Retention
               </h2>
               <p className="text-gray-600 font-inter">
@@ -156,7 +156,7 @@ const Privacy = () => {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-poppins font-semibold text-gray-900 mb-4">
+              <h2 className="text-2xl font-jetbrains-mono font-semibold text-gray-900 mb-4">
                 7. Cookies and Tracking
               </h2>
               <p className="text-gray-600 font-inter mb-4">
@@ -171,7 +171,7 @@ const Privacy = () => {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-poppins font-semibold text-gray-900 mb-4">
+              <h2 className="text-2xl font-jetbrains-mono font-semibold text-gray-900 mb-4">
                 8. Children's Privacy
               </h2>
               <p className="text-gray-600 font-inter">
@@ -182,7 +182,7 @@ const Privacy = () => {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-poppins font-semibold text-gray-900 mb-4">
+              <h2 className="text-2xl font-jetbrains-mono font-semibold text-gray-900 mb-4">
                 9. International Data Transfers
               </h2>
               <p className="text-gray-600 font-inter">
@@ -192,7 +192,7 @@ const Privacy = () => {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-poppins font-semibold text-gray-900 mb-4">
+              <h2 className="text-2xl font-jetbrains-mono font-semibold text-gray-900 mb-4">
                 10. Changes to This Policy
               </h2>
               <p className="text-gray-600 font-inter">
@@ -202,7 +202,7 @@ const Privacy = () => {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-poppins font-semibold text-gray-900 mb-4">
+              <h2 className="text-2xl font-jetbrains-mono font-semibold text-gray-900 mb-4">
                 11. Contact Us
               </h2>
               <p className="text-gray-600 font-inter mb-4">

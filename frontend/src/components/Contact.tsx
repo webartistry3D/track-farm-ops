@@ -53,7 +53,7 @@ const Contact = () => {
       {/*<div className="bg-gradient-to-r from-green-600 to-green-700 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-poppins font-bold mb-4">
+            <h1 className="text-4xl md:text-5xl font-jetbrains-mono font-bold mb-4">
               Contact TrackFarmOps
             </h1>
             <p className="text-xl font-inter max-w-3xl mx-auto">
@@ -67,7 +67,7 @@ const Contact = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Contact Form */}
           <div>
-            <h2 className="text-3xl font-poppins font-bold text-gray-900 mb-6">
+            <h2 className="text-3xl font-jetbrains-mono font-bold text-gray-900 mb-6">
               Send us a Message
             </h2>
             
@@ -196,7 +196,7 @@ const Contact = () => {
 
           {/* Contact Information */}
           <div>
-            <h2 className="text-3xl font-poppins font-bold text-gray-900 mb-6">
+            <h2 className="text-3xl font-jetbrains-mono font-bold text-gray-900 mb-6">
               Get in Touch
             </h2>
 
@@ -204,7 +204,7 @@ const Contact = () => {
               <div className="flex items-start space-x-4">
                 <div className="text-2xl">📍</div>
                 <div>
-                  <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">
+                  <h3 className="text-xl font-jetbrains-mono font-semibold text-gray-900 mb-2">
                     Office Location
                   </h3>
                   <p className="font-inter text-gray-600">
@@ -218,7 +218,7 @@ const Contact = () => {
               <div className="flex items-start space-x-4">
                 <div className="text-2xl">📞</div>
                 <div>
-                  <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">
+                  <h3 className="text-xl font-jetbrains-mono font-semibold text-gray-900 mb-2">
                     Phone Numbers
                   </h3>
                   <p className="font-inter text-gray-600">
@@ -231,7 +231,7 @@ const Contact = () => {
               <div className="flex items-start space-x-4">
                 <div className="text-2xl">✉️</div>
                 <div>
-                  <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">
+                  <h3 className="text-xl font-jetbrains-mono font-semibold text-gray-900 mb-2">
                     Email Addresses
                   </h3>
                   <p className="font-inter text-gray-600">
@@ -245,7 +245,7 @@ const Contact = () => {
               <div className="flex items-start space-x-4">
                 <div className="text-2xl">💬</div>
                 <div>
-                  <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">
+                  <h3 className="text-xl font-jetbrains-mono font-semibold text-gray-900 mb-2">
                     WhatsApp Support
                   </h3>
                   <p className="font-inter text-gray-600">
@@ -258,7 +258,7 @@ const Contact = () => {
               <div className="flex items-start space-x-4">
                 <div className="text-2xl">🕐</div>
                 <div>
-                  <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">
+                  <h3 className="text-xl font-jetbrains-mono font-semibold text-gray-900 mb-2">
                     Business Hours
                   </h3>
                   <p className="font-inter text-gray-600">
@@ -271,7 +271,7 @@ const Contact = () => {
             </div>
 
             <div className="mt-12 p-6 bg-green-50 rounded-2xl">
-              <h3 className="text-xl font-poppins font-semibold text-green-800 mb-3">
+              <h3 className="text-xl font-jetbrains-mono font-semibold text-green-800 mb-3">
                 Quick Response Guarantee
               </h3>
               <p className="font-inter text-green-700 mb-4">

@@ -127,7 +127,7 @@ const Pricing = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         {/* Header Section */}
         <div className="text-center mb-20">
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-poppins font-bold text-gray-900 mb-6">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-jetbrains-mono font-bold text-gray-900 mb-6">
             Pricing
           </h1>
           {/*<p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
@@ -186,14 +186,14 @@ const Pricing = () => {
                 {/* Plan Header */}
                 <div className="text-center mb-8">
                   <div className="text-5xl mb-4">{plan.emoji}</div>
-                  <h3 className="text-2xl font-poppins font-bold text-gray-900 mb-2">
+                  <h3 className="text-2xl font-jetbrains-mono font-bold text-gray-900 mb-2">
                     {plan.name}
                   </h3>
                   <p className="text-gray-600 font-inter mb-6">
                     {plan.description}
                   </p>
                   <div className="mb-4">
-                    <span className="text-4xl font-poppins font-bold text-gray-900">
+                    <span className="text-4xl font-jetbrains-mono font-bold text-gray-900">
                       {formatCurrency(plan.price[billingCycle].toString())}
                     </span>
                     <span className="text-lg text-gray-600 font-normal">
@@ -224,7 +224,7 @@ const Pricing = () => {
                 {/* CTA Button */}
                 <Link
                   to="/signup"
-                  className={`w-full py-3 px-6 rounded-lg font-poppins font-medium transition-all duration-200 text-center block ${
+                  className={`w-full py-3 px-6 rounded-lg font-jetbrains-mono font-medium transition-all duration-200 text-center block ${
                     plan.id === 'freemium'
                       ? 'bg-green-100 text-green-700 hover:bg-green-200 border-2 border-green-300'
                       : plan.highlighted
@@ -242,7 +242,7 @@ const Pricing = () => {
         {/* Add-Ons Section */}
         <div className="mb-20">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-poppins font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl font-jetbrains-mono font-bold text-gray-900 mb-4">
               Optional Add‑Ons
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -257,7 +257,7 @@ const Pricing = () => {
                 className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-8 border border-gray-200 text-center"
               >
                 <div className="text-4xl mb-4">{addOn.emoji}</div>
-                <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">
+                <h3 className="text-xl font-jetbrains-mono font-semibold text-gray-900 mb-2">
                   {addOn.name}
                 </h3>
                 <p className="text-green-600 font-bold font-inter text-lg mb-3">
@@ -274,11 +274,11 @@ const Pricing = () => {
         {/* One-Time Setup */}
         {/*
         <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-2xl shadow-lg p-8 mb-16 text-white">
-          <h3 className="text-2xl font-poppins font-bold mb-4 text-center">
+          <h3 className="text-2xl font-jetbrains-mono font-bold mb-4 text-center">
             One‑Time Setup (White‑Label)
           </h3>
           <div className="text-center mb-6">
-            <div className="text-3xl font-poppins font-bold mb-2">
+            <div className="text-3xl font-jetbrains-mono font-bold mb-2">
               ₦800,000 – ₦1,500,000
             </div>
             <div className="text-sm text-gray-500">
@@ -287,7 +287,7 @@ const Pricing = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h4 className="font-poppins font-semibold mb-3">Includes:</h4>
+              <h4 className="font-jetbrains-mono font-semibold mb-3">Includes:</h4>
               <ul className="space-y-2">
                 <li className="flex items-start">
                   <svg className="w-5 h-5 text-white mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -318,7 +318,7 @@ const Pricing = () => {
             <div className="flex items-center justify-center">
               <Link 
                 to="/signup" 
-                className="bg-white text-green-600 py-3 px-8 rounded-lg font-poppins font-bold hover:bg-gray-100 transition-colors duration-200 text-center"
+                className="bg-white text-green-600 py-3 px-8 rounded-lg font-jetbrains-mono font-bold hover:bg-gray-100 transition-colors duration-200 text-center"
               >
                 Contact Sales
               </Link>
@@ -329,7 +329,7 @@ const Pricing = () => {
         {/* Why Choose FarmOps */}
         <div className="mb-20">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-poppins font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl font-jetbrains-mono font-bold text-gray-900 mb-4">
               Why Choose TrackFarmOps?
             </h2>
           </div>
@@ -343,7 +343,7 @@ const Pricing = () => {
                 <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">
                   {benefit.emoji}
                 </div>
-                <h3 className="font-poppins font-semibold text-gray-900 mb-2">
+                <h3 className="font-jetbrains-mono font-semibold text-gray-900 mb-2">
                   {benefit.title}
                 </h3>
                 <p className="text-gray-600 font-inter leading-relaxed">
@@ -356,7 +356,7 @@ const Pricing = () => {
 
         {/* CTA Section */}
         <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-2xl p-6 text-center text-white max-w-3xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-poppins font-bold mb-4">
+          <h2 className="text-3xl md:text-4xl font-jetbrains-mono font-bold mb-4">
             Ready to Transform Your Farm?
           </h2>
           {/*<p className="text-xl text-green-100 mb-8 max-w-2xl mx-auto">
@@ -365,7 +365,7 @@ const Pricing = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link 
               to="/signup"
-              className="bg-white text-green-600 px-8 py-4 rounded-lg font-poppins font-semibold hover:bg-gray-100 transition-all duration-200 transform hover:scale-105 shadow-lg"
+              className="bg-white text-green-600 px-8 py-4 rounded-lg font-jetbrains-mono font-semibold hover:bg-gray-100 transition-all duration-200 transform hover:scale-105 shadow-lg"
             >
               Contact Sales
             </Link>

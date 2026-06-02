@@ -29,6 +29,14 @@ const Dashboard = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
+  // Time-based greeting
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour >= 0 && hour < 12) return 'Good morning,';
+    if (hour >= 12 && hour < 17) return 'Good afternoon,';
+    return 'Good evening,';
+  };
+
   useEffect(() => {
     fetchDashboardData();
     
@@ -243,8 +251,8 @@ const Dashboard = () => {
     <div className="space-y-6">
       {/* Welcome Section */}
       <div className="rounded-lg p-0">
-        <h1 className="text-xl font-poppins font-regular text-gray-900 dark:text-white mb-0">
-          Hi, {user.name?.split(' ')[0]}! 
+        <h1 className="text-3xl font-jetbrains-mono font-regular text-gray-900 dark:text-white mb-0">
+          {getGreeting()} {user.name?.split(' ')[0]}! 
         </h1>
         <p className="font-inter text-gray-600 text-sm mt-0">
           Here is your business update..
@@ -430,7 +438,7 @@ const Dashboard = () => {
       {/* Date Filter */}
       <div className="bg-white dark:bg-gray-800 shadow rounded-lg px-2 py-2 mb-6">
         <div className="flex flex-col gap-4">
-          {/*<h3 className="text-lg font-poppins font-medium text-gray-900 dark:text-white">
+          {/*<h3 className="text-lg font-jetbrains-mono font-medium text-gray-900 dark:text-white">
             Financial Overview
           </h3>*/}
           <div className="overflow-x-auto pb-2">
@@ -532,7 +540,7 @@ const Dashboard = () => {
       {/* Quick Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div>
-          <h2 className="text-xl font-poppins font-semibold mb-4">Quick Actions</h2>
+          <h2 className="text-xl font-jetbrains-mono font-semibold mb-4">Quick Actions</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <Link to="/income" className="font-inter btn btn-primary text-center">
               Record Income
@@ -554,14 +562,14 @@ const Dashboard = () => {
           
           {/* Quick Stats */}
           <div className="mt-6">
-            <h3 className="text-lg font-poppins font-semibold mb-4">Quick Stats</h3>
+            <h3 className="text-lg font-jetbrains-mono font-semibold mb-4">Quick Stats</h3>
             <div className="grid grid-cols-2 gap-3">
               <div 
                 onClick={() => handleCardClick('income')}
                 className="bg-white dark:bg-gray-800 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
               >
                 <div className="text-xl mb-1">📊</div>
-                <div className="text-xl font-poppins font-semibold text-gray-900 dark:text-white">
+                <div className="text-xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
                   {incomeEntries.length}
                 </div>
                 <div className="text-sm font-inter text-gray-500 dark:text-gray-400">Income Entries</div>
@@ -571,7 +579,7 @@ const Dashboard = () => {
                 className="bg-white dark:bg-gray-800 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
               >
                 <div className="text-xl mb-1">💸</div>
-                <div className="text-xl font-poppins font-semibold text-gray-900 dark:text-white">
+                <div className="text-xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
                   {expenseEntries.length}
                 </div>
                 <div className="text-sm font-inter text-gray-500 dark:text-gray-400">Expense Entries</div>
@@ -581,7 +589,7 @@ const Dashboard = () => {
                 className="bg-white dark:bg-gray-800 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
               >
                 <div className="text-xl mb-1">📦</div>
-                <div className="text-xl font-poppins font-semibold text-gray-900 dark:text-white">
+                <div className="text-xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
                   {inventoryItems.length}
                 </div>
                 <div className="text-sm font-inter text-gray-500 dark:text-gray-400">Inventory Items</div>
@@ -591,7 +599,7 @@ const Dashboard = () => {
                 className="bg-white dark:bg-gray-800 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
               >
                 <div className="text-xl mb-1">🏗️</div>
-                <div className="text-xl font-poppins font-semibold text-gray-900 dark:text-white">
+                <div className="text-xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
                   {assets.length}
                 </div>
                 <div className="text-sm font-inter text-gray-500 dark:text-gray-400">Assets</div>
@@ -601,7 +609,7 @@ const Dashboard = () => {
         </div>
 
         <div>
-          <h2 className="text-xl font-poppins font-semibold text-gray-900 dark:text-white mb-4">Recent Activity</h2>
+          <h2 className="text-xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white mb-4">Recent Activity</h2>
           <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-0">
             {incomeEntries.length > 0 || expenseEntries.length > 0 ? (
               <div className="space-y-3 max-h-96 overflow-y-auto">
@@ -680,7 +688,7 @@ const Dashboard = () => {
       {/* Worker View Notice */}
       {!isOwner && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-          <h3 className="text-lg font-poppins font-medium text-blue-900 mb-2">Worker View</h3>
+          <h3 className="text-lg font-jetbrains-mono font-medium text-blue-900 mb-2">Worker View</h3>
           <p className="font-inter text-blue-700">
             As a worker, you can record income and expenses. For detailed reports and analytics, 
             please contact the farm owner.
@@ -693,7 +701,7 @@ const Dashboard = () => {
         <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-4xl w-full max-h-[80vh] overflow-y-auto m-4">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-poppins font-bold text-gray-900 dark:text-white">
+              <h3 className="text-xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
                 {modalType === 'income' && 'Income Entries'}
                 {modalType === 'expenses' && 'Expense Entries'}
                 {modalType === 'inventory' && 'Inventory Items'}

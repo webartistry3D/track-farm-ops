@@ -44,7 +44,7 @@ const About = () => {
       {/*<div className="bg-gradient-to-r from-green-600 to-green-700 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-poppins font-bold mb-4">
+            <h1 className="text-4xl md:text-5xl font-jetbrains-mono font-bold mb-4">
               About TrackFarmOps
             </h1>
             <p className="text-xl font-inter max-w-3xl mx-auto">
@@ -66,7 +66,7 @@ const About = () => {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-poppins font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-jetbrains-mono font-bold text-gray-900 mb-4">
               Our Mission
             </h2>
             <p className="text-lg font-inter text-gray-600 max-w-3xl mx-auto">
@@ -78,7 +78,7 @@ const About = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
               <div className="text-4xl mb-4">🌾</div>
-              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">
+              <h3 className="text-xl font-jetbrains-mono font-semibold text-gray-900 mb-2">
                 Local Focus
               </h3>
               <p className="font-inter text-gray-600">
@@ -87,7 +87,7 @@ const About = () => {
             </div>
             <div className="text-center">
               <div className="text-4xl mb-4">💡</div>
-              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">
+              <h3 className="text-xl font-jetbrains-mono font-semibold text-gray-900 mb-2">
                 Simple Technology
               </h3>
               <p className="font-inter text-gray-600">
@@ -96,7 +96,7 @@ const About = () => {
             </div>
             <div className="text-center">
               <div className="text-4xl mb-4">📈</div>
-              <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">
+              <h3 className="text-xl font-jetbrains-mono font-semibold text-gray-900 mb-2">
                 Real Results
               </h3>
               <p className="font-inter text-gray-600">
@@ -120,7 +120,7 @@ const About = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl md:text-4xl font-poppins font-bold text-gray-900 mb-6">
+              <h2 className="text-3xl md:text-4xl font-jetbrains-mono font-bold text-gray-900 mb-6">
                 Our Story
               </h2>
               <div className="space-y-4 text-gray-600 font-inter">
@@ -141,7 +141,7 @@ const About = () => {
             </div>
             <div className="bg-green-100 rounded-2xl p-8 text-center">
               <div className="text-6xl mb-4">🚜</div>
-              <h3 className="text-2xl font-poppins font-bold text-green-800 mb-2">
+              <h3 className="text-2xl font-jetbrains-mono font-bold text-green-800 mb-2">
                 Growing Together
               </h3>
               <p className="font-inter text-green-700">
@@ -164,7 +164,7 @@ const About = () => {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-poppins font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-jetbrains-mono font-bold text-gray-900 mb-4">
               Our Values
             </h2>
           </div>
@@ -173,7 +173,7 @@ const About = () => {
             <div className="flex items-start space-x-4">
               <div className="text-3xl">🤝</div>
               <div>
-                <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">
+                <h3 className="text-xl font-jetbrains-mono font-semibold text-gray-900 mb-2">
                   Partnership
                 </h3>
                 <p className="font-inter text-gray-600">
@@ -184,7 +184,7 @@ const About = () => {
             <div className="flex items-start space-x-4">
               <div className="text-3xl">🎯</div>
               <div>
-                <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">
+                <h3 className="text-xl font-jetbrains-mono font-semibold text-gray-900 mb-2">
                   Impact
                 </h3>
                 <p className="font-inter text-gray-600">
@@ -195,7 +195,7 @@ const About = () => {
             <div className="flex items-start space-x-4">
               <div className="text-3xl">🌍</div>
               <div>
-                <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">
+                <h3 className="text-xl font-jetbrains-mono font-semibold text-gray-900 mb-2">
                   Sustainability
                 </h3>
                 <p className="font-inter text-gray-600">
@@ -206,7 +206,7 @@ const About = () => {
             <div className="flex items-start space-x-4">
               <div className="text-3xl">📱</div>
               <div>
-                <h3 className="text-xl font-poppins font-semibold text-gray-900 mb-2">
+                <h3 className="text-xl font-jetbrains-mono font-semibold text-gray-900 mb-2">
                   Accessibility
                 </h3>
                 <p className="font-inter text-gray-600">
@@ -221,7 +221,7 @@ const About = () => {
       {/* CTA Section */}
       <div className="bg-green-600 text-white py-20">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-poppins font-bold mb-4">
+          <h2 className="text-3xl md:text-4xl font-jetbrains-mono font-bold mb-4">
             Ready to Transform Your Farm?
           </h2>
           <p className="text-xl font-inter mb-8">

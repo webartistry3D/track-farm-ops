@@ -456,7 +456,7 @@ const Assets = () => {
               </div>
               <div className="ml-3 lg:ml-4">
                 <p className="text-xs lg:text-sm text-gray-500 dark:text-gray-400">Total Assets</p>
-                <p className="text-3xl font-poppins font-bold text-gray-900 dark:text-white">{assets.length}</p>
+                <p className="text-3xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">{assets.length}</p>
               </div>
             </div>
           </div>
@@ -474,7 +474,7 @@ const Assets = () => {
               </div>
               <div className="ml-3 lg:ml-4">
                 <p className="text-xs lg:text-sm text-gray-500 dark:text-gray-400">Active</p>
-                <p className="text-3xl font-poppins font-bold text-gray-900 dark:text-white">
+                <p className="text-3xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
                   {assets.filter(a => a.status === 'active').length}
                 </p>
               </div>
@@ -494,7 +494,7 @@ const Assets = () => {
               </div>
               <div className="ml-3 lg:ml-4">
                 <p className="text-xs lg:text-sm text-gray-500 dark:text-gray-400">Maintenance</p>
-                <p className="text-3xl font-poppins font-bold text-gray-900 dark:text-white">
+                <p className="text-3xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
                   {assets.filter(a => a.status === 'under_maintenance').length}
                 </p>
               </div>
@@ -514,7 +514,7 @@ const Assets = () => {
               </div>
               <div className="ml-3 lg:ml-4">
                 <p className="text-xs lg:text-sm text-gray-500 dark:text-gray-400">Issues</p>
-                <p className="text-3xl font-poppins font-bold text-gray-900 dark:text-white">
+                <p className="text-3xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
                   {assets.filter(a => a.status === 'damaged').length}
                 </p>
               </div>
@@ -1036,7 +1036,7 @@ const Assets = () => {
                   <div className="ml-3 lg:ml-4">
                     <p className="text-xs lg:text-sm font-medium text-gray-600 dark:text-gray-400">Asset Utilization</p>
                     <p className="hidden sm:block"><br></br></p>
-                    <p className="text-3xl font-poppins font-bold text-gray-900 dark:text-white">--</p>
+                    <p className="text-3xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">--</p>
                   </div>
                 </div>
               </div>
@@ -1049,7 +1049,7 @@ const Assets = () => {
                   <div className="ml-3 lg:ml-4">
                     <p className="text-xs lg:text-sm font-medium text-gray-600 dark:text-gray-400">Cost Ops. / Hour</p>
                     <p className="hidden sm:block"><br></br></p>
-                    <p className="text-3xl font-poppins font-bold text-gray-900 dark:text-white">--</p>
+                    <p className="text-3xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">--</p>
                   </div>
                 </div>
               </div>
@@ -1062,7 +1062,7 @@ const Assets = () => {
                   <div className="ml-3 lg:ml-4">
                     <p className="text-xs lg:text-sm font-medium text-gray-600 dark:text-gray-400">Downtime</p>
                     <p className="hidden sm:block"><br></br></p>
-                    <p className="text-3xl font-poppins font-bold text-gray-900 dark:text-white">--</p>
+                    <p className="text-3xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">--</p>
                   </div>
                 </div>
               </div>
@@ -1075,7 +1075,7 @@ const Assets = () => {
                   <div className="ml-3 lg:ml-4">
                     <p className="text-xs lg:text-sm font-medium text-gray-600 dark:text-gray-400">Maintenance</p>
                     <p className="hidden sm:block"><br></br></p>
-                    <p className="text-3xl font-poppins font-bold text-green-600 dark:text-green-400">--</p>
+                    <p className="text-3xl font-jetbrains-mono font-bold text-green-600 dark:text-green-400">--</p>
                   </div>
                 </div>
               </div>

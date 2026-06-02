@@ -9,7 +9,7 @@ export default {
     extend: {
       fontFamily: {
         'inter': ['Inter', 'system-ui', 'sans-serif'],
-        'poppins': ['Poppins', 'system-ui', 'sans-serif'],
+        'jetbrains-mono': ['JetBrains Mono', 'monospace'],
         'sans': ['Inter', 'system-ui', 'sans-serif'],
       },
       colors: {

@@ -6,7 +6,7 @@
 /* Custom CSS Variables */
 :root {
   --font-inter: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-poppins: 'Poppins', system-ui, -apple-system, sans-serif;
+  --font-jetbrains-mono: 'JetBrains Mono', monospace;
 }
 
 /* Base Styles */
@@ -79,7 +79,7 @@ form.space-y-4 > div.dark\:bg-gray-800 {
 
 /* Heading Styles */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-poppins);
+  font-family: var(--font-jetbrains-mono);
   font-weight: 600;
 }
 
@@ -109,22 +109,22 @@ h1, h2, h3, h4, h5, h6 {
   }
   
   .text-display {
-    font-family: var(--font-poppins);
+    font-family: var(--font-jetbrains-mono);
     font-weight: 700;
   }
   
   .text-heading {
-    font-family: var(--font-poppins);
+    font-family: var(--font-jetbrains-mono);
     font-weight: 600;
   }
   
   .text-subheading {
-    font-family: var(--font-poppins);
+    font-family: var(--font-jetbrains-mono);
     font-weight: 500;
   }
   
   .kpi-number {
-    font-family: var(--font-poppins);
+    font-family: var(--font-jetbrains-mono);
     font-weight: 700;
   }
   

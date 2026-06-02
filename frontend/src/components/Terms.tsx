@@ -11,7 +11,7 @@ const Terms = () => {
       <div className="bg-gradient-to-r from-green-600 to-green-700 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-poppins font-bold mb-4">
+            <h1 className="text-4xl md:text-5xl font-jetbrains-mono font-bold mb-4">
               Terms of Service
             </h1>
             <p className="text-xl font-inter max-w-3xl mx-auto">
@@ -36,7 +36,7 @@ const Terms = () => {
             </div>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-poppins font-semibold text-gray-900 mb-4">
+              <h2 className="text-2xl font-jetbrains-mono font-semibold text-gray-900 mb-4">
                 1. Acceptance of Terms
               </h2>
               <p className="text-gray-600 font-inter">
@@ -47,7 +47,7 @@ const Terms = () => {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-poppins font-semibold text-gray-900 mb-4">
+              <h2 className="text-2xl font-jetbrains-mono font-semibold text-gray-900 mb-4">
                 2. Description of Services
               </h2>
               <p className="text-gray-600 font-inter mb-4">
@@ -65,11 +65,11 @@ const Terms = () => {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-poppins font-semibold text-gray-900 mb-4">
+              <h2 className="text-2xl font-jetbrains-mono font-semibold text-gray-900 mb-4">
                 3. Account Registration and Security
               </h2>
               
-              <h3 className="text-xl font-poppins font-medium text-gray-800 mb-3">
+              <h3 className="text-xl font-jetbrains-mono font-medium text-gray-800 mb-3">
                 Account Responsibilities
               </h3>
               <ul className="list-disc pl-6 space-y-2 text-gray-600 font-inter">
@@ -80,7 +80,7 @@ const Terms = () => {
                 <li>You must be at least 18 years old to create an account</li>
               </ul>
 
-              <h3 className="text-xl font-poppins font-medium text-gray-800 mb-3 mt-6">
+              <h3 className="text-xl font-jetbrains-mono font-medium text-gray-800 mb-3 mt-6">
                 Account Suspension
               </h3>
               <p className="text-gray-600 font-inter">
@@ -90,11 +90,11 @@ const Terms = () => {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-poppins font-semibold text-gray-900 mb-4">
+              <h2 className="text-2xl font-jetbrains-mono font-semibold text-gray-900 mb-4">
                 4. Subscription Plans and Payment
               </h2>
               
-              <h3 className="text-xl font-poppins font-medium text-gray-800 mb-3">
+              <h3 className="text-xl font-jetbrains-mono font-medium text-gray-800 mb-3">
                 Subscription Fees
               </h3>
               <p className="text-gray-600 font-inter mb-4">
@@ -106,7 +106,7 @@ const Terms = () => {
                 <li><strong>Add-ons:</strong> Additional features available for extra fees</li>
               </ul>
 
-              <h3 className="text-xl font-poppins font-medium text-gray-800 mb-3 mt-6">
+              <h3 className="text-xl font-jetbrains-mono font-medium text-gray-800 mb-3 mt-6">
                 Payment Terms
               </h3>
               <ul className="list-disc pl-6 space-y-2 text-gray-600 font-inter">
@@ -118,11 +118,11 @@ const Terms = () => {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-poppins font-semibold text-gray-900 mb-4">
+              <h2 className="text-2xl font-jetbrains-mono font-semibold text-gray-900 mb-4">
                 5. User Responsibilities
               </h2>
               
-              <h3 className="text-xl font-poppins font-medium text-gray-800 mb-3">
+              <h3 className="text-xl font-jetbrains-mono font-medium text-gray-800 mb-3">
                 Prohibited Activities
               </h3>
               <p className="text-gray-600 font-inter mb-4">
@@ -138,7 +138,7 @@ const Terms = () => {
                 <li>Uploading malicious code or viruses</li>
               </ul>
 
-              <h3 className="text-xl font-poppins font-medium text-gray-800 mb-3 mt-6">
+              <h3 className="text-xl font-jetbrains-mono font-medium text-gray-800 mb-3 mt-6">
                 Data Accuracy
               </h3>
               <p className="text-gray-600 font-inter">
@@ -149,11 +149,11 @@ const Terms = () => {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-poppins font-semibold text-gray-900 mb-4">
+              <h2 className="text-2xl font-jetbrains-mono font-semibold text-gray-900 mb-4">
                 6. Intellectual Property
               </h2>
               
-              <h3 className="text-xl font-poppins font-medium text-gray-800 mb-3">
+              <h3 className="text-xl font-jetbrains-mono font-medium text-gray-800 mb-3">
                 FarmOps Intellectual Property
               </h3>
               <p className="text-gray-600 font-inter">
@@ -161,7 +161,7 @@ const Terms = () => {
                 and are protected by copyright, trademark, and other intellectual property laws.
               </p>
 
-              <h3 className="text-xl font-poppins font-medium text-gray-800 mb-3 mt-6">
+              <h3 className="text-xl font-jetbrains-mono font-medium text-gray-800 mb-3 mt-6">
                 User Data
               </h3>
               <p className="text-gray-600 font-inter">
@@ -171,7 +171,7 @@ const Terms = () => {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-poppins font-semibold text-gray-900 mb-4">
+              <h2 className="text-2xl font-jetbrains-mono font-semibold text-gray-900 mb-4">
                 7. Privacy and Data Protection
               </h2>
               <p className="text-gray-600 font-inter">
@@ -182,11 +182,11 @@ const Terms = () => {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-poppins font-semibold text-gray-900 mb-4">
+              <h2 className="text-2xl font-jetbrains-mono font-semibold text-gray-900 mb-4">
                 8. Service Availability and Support
               </h2>
               
-              <h3 className="text-xl font-poppins font-medium text-gray-800 mb-3">
+              <h3 className="text-xl font-jetbrains-mono font-medium text-gray-800 mb-3">
                 Service Availability
               </h3>
               <p className="text-gray-600 font-inter">
@@ -194,7 +194,7 @@ const Terms = () => {
                 We may schedule maintenance periods with advance notice when possible.
               </p>
 
-              <h3 className="text-xl font-poppins font-medium text-gray-800 mb-3 mt-6">
+              <h3 className="text-xl font-jetbrains-mono font-medium text-gray-800 mb-3 mt-6">
                 Customer Support
               </h3>
               <p className="text-gray-600 font-inter">
@@ -204,11 +204,11 @@ const Terms = () => {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-poppins font-semibold text-gray-900 mb-4">
+              <h2 className="text-2xl font-jetbrains-mono font-semibold text-gray-900 mb-4">
                 9. Disclaimers and Limitations
               </h2>
               
-              <h3 className="text-xl font-poppins font-medium text-gray-800 mb-3">
+              <h3 className="text-xl font-jetbrains-mono font-medium text-gray-800 mb-3">
                 Service Disclaimer
               </h3>
               <p className="text-gray-600 font-inter">
@@ -216,7 +216,7 @@ const Terms = () => {
                 the service will be error-free, uninterrupted, or meet your specific requirements.
               </p>
 
-              <h3 className="text-xl font-poppins font-medium text-gray-800 mb-3 mt-6">
+              <h3 className="text-xl font-jetbrains-mono font-medium text-gray-800 mb-3 mt-6">
                 Limitation of Liability
               </h3>
               <p className="text-gray-600 font-inter">
@@ -226,11 +226,11 @@ const Terms = () => {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-poppins font-semibold text-gray-900 mb-4">
+              <h2 className="text-2xl font-jetbrains-mono font-semibold text-gray-900 mb-4">
                 10. Termination
               </h2>
               
-              <h3 className="text-xl font-poppins font-medium text-gray-800 mb-3">
+              <h3 className="text-xl font-jetbrains-mono font-medium text-gray-800 mb-3">
                 Termination by User
               </h3>
               <p className="text-gray-600 font-inter">
@@ -238,7 +238,7 @@ const Terms = () => {
                 the account deletion feature in your settings.
               </p>
 
-              <h3 className="text-xl font-poppins font-medium text-gray-800 mb-3 mt-6">
+              <h3 className="text-xl font-jetbrains-mono font-medium text-gray-800 mb-3 mt-6">
                 Termination by FarmOps
               </h3>
               <p className="text-gray-600 font-inter">
@@ -246,7 +246,7 @@ const Terms = () => {
                 fraudulent activities, or non-payment of fees.
               </p>
 
-              <h3 className="text-xl font-poppins font-medium text-gray-800 mb-3 mt-6">
+              <h3 className="text-xl font-jetbrains-mono font-medium text-gray-800 mb-3 mt-6">
                 Effect of Termination
               </h3>
               <p className="text-gray-600 font-inter">
@@ -256,7 +256,7 @@ const Terms = () => {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-poppins font-semibold text-gray-900 mb-4">
+              <h2 className="text-2xl font-jetbrains-mono font-semibold text-gray-900 mb-4">
                 11. Governing Law and Dispute Resolution
               </h2>
               <p className="text-gray-600 font-inter mb-4">
@@ -271,7 +271,7 @@ const Terms = () => {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-poppins font-semibold text-gray-900 mb-4">
+              <h2 className="text-2xl font-jetbrains-mono font-semibold text-gray-900 mb-4">
                 12. Changes to Terms
               </h2>
               <p className="text-gray-600 font-inter">
@@ -282,7 +282,7 @@ const Terms = () => {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-poppins font-semibold text-gray-900 mb-4">
+              <h2 className="text-2xl font-jetbrains-mono font-semibold text-gray-900 mb-4">
                 13. Contact Information
               </h2>
               <p className="text-gray-600 font-inter mb-4">
@@ -298,7 +298,7 @@ const Terms = () => {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-poppins font-semibold text-gray-900 mb-4">
+              <h2 className="text-2xl font-jetbrains-mono font-semibold text-gray-900 mb-4">
                 14. General Provisions
               </h2>
               <ul className="list-disc pl-6 space-y-2 text-gray-600 font-inter">
