@@ -1,6 +1,6 @@
 {
   "name": "TrackFarmOps",
-  "short_name": "FarmOps",
+  "short_name": "TrackFarmOps",
   "description": "Comprehensive farm operations management system for tracking activities, inventory, finances, and more",
   "start_url": "/",
   "display": "standalone",
@@ -10,8 +10,8 @@
   "scope": "/",
   "icons": [
     {
-      "src": "/icon-192x192.png",
-      "sizes": "192x192",
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     },
