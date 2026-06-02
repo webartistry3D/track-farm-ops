@@ -459,7 +459,7 @@ const Landing = () => {
               <div className="text-4xl mb-4">📦</div>
               <h3 className="text-lg font-jetbrains-mono font-semibold text-gray-900 mb-2">Inventory & Assets Manager</h3>
               <p className="font-inter text-gray-600">
-                Track livestock, feed, and produce with real-time inventory updates and low stock alerts. Monitor equipment maintenance schedules, and manage farm supplies efficiently. Get automated notifications for reordering and optimize your farm resource allocation.
+                Track livestock and produce in real-time.<br></br>Monitor equipment maintenance schedules.<br></br>Manage farm supplies efficiently.<br></br>Get automated notifications.
               </p>
             </div>
 
@@ -473,7 +473,7 @@ const Landing = () => {
               <div className="text-4xl mb-4">📊</div>
               <h3 className="text-lg font-jetbrains-mono font-semibold text-gray-900 mb-2">Analytics & Reports</h3>
               <p className="font-inter text-gray-600">
-                Comprehensive dashboards and reports to monitor farm performance from anywhere. Track key metrics, analyze trends, and make data-driven decisions with real-time insights. Generate custom reports, export data, and visualize your farm's success with interactive charts and graphs.
+                Comprehensive dashboards and reports.<br></br>Monitor farm performance from anywhere.<br></br>Track key metrics, analyze trends, and make data-driven decisions.<br></br>Generate custom reports, export data, and visualize your farm's success with interactive charts and graphs.
               </p>
             </div>
 
