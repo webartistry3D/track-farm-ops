@@ -218,8 +218,20 @@ const Dashboard = () => {
     return <div>Please log in to view the dashboard.</div>;
   }
 
-  const isOwner = user.role === 'OWNER' || user.role === 'MANAGER';
+  const isOwner = user.role === 'OWNER' || user.role === 'ACCOUNTANT' || user.role === 'VETERINARIAN';
   const netProfit = todayIncome - todayExpenses;
+
+  // MANAGER and INVENTORY role restriction - no access to Dashboard
+  if (user.role === 'MANAGER' || user.role === 'INVENTORY') {
+    return (
+      <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 rounded-lg p-6">
+        <h3 className="text-lg font-medium text-yellow-900 mb-2">Access Restricted</h3>
+        <p className="text-yellow-700">
+          Dashboard access is not available for your role. Please use the navigation menu to access your assigned features.
+        </p>
+      </div>
+    );
+  }
 
   // Show skeleton while loading
   if (loading) {

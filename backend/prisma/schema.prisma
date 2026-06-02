@@ -34,6 +34,7 @@ model User {
   cctvCameras           CctvCamera[]
   notifications        Notification[]
   organization          Organization?          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  healthRecords         HealthRecord[]
 
   @@map("users")
 }
@@ -59,6 +60,7 @@ model Organization {
   soilAnalyses       SoilAnalysis[]
   irrigationSchedules IrrigationSchedule[]
   pestControl         PestControl[]
+  livestock          Livestock[]
 
   @@map("organizations")
 }
@@ -290,10 +292,13 @@ enum UsageType {
 }
 
 enum UserRole {
+  SUPERUSER
   OWNER
   MANAGER
   WORKER
-  SUPERUSER
+  ACCOUNTANT
+  INVENTORY
+  VETERINARIAN
 }
 
 enum PaymentMethod {
@@ -565,4 +570,108 @@ enum NotificationType {
   INCOME_RECORDED
   EXPENSE_RECORDED
   SYSTEM_UPDATE
+}
+
+// Livestock Management
+model Livestock {
+  id              Int                    @id @default(autoincrement())
+  name            String
+  tagId           String                 @unique @map("tag_id")
+  species         LivestockSpecies
+  breed           String
+  dateOfBirth     DateTime?              @map("date_of_birth")
+  gender          LivestockGender
+  weight          Decimal               @db.Decimal(10, 2)
+  location        String
+  healthStatus    LivestockHealthStatus  @default(HEALTHY) @map("health_status")
+  lastCheckup     DateTime?              @map("last_checkup")
+  notes           String?
+  organizationId  Int                    @map("organization_id")
+  createdAt       DateTime               @default(now()) @map("created_at")
+  updatedAt       DateTime               @updatedAt @map("updated_at")
+  organization    Organization           @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  healthRecords   HealthRecord[]
+  vaccinations    Vaccination[]
+
+  @@map("livestock")
+}
+
+enum LivestockSpecies {
+  CATTLE
+  SHEEP
+  GOAT
+  PIG
+  POULTRY
+  HORSE
+  OTHER
+}
+
+enum LivestockGender {
+  MALE
+  FEMALE
+}
+
+enum LivestockHealthStatus {
+  HEALTHY
+  SICK
+  QUARANTINE
+  RECOVERY
+  CRITICAL
+}
+
+// Health Records
+model HealthRecord {
+  id              Int                  @id @default(autoincrement())
+  livestockId     Int                  @map("livestock_id")
+  recordType      HealthRecordType     @map("record_type")
+  date            DateTime
+  veterinarian    String
+  diagnosis       String?
+  treatment       String?
+  medications     String?
+  notes           String?
+  followUpDate    DateTime?            @map("follow_up_date")
+  status          HealthRecordStatus   @default(SCHEDULED)
+  organizationId  Int                  @map("organization_id")
+  userId          Int                  @map("user_id")
+  createdAt       DateTime             @default(now()) @map("created_at")
+  updatedAt       DateTime             @updatedAt @map("updated_at")
+  livestock       Livestock            @relation(fields: [livestockId], references: [id], onDelete: Cascade)
+  user            User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("health_records")
+}
+
+enum HealthRecordType {
+  CHECKUP
+  VACCINATION
+  TREATMENT
+  SURGERY
+  LAB_TEST
+  OTHER
+}
+
+enum HealthRecordStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+}
+
+// Vaccinations
+model Vaccination {
+  id                  Int          @id @default(autoincrement())
+  livestockId         Int          @map("livestock_id")
+  vaccineName         String       @map("vaccine_name")
+  vaccineType         String?      @map("vaccine_type")
+  administrationDate  DateTime     @map("administration_date")
+  nextDueDate         DateTime?    @map("next_due_date")
+  veterinarian        String
+  batchNumber         String?      @map("batch_number")
+  notes               String?
+  organizationId      Int          @map("organization_id")
+  createdAt           DateTime     @default(now()) @map("created_at")
+  updatedAt           DateTime     @updatedAt @map("updated_at")
+  livestock           Livestock    @relation(fields: [livestockId], references: [id], onDelete: Cascade)
+
+  @@map("vaccinations")
 }

@@ -156,6 +156,7 @@ const Layout = ({ children }: LayoutProps) => {
     { name: 'Inventory', href: '/inventory', icon: '📦', current: location.pathname === '/inventory', feature: 'inventoryTransactions' as const, restricted: true },
     { name: 'Assets', href: '/assets', icon: '🚜', current: location.pathname === '/assets', feature: 'inventoryTransactions' as const, restricted: true },
     { name: 'CCTV', href: '/cctv', icon: '📹', current: location.pathname === '/cctv', feature: 'inventoryTransactions' as const, restricted: true },
+    { name: 'Livestock Health', href: '/livestock-health', icon: '🐄', current: location.pathname === '/livestock-health', feature: 'inventoryTransactions' as const, restricted: true },
     { name: 'Analytics', href: '/analytics', icon: '📊', current: location.pathname === '/analytics', feature: 'analytics' as const, restricted: true },
     { name: 'Reports', href: '/reports', icon: '📈', current: location.pathname === '/reports', feature: 'financialReports' as const, restricted: true },
   ];
@@ -164,7 +165,7 @@ const Layout = ({ children }: LayoutProps) => {
   // Restrictions will be handled at the page level with upgrade prompts
   const navigation = allNavigation;
 
-  const isAdmin = user ? (user.role === 'OWNER' || user.role === 'MANAGER') : false;
+  const isAdmin = user ? (user.role === 'OWNER' || user.role === 'MANAGER' || user.role === 'ACCOUNTANT' || user.role === 'INVENTORY' || user.role === 'VETERINARIAN') : false;
 
   const unreadCount = notifications.filter((n: any) => !n.read).length;
 
@@ -215,7 +216,7 @@ const Layout = ({ children }: LayoutProps) => {
 
       {/* Sidebar */}
       <div className={`
-        sidebar-container fixed inset-y-0 left-0 z-40 w-48 sm:w-56 md:w-64 bg-white dark:bg-gray-800 shadow-lg transform transition-transform duration-300 ease-in-out
+        sidebar-container fixed inset-y-0 left-0 z-40 w-56 sm:w-64 md:w-72 bg-white dark:bg-gray-800 shadow-lg transform transition-transform duration-300 ease-in-out
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
         lg:fixed lg:inset-y-0 lg:left-0 lg:transition-all lg:duration-300 lg:ease-in-out lg:w-48
         ${!sidebarOpen ? 'lg:w-12 lg:opacity-75' : 'lg:w-48 lg:opacity-100'}
@@ -263,11 +264,11 @@ const Layout = ({ children }: LayoutProps) => {
           </nav>
 
           <div className="absolute bottom-0 left-0 right-0 p-4">
-            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 mb-3">
+            {/*<div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 mb-3">
               <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Logged in as</div>
               <div className="text-sm font-medium text-gray-900 dark:text-white">{user.name}</div>
-              {/*<div className="text-xs text-gray-500 dark:text-gray-400">{user.role}</div>*/}
-            </div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">{user.role}</div>
+            </div>*/}
             <button
               onClick={() => {
                 logout();
@@ -334,6 +335,12 @@ const Layout = ({ children }: LayoutProps) => {
                       ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
                       : user.role === 'MANAGER'
                       ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
+                      : user.role === 'ACCOUNTANT'
+                      ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200'
+                      : user.role === 'INVENTORY'
+                      ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                      : user.role === 'VETERINARIAN'
+                      ? 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200'
                       : 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
                   }`}>
                     Authorized

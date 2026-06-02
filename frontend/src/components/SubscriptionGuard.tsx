@@ -6,7 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 interface SubscriptionGuardProps {
   children: ReactNode;
   requiredFeature?: 'inventoryTransactions' | 'analytics' | 'financialReports' | 'ownerDashboard';
-  requiredRole?: 'OWNER' | 'MANAGER' | 'WORKER';
+  requiredRole?: 'SUPERUSER' | 'OWNER' | 'MANAGER' | 'WORKER' | 'ACCOUNTANT' | 'INVENTORY' | 'VETERINARIAN';
   fallbackPath?: string;
 }
 

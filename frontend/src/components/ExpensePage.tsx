@@ -91,6 +91,22 @@ const ExpensePage = () => {
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // MANAGER and INVENTORY role restrictions
+  const isManager = user?.role === 'MANAGER';
+  const isInventory = user?.role === 'INVENTORY';
+  const allowedTabs = isManager ? ['record'] : isInventory ? [] : ['record', 'records'];
+
+  // Redirect to allowed tab if current tab is not allowed
+  useEffect(() => {
+    if ((isManager || isInventory) && !allowedTabs.includes(activeTab)) {
+      if (isManager) {
+        setActiveTab('record');
+      } else if (isInventory) {
+        // INVENTORY has no access to any tabs, show restricted message
+      }
+    }
+  }, [isManager, isInventory, activeTab, allowedTabs]);
+
   // Fetch expenses on component mount
   useEffect(() => {
     console.log('🔄 useEffect triggered:', { user: !!user, activeTab });
@@ -437,6 +453,18 @@ const ExpensePage = () => {
     return <div>Please log in to access this feature.</div>;
   }
 
+  // INVENTORY role restriction - no access to ExpensePage
+  if (isInventory) {
+    return (
+      <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 rounded-lg p-6">
+        <h3 className="text-lg font-medium text-yellow-900 mb-2">Access Restricted</h3>
+        <p className="text-yellow-700">
+          Expense management is not available for Inventory Managers. Please use the navigation menu to access your assigned features.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-7xl mx-auto p-0">
       <div className="dark:bg-gray-900 rounded-lg p-0">
@@ -459,17 +487,19 @@ const ExpensePage = () => {
                 <Plus className="h-4 w-4" />
                 Record Farm Expense
               </button>
-              <button
-                onClick={() => handleTabChange('records')}
-                className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${
-                  activeTab === 'records'
-                    ? 'border-amber-500 text-amber-600 dark:text-amber-400'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-                }`}
-              >
-                <Table className="h-4 w-4" />
-                Table Records
-              </button>
+              {!isManager && (
+                <button
+                  onClick={() => handleTabChange('records')}
+                  className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${
+                    activeTab === 'records'
+                      ? 'border-amber-500 text-amber-600 dark:text-amber-400'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                  }`}
+                >
+                  <Table className="h-4 w-4" />
+                  Table Records
+                </button>
+              )}
             </nav>
           </div>
 

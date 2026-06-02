@@ -157,7 +157,7 @@ export const getInvoices = async (req: AuthRequest, res: Response) => {
       const orgUsers = await prisma.user.findMany({
         where: { 
           organizationId: currentUserOrg.organizationId,
-          role: { in: ['OWNER', 'MANAGER', 'WORKER'] }
+          role: { in: ['SUPERUSER', 'OWNER', 'MANAGER', 'WORKER', 'ACCOUNTANT', 'INVENTORY', 'VETERINARIAN'] }
         },
         select: { id: true }
       });
@@ -167,7 +167,7 @@ export const getInvoices = async (req: AuthRequest, res: Response) => {
       const orgUsers = await prisma.user.findMany({
         where: { 
           organizationId: currentUserOrg.organizationId,
-          role: { in: ['OWNER', 'MANAGER', 'WORKER'] }
+          role: { in: ['SUPERUSER', 'OWNER', 'MANAGER', 'WORKER', 'ACCOUNTANT', 'INVENTORY', 'VETERINARIAN'] }
         },
         select: { id: true }
       });
@@ -278,10 +278,10 @@ export const getInvoiceById = async (req: AuthRequest, res: Response) => {
       hasAccess = true;
     } else if (currentUser.role === 'MANAGER') {
       // Managers can access invoices from OWNER, MANAGER, and WORKER roles
-      hasAccess = ['OWNER', 'MANAGER', 'WORKER'].includes(invoice.user?.role || '');
+      hasAccess = ['SUPERUSER', 'OWNER', 'MANAGER', 'WORKER', 'ACCOUNTANT', 'INVENTORY', 'VETERINARIAN'].includes(invoice.user?.role || '');
     } else if (currentUser.role === 'WORKER') {
       // Workers can access invoices from OWNER, MANAGER, and WORKER roles (organization-wide access)
-      hasAccess = ['OWNER', 'MANAGER', 'WORKER'].includes(invoice.user?.role || '');
+      hasAccess = ['SUPERUSER', 'OWNER', 'MANAGER', 'WORKER', 'ACCOUNTANT', 'INVENTORY', 'VETERINARIAN'].includes(invoice.user?.role || '');
     } else {
       // Users can only access their own invoices
       hasAccess = invoice.userId === currentUser.id;
@@ -586,7 +586,7 @@ export const markInvoiceAsPaid = async (req: AuthRequest, res: Response) => {
       console.log(`🔍 DEBUG: OWNER access granted`);
     } else if (currentUser.role === 'MANAGER') {
       // Managers can mark invoices from OWNER, MANAGER, and WORKER roles as paid
-      const allowedRoles = ['OWNER', 'MANAGER', 'WORKER'];
+      const allowedRoles = ['SUPERUSER', 'OWNER', 'MANAGER', 'WORKER', 'ACCOUNTANT', 'INVENTORY', 'VETERINARIAN'];
       hasAccess = allowedRoles.includes(existingInvoice.user?.role || '');
       console.log(`🔍 DEBUG: MANAGER access check - Allowed roles: [${allowedRoles.join(', ')}], Invoice creator role: ${existingInvoice.user?.role}, Access granted: ${hasAccess}`);
     } else if (currentUser.role === 'WORKER') {

@@ -47,6 +47,22 @@ const IncomePage = () => {
   const { user } = useAuth();
   const restrictions = useSubscriptionRestrictions();
 
+  // MANAGER and INVENTORY role restrictions
+  const isManager = user?.role === 'MANAGER';
+  const isInventory = user?.role === 'INVENTORY';
+  const allowedTabs = isManager ? ['record', 'invoice', 'invoices'] : isInventory ? [] : ['record', 'invoice', 'records', 'invoices', 'vat'];
+
+  // Redirect to allowed tab if current tab is not allowed
+  useEffect(() => {
+    if ((isManager || isInventory) && !allowedTabs.includes(activeTab)) {
+      if (isManager) {
+        setActiveTab('record');
+      } else if (isInventory) {
+        // INVENTORY has no access to any tabs, show restricted message
+      }
+    }
+  }, [isManager, isInventory, activeTab, allowedTabs]);
+
   // Scroll to top when navigating to Income page
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -1734,6 +1750,18 @@ Generated on: ${new Date().toLocaleString()}
     );
   }
 
+  // INVENTORY role restriction - no access to IncomePage
+  if (isInventory) {
+    return (
+      <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 rounded-lg p-6">
+        <h3 className="text-lg font-medium text-yellow-900 mb-2">Access Restricted</h3>
+        <p className="text-yellow-700">
+          Income management is not available for Inventory Managers. Please use the navigation menu to access your assigned features.
+        </p>
+      </div>
+    );
+  }
+
   // Confirmation Modal for Marking Invoice as Paid
   if (showPaidConfirmationModal && invoiceToMarkAsPaid) {
     return (
@@ -1933,28 +1961,32 @@ Generated on: ${new Date().toLocaleString()}
                 <Table className="h-4 w-4" />
                 Invoice Records
               </button>
-              <button
-                onClick={() => handleTabChange('records')}
-                className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 whitespace-nowrap ${
-                  activeTab === 'records'
-                    ? 'border-green-500 text-green-600 dark:text-green-400'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-                }`}
-              >
-                <span className="h-4 w-4 flex items-center justify-center text-sm font-bold">₦</span>
-                Income Records
-              </button>
-              <button
-                onClick={() => handleTabChange('vat' as any)}
-                className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 whitespace-nowrap ${
-                  activeTab === 'vat'
-                    ? 'border-green-500 text-green-600 dark:text-green-400'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-                }`}
-              >
-                <Receipt className="h-4 w-4" />
-                VAT Records
-              </button>
+              {!isManager && (
+                <>
+                  <button
+                    onClick={() => handleTabChange('records')}
+                    className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 whitespace-nowrap ${
+                      activeTab === 'records'
+                        ? 'border-green-500 text-green-600 dark:text-green-400'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                    }`}
+                  >
+                    <span className="h-4 w-4 flex items-center justify-center text-sm font-bold">₦</span>
+                    Income Records
+                  </button>
+                  <button
+                    onClick={() => handleTabChange('vat' as any)}
+                    className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 whitespace-nowrap ${
+                      activeTab === 'vat'
+                        ? 'border-green-500 text-green-600 dark:text-green-400'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                    }`}
+                  >
+                    <Receipt className="h-4 w-4" />
+                    VAT Records
+                  </button>
+                </>
+              )}
             </nav>
           </div>
 

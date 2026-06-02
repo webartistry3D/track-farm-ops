@@ -2,7 +2,7 @@ export interface User {
   id: number;
   name: string;
   email: string;
-  role: 'OWNER' | 'MANAGER' | 'WORKER' | 'SUPERUSER';
+  role: 'SUPERUSER' | 'OWNER' | 'MANAGER' | 'WORKER' | 'ACCOUNTANT' | 'INVENTORY' | 'VETERINARIAN';
   organizationId?: number;
   organizationName?: string;
   createdAt: string;
@@ -145,7 +145,7 @@ export interface InventoryTransaction {
     id: number;
     name: string;
     email: string;
-    role: 'OWNER' | 'MANAGER' | 'WORKER';
+    role: 'SUPERUSER' | 'OWNER' | 'MANAGER' | 'WORKER' | 'ACCOUNTANT' | 'INVENTORY' | 'VETERINARIAN';
   };
   inventoryItem: {
     id: number;

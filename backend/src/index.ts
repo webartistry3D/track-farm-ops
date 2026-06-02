@@ -188,7 +188,8 @@ app.get('/api', (req, res) => {
       storage: '/api/storage',
       ocr: '/api/ocr',
       superuser: '/api/superuser',
-      health: '/api/health'
+      health: '/api/health',
+      livestock: '/api/livestock'
     }
   });
 });

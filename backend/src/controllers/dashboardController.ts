@@ -40,7 +40,7 @@ export const getDashboardData = async (req: AuthRequest, res: Response) => {
       const orgUsers = await prisma.user.findMany({
         where: { 
           organizationId: currentUserOrg.organizationId,
-          role: { in: ['OWNER', 'MANAGER', 'WORKER'] }
+          role: { in: ['SUPERUSER', 'OWNER', 'MANAGER', 'WORKER', 'ACCOUNTANT', 'INVENTORY', 'VETERINARIAN'] }
         },
         select: { id: true }
       });
@@ -246,7 +246,7 @@ export const getDashboardCharts = async (req: AuthRequest, res: Response) => {
       const orgUsers = await prisma.user.findMany({
         where: { 
           organizationId: currentUserOrg.organizationId,
-          role: { in: ['OWNER', 'MANAGER', 'WORKER'] }
+          role: { in: ['SUPERUSER', 'OWNER', 'MANAGER', 'WORKER', 'ACCOUNTANT', 'INVENTORY', 'VETERINARIAN'] }
         },
         select: { id: true }
       });

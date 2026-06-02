@@ -72,7 +72,7 @@ const Assets = () => {
   // Check subscription access and role
   const restrictions = useSubscriptionRestrictions();
   const hasSubscriptionAccess = restrictions.canAccessFeature('inventoryTransactions');
-  const isOwnerOrManager = user && (user.role === 'OWNER' || user.role === 'MANAGER');
+  const isOwnerOrManager = user && (user.role === 'OWNER' || user.role === 'MANAGER' || user.role === 'INVENTORY');
   
   if (!hasSubscriptionAccess && !isOwnerOrManager) {
     return (
@@ -85,14 +85,14 @@ const Assets = () => {
     );
   }
 
-  const isOwner = user.role === 'OWNER' || user.role === 'MANAGER';
+  const isOwner = user.role === 'OWNER' || user.role === 'MANAGER' || user.role === 'ACCOUNTANT' || user.role === 'INVENTORY';
 
   if (!isOwner) {
     return (
       <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 rounded-lg p-6">
         <h3 className="text-lg font-medium text-yellow-900 mb-2">Access Restricted</h3>
         <p className="text-yellow-700">
-          Asset management is only available to farm owners and managers.
+          Asset management is only available to farm owners, managers, accountants, and inventory managers.
         </p>
       </div>
     );

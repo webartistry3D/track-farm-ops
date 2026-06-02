@@ -127,7 +127,7 @@ export const createUser = async (req: AuthRequest, res: Response) => {
     }
 
     // Validate role
-    if (!['OWNER', 'MANAGER', 'WORKER'].includes(role)) {
+    if (!['SUPERUSER', 'OWNER', 'MANAGER', 'WORKER', 'ACCOUNTANT', 'INVENTORY', 'VETERINARIAN'].includes(role)) {
       return res.status(400).json({ error: 'Invalid role' });
     }
 

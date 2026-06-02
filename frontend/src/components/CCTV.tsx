@@ -187,14 +187,14 @@ const CCTV = () => {
     );
   }
 
-  const isOwner = user.role === 'OWNER' || user.role === 'MANAGER';
+  const isOwner = user.role === 'OWNER' || user.role === 'MANAGER' || user.role === 'INVENTORY';
 
   if (!isOwner) {
     return (
       <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6">
         <h3 className="text-lg font-medium text-yellow-900 dark:text-yellow-100 mb-2">Access Restricted</h3>
         <p className="text-yellow-700 dark:text-yellow-300">
-          CCTV monitoring is only available to farm owners and managers.
+          CCTV monitoring is only available to farm owners, managers, and inventory managers.
         </p>
       </div>
     );

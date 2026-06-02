@@ -487,7 +487,7 @@ const Landing = () => {
               <div className="text-4xl mb-4">👥</div>
               <h3 className="text-lg font-poppins font-semibold text-gray-900 mb-2">Multi-User Access</h3>
               <p className="font-inter text-gray-600">
-                Authentication-based access control for owners, managers, and workers. Assign specific permissions and roles, manage user access levels, and ensure data security with encrypted authentication. Monitor user activity and maintain complete control over who can view, edit, and manage different aspects of your farm operations.
+                Authentication-based access control for owners, managers, workers, accountants, inventory managers, and veterinarians. Assign specific permissions and roles, manage user access levels, and ensure data security with encrypted authentication. Monitor user activity and maintain complete control over who can view, edit, and manage different aspects of your farm operations.
               </p>
             </div>
 

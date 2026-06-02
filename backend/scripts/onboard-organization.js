@@ -81,6 +81,33 @@ const WORKERS_CONFIG = [
   },
 ];
 
+const ACCOUNTANTS_CONFIG = [
+  {
+    name: 'Accountant User',
+    email: 'accountant@egobam.com',
+    password: 'Accountant123#', // Change this to a secure password
+  },
+  // Add more accountants as needed
+];
+
+const INVENTORY_MANAGERS_CONFIG = [
+  {
+    name: 'Inventory Manager',
+    email: 'inventory@egobam.com',
+    password: 'Inventory123#', // Change this to a secure password
+  },
+  // Add more inventory managers as needed
+];
+
+const VETERINARIANS_CONFIG = [
+  {
+    name: 'Veterinarian',
+    email: 'veterinarian@egobam.com',
+    password: 'Veterinarian123#', // Change this to a secure password
+  },
+  // Add more veterinarians as needed
+];
+
 // ============================================
 // 🚀 ONBOARDING SCRIPT - DO NOT MODIFY BELOW
 // ============================================
@@ -184,6 +211,93 @@ async function createWorkers(organizationId) {
   }
 
   return workers;
+}
+
+async function createAccountants(organizationId) {
+  console.log(`💰 Creating ${ACCOUNTANTS_CONFIG.length} accountants...`);
+
+  const accountants = [];
+
+  for (const accountantConfig of ACCOUNTANTS_CONFIG) {
+    try {
+      const hashedPassword = await bcrypt.hash(accountantConfig.password, 12);
+
+      const accountant = await prisma.user.create({
+        data: {
+          name: accountantConfig.name,
+          email: accountantConfig.email,
+          password: hashedPassword,
+          role: 'ACCOUNTANT',
+          organizationId,
+        },
+      });
+
+      console.log(`✅ Created accountant: ${accountant.name} (${accountant.email})`);
+      accountants.push(accountant);
+    } catch (error) {
+      console.error(`❌ Error creating accountant ${accountantConfig.name}:`, error);
+    }
+  }
+
+  return accountants;
+}
+
+async function createInventoryManagers(organizationId) {
+  console.log(`📦 Creating ${INVENTORY_MANAGERS_CONFIG.length} inventory managers...`);
+
+  const inventoryManagers = [];
+
+  for (const inventoryManagerConfig of INVENTORY_MANAGERS_CONFIG) {
+    try {
+      const hashedPassword = await bcrypt.hash(inventoryManagerConfig.password, 12);
+
+      const inventoryManager = await prisma.user.create({
+        data: {
+          name: inventoryManagerConfig.name,
+          email: inventoryManagerConfig.email,
+          password: hashedPassword,
+          role: 'INVENTORY',
+          organizationId,
+        },
+      });
+
+      console.log(`✅ Created inventory manager: ${inventoryManager.name} (${inventoryManager.email})`);
+      inventoryManagers.push(inventoryManager);
+    } catch (error) {
+      console.error(`❌ Error creating inventory manager ${inventoryManagerConfig.name}:`, error);
+    }
+  }
+
+  return inventoryManagers;
+}
+
+async function createVeterinarians(organizationId) {
+  console.log(`🏥 Creating ${VETERINARIANS_CONFIG.length} veterinarians...`);
+
+  const veterinarians = [];
+
+  for (const veterinarianConfig of VETERINARIANS_CONFIG) {
+    try {
+      const hashedPassword = await bcrypt.hash(veterinarianConfig.password, 12);
+
+      const veterinarian = await prisma.user.create({
+        data: {
+          name: veterinarianConfig.name,
+          email: veterinarianConfig.email,
+          password: hashedPassword,
+          role: 'VETERINARIAN',
+          organizationId,
+        },
+      });
+
+      console.log(`✅ Created veterinarian: ${veterinarian.name} (${veterinarian.email})`);
+      veterinarians.push(veterinarian);
+    } catch (error) {
+      console.error(`❌ Error creating veterinarian ${veterinarianConfig.name}:`, error);
+    }
+  }
+
+  return veterinarians;
 }
 
 async function seedSystemInventoryForOrganization(organizationId) {
@@ -397,6 +511,24 @@ async function main() {
       console.warn('⚠️ No workers were created (this might be intentional)');
     }
 
+    // Create accountants
+    const accountants = await createAccountants(organization.id);
+    if (accountants.length === 0) {
+      console.warn('⚠️ No accountants were created (this might be intentional)');
+    }
+
+    // Create inventory managers
+    const inventoryManagers = await createInventoryManagers(organization.id);
+    if (inventoryManagers.length === 0) {
+      console.warn('⚠️ No inventory managers were created (this might be intentional)');
+    }
+
+    // Create veterinarians
+    const veterinarians = await createVeterinarians(organization.id);
+    if (veterinarians.length === 0) {
+      console.warn('⚠️ No veterinarians were created (this might be intentional)');
+    }
+
     // Seed inventory for the organization
     console.log('\n📦 Seeding inventory...');
     const seedingSuccess = await seedSystemInventoryForOrganization(organization.id);
@@ -431,6 +563,27 @@ async function main() {
       console.log(`   ${index + 1}. ${worker.name}`);
       console.log(`      Email: ${worker.email}`);
       console.log(`      Password: ${WORKERS_CONFIG[index].password}`);
+    });
+
+    console.log('\n💰 ACCOUNTANT CREDENTIALS:');
+    accountants.forEach((accountant, index) => {
+      console.log(`   ${index + 1}. ${accountant.name}`);
+      console.log(`      Email: ${accountant.email}`);
+      console.log(`      Password: ${ACCOUNTANTS_CONFIG[index].password}`);
+    });
+
+    console.log('\n📦 INVENTORY MANAGER CREDENTIALS:');
+    inventoryManagers.forEach((inventoryManager, index) => {
+      console.log(`   ${index + 1}. ${inventoryManager.name}`);
+      console.log(`      Email: ${inventoryManager.email}`);
+      console.log(`      Password: ${INVENTORY_MANAGERS_CONFIG[index].password}`);
+    });
+
+    console.log('\n🏥 VETERINARIAN CREDENTIALS:');
+    veterinarians.forEach((veterinarian, index) => {
+      console.log(`   ${index + 1}. ${veterinarian.name}`);
+      console.log(`      Email: ${veterinarian.email}`);
+      console.log(`      Password: ${VETERINARIANS_CONFIG[index].password}`);
     });
 
     console.log('\n📦 INVENTORY:');

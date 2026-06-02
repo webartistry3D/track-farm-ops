@@ -63,14 +63,17 @@ const Analytics = () => {
     );
   }
 
-  const isOwner = user.role === 'OWNER' || user.role === 'MANAGER';
+  const isOwner = user.role === 'OWNER' || user.role === 'MANAGER' || user.role === 'ACCOUNTANT' || user.role === 'INVENTORY';
+  const isManager = user.role === 'MANAGER';
+  const isInventory = user.role === 'INVENTORY';
+  const shouldHideFinancialSections = isManager || isInventory;
 
   if (!isOwner) {
     return (
       <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 rounded-lg p-6">
         <h3 className="text-lg font-medium text-yellow-900 mb-2">Access Restricted</h3>
         <p className="text-yellow-700">
-          Analytics is only available to farm owners and managers.
+          Analytics is only available to farm owners, managers, accountants, and inventory managers.
         </p>
       </div>
     );
@@ -611,41 +614,43 @@ const Analytics = () => {
         </div>
 
         {/* Financial Overview */}
-        <div className="mb-8">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Financial Overview</h2>
-          {financialLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                  <div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
-                  <div className="h-8 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
-                  <div className="h-3 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <StatCard
-                title="Total Income"
-                value={formatCurrency(Number(financialSummary?.totalIncome) || 0)}
-                icon={<TrendingUp className="h-4 w-4 text-white" />}
-                color="bg-green-500"
-              />
-              <StatCard
-                title="Total Expenses"
-                value={formatCurrency(Number(financialSummary?.totalExpenses) || 0)}
-                icon={<ShoppingCart className="h-4 w-4 text-white" />}
-                color="bg-red-500"
-              />
-              <StatCard
-                title="Net Profit"
-                value={formatCurrency(Number(financialSummary?.netProfit) || 0)}
-                icon={<TrendingUp className="h-4 w-4 text-white" />}
-                color={(Number(financialSummary?.netProfit) || 0) >= 0 ? "bg-blue-500" : "bg-orange-500"}
-              />
-            </div>
-          )}
-        </div>
+        {!isManager && (
+          <div className="mb-8">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Financial Overview</h2>
+            {financialLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                    <div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
+                    <div className="h-8 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
+                    <div className="h-3 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <StatCard
+                  title="Total Income"
+                  value={formatCurrency(Number(financialSummary?.totalIncome) || 0)}
+                  icon={<TrendingUp className="h-4 w-4 text-white" />}
+                  color="bg-green-500"
+                />
+                <StatCard
+                  title="Total Expenses"
+                  value={formatCurrency(Number(financialSummary?.totalExpenses) || 0)}
+                  icon={<ShoppingCart className="h-4 w-4 text-white" />}
+                  color="bg-red-500"
+                />
+                <StatCard
+                  title="Net Profit"
+                  value={formatCurrency(Number(financialSummary?.netProfit) || 0)}
+                  icon={<TrendingUp className="h-4 w-4 text-white" />}
+                  color={(Number(financialSummary?.netProfit) || 0) >= 0 ? "bg-blue-500" : "bg-orange-500"}
+                />
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-8">
           <div className="flex flex-col gap-4">
@@ -764,7 +769,8 @@ const Analytics = () => {
         </div>*/}
 
         {/* Advanced Analytics Charts */}
-        <div className="mb-8">
+        {!shouldHideFinancialSections && (
+          <div className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Advanced Analytics</h2>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
@@ -880,13 +886,15 @@ const Analytics = () => {
             </div>
           </div>
         </div>
+        )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-              <TrendingUp className="w-5 h-5 mr-2 text-green-500" />
-              Income by Category
-            </h2>
+        {!shouldHideFinancialSections && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                <TrendingUp className="w-5 h-5 mr-2 text-green-500" />
+                Income by Category
+              </h2>
             {financialLoading ? (
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                 <div className="h-6 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-4"></div>
@@ -1014,6 +1022,7 @@ const Analytics = () => {
             )}
           </div>
         </div>
+        )}
 
         <div>
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">

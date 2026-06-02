@@ -233,14 +233,26 @@ const Reports: React.FC = () => {
     return <ReportsSkeleton />;
   }
 
-  const isOwner = user?.role === 'OWNER' || user?.role === 'MANAGER';
+  const isOwner = user?.role === 'OWNER' || user?.role === 'ACCOUNTANT';
+
+  // MANAGER and INVENTORY role restriction - no access to Reports
+  if (user?.role === 'MANAGER' || user?.role === 'INVENTORY') {
+    return (
+      <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 rounded-lg p-6">
+        <h3 className="text-lg font-medium text-yellow-900 mb-2">Access Restricted</h3>
+        <p className="text-yellow-700">
+          Reports access is not available for your role. Please use the navigation menu to access your assigned features.
+        </p>
+      </div>
+    );
+  }
 
   if (!isOwner) {
     return (
       <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 rounded-lg p-6">
         <h3 className="text-lg font-medium text-yellow-900 mb-2">Access Restricted</h3>
         <p className="text-yellow-700">
-          Reports are only available to farm owners and managers.
+          Reports are only available to farm owners, managers, and accountants.
         </p>
       </div>
     );

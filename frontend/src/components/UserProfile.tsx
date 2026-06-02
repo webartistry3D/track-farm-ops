@@ -182,6 +182,9 @@ const UserProfile: React.FC<UserProfileProps> = ({ className = '' }) => {
       case 'owner': return 'text-purple-600 bg-purple-50 dark:text-purple-400 dark:bg-purple-900/20';
       case 'manager': return 'text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-900/20';
       case 'worker': return 'text-green-600 bg-green-50 dark:text-green-400 dark:bg-green-900/20';
+      case 'accountant': return 'text-emerald-600 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-900/20';
+      case 'inventory': return 'text-yellow-600 bg-yellow-50 dark:text-yellow-400 dark:bg-yellow-900/20';
+      case 'veterinarian': return 'text-pink-600 bg-pink-50 dark:text-pink-400 dark:bg-pink-900/20';
       case 'superuser': return 'text-red-600 bg-red-50 dark:text-red-400 dark:bg-red-900/20';
       default: return 'text-gray-600 bg-gray-50 dark:text-gray-400 dark:bg-gray-900/20';
     }

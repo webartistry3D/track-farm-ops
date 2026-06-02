@@ -90,7 +90,7 @@ router.get('/income', authenticate, async (req: AuthRequest, res) => {
       const orgUsers = await prisma.user.findMany({
         where: { 
           organizationId: currentUserOrg.organizationId,
-          role: { in: ['OWNER', 'MANAGER', 'WORKER'] }
+          role: { in: ['SUPERUSER', 'OWNER', 'MANAGER', 'WORKER', 'ACCOUNTANT', 'INVENTORY', 'VETERINARIAN'] }
         },
         select: { id: true }
       });
@@ -105,7 +105,7 @@ router.get('/income', authenticate, async (req: AuthRequest, res) => {
       const orgUsers = await prisma.user.findMany({
         where: { 
           organizationId: currentUserOrg.organizationId,
-          role: { in: ['OWNER', 'MANAGER', 'WORKER'] }
+          role: { in: ['SUPERUSER', 'OWNER', 'MANAGER', 'WORKER', 'ACCOUNTANT', 'INVENTORY', 'VETERINARIAN'] }
         },
         select: { id: true }
       });
@@ -316,7 +316,7 @@ router.get('/expenses', authenticate, async (req: AuthRequest, res) => {
       const orgUsers = await prisma.user.findMany({
         where: { 
           organizationId: currentUserOrg.organizationId,
-          role: { in: ['OWNER', 'MANAGER', 'WORKER'] }
+          role: { in: ['SUPERUSER', 'OWNER', 'MANAGER', 'WORKER', 'ACCOUNTANT', 'INVENTORY', 'VETERINARIAN'] }
         },
         select: { id: true }
       });
@@ -331,7 +331,7 @@ router.get('/expenses', authenticate, async (req: AuthRequest, res) => {
       const orgUsers = await prisma.user.findMany({
         where: { 
           organizationId: currentUserOrg.organizationId,
-          role: { in: ['OWNER', 'MANAGER', 'WORKER'] }
+          role: { in: ['SUPERUSER', 'OWNER', 'MANAGER', 'WORKER', 'ACCOUNTANT', 'INVENTORY', 'VETERINARIAN'] }
         },
         select: { id: true }
       });
@@ -758,7 +758,7 @@ router.get('/summary', authenticate, async (req: AuthRequest, res) => {
       const orgUsers = await prisma.user.findMany({
         where: { 
           organizationId: currentUserOrg.organizationId,
-          role: { in: ['OWNER', 'MANAGER', 'WORKER'] }
+          role: { in: ['SUPERUSER', 'OWNER', 'MANAGER', 'WORKER', 'ACCOUNTANT', 'INVENTORY', 'VETERINARIAN'] }
         },
         select: { id: true }
       });

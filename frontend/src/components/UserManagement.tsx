@@ -202,6 +202,9 @@ const UserManagement = () => {
                     <option value="WORKER">Worker</option>
                     <option value="MANAGER">Manager</option>
                     <option value="OWNER">Owner</option>
+                    <option value="ACCOUNTANT">Accountant</option>
+                    <option value="INVENTORY">Inventory Manager</option>
+                    <option value="VETERINARIAN">Veterinarian</option>
                   </select>
                 </div>
 
@@ -347,6 +350,12 @@ const UserManagement = () => {
                         ? 'bg-purple-100 text-purple-800 dark:bg-purple-800 dark:text-purple-100'
                         : user.role === 'MANAGER'
                         ? 'bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100'
+                        : user.role === 'ACCOUNTANT'
+                        ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100'
+                        : user.role === 'INVENTORY'
+                        ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100'
+                        : user.role === 'VETERINARIAN'
+                        ? 'bg-pink-100 text-pink-800 dark:bg-pink-800 dark:text-pink-100'
                         : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                     }`}>
                       {user.role}
@@ -385,10 +394,13 @@ const UserManagement = () => {
           <p>• <strong>Workers:</strong> Can record income, expenses, and update inventory</p>
           <p>• <strong>Managers:</strong> Can do everything workers can plus view reports</p>
           <p>• <strong>Owners:</strong> Full access to all features including user management</p>
+          <p>• <strong>Accountants:</strong> Can manage financial records, invoices, and VAT</p>
+          <p>• <strong>Inventory Managers:</strong> Can manage inventory items, categories, and transactions</p>
+          <p>• <strong>Veterinarians:</strong> Can manage livestock health records and treatments</p>
         </div>
         <div className="mt-4 pt-4 border-t border-blue-200 dark:border-blue-800">
           <p className="text-sm text-blue-600 dark:text-blue-400">
-            <strong>Note:</strong> Workers cannot sign up themselves. Only owners can create worker accounts.
+            <strong>Note:</strong> Workers cannot sign up themselves. Only owners can create user accounts.
           </p>
         </div>
       </div>

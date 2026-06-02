@@ -12,6 +12,7 @@ import Dashboard from './components/Dashboard';
 import Reports from './components/Reports';
 import CCTV from './components/CCTV';
 import Analytics from './components/Analytics';
+import LivestockHealth from './components/LivestockHealth';
 import IncomePage from './components/IncomePage';
 import ExpensePage from './components/ExpensePage';
 import Inventory from './components/Inventory';
@@ -155,6 +156,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <CCTV />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/livestock-health" 
+        element={
+          <ProtectedRoute>
+            <LivestockHealth />
           </ProtectedRoute>
         } 
       />
