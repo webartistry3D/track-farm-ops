@@ -51,25 +51,25 @@ const Navigation = () => {
       </div>
       
       {/* Mobile menu */}
-      <div className={`md:hidden fixed top-12 right-0 h-fit max-h-[45vh] w-[30%] min-w-[150px] bg-white bg-opacity-10 backdrop-blur-md border-l border-white border-opacity-20 transition-transform duration-300 ease-in-out z-40 ${
+      <div className={`md:hidden fixed top-12 right-0 h-fit max-h-[45vh] w-[50%] min-w-[150px] bg-white bg-opacity-10 backdrop-blur-md border-l border-white border-opacity-20 transition-transform duration-300 ease-in-out z-40 ${
         isMenuOpen ? 'translate-x-0' : 'translate-x-full'
       }`}>
         <div className="p-4">
           <div className="space-y-1">
-            <Link to="/about" className="text-green-500 hover:text-green-300 block px-3 py-2 rounded-md text-base font-medium transition-colors">
+            <Link to="/about" className="text-white hover:text-green-300 block px-3 py-2 rounded-md text-base font-medium transition-colors">
               About
             </Link>
-            <Link to="/privacy" className="text-green-500 hover:text-green-300 block px-3 py-2 rounded-md text-base font-medium transition-colors">
+            <Link to="/privacy" className="text-white hover:text-green-300 block px-3 py-2 rounded-md text-base font-medium transition-colors">
               Privacy
             </Link>
-            <Link to="/terms" className="text-green-500 hover:text-green-300 block px-3 py-2 rounded-md text-base font-medium transition-colors">
+            <Link to="/terms" className="text-white hover:text-green-300 block px-3 py-2 rounded-md text-base font-medium transition-colors">
               Terms
             </Link>
-            <Link to="/contact" className="text-green-500 hover:text-green-300 block px-3 py-2 rounded-md text-base font-medium transition-colors">
+            <Link to="/contact" className="text-white hover:text-green-300 block px-3 py-2 rounded-md text-base font-medium transition-colors">
               Contact
             </Link>
             <div className="border-t border-gray-200 pt-2 mt-2">
-              <Link to="/login" className="text-green-500 hover:text-green-300 block px-3 py-2 rounded-md text-base font-medium transition-colors">
+              <Link to="/login" className="text-white hover:text-green-300 block px-3 py-2 rounded-md text-base font-medium transition-colors">
                 Login
               </Link>
               <Link to="/signup" className="bg-green-600 text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-green-700 transition-all duration-300 mt-1">
@@ -83,7 +83,7 @@ const Navigation = () => {
       {/* Mobile menu overlay */}
       {isMenuOpen && (
         <div 
-          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
+          className="md:hidden fixed inset-0 bg-transparent z-30"
           onClick={() => setIsMenuOpen(false)}
         />
       )}

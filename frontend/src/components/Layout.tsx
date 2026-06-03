@@ -211,7 +211,7 @@ const Layout = ({ children }: LayoutProps) => {
       {sidebarOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
           <div 
-            className="fixed inset-0 bg-gray-600 dark:bg-gray-800 bg-opacity-75 dark:bg-opacity-75" 
+            className="fixed inset-0 bg-transparent" 
             onClick={() => setSidebarOpen(false)}
           />
         </div>
