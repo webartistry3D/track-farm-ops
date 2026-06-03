@@ -9,12 +9,12 @@ const Landing = () => {
     const style = document.createElement('style');
     style.textContent = `
       @keyframes scroll-x {
-        0% { transform: translateX(-90%); }
-        100% { transform: translateX(0); }
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-100%); }
       }
       
       @keyframes scroll-x-reverse {
-        0% { transform: translateX(90%); }
+        0% { transform: translateX(-100%); }
         100% { transform: translateX(0); }
       }
       
@@ -25,11 +25,33 @@ const Landing = () => {
       }
       
       .animate-scroll-x {
-        animation: scroll-x 15s linear infinite;
+        animation: scroll-x 25s linear infinite;
       }
       
       .animate-scroll-x-reverse {
-        animation: scroll-x-reverse 15s linear infinite;
+        animation: scroll-x-reverse 25s linear infinite;
+      }
+      
+      @keyframes scroll-x-mobile {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-100%); }
+        100% { transform: translateX(-100%); }
+      }
+      
+      @keyframes scroll-x-reverse-mobile {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(0); }
+        100% { transform: translateX(0); }
+      }
+      
+      @media (max-width: 768px) {
+        .animate-scroll-x {
+          animation: scroll-x-mobile 20s linear infinite;
+        }
+        
+        .animate-scroll-x-reverse {
+          animation: scroll-x-reverse-mobile 20s linear infinite;
+        }
       }
     `;
     document.head.appendChild(style);
@@ -334,7 +356,7 @@ const Landing = () => {
       </div>
 
       {/* Image Cards Section */}
-      <div 
+      {/*<div 
         id="everything-you-need-section"
         ref={addToRefs}
         data-section="everything-you-need"
@@ -351,7 +373,7 @@ const Landing = () => {
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Image Card 1 */}
+            {/* Image Card 1
             <div className={`bg-gray-100 rounded-lg overflow-hidden h-88 transition-all duration-800 ease-in transform ${
               visibleSections.has('everything-you-need')
                 ? 'opacity-100 translate-x-0'
@@ -371,10 +393,10 @@ const Landing = () => {
                 <p className="font-inter text-gray-600">
                   Track everything from crops to livestock in one unified platform
                 </p>
-              </div>*/}
+              </div>
             </div>
 
-            {/* Image Card 2 */}
+            {/* Image Card 2 *
             <div className={`bg-white/90 rounded-lg overflow-hidden w-2/5 mx-auto transition-all duration-800 ease-in transform ${
               visibleSections.has('everything-you-need')
                 ? 'opacity-100 translate-x-0'
@@ -394,36 +416,20 @@ const Landing = () => {
                 <p className="font-inter text-gray-600">
                   Monitor your farm performance with detailed insights and reports
                 </p>
-              </div>*/}
+              </div>*
             </div>
           </div>
         </div>
-      </div>
+      </div>*/}
 
       {/* Features Section */}
       <div 
         id="features-section"
         ref={addToRefs}
         data-section="features"
-        className="py-20 bg-gray-50 relative overflow-hidden"
+        className="py-20 bg-white relative overflow-hidden"
       >
-        {/* Parallax Background */}
-        <div className="absolute inset-0">
-          <div 
-            className="w-full h-full bg-cover bg-center bg-fixed"
-            style={{
-              backgroundImage: 'url("/farm-os2.png")',
-              backgroundAttachment: 'fixed',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
-              backgroundSize: 'cover'
-            }}
-          >
-            {/* Overlay for text readability */}
-            <div className="absolute inset-0 bg-white/30 bg-opacity-20"></div>
-          </div>
-        </div>
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative z-10 max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className={`text-center mb-16 transition-all duration-1000 transform ${
             visibleHeaders.has('features')
               ? 'opacity-100 translate-y-0'
@@ -434,89 +440,65 @@ const Landing = () => {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className={`text-center bg-white/90 rounded-lg shadow-lg p-6 transition-all duration-700 transform ${
-              visibleSections.has('features')
-                ? 'opacity-100 translate-y-0'
-                : 'opacity-0 translate-y-16'
-            }`} style={{
-              transitionDelay: visibleSections.has('features') ? '200ms' : '0ms'
-            }}>
-              <div className="text-4xl mb-4">₦</div>
-              <h3 className="text-lg font-jetbrains-mono font-semibold text-gray-900 mb-2">Income & Expense Tracker</h3>
-              <p className="font-inter text-gray-600">
-                Record daily income and expenses.<br></br>Create and track invoices.<br></br>Upload receipts.<br></br>Generate detailed financial reports.
-              </p>
+          <div className="flex overflow-x-auto gap-8 pb-4 snap-x snap-mandatory scrollbar-hide">
+            <div className="flex-shrink-0 w-80 snap-start">
+              <img src="/income-expense.png" alt="Income & Expense Tracker" className={`w-full rounded-lg shadow-lg transition-all duration-700 transform ${
+                visibleSections.has('features')
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-16'
+              }`} style={{
+                transitionDelay: visibleSections.has('features') ? '200ms' : '0ms'
+              }} />
             </div>
 
-            <div className={`text-center bg-white/90 rounded-lg shadow-lg p-6 transition-all duration-700 transform ${
-              visibleSections.has('features')
-                ? 'opacity-100 translate-y-0'
-                : 'opacity-0 translate-y-16'
-            }`} style={{
-              transitionDelay: visibleSections.has('features') ? '400ms' : '0ms'
-            }}>
-              <div className="text-4xl mb-4">📦</div>
-              <h3 className="text-lg font-jetbrains-mono font-semibold text-gray-900 mb-2">Inventory & Assets Manager</h3>
-              <p className="font-inter text-gray-600">
-                Track livestock and produce in real-time.<br></br>Monitor equipment maintenance schedules.<br></br>Manage farm supplies efficiently.<br></br>Get automated notifications.
-              </p>
+            <div className="flex-shrink-0 w-80 snap-start">
+              <img src="/inventory-assets.png" alt="Inventory & Assets Manager" className={`w-full rounded-lg shadow-lg transition-all duration-700 transform ${
+                visibleSections.has('features')
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-16'
+              }`} style={{
+                transitionDelay: visibleSections.has('features') ? '400ms' : '0ms'
+              }} />
             </div>
 
-            <div className={`text-center bg-white/90 rounded-lg shadow-lg p-6 transition-all duration-700 transform ${
-              visibleSections.has('features')
-                ? 'opacity-100 translate-y-0'
-                : 'opacity-0 translate-y-16'
-            }`} style={{
-              transitionDelay: visibleSections.has('features') ? '600ms' : '0ms'
-            }}>
-              <div className="text-4xl mb-4">📊</div>
-              <h3 className="text-lg font-jetbrains-mono font-semibold text-gray-900 mb-2">Analytics & Reports</h3>
-              <p className="font-inter text-gray-600">
-                Comprehensive dashboards and reports.<br></br>Monitor farm performance from anywhere.<br></br>Track key metrics, analyze trends, and make data-driven decisions.<br></br>Generate custom reports, export data, and visualize your farm's success with interactive charts and graphs.
-              </p>
+            <div className="flex-shrink-0 w-80 snap-start">
+              <img src="/analytics-reports.png" alt="Analytics & Reports" className={`w-full rounded-lg shadow-lg transition-all duration-700 transform ${
+                visibleSections.has('features')
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-16'
+              }`} style={{
+                transitionDelay: visibleSections.has('features') ? '600ms' : '0ms'
+              }} />
             </div>
 
-            <div className={`text-center bg-white/90 rounded-lg shadow-lg p-6 transition-all duration-700 transform ${
-              visibleSections.has('features')
-                ? 'opacity-100 translate-y-0'
-                : 'opacity-0 translate-y-16'
-            }`} style={{
-              transitionDelay: visibleSections.has('features') ? '600ms' : '0ms'
-            }}>
-              <div className="text-4xl mb-4">👥</div>
-              <h3 className="text-lg font-jetbrains-mono font-semibold text-gray-900 mb-2">Multi-User Access</h3>
-              <p className="font-inter text-gray-600">
-                Authentication-based access control for owners, managers, workers, accountants, inventory managers, and veterinarians. Assign specific permissions and roles, manage user access levels, and ensure data security with encrypted authentication. Monitor user activity and maintain complete control over who can view, edit, and manage different aspects of your farm operations.
-              </p>
+            <div className="flex-shrink-0 w-80 snap-start">
+              <img src="/multi-user.png" alt="Multi-User Access" className={`w-full rounded-lg shadow-lg transition-all duration-700 transform ${
+                visibleSections.has('features')
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-16'
+              }`} style={{
+                transitionDelay: visibleSections.has('features') ? '600ms' : '0ms'
+              }} />
             </div>
 
-            <div className={`text-center bg-white/90 rounded-lg shadow-lg p-6 transition-all duration-700 transform ${
-              visibleSections.has('features')
-                ? 'opacity-100 translate-y-0'
-                : 'opacity-0 translate-y-16'
-            }`} style={{
-              transitionDelay: visibleSections.has('features') ? '800ms' : '0ms'
-            }}>
-              <div className="text-4xl mb-4">📱</div>
-              <h3 className="text-lg font-jetbrains-mono font-semibold text-gray-900 mb-2">Mobile Optimized</h3>
-              <p className="font-inter text-gray-600">
-                Works perfectly on low-end Android phones with poor internet connectivity. Optimized for minimal data usage and offline functionality with automatic sync when connection is restored. Fast loading times and responsive design ensure smooth operation even on basic smartphones and unstable networks.
-              </p>
+            <div className="flex-shrink-0 w-80 snap-start">
+              <img src="/mobile-optimized.png" alt="Mobile Optimized" className={`w-full rounded-lg shadow-lg transition-all duration-700 transform ${
+                visibleSections.has('features')
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-16'
+              }`} style={{
+                transitionDelay: visibleSections.has('features') ? '800ms' : '0ms'
+              }} />
             </div>
 
-            <div className={`text-center bg-white/90 rounded-lg shadow-lg p-6 transition-all duration-700 transform ${
-              visibleSections.has('features')
-                ? 'opacity-100 translate-y-0'
-                : 'opacity-0 translate-y-16'
-            }`} style={{
-              transitionDelay: visibleSections.has('features') ? '1000ms' : '0ms'
-            }}>
-              <div className="text-4xl mb-4">🔒</div>
-              <h3 className="text-lg font-jetbrains-mono font-semibold text-gray-900 mb-2">Secure & Reliable</h3>
-              <p className="font-inter text-gray-600">
-                Bank-level security with HTTPS and AES-256 encryption for secure data storage and backups. Regular security audits, secure data centers, and compliance with international data protection standards ensure your farm information remains confidential and protected at all times.
-              </p>
+            <div className="flex-shrink-0 w-80 snap-start">
+              <img src="/secure-reliable.png" alt="Secure & Reliable" className={`w-full rounded-lg shadow-lg transition-all duration-700 transform ${
+                visibleSections.has('features')
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-16'
+              }`} style={{
+                transitionDelay: visibleSections.has('features') ? '1000ms' : '0ms'
+              }} />
             </div>
           </div>
         </div>
@@ -707,11 +689,11 @@ const Landing = () => {
             </h2>
           </div>
 
-          <div className="relative overflow-hidden">
-            <div className="flex animate-scroll-x">
+          <div className="relative overflow-x-hidden">
+            <div className="flex animate-scroll-x gap-8">
               {/* Benefits Cards */}
-              <div className="flex space-x-8 px-4">
-            <div className={`bg-white rounded-xl shadow-lg p-8 transition-all duration-700 transform hover:scale-105 min-w-[350px] ${
+              <div className="flex gap-8 px-4">
+            <div className={`bg-white rounded-xl shadow-lg p-8 transition-all duration-700 transform hover:scale-105 min-w-[350px] overflow-y-hidden ${
               visibleSections.has('benefits')
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-16'
@@ -725,7 +707,7 @@ const Landing = () => {
               </p>
             </div>
 
-            <div className={`bg-white rounded-xl shadow-lg p-8 transition-all duration-700 transform hover:scale-105 min-w-[350px] ${
+            <div className={`bg-white rounded-xl shadow-lg p-8 transition-all duration-700 transform hover:scale-105 min-w-[350px] overflow-y-hidden ${
               visibleSections.has('benefits')
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-16'
@@ -739,7 +721,7 @@ const Landing = () => {
               </p>
             </div>
 
-            <div className={`bg-white rounded-xl shadow-lg p-8 transition-all duration-700 transform hover:scale-105 min-w-[350px] ${
+            <div className={`bg-white rounded-xl shadow-lg p-8 transition-all duration-700 transform hover:scale-105 min-w-[350px] overflow-y-hidden ${
               visibleSections.has('benefits')
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-16'
@@ -753,7 +735,7 @@ const Landing = () => {
               </p>
             </div>
 
-            <div className={`bg-white rounded-xl shadow-lg p-8 transition-all duration-700 transform hover:scale-105 min-w-[350px] ${
+            <div className={`bg-white rounded-xl shadow-lg p-8 transition-all duration-700 transform hover:scale-105 min-w-[350px] overflow-y-hidden ${
               visibleSections.has('benefits')
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-16'
@@ -767,7 +749,7 @@ const Landing = () => {
               </p>
             </div>
 
-            <div className={`bg-white rounded-xl shadow-lg p-8 transition-all duration-700 transform hover:scale-105 min-w-[350px] ${
+            <div className={`bg-white rounded-xl shadow-lg p-8 transition-all duration-700 transform hover:scale-105 min-w-[350px] overflow-y-hidden ${
               visibleSections.has('benefits')
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-16'
@@ -781,7 +763,7 @@ const Landing = () => {
               </p>
             </div>
 
-            <div className={`bg-white rounded-xl shadow-lg p-8 transition-all duration-700 transform hover:scale-105 min-w-[350px] ${
+            <div className={`bg-white rounded-xl shadow-lg p-8 transition-all duration-700 transform hover:scale-105 min-w-[350px] overflow-y-hidden ${
               visibleSections.has('benefits')
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-16'
@@ -795,7 +777,7 @@ const Landing = () => {
               </p>
             </div>
 
-            <div className={`bg-white rounded-xl shadow-lg p-8 transition-all duration-700 transform hover:scale-105 min-w-[350px] ${
+            <div className={`bg-white rounded-xl shadow-lg p-8 transition-all duration-700 transform hover:scale-105 min-w-[350px] overflow-y-hidden ${
               visibleSections.has('benefits')
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-16'
@@ -826,10 +808,10 @@ const Landing = () => {
             </p>*/}
           </div>
 
-          <div className="relative overflow-hidden">
-            <div className="flex animate-scroll-x-reverse">
+          <div className="relative overflow-x-hidden">
+            <div className="flex animate-scroll-x-reverse gap-8">
               {/* First set of testimonials */}
-              <div className="flex space-x-8 px-4">
+              <div className="flex gap-8 px-4">
                 <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
                   <div className="flex items-center mb-4">
                     <img src="/Alex.jpg" alt="John Davis" className="w-12 h-12 rounded-full object-cover mr-4" />
@@ -892,7 +874,7 @@ const Landing = () => {
               </div>
 
               {/* Second set for seamless scroll */}
-              <div className="flex space-x-8 px-4">
+              <div className="flex gap-8 px-4">
                 <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
                   <div className="flex items-center mb-4">
                     <img src="/Alex.jpg" alt="John Davis" className="w-12 h-12 rounded-full object-cover mr-4" />
@@ -955,7 +937,7 @@ const Landing = () => {
               </div>
 
               {/* Third set for even smoother scroll */}
-              <div className="flex space-x-8 px-4">
+              <div className="flex gap-8 px-4">
                 <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
                   <div className="flex items-center mb-4">
                     <img src="/Alex.jpg" alt="John Davis" className="w-12 h-12 rounded-full object-cover mr-4" />
@@ -1018,7 +1000,7 @@ const Landing = () => {
               </div>
 
               {/* Fourth set for extra smoothness */}
-              <div className="flex space-x-8 px-4">
+              <div className="flex gap-8 px-4">
                 <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
                   <div className="flex items-center mb-4">
                     <img src="/Alex.jpg" alt="John Davis" className="w-12 h-12 rounded-full object-cover mr-4" />
@@ -1064,6 +1046,384 @@ const Landing = () => {
                     <img src="/Ngozi.jpg" alt="Alex Kumar" className="w-12 h-12 rounded-full object-cover mr-4" />
                     <div>
                       <h3 className="font-jetbrains-mono font-semibold text-gray-900">Alex Kumar</h3>
+                      <p className="text-sm text-gray-600">Mixed Farm Owner</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "The analytics dashboard gives us insights we never had before. We can make better decisions based on real data."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Fifth set - repeat of first set for seamless loop */}
+              <div className="flex gap-8 px-4">
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <img src="/Alex.jpg" alt="John Davis" className="w-12 h-12 rounded-full object-cover mr-4" />
+                    <div>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">John Davis</h3>
+                      <p className="text-sm text-gray-600">Dairy Farm Owner</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "Track Farm Ops has transformed how we manage our dairy operation. The expense tracking alone has saved us thousands in just a few months."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <img src="/Sarah.jpg" alt="Sarah Miller" className="w-12 h-12 rounded-full object-cover mr-4" />
+                    <div>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">Sarah Miller</h3>
+                      <p className="text-sm text-gray-600">Crop Farmer</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "The inventory management feature is exactly what we needed. We can now track our seed, fertilizer, and equipment in one place."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <img src="/Ngozi.jpg" alt="Ngozi Okafor" className="w-12 h-12 rounded-full object-cover mr-4" />
+                    <div>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">Ngozi Okafor</h3>
+                      <p className="text-sm text-gray-600">Mixed Farm Owner</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "The analytics dashboard gives us insights we never had before. We can make better decisions based on real data."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Sixth set - additional repeat for better coverage */}
+              <div className="flex gap-8 px-4">
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <img src="/Alex.jpg" alt="John Davis" className="w-12 h-12 rounded-full object-cover mr-4" />
+                    <div>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">John Davis</h3>
+                      <p className="text-sm text-gray-600">Dairy Farm Owner</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "Track Farm Ops has transformed how we manage our dairy operation. The expense tracking alone has saved us thousands in just a few months."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <img src="/Sarah.jpg" alt="Sarah Miller" className="w-12 h-12 rounded-full object-cover mr-4" />
+                    <div>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">Sarah Miller</h3>
+                      <p className="text-sm text-gray-600">Crop Farmer</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "The inventory management feature is exactly what we needed. We can now track our seed, fertilizer, and equipment in one place."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <img src="/Ngozi.jpg" alt="Ngozi Okafor" className="w-12 h-12 rounded-full object-cover mr-4" />
+                    <div>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">Ngozi Okafor</h3>
+                      <p className="text-sm text-gray-600">Mixed Farm Owner</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "The analytics dashboard gives us insights we never had before. We can make better decisions based on real data."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Seventh set - continuous flow */}
+              <div className="flex gap-8 px-4">
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <img src="/Alex.jpg" alt="John Davis" className="w-12 h-12 rounded-full object-cover mr-4" />
+                    <div>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">John Davis</h3>
+                      <p className="text-sm text-gray-600">Dairy Farm Owner</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "Track Farm Ops has transformed how we manage our dairy operation. The expense tracking alone has saved us thousands in just a few months."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <img src="/Sarah.jpg" alt="Sarah Miller" className="w-12 h-12 rounded-full object-cover mr-4" />
+                    <div>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">Sarah Miller</h3>
+                      <p className="text-sm text-gray-600">Crop Farmer</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "The inventory management feature is exactly what we needed. We can now track our seed, fertilizer, and equipment in one place."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <img src="/Ngozi.jpg" alt="Ngozi Okafor" className="w-12 h-12 rounded-full object-cover mr-4" />
+                    <div>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">Ngozi Okafor</h3>
+                      <p className="text-sm text-gray-600">Mixed Farm Owner</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "The analytics dashboard gives us insights we never had before. We can make better decisions based on real data."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Eighth set - continuous flow */}
+              <div className="flex gap-8 px-4">
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <img src="/Alex.jpg" alt="John Davis" className="w-12 h-12 rounded-full object-cover mr-4" />
+                    <div>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">John Davis</h3>
+                      <p className="text-sm text-gray-600">Dairy Farm Owner</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "Track Farm Ops has transformed how we manage our dairy operation. The expense tracking alone has saved us thousands in just a few months."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <img src="/Sarah.jpg" alt="Sarah Miller" className="w-12 h-12 rounded-full object-cover mr-4" />
+                    <div>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">Sarah Miller</h3>
+                      <p className="text-sm text-gray-600">Crop Farmer</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "The inventory management feature is exactly what we needed. We can now track our seed, fertilizer, and equipment in one place."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <img src="/Ngozi.jpg" alt="Ngozi Okafor" className="w-12 h-12 rounded-full object-cover mr-4" />
+                    <div>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">Ngozi Okafor</h3>
+                      <p className="text-sm text-gray-600">Mixed Farm Owner</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "The analytics dashboard gives us insights we never had before. We can make better decisions based on real data."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Ninth set - continuous flow */}
+              <div className="flex gap-8 px-4">
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <img src="/Alex.jpg" alt="John Davis" className="w-12 h-12 rounded-full object-cover mr-4" />
+                    <div>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">John Davis</h3>
+                      <p className="text-sm text-gray-600">Dairy Farm Owner</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "Track Farm Ops has transformed how we manage our dairy operation. The expense tracking alone has saved us thousands in just a few months."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <img src="/Sarah.jpg" alt="Sarah Miller" className="w-12 h-12 rounded-full object-cover mr-4" />
+                    <div>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">Sarah Miller</h3>
+                      <p className="text-sm text-gray-600">Crop Farmer</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "The inventory management feature is exactly what we needed. We can now track our seed, fertilizer, and equipment in one place."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <img src="/Ngozi.jpg" alt="Ngozi Okafor" className="w-12 h-12 rounded-full object-cover mr-4" />
+                    <div>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">Ngozi Okafor</h3>
+                      <p className="text-sm text-gray-600">Mixed Farm Owner</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "The analytics dashboard gives us insights we never had before. We can make better decisions based on real data."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Tenth set - final repeat for seamless loop */}
+              <div className="flex gap-8 px-4">
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <img src="/Alex.jpg" alt="John Davis" className="w-12 h-12 rounded-full object-cover mr-4" />
+                    <div>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">John Davis</h3>
+                      <p className="text-sm text-gray-600">Dairy Farm Owner</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "Track Farm Ops has transformed how we manage our dairy operation. The expense tracking alone has saved us thousands in just a few months."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <img src="/Sarah.jpg" alt="Sarah Miller" className="w-12 h-12 rounded-full object-cover mr-4" />
+                    <div>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">Sarah Miller</h3>
+                      <p className="text-sm text-gray-600">Crop Farmer</p>
+                    </div>
+                  </div>
+                  <p className="font-inter text-gray-700 italic">
+                    "The inventory management feature is exactly what we needed. We can now track our seed, fertilizer, and equipment in one place."
+                  </p>
+                  <div className="flex mt-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 p-6 rounded-lg min-w-[350px]">
+                  <div className="flex items-center mb-4">
+                    <img src="/Ngozi.jpg" alt="Ngozi Okafor" className="w-12 h-12 rounded-full object-cover mr-4" />
+                    <div>
+                      <h3 className="font-jetbrains-mono font-semibold text-gray-900">Ngozi Okafor</h3>
                       <p className="text-sm text-gray-600">Mixed Farm Owner</p>
                     </div>
                   </div>
