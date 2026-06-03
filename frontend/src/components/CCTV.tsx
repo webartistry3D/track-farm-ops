@@ -447,7 +447,7 @@ const CCTV = () => {
                       {camera.batteryLevel && (
                         <div className="flex items-center">
                           <Battery className={`h-4 w-4 ${getBatteryColor(camera.batteryLevel)}`} />
-                          <span className={`text-xs ml-1 ${getBatteryColor(camera.batteryLevel)}`}>{camera.batteryLevel}%</span>
+                          <span className={`text-xs ml-1 font-jetbrains-mono ${getBatteryColor(camera.batteryLevel)}`}>{camera.batteryLevel}%</span>
                         </div>
                       )}
                       <button

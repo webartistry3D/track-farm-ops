@@ -292,7 +292,7 @@ const Dashboard = () => {
               </div>
             </div>
             <div className="flex items-center">
-              <p className="text-3xl font-bold text-green-600 dark:text-green-400">
+              <p className="text-3xl font-bold font-jetbrains-mono text-green-600 dark:text-green-400">
                 {formatCurrency(todayIncome.toString(), { includeSymbol: true })}
               </p>
             </div>
@@ -329,7 +329,7 @@ const Dashboard = () => {
               </div>
             </div>
             <div className="flex items-center">
-              <p className="text-3xl font-bold text-red-600 dark:text-red-400">
+              <p className="text-3xl font-bold font-jetbrains-mono text-red-600 dark:text-red-400">
                 {formatCurrency(todayExpenses.toString(), { includeSymbol: true })}
               </p>
             </div>
@@ -366,7 +366,7 @@ const Dashboard = () => {
               </div>
             </div>
             <div className="flex items-center">
-              <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">
+              <p className="text-3xl font-bold font-jetbrains-mono text-purple-600 dark:text-purple-400">
                 {formatCurrency(todayVAT.toString(), { includeSymbol: true })}
               </p>
             </div>
@@ -421,7 +421,7 @@ const Dashboard = () => {
               </div>
             </div>
             <div className="flex items-center">
-              <p className={`text-3xl font-bold ${
+              <p className={`text-3xl font-bold font-jetbrains-mono ${
                 dateFilter === 'allTime' ? 
                   'text-blue-600 dark:text-blue-400' :
                   netProfit >= 0 ? 'text-green-600 dark:text-green-400' : 
@@ -635,7 +635,7 @@ const Dashboard = () => {
                             }`}>
                               {entry.type === 'Income' ? 'Income' : 'Expense'}
                             </span>
-                            <span className="font-inter text-gray-900 dark:text-white font-medium">
+                            <span className="font-jetbrains-mono text-gray-900 dark:text-white font-medium">
                               {formatCurrency(entry.amount.toString())}
                             </span>
                           </div>

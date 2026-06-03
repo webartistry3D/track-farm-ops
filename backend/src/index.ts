@@ -22,6 +22,7 @@ import subscriptionRoutes from './routes/subscription';
 import storageRoutes from './routes/storageRoutes';
 import superuserRoutes from './routes/superuser';
 import cctvRoutes from './routes/cctvRoutes';
+import livestockRoutes from './routes/livestock';
 import { prisma } from './lib/prisma';
 
 // Import our enhanced security middleware (temporarily disabled for compilation)
@@ -231,6 +232,7 @@ app.use('/api/subscription', subscriptionRoutes);
 app.use('/api/storage', storageRoutes);
 app.use('/api/superuser', superuserRoutes);
 app.use('/api/cctv', cctvRoutes);
+app.use('/api/livestock', livestockRoutes);
 app.use('/ocr', ocrRoutes);
 
 // Serve static files from uploads directory

@@ -422,10 +422,10 @@ const Reports: React.FC = () => {
                               {transaction.description || transaction.category || 'No description'}
                             </div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium font-jetbrains-mono text-gray-900 dark:text-white">
                             {formatCurrency(transaction.amount.toString())}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium font-jetbrains-mono text-gray-900 dark:text-white">
                             {transaction.vat ? formatCurrency(transaction.vat.toString()) : '-'}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
@@ -517,10 +517,10 @@ const Reports: React.FC = () => {
                               {transaction.description || transaction.category || 'No description'}
                             </div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium font-jetbrains-mono text-gray-900 dark:text-white">
                             {formatCurrency(transaction.amount.toString())}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium font-jetbrains-mono text-gray-900 dark:text-white">
                             {transaction.vat ? formatCurrency(transaction.vat.toString()) : '-'}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
@@ -608,7 +608,7 @@ const Reports: React.FC = () => {
                               {transaction.description || 'No description'}
                             </div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-red-600">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium font-jetbrains-mono text-red-600">
                             {formatCurrency(transaction.amount.toString())}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
@@ -795,7 +795,7 @@ const Reports: React.FC = () => {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Amount</p>
-                      <p className={`text-3xl font-bold ${
+                      <p className={`text-3xl font-bold font-jetbrains-mono ${
                         selectedTransaction.type === 'Income'
                           ? 'text-green-600 dark:text-green-400'
                           : 'text-red-600 dark:text-red-400'

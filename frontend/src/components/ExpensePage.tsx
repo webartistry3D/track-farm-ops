@@ -6,7 +6,7 @@ import { processReceiptImage } from '../lib/ocrService';
 import { StorageService } from '../services/storageService';
 import type { ExpenseEntry } from '../types';
 import { formatCurrency, parseCurrency, validateCurrencyInput } from '../utils/currency';
-import { Camera, Upload, Scan, CheckCircle, X, Table, Plus, Eye, Trash2 } from 'lucide-react';
+import { Camera, Upload, CheckCircle, X, Table, Plus, Eye, Trash2 } from 'lucide-react';
 import Pagination from './Pagination';
 import ConfirmModal from './ConfirmModal';
 import SuccessModal from './SuccessModal';
@@ -512,24 +512,24 @@ const ExpensePage = () => {
                   <div className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 rounded-xl dark:border-amber-700 shadow-sm">
                     <div className="p-4">
                       <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center space-x-3">
+                        {/*<div className="flex items-center space-x-3">
                           <div className="p-2 bg-amber-600 dark:bg-amber-700 rounded-lg shadow-sm">
                             <Scan className="h-4 w-4 text-white" />
                           </div>
                           <div>
-                            {/*<h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">Quick Receipt Scan</h3>*/}
+                            {/*<h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">Quick Receipt Scan</h3>*
                             <p className="text-md text-gray-600 dark:text-gray-400 mt-0.5">
                               Extract expense details wth AI-powered OCR
                             </p>
                           </div>
-                        </div>
+                        </div>*/}
                       </div>
                       
-                      <div className="flex flex-col sm:flex-row gap-2">
+                      <div className="flex flex-row gap-2">
                         <button
                           onClick={handleCameraCapture}
                           disabled={isScanning}
-                          className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 bg-amber-600 dark:bg-amber-700 text-white text-sm font-medium rounded-lg hover:bg-amber-700 dark:hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md"
+                          className="w-1/2 flex items-center justify-center gap-2 px-3 py-2.5 bg-amber-600 dark:bg-amber-700 text-white text-sm font-medium rounded-lg hover:bg-amber-700 dark:hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md"
                         >
                           <Camera className="h-4 w-4" />
                           {isScanning ? 'Processing...' : 'Take Photo'}
@@ -537,7 +537,7 @@ const ExpensePage = () => {
                         <button
                           onClick={handleFileUpload}
                           disabled={isScanning}
-                          className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 bg-white dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-sm font-medium rounded-lg dark:border-amber-700 hover:bg-amber-50 dark:hover:bg-amber-700/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md"
+                          className="w-1/2 flex items-center justify-center gap-2 px-3 py-2.5 bg-white dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-sm font-medium rounded-lg dark:border-amber-700 hover:bg-amber-50 dark:hover:bg-amber-700/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md"
                         >
                           <Upload className="h-4 w-4" />
                           {isScanning ? 'Processing...' : 'Upload Image'}

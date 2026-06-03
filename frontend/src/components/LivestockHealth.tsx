@@ -322,7 +322,7 @@ const LivestockHealth = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">Total</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">{healthStats.total}</p>
+              <p className="text-2xl font-bold font-jetbrains-mono text-gray-900 dark:text-white">{healthStats.total}</p>
             </div>
             <PawPrint className="h-8 w-8 text-gray-500" />
           </div>
@@ -331,7 +331,7 @@ const LivestockHealth = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-green-600 dark:text-green-400">Healthy</p>
-              <p className="text-2xl font-bold text-green-900 dark:text-green-100">{healthStats.healthy}</p>
+              <p className="text-2xl font-bold font-jetbrains-mono text-green-900 dark:text-green-100">{healthStats.healthy}</p>
             </div>
             <Activity className="h-8 w-8 text-green-500" />
           </div>
@@ -340,7 +340,7 @@ const LivestockHealth = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-red-600 dark:text-red-400">Sick</p>
-              <p className="text-2xl font-bold text-red-900 dark:text-red-100">{healthStats.sick}</p>
+              <p className="text-2xl font-bold font-jetbrains-mono text-red-900 dark:text-red-100">{healthStats.sick}</p>
             </div>
             <AlertTriangle className="h-8 w-8 text-red-500" />
           </div>
@@ -349,7 +349,7 @@ const LivestockHealth = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-yellow-600 dark:text-yellow-400">Quarantine</p>
-              <p className="text-2xl font-bold text-yellow-900 dark:text-yellow-100">{healthStats.quarantine}</p>
+              <p className="text-2xl font-bold font-jetbrains-mono text-yellow-900 dark:text-yellow-100">{healthStats.quarantine}</p>
             </div>
             <Shield className="h-8 w-8 text-yellow-500" />
           </div>
@@ -358,7 +358,7 @@ const LivestockHealth = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-blue-600 dark:text-blue-400">Recovery</p>
-              <p className="text-2xl font-bold text-blue-900 dark:text-blue-100">{healthStats.recovery}</p>
+              <p className="text-2xl font-bold font-jetbrains-mono text-blue-900 dark:text-blue-100">{healthStats.recovery}</p>
             </div>
             <TrendingUp className="h-8 w-8 text-blue-500" />
           </div>
@@ -367,7 +367,7 @@ const LivestockHealth = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-purple-600 dark:text-purple-400">Critical</p>
-              <p className="text-2xl font-bold text-purple-900 dark:text-purple-100">{healthStats.critical}</p>
+              <p className="text-2xl font-bold font-jetbrains-mono text-purple-900 dark:text-purple-100">{healthStats.critical}</p>
             </div>
             <AlertCircle className="h-8 w-8 text-purple-500" />
           </div>

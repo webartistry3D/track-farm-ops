@@ -103,6 +103,7 @@ export const createLivestock = async (req: Request, res: Response) => {
 export const updateLivestock = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const livestockId = Array.isArray(id) ? id[0] : id;
     const user = (req as any).user;
     const organizationId = user.organizationId;
 
@@ -126,7 +127,7 @@ export const updateLivestock = async (req: Request, res: Response) => {
     // Verify livestock belongs to organization
     const existingLivestock = await prisma.livestock.findFirst({
       where: {
-        id: parseInt(id),
+        id: parseInt(livestockId),
         organizationId
       }
     });
@@ -141,7 +142,7 @@ export const updateLivestock = async (req: Request, res: Response) => {
         where: {
           tagId,
           organizationId,
-          id: { not: parseInt(id) }
+          id: { not: parseInt(livestockId) }
         }
       });
 
@@ -151,7 +152,7 @@ export const updateLivestock = async (req: Request, res: Response) => {
     }
 
     const livestock = await prisma.livestock.update({
-      where: { id: parseInt(id) },
+      where: { id: parseInt(livestockId) },
       data: {
         ...(name && { name }),
         ...(tagId && { tagId }),
@@ -191,6 +192,7 @@ export const updateLivestock = async (req: Request, res: Response) => {
 export const deleteLivestock = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const livestockId = Array.isArray(id) ? id[0] : id;
     const user = (req as any).user;
     const organizationId = user.organizationId;
 
@@ -201,7 +203,7 @@ export const deleteLivestock = async (req: Request, res: Response) => {
     // Verify livestock belongs to organization
     const existingLivestock = await prisma.livestock.findFirst({
       where: {
-        id: parseInt(id),
+        id: parseInt(livestockId),
         organizationId
       }
     });
@@ -211,7 +213,7 @@ export const deleteLivestock = async (req: Request, res: Response) => {
     }
 
     await prisma.livestock.delete({
-      where: { id: parseInt(id) }
+      where: { id: parseInt(livestockId) }
     });
 
     res.json({ message: 'Livestock deleted successfully' });

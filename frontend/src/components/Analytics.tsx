@@ -555,7 +555,7 @@ const Analytics = () => {
           </div>
         </div>
         <div className="flex items-center">
-          <p className={`text-3xl font-bold ${getTextColor()}`}>
+          <p className={`text-3xl font-bold font-jetbrains-mono ${getTextColor()}`}>
             {value}
           </p>
         </div>
@@ -842,7 +842,7 @@ const Analytics = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">Avg Daily Revenue</p>
-                    <p className="text-xl font-bold text-gray-900 dark:text-white">
+                    <p className="text-xl font-bold font-jetbrains-mono text-gray-900 dark:text-white">
                       {formatCurrency(Math.floor((Number(financialSummary?.totalIncome) || 0) / 30))}
                     </p>
                   </div>
@@ -856,7 +856,7 @@ const Analytics = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">Profit Margin</p>
-                    <p className="text-xl font-bold text-gray-900 dark:text-white">
+                    <p className="text-xl font-bold font-jetbrains-mono text-gray-900 dark:text-white">
                       {financialSummary?.totalIncome && financialSummary?.totalExpenses 
                         ? `${Math.round(((financialSummary.totalIncome - financialSummary.totalExpenses) / financialSummary.totalIncome) * 100)}%`
                         : '0%'
@@ -873,7 +873,7 @@ const Analytics = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">Growth Rate</p>
-                    <p className="text-xl font-bold text-gray-900 dark:text-white">
+                    <p className="text-xl font-bold font-jetbrains-mono text-gray-900 dark:text-white">
                       {calculateProfitGrowth() !== 0 ? `${calculateProfitGrowth() >= 0 ? '+' : ''}${calculateProfitGrowth()}%` : 'N/A'}
                     </p>
                   </div>
@@ -932,7 +932,7 @@ const Analytics = () => {
                           <div className="flex-1">
                             <div className="flex justify-between items-center mb-2">
                               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{item.category}</span>
-                              <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                              <span className="text-sm font-semibold font-jetbrains-mono text-gray-900 dark:text-white">
                                 {formatCurrency(item.amount)}
                               </span>
                             </div>
@@ -998,7 +998,7 @@ const Analytics = () => {
                           <div className="flex-1">
                             <div className="flex justify-between items-center mb-2">
                               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{item.category}</span>
-                              <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                              <span className="text-sm font-semibold font-jetbrains-mono text-gray-900 dark:text-white">
                                 {formatCurrency(item.amount)}
                               </span>
                             </div>
