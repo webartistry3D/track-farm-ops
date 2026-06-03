@@ -83,8 +83,32 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Landing />} />
-      <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <LoginClean key="login-page" />} />
-      <Route path="/signup" element={user ? <Navigate to="/dashboard" replace /> : <Signup />} />
+      <Route 
+        path="/login" 
+        element={
+          user 
+            ? <Navigate to={
+                user.role === 'MANAGER' ? '/analytics' :
+                user.role === 'WORKER' ? '/income' :
+                user.role === 'VETERINARIAN' ? '/livestock-health' :
+                '/dashboard'
+              } replace /> 
+            : <LoginClean key="login-page" />
+        } 
+      />
+      <Route 
+        path="/signup" 
+        element={
+          user 
+            ? <Navigate to={
+                user.role === 'MANAGER' ? '/analytics' :
+                user.role === 'WORKER' ? '/income' :
+                user.role === 'VETERINARIAN' ? '/livestock-health' :
+                '/dashboard'
+              } replace /> 
+            : <Signup />
+        } 
+      />
       <Route path="/about" element={<About />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/privacy" element={<Privacy />} />

@@ -306,19 +306,19 @@ const LivestockHealth = () => {
   return (
     <div className="max-w-7xl mx-auto p-0">
       {/* Header */}
-      <div className="mb-8">
-        {/*<h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
+      {/*<div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
           <Heart className="h-8 w-8 text-red-500" />
           Livestock Health Management
-        </h1>*/}
+        </h1>
         <p className="text-gray-600 dark:text-gray-400">
           Monitor and manage livestock health records, vaccinations, and treatments
         </p>
-      </div>
+      </div>*/}
 
       {/* Health Statistics Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4 mb-8">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">Total</p>
@@ -327,7 +327,7 @@ const LivestockHealth = () => {
             <PawPrint className="h-8 w-8 text-gray-500" />
           </div>
         </div>
-        <div className="bg-green-50 dark:bg-green-900/20 rounded-lg shadow-sm border border-green-200 dark:border-green-800 p-4">
+        <div className="bg-green-50 dark:bg-green-900/20 rounded-lg shadow-sm p-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-green-600 dark:text-green-400">Healthy</p>
@@ -336,7 +336,7 @@ const LivestockHealth = () => {
             <Activity className="h-8 w-8 text-green-500" />
           </div>
         </div>
-        <div className="bg-red-50 dark:bg-red-900/20 rounded-lg shadow-sm border border-red-200 dark:border-red-800 p-4">
+        <div className="bg-red-50 dark:bg-red-900/20 rounded-lg shadow-sm p-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-red-600 dark:text-red-400">Sick</p>
@@ -345,7 +345,7 @@ const LivestockHealth = () => {
             <AlertTriangle className="h-8 w-8 text-red-500" />
           </div>
         </div>
-        <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg shadow-sm border border-yellow-200 dark:border-yellow-800 p-4">
+        <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg shadow-sm p-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-yellow-600 dark:text-yellow-400">Quarantine</p>
@@ -354,7 +354,7 @@ const LivestockHealth = () => {
             <Shield className="h-8 w-8 text-yellow-500" />
           </div>
         </div>
-        <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg shadow-sm border border-blue-200 dark:border-blue-800 p-4">
+        <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg shadow-sm p-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-blue-600 dark:text-blue-400">Recovery</p>
@@ -363,7 +363,7 @@ const LivestockHealth = () => {
             <TrendingUp className="h-8 w-8 text-blue-500" />
           </div>
         </div>
-        <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg shadow-sm border border-purple-200 dark:border-purple-800 p-4">
+        <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg shadow-sm p-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-purple-600 dark:text-purple-400">Critical</p>
