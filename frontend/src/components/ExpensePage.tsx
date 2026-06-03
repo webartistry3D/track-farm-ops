@@ -93,8 +93,9 @@ const ExpensePage = () => {
 
   // MANAGER and INVENTORY role restrictions
   const isManager = user?.role === 'MANAGER';
+  const isAccountant = user?.role === 'ACCOUNTANT';
   const isInventory = user?.role === 'INVENTORY';
-  const allowedTabs = isManager ? ['record'] : isInventory ? [] : ['record', 'records'];
+  const allowedTabs = isManager ? ['record', 'records'] : isAccountant ? ['record', 'records'] : isInventory ? [] : ['record', 'records'];
 
   // Redirect to allowed tab if current tab is not allowed
   useEffect(() => {
@@ -487,7 +488,7 @@ const ExpensePage = () => {
                 <Plus className="h-4 w-4" />
                 Record Farm Expense
               </button>
-              {!isManager && user.role !== 'WORKER' && (
+              {isManager || isAccountant && (
                 <button
                   onClick={() => handleTabChange('records')}
                   className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${

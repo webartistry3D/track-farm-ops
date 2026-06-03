@@ -49,19 +49,20 @@ const IncomePage = () => {
 
   // MANAGER and INVENTORY role restrictions
   const isManager = user?.role === 'MANAGER';
+  const isAccountant = user?.role === 'ACCOUNTANT';
   const isInventory = user?.role === 'INVENTORY';
-  const allowedTabs = isManager ? ['record', 'invoice', 'invoices'] : isInventory ? [] : ['record', 'invoice', 'records', 'invoices', 'vat'];
+  const allowedTabs = isManager ? ['record', 'invoice', 'records', 'invoices'] : isManager ? ['record', 'invoice', 'records', 'invoices', 'vat'] : isInventory ? [] : ['record', 'invoice', 'records', 'invoices'];
 
   // Redirect to allowed tab if current tab is not allowed
   useEffect(() => {
-    if ((isManager || isInventory) && !allowedTabs.includes(activeTab)) {
+    if ((isManager || isAccountant || isInventory) && !allowedTabs.includes(activeTab)) {
       if (isManager) {
         setActiveTab('record');
       } else if (isInventory) {
         // INVENTORY has no access to any tabs, show restricted message
       }
     }
-  }, [isManager, isInventory, activeTab, allowedTabs]);
+  }, [isManager, isAccountant, isInventory, activeTab, allowedTabs]);
 
   // Scroll to top when navigating to Income page
   useEffect(() => {
@@ -1961,7 +1962,7 @@ Generated on: ${new Date().toLocaleString()}
                 <Table className="h-4 w-4" />
                 Invoice Records
               </button>
-              {!isManager && user.role !== 'WORKER' && (
+              {isManager || isAccountant && (
                 <>
                   <button
                     onClick={() => handleTabChange('records')}
@@ -1974,17 +1975,21 @@ Generated on: ${new Date().toLocaleString()}
                     <span className="h-4 w-4 flex items-center justify-center text-sm font-bold">₦</span>
                     Income Records
                   </button>
-                  <button
-                    onClick={() => handleTabChange('vat' as any)}
-                    className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 whitespace-nowrap ${
-                      activeTab === 'vat'
-                        ? 'border-green-500 text-green-600 dark:text-green-400'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-                    }`}
-                  >
-                    <Receipt className="h-4 w-4" />
-                    VAT Records
-                  </button>
+                  {isManager && user.role !== 'WORKER' || user.role !== 'VETERINARIAN' && (
+                    <>
+                      <button
+                        onClick={() => handleTabChange('vat' as any)}
+                        className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 whitespace-nowrap ${
+                          activeTab === 'vat'
+                            ? 'border-green-500 text-green-600 dark:text-green-400'
+                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                        }`}
+                      >
+                        <Receipt className="h-4 w-4" />
+                        VAT Records
+                      </button>
+                    </>
+                  )}
                 </>
               )}
             </nav>

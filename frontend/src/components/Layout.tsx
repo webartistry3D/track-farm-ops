@@ -153,12 +153,12 @@ const Layout = ({ children }: LayoutProps) => {
 
   const allNavigation = [
     { name: 'Dashboard', href: '/dashboard', icon: '📊', current: location.pathname === '/dashboard', restricted: false, allowedRoles: ['OWNER', 'ACCOUNTANT'] },
-    { name: 'Income', href: '/income', icon: '💰', current: location.pathname === '/income', restricted: false, allowedRoles: ['OWNER', 'MANAGER', 'WORKER', 'ACCOUNTANT'] },
-    { name: 'Expenses', href: '/expenses', icon: '💳', current: location.pathname === '/expenses', restricted: false, allowedRoles: ['OWNER', 'MANAGER', 'WORKER', 'ACCOUNTANT'] },
-    { name: 'Inventory', href: '/inventory', icon: '📦', current: location.pathname === '/inventory', feature: 'inventoryTransactions' as const, restricted: true, allowedRoles: ['OWNER', 'MANAGER', 'ACCOUNTANT', 'INVENTORY'] },
-    { name: 'Assets', href: '/assets', icon: '🚜', current: location.pathname === '/assets', feature: 'inventoryTransactions' as const, restricted: true, allowedRoles: ['OWNER', 'MANAGER', 'ACCOUNTANT', 'INVENTORY'] },
+    { name: 'Income', href: '/income', icon: '💰', current: location.pathname === '/income', restricted: false, allowedRoles: ['OWNER', 'MANAGER', 'WORKER', 'ACCOUNTANT', 'VETERINARIAN'] },
+    { name: 'Expenses', href: '/expenses', icon: '💳', current: location.pathname === '/expenses', restricted: false, allowedRoles: ['OWNER', 'MANAGER', 'WORKER', 'ACCOUNTANT', 'VETERINARIAN'] },
+    { name: 'Inventory', href: '/inventory', icon: '📦', current: location.pathname === '/inventory', feature: 'inventoryTransactions' as const, restricted: true, allowedRoles: ['OWNER', 'MANAGER', 'ACCOUNTANT', 'INVENTORY', 'VETERINARIAN'] },
+    { name: 'Assets', href: '/assets', icon: '🚜', current: location.pathname === '/assets', feature: 'inventoryTransactions' as const, restricted: true, allowedRoles: ['OWNER', 'MANAGER', 'ACCOUNTANT', 'INVENTORY', 'VETERINARIAN'] },
     { name: 'CCTV', href: '/cctv', icon: '📹', current: location.pathname === '/cctv', feature: 'inventoryTransactions' as const, restricted: true, allowedRoles: ['OWNER', 'MANAGER', 'ACCOUNTANT', 'INVENTORY'] },
-    { name: 'Livestock Health', href: '/livestock-health', icon: '🐄', current: location.pathname === '/livestock-health', feature: 'inventoryTransactions' as const, restricted: true, allowedRoles: ['OWNER', 'MANAGER', 'VETERINARIAN'] },
+    { name: 'Livestock Health', href: '/livestock-health', icon: '🐄', current: location.pathname === '/livestock-health', feature: 'inventoryTransactions' as const, restricted: true, allowedRoles: ['OWNER', 'MANAGER', 'ACCOUNTANT', 'VETERINARIAN'] },
     { name: 'Analytics', href: '/analytics', icon: '📊', current: location.pathname === '/analytics', feature: 'analytics' as const, restricted: true, allowedRoles: ['OWNER', 'MANAGER', 'ACCOUNTANT'] },
     { name: 'Reports', href: '/reports', icon: '📈', current: location.pathname === '/reports', feature: 'financialReports' as const, restricted: true, allowedRoles: ['OWNER', 'ACCOUNTANT'] },
   ];

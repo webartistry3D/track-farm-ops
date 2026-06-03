@@ -187,7 +187,7 @@ const CCTV = () => {
     );
   }
 
-  const isOwner = user.role === 'OWNER' || user.role === 'MANAGER' || user.role === 'INVENTORY';
+  const isOwner = user.role === 'OWNER' || user.role === 'ACCOUNTANT' || user.role === 'MANAGER' || user.role === 'INVENTORY';
 
   if (!isOwner) {
     return (
