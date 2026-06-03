@@ -102,23 +102,23 @@ const Pricing = () => {
   const benefits = [
     {
       emoji: '🌍',
-      title: 'Remote Monitoring',
-      description: 'Monitor your farm from anywhere in the world'
+      title: '24/7 Remote Monitoring',
+      //description: 'Monitor your farm from anywhere in the world'
     },
     {
       emoji: '🔍',
       title: 'Full Transparency',
-      description: 'No deleted records — complete audit trail'
+      //description: 'No deleted records — complete audit trail'
     },
     {
       emoji: '🇳🇬',
       title: 'Built for Nigerian farmers',
-      description: 'Designed specifically for Nigerian farm realities'
+      //description: 'Designed specifically for Nigerian farm realities'
     },
     {
       emoji: '📱',
       title: 'Low-End Android Support',
-      description: 'Works perfectly on basic Android phones'
+      //description: 'Works perfectly on basic Android phones'
     }
   ];
 
@@ -346,9 +346,9 @@ const Pricing = () => {
                 <h3 className="font-jetbrains-mono font-semibold text-gray-900 mb-2">
                   {benefit.title}
                 </h3>
-                <p className="text-gray-600 font-inter leading-relaxed">
+                {/*<p className="text-gray-600 font-inter leading-relaxed">
                   {benefit.description}
-                </p>
+                </p>*/}
               </div>
             ))}
           </div>

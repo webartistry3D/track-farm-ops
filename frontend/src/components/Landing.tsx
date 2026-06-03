@@ -435,7 +435,7 @@ const Landing = () => {
               ? 'opacity-100 translate-y-0'
               : 'opacity-0 translate-y-16'
           }`}>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-jetbrains-mono font-bold text-green-600 mb-4 bg-green-100 px-4 py-2 rounded-lg inline-block">
+            <h2 className="text-3xl md:text-4xl font-jetbrains-mono font-bold text-green-600 mb-4 bg-green-100 px-4 py-2 rounded-lg inline-block">
               Features
             </h2>
           </div>
@@ -585,7 +585,7 @@ const Landing = () => {
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-16'
             }`}>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-jetbrains-mono font-bold text-green-600 mb-4 bg-green-100 px-4 py-2 rounded-lg inline-block">
+              <h2 className="text-3xl md:text-4xl font-jetbrains-mono font-bold text-green-600 mb-4 bg-green-100 px-4 py-2 rounded-lg inline-block">
                 How It Works
               </h2>
               {/*<p className="text-lg text-white text-opacity-90 max-w-3xl mx-auto">
@@ -643,7 +643,7 @@ const Landing = () => {
                     <span className="text-2xl font-jetbrains-mono font-bold text-green-600">3</span>
                   </div>
                   <div className="bg-green-100 rounded-lg px-4 py-3 shadow-lg">
-                    <h3 className="text-xl font-jetbrains-mono font-semibold text-green-600 mb-2">Start Managing</h3>
+                    <h3 className="text-xl font-jetbrains-mono font-semibold text-green-600 mb-2">Start Tracking</h3>
                     <p className="text-green-600">Begin tracking operations, assets, and optimizing your farm workflow.</p>
                   </div>
                 </div>
