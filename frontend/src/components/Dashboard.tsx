@@ -686,7 +686,7 @@ const Dashboard = () => {
       </div>
 
       {/* Worker View Notice */}
-      {!isOwner && (
+      {/*{!isOwner && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
           <h3 className="text-lg font-jetbrains-mono font-medium text-blue-900 mb-2">Worker View</h3>
           <p className="font-inter text-blue-700">
@@ -694,7 +694,7 @@ const Dashboard = () => {
             please contact the farm owner.
           </p>
         </div>
-      )}
+      )}*/}
 
       {/* Detail Modal */}
       {modalOpen && (
