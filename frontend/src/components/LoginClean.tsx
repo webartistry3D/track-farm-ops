@@ -15,7 +15,7 @@ const LoginClean = () => {
   const [fieldErrors, setFieldErrors] = useState<{email?: string; password?: string}>({});
   const [showPassword, setShowPassword] = useState(false);
   
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const { isDark, toggleTheme } = useTheme();
 
   // Clear form fields on initial mount
@@ -64,7 +64,17 @@ const LoginClean = () => {
 
     try {
       await login(credentials);
-      navigate('/dashboard');
+      
+      // Redirect based on user role
+      if (user?.role === 'MANAGER') {
+        navigate('/analytics');
+      } else if (user?.role === 'WORKER') {
+        navigate('/income');
+      } else if (user?.role === 'VETERINARIAN') {
+        navigate('/livestock-health');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err: any) {
       setError(err.response?.data?.error || 'Login failed. Please try again.');
     } finally {

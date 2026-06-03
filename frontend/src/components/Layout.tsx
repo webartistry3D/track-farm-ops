@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { SubscriptionRestrictions } from '../utils/subscriptionRestrictions';
 import FirstTimePasswordPrompt from './FirstTimePasswordPrompt';
+import ConfirmModal from './ConfirmModal';
 import api from '../lib/api';
 // import { InactivityWarning } from './InactivityWarning'; // DISABLED
 
@@ -18,6 +19,7 @@ const Layout = ({ children }: LayoutProps) => {
   const [subscription, setSubscription] = useState<any>(null);
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
   // const [showInactivityWarning, setShowInactivityWarning] = useState(false); // DISABLED
   const { user, logout, setUser } = useAuth();
   const { isDark, toggleTheme } = useTheme();
@@ -150,7 +152,7 @@ const Layout = ({ children }: LayoutProps) => {
   }, [profileDropdownOpen, notificationsOpen, user]); // Removed logout dependency since it's disabled
 
   const allNavigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: '📊', current: location.pathname === '/dashboard', restricted: false, allowedRoles: ['OWNER', 'MANAGER', 'WORKER', 'ACCOUNTANT'] },
+    { name: 'Dashboard', href: '/dashboard', icon: '📊', current: location.pathname === '/dashboard', restricted: false, allowedRoles: ['OWNER', 'ACCOUNTANT'] },
     { name: 'Income', href: '/income', icon: '💰', current: location.pathname === '/income', restricted: false, allowedRoles: ['OWNER', 'MANAGER', 'WORKER', 'ACCOUNTANT'] },
     { name: 'Expenses', href: '/expenses', icon: '💳', current: location.pathname === '/expenses', restricted: false, allowedRoles: ['OWNER', 'MANAGER', 'WORKER', 'ACCOUNTANT'] },
     { name: 'Inventory', href: '/inventory', icon: '📦', current: location.pathname === '/inventory', feature: 'inventoryTransactions' as const, restricted: true, allowedRoles: ['OWNER', 'MANAGER', 'ACCOUNTANT', 'INVENTORY'] },
@@ -274,8 +276,7 @@ const Layout = ({ children }: LayoutProps) => {
             </div>*/}
             <button
               onClick={() => {
-                logout();
-                setSidebarOpen(false);
+                setShowLogoutModal(true);
               }}
               className="w-full flex items-center justify-center space-x-2 px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors duration-200 text-sm font-medium"
             >
@@ -498,6 +499,22 @@ const Layout = ({ children }: LayoutProps) => {
             }}
           />
         )}
+
+        {/* Logout confirmation modal */}
+        <ConfirmModal
+          isOpen={showLogoutModal}
+          onClose={() => setShowLogoutModal(false)}
+          onConfirm={() => {
+            logout();
+            setSidebarOpen(false);
+            setShowLogoutModal(false);
+          }}
+          title="Confirm Logout"
+          message="Are you sure you want to logout? You will need to log in again to access your account."
+          confirmText="Logout"
+          cancelText="Cancel"
+          type="danger"
+        />
       </div>
     </div>
   );
