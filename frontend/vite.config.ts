@@ -16,7 +16,7 @@ export default defineConfig({
         name: 'TrackFarmOps',
         short_name: 'FarmOps',
         description: 'Comprehensive farm operations management system for tracking activities, inventory, finances, and more',
-        theme_color: '#22c55e',
+        theme_color: '#05190d',
         background_color: '#ffffff',
         display: 'standalone',
         orientation: 'portrait-primary',
@@ -36,7 +36,7 @@ export default defineConfig({
             purpose: 'any maskable'
           }
         ],
-        shortcuts: [
+        /*shortcuts: [
           {
             name: 'Dashboard',
             short_name: 'Dashboard',
@@ -58,7 +58,7 @@ export default defineConfig({
             url: '/finance',
             icons: [{ src: '/icon-192x192.png', sizes: '192x192' }]
           }
-        ]
+        ]*/
       },
       workbox: {
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5MB
