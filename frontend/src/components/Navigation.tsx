@@ -10,7 +10,7 @@ const Navigation = () => {
         <div className="flex justify-between h-12">
           <div className="flex items-center">
             <Link to="/" className="text-xl font-bold text-white hover:text-green-300 transition-colors">
-              🚜 TrackFarmOps
+              TrackFarmOps
             </Link>
           </div>
           <div className="hidden md:flex items-center space-x-4">
