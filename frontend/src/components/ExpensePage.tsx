@@ -488,19 +488,17 @@ const ExpensePage = () => {
                 <Plus className="h-4 w-4" />
                 Record Farm Expense
               </button>
-              {isManager || isAccountant && (
-                <button
-                  onClick={() => handleTabChange('records')}
-                  className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${
-                    activeTab === 'records'
-                      ? 'border-amber-500 text-amber-600 dark:text-amber-400'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-                  }`}
-                >
-                  <Table className="h-4 w-4" />
-                  Table Records
-                </button>
-              )}
+              <button
+                onClick={() => handleTabChange('records')}
+                className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${
+                  activeTab === 'records'
+                    ? 'border-amber-500 text-amber-600 dark:text-amber-400'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                }`}
+              >
+                <Table className="h-4 w-4" />
+                Table Records
+              </button>
             </nav>
           </div>
 

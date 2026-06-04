@@ -51,7 +51,7 @@ const IncomePage = () => {
   const isManager = user?.role === 'MANAGER';
   const isAccountant = user?.role === 'ACCOUNTANT';
   const isInventory = user?.role === 'INVENTORY';
-  const allowedTabs = isManager ? ['record', 'invoice', 'records', 'invoices'] : isManager ? ['record', 'invoice', 'records', 'invoices', 'vat'] : isInventory ? [] : ['record', 'invoice', 'records', 'invoices'];
+  const allowedTabs = isManager ? ['record', 'invoice', 'records', 'invoices'] : isAccountant ? ['record', 'invoice', 'records', 'invoices', 'vat'] : isInventory ? [] : ['record', 'invoice', 'records', 'invoices'];
 
   // Redirect to allowed tab if current tab is not allowed
   useEffect(() => {
@@ -1962,8 +1962,6 @@ Generated on: ${new Date().toLocaleString()}
                 <Table className="h-4 w-4" />
                 Invoice Records
               </button>
-              {isManager || isAccountant && (
-                <>
                   <button
                     onClick={() => handleTabChange('records')}
                     className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 whitespace-nowrap ${
@@ -1975,7 +1973,7 @@ Generated on: ${new Date().toLocaleString()}
                     <span className="h-4 w-4 flex items-center justify-center text-sm font-bold">₦</span>
                     Income Records
                   </button>
-                  {isManager && user.role !== 'WORKER' || user.role !== 'VETERINARIAN' && (
+                  {!isManager && user.role !== 'WORKER' && user.role !== 'VETERINARIAN' && (
                     <>
                       <button
                         onClick={() => handleTabChange('vat' as any)}
@@ -1990,8 +1988,6 @@ Generated on: ${new Date().toLocaleString()}
                       </button>
                     </>
                   )}
-                </>
-              )}
             </nav>
           </div>
 
