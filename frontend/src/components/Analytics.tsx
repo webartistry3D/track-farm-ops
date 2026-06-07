@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
-import { formatCurrency } from '../utils/currency';
+import { formatCurrency, formatCompactCurrency } from '../utils/currency';
 import { 
   AnalyticsSkeleton
 } from './EnhancedSkeletons';
@@ -630,19 +630,19 @@ const Analytics = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <StatCard
                   title="Total Income"
-                  value={formatCurrency(Number(financialSummary?.totalIncome) || 0)}
+                  value={formatCompactCurrency(Number(financialSummary?.totalIncome) || 0)}
                   icon={<TrendingUp className="h-4 w-4 text-white" />}
                   color="bg-green-500"
                 />
                 <StatCard
                   title="Total Expenses"
-                  value={formatCurrency(Number(financialSummary?.totalExpenses) || 0)}
+                  value={formatCompactCurrency(Number(financialSummary?.totalExpenses) || 0)}
                   icon={<ShoppingCart className="h-4 w-4 text-white" />}
                   color="bg-red-500"
                 />
                 <StatCard
                   title="Net Profit"
-                  value={formatCurrency(Number(financialSummary?.netProfit) || 0)}
+                  value={formatCompactCurrency(Number(financialSummary?.netProfit) || 0)}
                   icon={<TrendingUp className="h-4 w-4 text-white" />}
                   color={(Number(financialSummary?.netProfit) || 0) >= 0 ? "bg-blue-500" : "bg-orange-500"}
                 />
@@ -709,7 +709,7 @@ const Analytics = () => {
                                 : 'bg-gradient-to-t from-red-600 to-red-400'
                             }`}
                             style={{ height: `${Math.abs(data.percentage)}%` }}
-                            title={`${data.label}: ${formatCurrency(data.profit)}`}
+                            title={`${data.label}: ${formatCompactCurrency(data.profit)}`}
                           ></div>
                           <span className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                             {data.label}
@@ -744,7 +744,7 @@ const Analytics = () => {
                   <div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">Avg Daily Revenue</p>
                     <p className="text-xl font-bold font-jetbrains-mono text-gray-900 dark:text-white">
-                      {formatCurrency(Math.floor((Number(financialSummary?.totalIncome) || 0) / 30))}
+                      {formatCompactCurrency(Math.floor((Number(financialSummary?.totalIncome) || 0) / 30))}
                     </p>
                   </div>
                   <div className="p-2 bg-green-500 rounded-lg">

@@ -1067,7 +1067,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Low Stock Items</p>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Low Stock</p>
                 <p className="text-3xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
                   {totals.lowStockItems}
                 </p>
