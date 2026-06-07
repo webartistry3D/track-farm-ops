@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
 import type { IncomeEntry } from '../types';
@@ -44,6 +44,7 @@ const formatNumberWithSeparator = (value: any): string => {
 const IncomePage = () => {
   const [activeTab, setActiveTab] = useState<'record' | 'invoice' | 'records' | 'invoices' | 'vat'>('record');
   const location = useLocation();
+  const [searchParams] = useSearchParams();
   const { user } = useAuth();
   const restrictions = useSubscriptionRestrictions();
 
@@ -68,6 +69,14 @@ const IncomePage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location]);
+
+  // Read tab parameter from URL and set active tab
+  useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam && ['record', 'invoice', 'records', 'invoices', 'vat'].includes(tabParam)) {
+      setActiveTab(tabParam as 'record' | 'invoice' | 'records' | 'invoices' | 'vat');
+    }
+  }, [searchParams]);
 
   const [formData, setFormData] = useState({
     description: '',

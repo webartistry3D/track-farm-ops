@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { SubscriptionRestrictions } from '../utils/subscriptionRestrictions';
@@ -20,10 +20,16 @@ const Layout = ({ children }: LayoutProps) => {
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  // Notification pagination state
+  const [notificationPage, setNotificationPage] = useState(1);
+  const notificationItemsPerPage = 10;
+  // Notification sound state
+  const [hasPlayedNotificationSound, setHasPlayedNotificationSound] = useState(false);
   // const [showInactivityWarning, setShowInactivityWarning] = useState(false); // DISABLED
   const { user, logout, setUser } = useAuth();
   const { isDark, toggleTheme } = useTheme();
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Inactivity detection state - DISABLED
   // const [inactivityTimer, setInactivityTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
@@ -174,13 +180,39 @@ const Layout = ({ children }: LayoutProps) => {
 
   const unreadCount = notifications.filter((n: any) => !n.read).length;
 
-  // Fetch notifications from API
+  // Play notification sound
+  const playNotificationSound = () => {
+    try {
+      const audio = new Audio('/mixkit-happy-bells-notification-937.wav');
+      audio.play().catch(error => {
+        console.log('Audio play failed (user may need to interact first):', error);
+      });
+    } catch (error) {
+      console.error('Failed to play notification sound:', error);
+    }
+  };
+
+  // Fetch notifications from API with pagination
   useEffect(() => {
     const fetchNotifications = async () => {
       if (user) {
         try {
-          const response = await api.get('/notifications');
-          setNotifications(response.data.notifications || []);
+          const offset = (notificationPage - 1) * notificationItemsPerPage;
+          const response = await api.get('/notifications', {
+            params: {
+              limit: notificationItemsPerPage,
+              offset: offset
+            }
+          });
+          const fetchedNotifications = response.data.notifications || [];
+          setNotifications(fetchedNotifications);
+          
+          // Play notification sound if there are unread notifications and sound hasn't been played yet
+          const unreadNotifications = fetchedNotifications.filter((n: any) => !n.read);
+          if (unreadNotifications.length > 0 && !hasPlayedNotificationSound) {
+            playNotificationSound();
+            setHasPlayedNotificationSound(true);
+          }
         } catch (error) {
           console.error('Failed to fetch notifications:', error);
           // Set empty array on error to prevent UI issues
@@ -190,16 +222,83 @@ const Layout = ({ children }: LayoutProps) => {
     };
 
     fetchNotifications();
-  }, [user]);
+  }, [user, notificationPage]);
 
   const handleMarkAllAsRead = async () => {
     try {
       await api.patch('/notifications/read-all');
-      // Refetch notifications after marking as read
-      const response = await api.get('/notifications');
+      // Refetch notifications after marking as read with pagination
+      const offset = (notificationPage - 1) * notificationItemsPerPage;
+      const response = await api.get('/notifications', {
+        params: {
+          limit: notificationItemsPerPage,
+          offset: offset
+        }
+      });
       setNotifications(response.data.notifications || []);
     } catch (error) {
       console.error('Failed to mark all as read:', error);
+    }
+  };
+
+  const handleNotificationClick = async (notification: any) => {
+    try {
+      // Mark individual notification as read
+      await api.patch(`/notifications/${notification.id}/read`);
+      // Refetch notifications after marking as read with pagination
+      const offset = (notificationPage - 1) * notificationItemsPerPage;
+      const response = await api.get('/notifications', {
+        params: {
+          limit: notificationItemsPerPage,
+          offset: offset
+        }
+      });
+      setNotifications(response.data.notifications || []);
+      
+      // Navigate to appropriate page based on notification type
+      const relatedEntity = notification.relatedEntity || notification.type;
+      
+      switch (relatedEntity) {
+        case 'IncomeEntry':
+        case 'INCOME_CREATED':
+          // Navigate to Income records tab
+          navigate('/income?tab=records');
+          break;
+        case 'ExpenseEntry':
+        case 'EXPENSE_CREATED':
+          // Navigate to Expenses page
+          navigate('/expenses');
+          break;
+        case 'InventoryItem':
+        case 'INVENTORY_CREATED':
+        case 'INVENTORY_UPDATED':
+          // Navigate to Inventory page
+          navigate('/inventory');
+          break;
+        case 'Asset':
+        case 'ASSET_CREATED':
+        case 'ASSET_UPDATED':
+          // Navigate to Assets page
+          navigate('/assets');
+          break;
+        case 'Livestock':
+        case 'HealthRecord':
+        case 'Vaccination':
+        case 'LIVESTOCK_CREATED':
+        case 'HEALTH_RECORD_CREATED':
+        case 'VACCINATION_CREATED':
+          // Navigate to Livestock Health page
+          navigate('/livestock-health');
+          break;
+        default:
+          console.log('Unknown notification type:', relatedEntity);
+          break;
+      }
+      
+      // Close notifications dropdown
+      setNotificationsOpen(false);
+    } catch (error) {
+      console.error('Failed to handle notification click:', error);
     }
   };
 
@@ -390,7 +489,8 @@ const Layout = ({ children }: LayoutProps) => {
                         {notifications.map((notification) => (
                           <div
                             key={notification.id}
-                            className={`p-2 sm:p-3 md:p-4 hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-600 ${!notification.read ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}
+                            onClick={() => handleNotificationClick(notification)}
+                            className={`p-2 sm:p-3 md:p-4 hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-600 cursor-pointer ${!notification.read ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}
                           >
                             <div className="flex items-start">
                               <div className="flex-1 min-w-0">
@@ -406,6 +506,26 @@ const Layout = ({ children }: LayoutProps) => {
                             </div>
                           </div>
                         ))}
+                      </div>
+                      {/* Pagination Controls */}
+                      <div className="p-2 sm:p-2 md:p-3 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                        <button
+                          onClick={() => setNotificationPage(prev => Math.max(1, prev - 1))}
+                          disabled={notificationPage === 1}
+                          className="text-xs sm:text-sm px-2 py-1 rounded bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          Previous
+                        </button>
+                        <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                          Page {notificationPage}
+                        </span>
+                        <button
+                          onClick={() => setNotificationPage(prev => prev + 1)}
+                          disabled={notifications.length < notificationItemsPerPage}
+                          className="text-xs sm:text-sm px-2 py-1 rounded bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          Next
+                        </button>
                       </div>
                       <div className="p-2 sm:p-2 md:p-3 border-t border-gray-200 dark:border-gray-700">
                         <button 
