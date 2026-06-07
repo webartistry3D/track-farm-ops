@@ -481,7 +481,7 @@ const Layout = ({ children }: LayoutProps) => {
                   </button>
                   
                   {notificationsOpen && (
-                    <div className="absolute right-0 sm:right-0 mt-2 w-80 sm:w-80 md:w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50 max-w-[calc(100vw-1rem)] sm:max-w-[calc(100vw-2rem)] md:max-w-none">
+                    <div className="absolute right-0 sm:right-0 mt-2 w-72 sm:w-80 md:w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50 max-w-[calc(100vw-1rem)] sm:max-w-[calc(100vw-2rem)] md:max-w-none">
                       <div className="p-2 sm:p-3 md:p-4 border-b border-gray-200 dark:border-gray-700">
                         <h3 className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white">Notifications</h3>
                       </div>

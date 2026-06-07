@@ -11,7 +11,7 @@ import SuccessModal from './SuccessModal';
 import jsPDF from 'jspdf';
 
 const incomeCategories = [
-  "Sales", "Services", "Investments", "Loans", "Grants", "Other"
+  "Sales", "Investments", "Loans", "Grants", "Other"
 ];
 
 const paymentMethods = [
@@ -79,6 +79,8 @@ const IncomePage = () => {
   }, [searchParams]);
 
   const [formData, setFormData] = useState({
+    inventoryItemId: '',
+    categoryId: '',
     description: '',
     quantity: '',
     unitPrice: '',
@@ -227,11 +229,15 @@ const IncomePage = () => {
   useEffect(() => {
     if (activeTab === 'records') {
       fetchIncomes(1);
+    } else if (activeTab === 'invoice') {
+      fetchInventoryData(); // Fetch inventory data for invoice items
     } else if (activeTab === 'invoices') {
       fetchInvoices(1);
       fetchInventoryData(); // Fetch inventory data for invoice items
     } else if (activeTab === 'vat') {
       fetchVatRecords();
+    } else if (activeTab === 'record') {
+      fetchInventoryData(); // Fetch inventory data for record income tab
     }
     
     // Scroll to top on page load
@@ -1382,7 +1388,9 @@ TrackFarmOps Team`;
         enableVAT: formData.enableVAT,
         category: formData.category,
         paymentMethod: formData.paymentMethod,
-        subtotal: subtotal.toString()
+        subtotal: subtotal.toString(),
+        inventoryItemId: formData.inventoryItemId || null,
+        categoryId: formData.categoryId || null
       };
       
       console.log('📤 Sending income data:', JSON.stringify(incomeData, null, 2));
@@ -1409,6 +1417,8 @@ TrackFarmOps Team`;
 
   const resetForm = () => {
     setFormData({
+      inventoryItemId: '',
+      categoryId: '',
       description: '',
       quantity: '',
       unitPrice: '',
@@ -1949,6 +1959,7 @@ Generated on: ${new Date().toLocaleString()}
                 <Plus className="h-4 w-4" />
                 Record Income
               </button>
+              {/*
               <button
                 onClick={() => handleTabChange('invoice')}
                 className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 whitespace-nowrap ${
@@ -1971,32 +1982,33 @@ Generated on: ${new Date().toLocaleString()}
                 <Table className="h-4 w-4" />
                 Invoice Records
               </button>
+              */}
+              <button
+                onClick={() => handleTabChange('records')}
+                className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 whitespace-nowrap ${
+                  activeTab === 'records'
+                    ? 'border-green-500 text-green-600 dark:text-green-400'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                }`}
+              >
+                <span className="h-4 w-4 flex items-center justify-center text-sm font-bold">₦</span>
+                Income Records
+              </button>
+              {!isManager && user.role !== 'WORKER' && user.role !== 'VETERINARIAN' && (
+                <>
                   <button
-                    onClick={() => handleTabChange('records')}
+                    onClick={() => handleTabChange('vat' as any)}
                     className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 whitespace-nowrap ${
-                      activeTab === 'records'
+                      activeTab === 'vat'
                         ? 'border-green-500 text-green-600 dark:text-green-400'
                         : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
                     }`}
                   >
-                    <span className="h-4 w-4 flex items-center justify-center text-sm font-bold">₦</span>
-                    Income Records
+                    <Receipt className="h-4 w-4" />
+                    VAT Records
                   </button>
-                  {!isManager && user.role !== 'WORKER' && user.role !== 'VETERINARIAN' && (
-                    <>
-                      <button
-                        onClick={() => handleTabChange('vat' as any)}
-                        className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 whitespace-nowrap ${
-                          activeTab === 'vat'
-                            ? 'border-green-500 text-green-600 dark:text-green-400'
-                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-                        }`}
-                      >
-                        <Receipt className="h-4 w-4" />
-                        VAT Records
-                      </button>
-                    </>
-                  )}
+                </>
+              )}
             </nav>
           </div>
 
@@ -2004,8 +2016,99 @@ Generated on: ${new Date().toLocaleString()}
           {activeTab === 'record' && (
             <div>
               <form onSubmit={handleSubmit} className="space-y-4">
-                {/* First Row: Description, Quantity, Unit Price */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                {/* First Row: Select from Inventory, Description, Quantity, Unit Price */}
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+                  {/* Inventory Item Selection */}
+                  <div>
+                    <label htmlFor="inventoryItemId" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Select from Inventory
+                    </label>
+                    <select
+                      id="inventoryItemId"
+                      name="inventoryItemId"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                      value={formData.inventoryItemId}
+                      onChange={(e) => {
+                        const inventoryItemId = e.target.value;
+                        if (inventoryItemId) {
+                          const selectedItem = inventoryItems.find(inv => 
+                            inv.id.toString() === inventoryItemId.toString()
+                          );
+                          if (selectedItem) {
+                            setFormData(prev => ({
+                              ...prev,
+                              inventoryItemId: inventoryItemId.toString(),
+                              description: selectedItem.name,
+                              unitPrice: selectedItem.pricePerUnit || 0,
+                              categoryId: selectedItem.categoryId
+                            }));
+                          }
+                        } else {
+                          setFormData(prev => ({
+                            ...prev,
+                            inventoryItemId: '',
+                            categoryId: ''
+                          }));
+                        }
+                      }}
+                    >
+                      <option value="">-- Select from Inventory --</option>
+                      {inventoryCategories.length === 0 && inventoryItems.length > 0 && (
+                        <optgroup label="📦 Uncategorized Items">
+                          {inventoryItems.map(invItem => (
+                            <option 
+                              key={invItem.id} 
+                              value={invItem.id.toString()}
+                              disabled={(invItem.quantity || 0) <= 0}
+                            >
+                              {invItem.name} ({invItem.quantity || 0} {invItem.unit}) - ₦{formatNumberWithSeparator(invItem.pricePerUnit || 0)}/unit
+                              {(invItem.quantity || 0) <= 0 && ' (OUT OF STOCK)'}
+                            </option>
+                          ))}
+                        </optgroup>
+                      )}
+                      {inventoryCategories.length === 0 && (
+                        <option value="" disabled>No categories available</option>
+                      )}
+                      {inventoryCategories.map(category => (
+                        <optgroup key={category.id} label={`${category.icon || '📦'} ${category.name}`}>
+                          {inventoryItems
+                            .filter(item => item.categoryId === category.id)
+                            .map(invItem => (
+                              <option 
+                                key={invItem.id} 
+                                value={invItem.id.toString()}
+                                disabled={(invItem.quantity || 0) <= 0}
+                              >
+                                {invItem.name} ({invItem.quantity || 0} {invItem.unit}) - ₦{formatNumberWithSeparator(invItem.pricePerUnit || 0)}/unit
+                                {(invItem.quantity || 0) <= 0 && ' (OUT OF STOCK)'}
+                              </option>
+                            ))}
+                        </optgroup>
+                      ))}
+                      {inventoryCategories.length > 0 && inventoryItems.length === 0 && (
+                        <option value="" disabled>No items available in inventory</option>
+                      )}
+                      {inventoryCategories.length === 0 && inventoryItems.length === 0 && (
+                        <option value="" disabled>No inventory data available</option>
+                      )}
+                    </select>
+                    {formData.inventoryItemId && (
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        Category: {(() => {
+                          const invItem = inventoryItems.find(inv => inv.id.toString() === formData.inventoryItemId);
+                          if (!invItem) return 'N/A';
+                          if (invItem.categoryId) {
+                            const category = inventoryCategories.find(cat => cat.id === invItem.categoryId);
+                            return category ? category.name : 'Unknown Category';
+                          }
+                          return 'Uncategorized';
+                        })()}
+                      </p>
+                    )}
+                  </div>
+                  
+                  {/* Description */}
                   <div>
                     <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Description *
@@ -2016,11 +2119,18 @@ Generated on: ${new Date().toLocaleString()}
                       name="description"
                       required
                       className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
-                      placeholder="Description"
+                      placeholder="Product or service description"
                       value={formData.description}
                       onChange={handleChange}
                     />
+                    {formData.inventoryItemId && (
+                      <p className="text-xs text-green-600 dark:text-green-400 mt-1">
+                        ✅ Linked to inventory item
+                      </p>
+                    )}
                   </div>
+                  
+                  {/* Quantity */}
                   <div>
                     <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Quantity *
@@ -2029,13 +2139,22 @@ Generated on: ${new Date().toLocaleString()}
                       type="text"
                       id="quantity"
                       name="quantity"
-                      min="0"
-                      step="0.01"
+                      min="1"
                       className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
                       value={formatNumberWithSeparator(formData.quantity)}
                       onChange={(e) => handleChange(e as React.ChangeEvent<HTMLInputElement>)}
                     />
+                    {formData.inventoryItemId && (
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        Available: {(() => {
+                          const invItem = inventoryItems.find(inv => inv.id.toString() === formData.inventoryItemId);
+                          return invItem ? `${invItem.quantity || 0} ${invItem.unit}` : 'N/A';
+                        })()}
+                      </p>
+                    )}
                   </div>
+                  
+                  {/* Unit Price */}
                   <div>
                     <label htmlFor="unitPrice" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Unit Price (₦) *
@@ -2050,9 +2169,27 @@ Generated on: ${new Date().toLocaleString()}
                       className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
                       value={formatNumberWithSeparator(formData.unitPrice)}
                       onChange={(e) => handleChange(e as React.ChangeEvent<HTMLInputElement>)}
+                      disabled={!!formData.inventoryItemId}
                     />
+                    {formData.inventoryItemId && (
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        From inventory price
+                      </p>
+                    )}
                   </div>
                 </div>
+
+                {/* Inventory Warning */}
+                {formData.inventoryItemId && (() => {
+                  const invItem = inventoryItems.find(inv => inv.id.toString() === formData.inventoryItemId);
+                  const requestedQty = parseFloat((formData.quantity || '0').replace(/,/g, ''));
+                  const availableQty = invItem ? (invItem.quantity || 0) : 0;
+                  return requestedQty > availableQty ? (
+                    <div className="p-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded text-red-600 dark:text-red-400 text-sm">
+                      ⚠️ Requested quantity ({requestedQty}) exceeds available stock ({availableQty} {invItem?.unit})
+                    </div>
+                  ) : null;
+                })()}
 
                 {/* VAT Option */}
                 <div className="p-4 rounded-lg">
@@ -3213,7 +3350,7 @@ Generated on: ${new Date().toLocaleString()}
                               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
                             >
                               <option value="Sales">Sales</option>
-                              <option value="Services">Services</option>
+                              {/*<option value="Services">Services</option>*/}
                               <option value="Investments">Investments</option>
                               <option value="Loans">Loans</option>
                               <option value="Grants">Grants</option>
