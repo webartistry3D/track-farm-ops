@@ -932,7 +932,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
       
       <div className="w-full px-0 sm:px-0 lg:px-0 py-0">
         {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-2 gap-6 mb-6">
           {/* First Row: Items, Categories, Value (double width) */}
           <div 
             onClick={() => {
@@ -973,13 +973,14 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
               </div>
             </div>
           </div>
-          
-          <div 
+        </div>
+
+        <div
             onClick={() => {
               // Show high-value items or filter by value
               console.log('Total Value clicked');
             }}
-            className="md:col-span-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -993,10 +994,9 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
               </div>
             </div>
           </div>
-        </div>
 
         {/* Second Row: Livestock, Produce, Consumables, Low Stock */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
           <div 
             onClick={() => {
               // Navigate to livestock items
@@ -1011,7 +1011,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                   {totals.livestockItems}
                 </p>
               </div>
-              <div className="p-3 bg-orange-100 dark:bg-orange-900 rounded-lg">
+              <div className="p-0.5 bg-orange-100 dark:bg-orange-900 rounded-lg">
                 <span className="text-2xl">🐄</span>
               </div>
             </div>
@@ -1031,7 +1031,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                   {totals.produceItems}
                 </p>
               </div>
-              <div className="p-3 bg-green-100 dark:bg-green-900 rounded-lg">
+              <div className="p-1 bg-green-100 dark:bg-green-900 rounded-lg">
                 <span className="text-2xl">🌾</span>
               </div>
             </div>
@@ -1051,7 +1051,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                   {totals.consumablesItems}
                 </p>
               </div>
-              <div className="p-3 bg-indigo-100 dark:bg-indigo-900 rounded-lg">
+              <div className="p-1 bg-indigo-100 dark:bg-indigo-900 rounded-lg">
                 <span className="text-2xl">📦</span>
               </div>
             </div>
@@ -1071,7 +1071,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                   {totals.lowStockItems}
                 </p>
               </div>
-              <div className="p-3 bg-yellow-100 dark:bg-yellow-900 rounded-lg">
+              <div className="p-1 bg-yellow-100 dark:bg-yellow-900 rounded-lg">
                 <AlertTriangle className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
               </div>
             </div>
