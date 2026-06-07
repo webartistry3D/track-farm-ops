@@ -7,6 +7,7 @@ import { Router } from 'express';
 import { authenticate } from '../middleware/auth';
 import { AuthRequest } from '../middleware/auth';
 import { prisma } from '../lib/prisma';
+import { createActivityNotification, NotificationActivityType, formatNotificationMessage } from '../utils/notificationHelper';
 
 const router = Router();
 
@@ -533,6 +534,36 @@ router.post('/income', authenticate, async (req: AuthRequest, res) => {
     
     console.log('✅ Income entry created:', incomeEntry);
     console.log('✅ VAT Data Stored - enableVAT:', incomeEntry.enableVAT, 'vatRate:', incomeEntry.vatRate, 'vatAmount:', incomeEntry.vatAmount, 'subtotal:', incomeEntry.subtotal);
+
+    // Send notification to owner/managers
+    console.log('🔔 About to call createActivityNotification for INCOME_CREATED');
+    try {
+      await createActivityNotification(
+        NotificationActivityType.INCOME_CREATED,
+        currentUser.id,
+        currentUserOrg.organizationId,
+        {
+          title: 'New Income Recorded',
+          message: formatNotificationMessage(
+            NotificationActivityType.INCOME_CREATED,
+            currentUser.name,
+            description || category,
+            `₦${parseFloat(amount).toLocaleString()}`
+          ),
+          relatedEntity: 'IncomeEntry',
+          relatedEntityId: incomeEntry.id,
+          metadata: {
+            amount: parseFloat(amount),
+            category,
+            description
+          }
+        }
+      );
+      console.log('🔔 createActivityNotification completed successfully');
+    } catch (notificationError) {
+      console.error('❌ Notification creation failed:', notificationError);
+      // Don't fail the entire request if notification fails
+    }
     
     res.json({
       success: true,
@@ -622,7 +653,37 @@ router.post('/expenses', authenticate, async (req: AuthRequest, res) => {
     });
     
     console.log(`✅ Expense entry created: ${expense.category} - $${expense.amount} by ${currentUser.name}`);
-    
+
+    // Send notification to owner/managers
+    console.log('🔔 About to call createActivityNotification for EXPENSE_CREATED');
+    try {
+      await createActivityNotification(
+        NotificationActivityType.EXPENSE_CREATED,
+        currentUser.id,
+        currentUserOrg.organizationId,
+        {
+          title: 'New Expense Recorded',
+          message: formatNotificationMessage(
+            NotificationActivityType.EXPENSE_CREATED,
+            currentUser.name,
+            note || category,
+            `₦${parseFloat(amount).toLocaleString()}`
+          ),
+          relatedEntity: 'ExpenseEntry',
+          relatedEntityId: expense.id,
+          metadata: {
+            amount: parseFloat(amount),
+            category,
+            note
+          }
+        }
+      );
+      console.log('🔔 createActivityNotification completed successfully');
+    } catch (notificationError) {
+      console.error('❌ Notification creation failed:', notificationError);
+      // Don't fail the entire request if notification fails
+    }
+
     res.status(201).json({
       success: true,
       data: expense,

@@ -5,6 +5,7 @@ import { buildRoleBasedWhereClause, canUserAccessRecord } from '../utils/roleAcc
 import { createActivityNotification, NotificationActivityType, formatNotificationMessage } from '../utils/notificationHelper';
 
 export const createIncomeEntry = async (req: AuthRequest, res: Response) => {
+  console.log('🚨 createIncomeEntry FUNCTION CALLED');
   try {
     const { 
       amount, 
@@ -86,28 +87,35 @@ export const createIncomeEntry = async (req: AuthRequest, res: Response) => {
     console.log('✅ Income entry created successfully:', JSON.stringify(incomeEntry, null, 2));
 
     // Send notification to owner/managers
-    await createActivityNotification(
-      NotificationActivityType.INCOME_CREATED,
-      currentUser.id,
-      currentUserOrg.organizationId,
-      {
-        title: 'New Income Recorded',
-        message: formatNotificationMessage(
-          NotificationActivityType.INCOME_CREATED,
-          currentUser.name,
-          description || category,
-          `₦${parseFloat(amount).toLocaleString()}`
-        ),
-        relatedEntity: 'IncomeEntry',
-        relatedEntityId: incomeEntry.id,
-        metadata: {
-          amount: parseFloat(amount),
-          category,
-          description
+    console.log('🔔 About to call createActivityNotification for INCOME_CREATED');
+    try {
+      await createActivityNotification(
+        NotificationActivityType.INCOME_CREATED,
+        currentUser.id,
+        currentUserOrg.organizationId,
+        {
+          title: 'New Income Recorded',
+          message: formatNotificationMessage(
+            NotificationActivityType.INCOME_CREATED,
+            currentUser.name,
+            description || category,
+            `₦${parseFloat(amount).toLocaleString()}`
+          ),
+          relatedEntity: 'IncomeEntry',
+          relatedEntityId: incomeEntry.id,
+          metadata: {
+            amount: parseFloat(amount),
+            category,
+            description
+          }
         }
-      }
-    );
-
+      );
+      console.log('🔔 createActivityNotification completed successfully');
+    } catch (notificationError) {
+      console.error('❌ Notification creation failed:', notificationError);
+      // Don't fail the entire request if notification fails
+    }
+    
     res.status(201).json(incomeEntry);
   } catch (error) {
     console.error('Create income entry error:', error);
@@ -464,27 +472,34 @@ export const createExpenseEntry = async (req: AuthRequest, res: Response) => {
     console.log('✅ Expense entry created successfully:', JSON.stringify(expenseEntry, null, 2));
 
     // Send notification to owner/managers
-    await createActivityNotification(
-      NotificationActivityType.EXPENSE_CREATED,
-      currentUser.id,
-      currentUserOrg.organizationId,
-      {
-        title: 'New Expense Recorded',
-        message: formatNotificationMessage(
-          NotificationActivityType.EXPENSE_CREATED,
-          currentUser.name,
-          note || category,
-          `₦${parseFloat(amount).toLocaleString()}`
-        ),
-        relatedEntity: 'ExpenseEntry',
-        relatedEntityId: expenseEntry.id,
-        metadata: {
-          amount: parseFloat(amount),
-          category,
-          note
+    console.log('🔔 About to call createActivityNotification for EXPENSE_CREATED');
+    try {
+      await createActivityNotification(
+        NotificationActivityType.EXPENSE_CREATED,
+        currentUser.id,
+        currentUserOrg.organizationId,
+        {
+          title: 'New Expense Recorded',
+          message: formatNotificationMessage(
+            NotificationActivityType.EXPENSE_CREATED,
+            currentUser.name,
+            note || category,
+            `₦${parseFloat(amount).toLocaleString()}`
+          ),
+          relatedEntity: 'ExpenseEntry',
+          relatedEntityId: expenseEntry.id,
+          metadata: {
+            amount: parseFloat(amount),
+            category,
+            note
+          }
         }
-      }
-    );
+      );
+      console.log('🔔 createActivityNotification completed successfully');
+    } catch (notificationError) {
+      console.error('❌ Notification creation failed:', notificationError);
+      // Don't fail the entire request if notification fails
+    }
 
     res.status(201).json(expenseEntry);
   } catch (error) {

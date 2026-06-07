@@ -1,4 +1,5 @@
 import { prisma } from '../lib/prisma';
+import { UserRole } from '@prisma/client';
 
 /**
  * Notification types for different activities
@@ -37,6 +38,7 @@ export async function createActivityNotification(
     metadata?: any;
   }
 ) {
+  console.log('🚨🚨🚨 createActivityNotification FUNCTION CALLED - activityType:', activityType);
   try {
     // Get the actor (user who performed the action)
     const actor = await prisma.user.findUnique({
@@ -49,52 +51,46 @@ export async function createActivityNotification(
       return;
     }
 
-    // Determine recipients based on actor's role
+    // Determine recipients based on actor role.
+    // This ensures OWNER sees finance/livestock notifications from manager, worker, veterinarian, and accountant actors.
+    const actorRole = actor.role.toUpperCase() as UserRole;
+    console.log(`🔔 Notification Debug: Actor role = '${actor.role}', Uppercase = '${actorRole}'`);
+    const defaultRecipientRoles: UserRole[] = ['OWNER', 'SUPERUSER'];
+    const recipientRoleMap: Partial<Record<UserRole, UserRole[]>> = {
+      WORKER: ['OWNER', 'MANAGER', 'VETERINARIAN', 'INVENTORY', 'ACCOUNTANT', 'SUPERUSER'],
+      MANAGER: ['OWNER', 'VETERINARIAN', 'INVENTORY', 'ACCOUNTANT', 'SUPERUSER'],
+      VETERINARIAN: ['OWNER', 'MANAGER', 'ACCOUNTANT', 'SUPERUSER'],
+      INVENTORY: ['OWNER', 'MANAGER', 'ACCOUNTANT', 'SUPERUSER'],
+      ACCOUNTANT: ['OWNER', 'MANAGER', 'SUPERUSER']
+    };
+
+    if (actorRole === 'OWNER') {
+      // Owner actions do not need downstream notifications to owners.
+      console.log(`🔔 Notification Debug: Actor is OWNER, skipping notification`);
+      return;
+    }
+
+    const recipientRoles = recipientRoleMap[actorRole] ?? defaultRecipientRoles;
+    console.log(`🔔 Notification Debug: Recipient roles for ${actorRole} =`, recipientRoles);
+    const uniqueRecipientRoles = Array.from(new Set(recipientRoles));
+
     let recipientIds: number[] = [];
 
-    if (actor.role === 'WORKER') {
-      // Worker actions: Notify all managers, owner, veterinarian, and inventory manager
-      const managersAndOwner = await prisma.user.findMany({
+    if (uniqueRecipientRoles.length > 0) {
+      const recipients = await prisma.user.findMany({
         where: {
           organizationId,
-          role: { in: ['MANAGER', 'OWNER', 'VETERINARIAN', 'INVENTORY'] }
+          role: { in: uniqueRecipientRoles }
         },
-        select: { id: true }
+        select: { id: true, role: true }
       });
-      recipientIds = managersAndOwner.map(u => u.id);
-    } else if (actor.role === 'MANAGER') {
-      // Manager actions: Notify owner, veterinarian, and inventory manager
-      const ownerAndSpecialists = await prisma.user.findMany({
-        where: {
-          organizationId,
-          role: { in: ['OWNER', 'VETERINARIAN', 'INVENTORY'] }
-        },
-        select: { id: true }
-      });
-      recipientIds = ownerAndSpecialists.map(u => u.id);
-    } else if (actor.role === 'VETERINARIAN') {
-      // Veterinarian actions: Notify owner and manager
-      const ownerAndManager = await prisma.user.findMany({
-        where: {
-          organizationId,
-          role: { in: ['OWNER', 'MANAGER'] }
-        },
-        select: { id: true }
-      });
-      recipientIds = ownerAndManager.map(u => u.id);
-    } else if (actor.role === 'INVENTORY') {
-      // Inventory manager actions: Notify owner and manager
-      const ownerAndManager = await prisma.user.findMany({
-        where: {
-          organizationId,
-          role: { in: ['OWNER', 'MANAGER'] }
-        },
-        select: { id: true }
-      });
-      recipientIds = ownerAndManager.map(u => u.id);
-    } else if (actor.role === 'OWNER') {
-      // Owner actions: No notifications needed (owner is the top level)
-      return;
+      console.log(`🔔 Notification Debug: Found ${recipients.length} recipients for roles ${uniqueRecipientRoles} in org ${organizationId}:`, recipients.map(r => ({ id: r.id, role: r.role })));
+      recipientIds = recipients.map(u => u.id);
+
+      if (recipientIds.length === 0) {
+        console.warn(`⚠️ No notification recipients found for actor role ${actorRole} in org ${organizationId}`);
+        return;
+      }
     }
 
     // Create notifications for all recipients

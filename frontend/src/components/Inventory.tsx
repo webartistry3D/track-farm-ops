@@ -6,9 +6,7 @@ import { formatCurrency } from '../utils/currency';
 import { useSubscriptionRestrictions } from '../utils/subscriptionRestrictions';
 import type { InventoryItem } from '../types';
 import Pagination from './Pagination';
-import { 
-  InventorySkeleton
-} from './EnhancedSkeletons';
+import { InventorySkeleton } from './EnhancedSkeletons';
 import { 
   Search, Plus, Edit2, Trash2, AlertTriangle, TrendingUp, Clock, MapPin, User, FileText, CheckCircle, Calendar, 
   Package, Activity, RefreshCw, Grid3X3, List, Check,

@@ -85,6 +85,15 @@ const LivestockHealth = () => {
   const [selectedSpecies, setSelectedSpecies] = useState('all');
   const [selectedHealthStatus, setSelectedHealthStatus] = useState('all');
   const [activeTab, setActiveTab] = useState<'livestock' | 'healthRecords' | 'vaccinations'>('livestock');
+  
+  // Health records search and filter state
+  const [healthSearchTerm, setHealthSearchTerm] = useState('');
+  const [selectedRecordType, setSelectedRecordType] = useState('all');
+  const [selectedRecordStatus, setSelectedRecordStatus] = useState('all');
+  
+  // Vaccinations search and filter state
+  const [vaccinationSearchTerm, setVaccinationSearchTerm] = useState('');
+  const [selectedVaccineType, setSelectedVaccineType] = useState('all');
 
   // Modal states
   const [showAddLivestockModal, setShowAddLivestockModal] = useState(false);
@@ -180,6 +189,25 @@ const LivestockHealth = () => {
     const matchesSpecies = selectedSpecies === 'all' || animal.species === selectedSpecies;
     const matchesHealth = selectedHealthStatus === 'all' || animal.healthStatus === selectedHealthStatus;
     return matchesSearch && matchesSpecies && matchesHealth;
+  });
+
+  // Filter health records
+  const filteredHealthRecords = healthRecords.filter(record => {
+    const matchesSearch = record.diagnosis.toLowerCase().includes(healthSearchTerm.toLowerCase()) ||
+                         record.veterinarian.toLowerCase().includes(healthSearchTerm.toLowerCase()) ||
+                         (livestock.find(l => l.id === record.livestockId)?.name || '').toLowerCase().includes(healthSearchTerm.toLowerCase());
+    const matchesRecordType = selectedRecordType === 'all' || record.recordType === selectedRecordType;
+    const matchesStatus = selectedRecordStatus === 'all' || record.status === selectedRecordStatus;
+    return matchesSearch && matchesRecordType && matchesStatus;
+  });
+
+  // Filter vaccinations
+  const filteredVaccinations = vaccinations.filter(vaccination => {
+    const matchesSearch = vaccination.vaccineName.toLowerCase().includes(vaccinationSearchTerm.toLowerCase()) ||
+                         vaccination.veterinarian.toLowerCase().includes(vaccinationSearchTerm.toLowerCase()) ||
+                         (livestock.find(l => l.id === vaccination.livestockId)?.name || '').toLowerCase().includes(vaccinationSearchTerm.toLowerCase());
+    const matchesVaccineType = selectedVaccineType === 'all' || vaccination.vaccineType === selectedVaccineType;
+    return matchesSearch && matchesVaccineType;
   });
 
   // Get health status color
@@ -454,7 +482,7 @@ const LivestockHealth = () => {
               <option value="recovery">Recovery</option>
               <option value="critical">Critical</option>
             </select>
-            {user.role === 'OWNER' && (
+            {(user.role === 'OWNER' || user.role === 'VETERINARIAN') && (
               <button
                 onClick={() => setShowAddLivestockModal(true)}
                 className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2"
@@ -540,8 +568,42 @@ const LivestockHealth = () => {
       {/* Health Records Tab */}
       {activeTab === 'healthRecords' && (
         <div>
-          {user.role === 'OWNER' && (
-            <div className="mb-6 flex justify-end">
+          {/* Search and Filter */}
+          <div className="mb-6 flex flex-col sm:flex-row gap-4">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search health records by diagnosis, veterinarian, or livestock..."
+                value={healthSearchTerm}
+                onChange={(e) => setHealthSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:text-white"
+              />
+            </div>
+            <select
+              value={selectedRecordType}
+              onChange={(e) => setSelectedRecordType(e.target.value)}
+              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:text-white"
+            >
+              <option value="all">All Types</option>
+              <option value="vaccination">Vaccination</option>
+              <option value="treatment">Treatment</option>
+              <option value="checkup">Checkup</option>
+              <option value="surgery">Surgery</option>
+              <option value="lab_test">Lab Test</option>
+              <option value="other">Other</option>
+            </select>
+            <select
+              value={selectedRecordStatus}
+              onChange={(e) => setSelectedRecordStatus(e.target.value)}
+              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:text-white"
+            >
+              <option value="all">All Status</option>
+              <option value="scheduled">Scheduled</option>
+              <option value="completed">Completed</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+            {(user.role === 'OWNER' || user.role === 'VETERINARIAN') && (
               <button
                 onClick={() => setShowAddHealthRecordModal(true)}
                 className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2"
@@ -549,8 +611,8 @@ const LivestockHealth = () => {
                 <Plus className="h-4 w-4" />
                 Add Health Record
               </button>
-            </div>
-          )}
+            )}
+          </div>
 
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-x-auto">
             <table className="w-full min-w-[600px]">
@@ -565,7 +627,7 @@ const LivestockHealth = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                {healthRecords.map((record) => (
+                {filteredHealthRecords.map((record) => (
                   <tr key={record.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                     <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{new Date(record.date).toLocaleDateString()}</td>
                     <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{livestock.find(l => l.id === record.livestockId)?.name || 'Unknown'}</td>
@@ -586,7 +648,7 @@ const LivestockHealth = () => {
               </tbody>
             </table>
 
-            {healthRecords.length === 0 && (
+            {filteredHealthRecords.length === 0 && (
               <div className="text-center py-12">
                 <ClipboardList className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-600 dark:text-gray-400">No health records found</p>
@@ -599,8 +661,33 @@ const LivestockHealth = () => {
       {/* Vaccinations Tab */}
       {activeTab === 'vaccinations' && (
         <div>
-          {user.role === 'OWNER' && (
-            <div className="mb-6 flex justify-end">
+          {/* Search and Filter */}
+          <div className="mb-6 flex flex-col sm:flex-row gap-4">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search vaccinations by vaccine name, veterinarian, or livestock..."
+                value={vaccinationSearchTerm}
+                onChange={(e) => setVaccinationSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:text-white"
+              />
+            </div>
+            <select
+              value={selectedVaccineType}
+              onChange={(e) => setSelectedVaccineType(e.target.value)}
+              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:text-white"
+            >
+              <option value="all">All Vaccine Types</option>
+              <option value="live">Live</option>
+              <option value="killed">Killed</option>
+              <option value="toxoid">Toxoid</option>
+              <option value="subunit">Subunit</option>
+              <option value="conjugate">Conjugate</option>
+              <option value="mRNA">mRNA</option>
+              <option value="other">Other</option>
+            </select>
+            {(user.role === 'VETERINARIAN' || user.role === 'OWNER') && (
               <button
                 onClick={() => setShowAddVaccinationModal(true)}
                 className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2"
@@ -608,8 +695,8 @@ const LivestockHealth = () => {
                 <Plus className="h-4 w-4" />
                 Add Vaccination
               </button>
-            </div>
-          )}
+            )}
+          </div>
 
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-x-auto">
             <table className="w-full min-w-[600px]">
@@ -624,7 +711,7 @@ const LivestockHealth = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                {vaccinations.map((vaccination) => (
+                {filteredVaccinations.map((vaccination) => (
                   <tr key={vaccination.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                     <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{vaccination.vaccineName}</td>
                     <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{livestock.find(l => l.id === vaccination.livestockId)?.name || 'Unknown'}</td>
@@ -637,7 +724,7 @@ const LivestockHealth = () => {
               </tbody>
             </table>
 
-            {vaccinations.length === 0 && (
+            {filteredVaccinations.length === 0 && (
               <div className="text-center py-12">
                 <Syringe className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-600 dark:text-gray-400">No vaccination records found</p>
