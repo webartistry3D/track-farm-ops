@@ -268,12 +268,12 @@ const Dashboard = () => {
             <div className="flex items-start justify-between mb-3">
               <div className="flex flex-col space-y-1">
                 <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                  {dateFilter === 'today' ? "Income" : 
-                   dateFilter === 'yesterday' ? "Income" :
-                   dateFilter === 'week' ? "Income" : 
-                   dateFilter === 'month' ? "Income" :
-                   dateFilter === 'thisMonth' ? "Income" :
-                   dateFilter === 'thisYear' ? "Income" :
+                  {dateFilter === 'today' ? "Today's Income" : 
+                   dateFilter === 'yesterday' ? "Yesterday's Income" :
+                   dateFilter === 'week' ? "This Week's Income" : 
+                   dateFilter === 'month' ? "This Month's Income" :
+                   dateFilter === 'thisMonth' ? "This Month's Income" :
+                   dateFilter === 'thisYear' ? "This Year's Income" :
                    dateFilter === 'allTime' ? "All Time Income" :
                    dateFilter === 'customMonth' ? `${new Date(selectedYear, selectedMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} Income` :
                    `${selectedYear} Income`}
@@ -306,12 +306,12 @@ const Dashboard = () => {
             <div className="flex items-start justify-between mb-3">
               <div className="flex flex-col space-y-1">
                 <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                  {dateFilter === 'today' ? "Expenses" : 
-                   dateFilter === 'yesterday' ? "Expenses" :
-                   dateFilter === 'week' ? "Expenses" : 
-                   dateFilter === 'month' ? "Expenses" :
-                   dateFilter === 'thisMonth' ? "Expenses" :
-                   dateFilter === 'thisYear' ? "Expenses" :
+                  {dateFilter === 'today' ? "Today's Expenses" : 
+                   dateFilter === 'yesterday' ? "Yesterday's Expenses" :
+                   dateFilter === 'week' ? "This Week's Expenses" : 
+                   dateFilter === 'month' ? "This Month's Expenses" :
+                   dateFilter === 'thisMonth' ? "This Month's Expenses" :
+                   dateFilter === 'thisYear' ? "This Year's Expenses" :
                    dateFilter === 'allTime' ? "All Time Expenses" :
                    dateFilter === 'customMonth' ? `${new Date(selectedYear, selectedMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} Expenses` :
                    `${selectedYear} Expenses`}
@@ -344,12 +344,12 @@ const Dashboard = () => {
             <div className="flex items-start justify-between mb-3">
               <div className="flex flex-col space-y-1">
                 <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                  {dateFilter === 'today' ? "VAT" : 
-                   dateFilter === 'yesterday' ? "VAT" :
-                   dateFilter === 'week' ? "VAT" : 
-                   dateFilter === 'month' ? "VAT" :
-                   dateFilter === 'thisMonth' ? "VAT" :
-                   dateFilter === 'thisYear' ? "VAT" :
+                  {dateFilter === 'today' ? "Today's VAT" : 
+                   dateFilter === 'yesterday' ? "Yesterday's VAT" :
+                   dateFilter === 'week' ? "This Week's VAT" : 
+                   dateFilter === 'month' ? "This Month's VAT" :
+                   dateFilter === 'thisMonth' ? "This Month's VAT" :
+                   dateFilter === 'thisYear' ? "This Year's VAT" :
                    dateFilter === 'allTime' ? "All Time VATax" :
                    dateFilter === 'customMonth' ? `${new Date(selectedYear, selectedMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} VAT` :
                    `${selectedYear} VAT`}
@@ -387,12 +387,12 @@ const Dashboard = () => {
             <div className="flex items-start justify-between mb-3">
               <div className="flex flex-col space-y-1">
                 <h3 className={`text-sm font-semibold text-gray-700 dark:text-gray-300`}>
-                  {dateFilter === 'today' ? "Net Profit" : 
-                   dateFilter === 'yesterday' ? "Net Profit" :
-                   dateFilter === 'week' ? "Net Profit" : 
-                   dateFilter === 'month' ? "Net Profit" :
-                   dateFilter === 'thisMonth' ? "Net Profit" :
-                   dateFilter === 'thisYear' ? "Net Profit" :
+                  {dateFilter === 'today' ? "Today's Net Profit" : 
+                   dateFilter === 'yesterday' ? "Yesterday's Net Profit" :
+                   dateFilter === 'week' ? "This Week's Net Profit" : 
+                   dateFilter === 'month' ? "This Month's Net Profit" :
+                   dateFilter === 'thisMonth' ? "This Month's Net Profit" :
+                   dateFilter === 'thisYear' ? "This Year's Net Profit" :
                    dateFilter === 'allTime' ? "All Time Net Profit" :
                    dateFilter === 'customMonth' ? `${new Date(selectedYear, selectedMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} Net Profit` :
                    `${selectedYear} Net Profit`}
