@@ -932,7 +932,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
       
       <div className="w-full px-0 sm:px-0 lg:px-0 py-0">
         {/* Stats Overview */}
-        <div className="grid grid-cols-1   md:grid-cols-3 gap-3 mb-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
           {/* First Row: Items, Categories, Value (double width) */}
           <div 
             onClick={() => {
