@@ -251,7 +251,7 @@ const Dashboard = () => {
     <div className="space-y-6">
       {/* Welcome Section */}
       <div className="rounded-lg p-0">
-        <h1 className="text-xl font-jetbrains-mono font-regular text-gray-900 dark:text-white mb-0">
+        <h1 className="text-xl font-inter font-regular text-gray-900 dark:text-white mb-0">
           {getGreeting()} {user.name?.split(' ')[0]}! 
         </h1>
         <p className="font-inter text-gray-600 text-sm mt-0">
