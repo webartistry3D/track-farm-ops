@@ -2575,7 +2575,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                     <div>
                       <p className="text-sm font-medium text-green-600 dark:text-green-400">Unit Price</p>
                       <p className="text-xl font-bold text-green-900 dark:text-green-100">
-                        {formatCurrency(itemToView.pricePerUnit || 0)}
+                        {formatCompactCurrency(itemToView.pricePerUnit || 0)}
                       </p>
                     </div>
                     <div className="w-10 h-10 bg-green-100 dark:bg-green-800/30 rounded-lg flex items-center justify-center">
@@ -2589,7 +2589,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                     <div>
                       <p className="text-sm font-medium text-blue-600 dark:text-blue-400">Total Value</p>
                       <p className="text-xl font-bold text-blue-900 dark:text-blue-100">
-                        {formatCurrency(calculateItemValue(itemToView))}
+                        {formatCompactCurrency(calculateItemValue(itemToView))}
                       </p>
                     </div>
                     <div className="w-10 h-10 bg-blue-100 dark:bg-blue-800/30 rounded-lg flex items-center justify-center">

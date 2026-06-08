@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { formatCurrency } from '../utils/currency';
+import { formatCurrency, formatCompactCurrency } from '../utils/currency';
 import RestrictedPageMessage from './RestrictedPageMessage';
 import { useSubscriptionRestrictions } from '../utils/subscriptionRestrictions';
 import { Search, Plus, Edit2, Trash2, Wrench, AlertTriangle, TrendingUp, Clock, MapPin, User, QrCode, FileText, BarChart3, CheckCircle } from 'lucide-react';
@@ -1195,7 +1195,7 @@ const Assets = () => {
                         <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">({asset.category})</span>
                       </div>
                       <div className="text-right">
-                        <p className="text-lg font-bold text-gray-900 dark:text-white">{formatCurrency(asset.cost)}</p>
+                        <p className="text-lg font-bold text-gray-900 dark:text-white">{formatCompactCurrency(asset.cost)}</p>
                         <div className="w-24 bg-gray-200 rounded-full h-2 mt-1">
                           <div 
                             className="bg-green-500 h-2 rounded-full" 

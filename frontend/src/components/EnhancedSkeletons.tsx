@@ -1,8 +1,4 @@
 import React from 'react';
-import {
-  getResponsiveSkeleton,
-  SKELETON_DIMENSIONS
-} from './SkeletonDesignSystem';
 import { 
   SkeletonElement, 
   CardSkeleton, 
@@ -122,8 +118,8 @@ export const DashboardSkeleton: React.FC = () => (
 export const InventorySkeleton: React.FC = () => (
   <PageSkeleton>
     <div className="w-full px-0 sm:px-0 lg:px-0 py-0">
-      {/* Stats Overview - First Row: 4 columns with Total Value spanning 2 */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      {/* Stats Overview - First Row: 3 columns */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
         {/* Total Items Card */}
         <CardSkeleton className="cursor-pointer hover:shadow-xl transition-all duration-300">
           <div className="flex items-center justify-between p-6">
@@ -146,8 +142,8 @@ export const InventorySkeleton: React.FC = () => (
           </div>
         </CardSkeleton>
         
-        {/* Total Value Card - Spans 2 columns on md */}
-        <CardSkeleton className="md:col-span-2 cursor-pointer hover:shadow-xl transition-all duration-300">
+        {/* Total Value Card */}
+        <CardSkeleton className="cursor-pointer hover:shadow-xl transition-all duration-300">
           <div className="flex items-center justify-between p-6">
             <div className="flex-1">
               <SkeletonElement className="h-4 w-20 mb-2" />
@@ -159,7 +155,7 @@ export const InventorySkeleton: React.FC = () => (
       </div>
 
       {/* Stats Overview - Second Row: 4 columns */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
         {/* Livestock Card */}
         <CardSkeleton className="cursor-pointer hover:shadow-xl transition-all duration-300">
           <div className="flex items-center justify-between p-6">
@@ -367,6 +363,18 @@ export const AssetsSkeleton: React.FC = () => (
           </div>
         </CardSkeleton>
 
+        {/* Tabs Section */}
+        <CardSkeleton className="bg-gray-100 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex overflow-x-auto justify-between">
+            <div className="flex overflow-x-auto space-x-4">
+              {[...Array(4)].map((_, i) => (
+                <SkeletonElement key={i} className="flex-shrink-0 h-10 w-24" />
+              ))}
+            </div>
+            <SkeletonElement className="flex-shrink-0 h-10 w-20 ml-4" />
+          </div>
+        </CardSkeleton>
+
         {/* Assets Table */}
         <CardSkeleton className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden mt-4">
           <div className="overflow-x-auto">
@@ -442,62 +450,79 @@ export const AssetsSkeleton: React.FC = () => (
 // Engineering-precise Analytics Skeleton
 export const AnalyticsSkeleton: React.FC = () => (
   <PageSkeleton>
-    {/* Date Filter Section */}
-    <CardSkeleton className="mb-6">
-      <div className="flex flex-col sm:flex-row gap-4 items-center">
-        <SkeletonElement className="h-10 w-32 rounded-lg" />
-        <SkeletonElement className="h-10 w-40 rounded-lg" />
-        <SkeletonElement className="h-10 w-32 rounded-lg" />
-      </div>
-    </CardSkeleton>
-
     {/* Financial Overview Cards */}
     <div className="mb-8">
-      <SkeletonElement className="h-6 w-32 mb-4" />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[...Array(3)].map((_, i) => (
-          <CardSkeleton key={i}>
-            <SkeletonElement className="h-6 w-24 mb-4" />
-            <SkeletonElement 
-              className={getResponsiveSkeleton(SKELETON_DIMENSIONS.analytics.metricCard)} 
-            />
+          <CardSkeleton key={i} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <SkeletonElement className="h-4 w-24 mb-2" />
+            <SkeletonElement className="h-8 w-32 mb-2" />
+            <SkeletonElement className="h-3 w-16" />
           </CardSkeleton>
         ))}
+      </div>
+    </div>
+
+    {/* Advanced Analytics Section */}
+    <div className="mb-8">
+      <SkeletonElement className="h-8 w-48 mb-6" />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        {/* Quick Stats Column */}
+        <div className="space-y-4">
+          {[...Array(3)].map((_, i) => (
+            <CardSkeleton key={i} className="rounded-xl p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <SkeletonElement className="h-4 w-32 mb-2" />
+                  <SkeletonElement className="h-6 w-24" />
+                </div>
+                <SkeletonElement className="w-10 h-10 rounded-lg" />
+              </div>
+            </CardSkeleton>
+          ))}
+        </div>
       </div>
     </div>
 
     {/* Charts Section */}
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
       {/* Income Chart */}
-      <CardSkeleton>
+      <CardSkeleton className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
         <SkeletonElement className="h-6 w-32 mb-4" />
-        <SkeletonElement 
-          className={getResponsiveSkeleton(SKELETON_DIMENSIONS.analytics.chartContainer)} 
-        />
+        <div className="space-y-3">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="flex items-center justify-between">
+              <div className="flex-1">
+                <div className="flex justify-between items-center mb-1">
+                  <SkeletonElement className="h-4 w-20" />
+                  <SkeletonElement className="h-4 w-16" />
+                </div>
+                <SkeletonElement className="w-full h-2 rounded-full" />
+              </div>
+              <SkeletonElement className="ml-4 h-4 w-8" />
+            </div>
+          ))}
+        </div>
       </CardSkeleton>
 
       {/* Expense Chart */}
-      <CardSkeleton>
+      <CardSkeleton className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
         <SkeletonElement className="h-6 w-32 mb-4" />
-        <SkeletonElement 
-          className={getResponsiveSkeleton(SKELETON_DIMENSIONS.analytics.chartContainer)} 
-        />
+        <div className="space-y-3">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="flex items-center justify-between">
+              <div className="flex-1">
+                <div className="flex justify-between items-center mb-1">
+                  <SkeletonElement className="h-4 w-20" />
+                  <SkeletonElement className="h-4 w-16" />
+                </div>
+                <SkeletonElement className="w-full h-2 rounded-full" />
+              </div>
+              <SkeletonElement className="ml-4 h-4 w-8" />
+            </div>
+          ))}
+        </div>
       </CardSkeleton>
-    </div>
-
-    {/* Inventory Overview Cards */}
-    <div className="mb-8">
-      <SkeletonElement className="h-6 w-32 mb-4" />
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        {[...Array(4)].map((_, i) => (
-          <CardSkeleton key={i}>
-            <SkeletonElement className="h-6 w-20 mb-4" />
-            <SkeletonElement 
-              className={getResponsiveSkeleton(SKELETON_DIMENSIONS.analytics.metricCard)} 
-            />
-          </CardSkeleton>
-        ))}
-      </div>
     </div>
   </PageSkeleton>
 );
@@ -506,20 +531,20 @@ export const AnalyticsSkeleton: React.FC = () => (
 export const ReportsSkeleton: React.FC = () => (
   <PageSkeleton>
     <div className="min-h-screen bg-gray-0 dark:bg-gray-900 py-0">
-      <div className="max-w-6xl mx-auto px-0 sm:px-0 lg:px-0">
+      <div className="max-w-7xl mx-auto px-0 sm:px-0 lg:px-0">
         {/* Report Tabs with Export Buttons */}
         <div className="bg-white dark:bg-gray-900 shadow rounded-lg p-0 mb-6">
           <div className="overflow-x-auto pb-0">
-            <div className="flex items-center justify-between gap-1 min-w-max border-b border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between gap-4 min-w-max border-b border-gray-200 dark:border-gray-700">
               {/* Tab Buttons */}
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-4">
                 {[...Array(3)].map((_, i) => (
                   <SkeletonElement key={i} className="flex-shrink-0 h-10 w-32 rounded-t-lg" />
                 ))}
               </div>
               
               {/* Export Buttons */}
-              <div className="flex flex-col sm:flex-row sm:gap-2 gap-2 pb-2">
+              <div className="flex flex-row sm:flex-row sm:gap-2 gap-2 pb-2">
                 <div className="flex items-center gap-2 px-3 py-2 bg-green-600 rounded-lg">
                   <SkeletonElement className="w-4 h-4" />
                   <SkeletonElement className="h-4 w-8" />
@@ -539,12 +564,13 @@ export const ReportsSkeleton: React.FC = () => (
             <div className="min-w-full">
               {/* Table Header */}
               <div className="border-b border-gray-200 dark:border-gray-700">
-                <div className="grid gap-4 px-6 py-3" style={{ gridTemplateColumns: 'repeat(7, minmax(0, 1fr))' }}>
+                <div className="grid gap-4 px-6 py-3" style={{ gridTemplateColumns: 'repeat(8, minmax(0, 1fr))' }}>
                   <SkeletonElement className="h-3 w-16" />
                   <SkeletonElement className="h-3 w-12" />
                   <SkeletonElement className="h-3 w-20" />
                   <SkeletonElement className="h-3 w-16" />
-                  <SkeletonElement className="h-3 w-20" />
+                  <SkeletonElement className="h-3 w-12" />
+                  <SkeletonElement className="h-3 w-24" />
                   <SkeletonElement className="h-3 w-24" />
                   <SkeletonElement className="h-3 w-20" />
                 </div>
@@ -554,7 +580,7 @@ export const ReportsSkeleton: React.FC = () => (
               <div className="divide-y divide-gray-200 dark:divide-gray-700">
                 {[...Array(10)].map((_, rowIndex) => (
                   <div key={rowIndex} className="hover:bg-gray-50 dark:bg-gray-900 dark:hover:bg-gray-700 transition-colors">
-                    <div className="grid gap-4 px-6 py-4" style={{ gridTemplateColumns: 'repeat(7, minmax(0, 1fr))' }}>
+                    <div className="grid gap-4 px-6 py-4" style={{ gridTemplateColumns: 'repeat(8, minmax(0, 1fr))' }}>
                       {/* Date Column */}
                       <SkeletonElement className="h-4 w-20" />
                       
@@ -569,7 +595,10 @@ export const ReportsSkeleton: React.FC = () => (
                       {/* Amount Column */}
                       <SkeletonElement className="h-4 w-16" />
                       
-                      {/* User Column */}
+                      {/* VAT Column */}
+                      <SkeletonElement className="h-4 w-12" />
+                      
+                      {/* Recorded By Column */}
                       <div>
                         <SkeletonElement className="h-4 w-20 mb-1" />
                         <SkeletonElement className="h-3 w-24" />

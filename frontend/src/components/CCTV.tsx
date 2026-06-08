@@ -22,7 +22,8 @@ import {
   Battery,
   Wifi,
   WifiOff,
-  Zap
+  Zap,
+  Trash2
 } from 'lucide-react';
 import { CCTVSkeleton } from './EnhancedSkeletons';
 
@@ -165,6 +166,30 @@ const CCTV = () => {
       setCameras(prev => prev.map(cam => 
         cam.id === cameraId ? { ...cam, ...updates } : cam
       ));
+    }
+  };
+
+  // Delete camera
+  const deleteCamera = async (cameraId: string) => {
+    if (!window.confirm('Are you sure you want to delete this camera? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      await api.delete(`/cctv/cameras/${cameraId}`);
+      
+      // Remove from local state
+      setCameras(prev => prev.filter(cam => cam.id !== cameraId));
+      
+      console.log(`✅ Deleted camera ${cameraId}`);
+      
+      // Close settings if the deleted camera was selected
+      if (selectedCamera?.id === cameraId) {
+        closeSettings();
+      }
+    } catch (err: any) {
+      console.error('❌ Failed to delete camera:', err);
+      alert('Failed to delete camera. Please try again.');
     }
   };
 
@@ -511,6 +536,13 @@ const CCTV = () => {
                       >
                         <Download className="h-4 w-4 text-white" />
                       </button>
+                      <button
+                        onClick={() => deleteCamera(camera.id)}
+                        className="p-2 rounded-lg bg-red-600 hover:bg-red-700 transition-colors"
+                        title="Delete Camera"
+                      >
+                        <Trash2 className="h-4 w-4 text-white" />
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -624,17 +656,19 @@ const CCTV = () => {
                       >
                         <RefreshCw className={`h-5 w-5 text-gray-600 dark:text-gray-400 ${refreshing[camera.id] ? 'animate-spin' : ''}`} />
                       </button>
-                      <button
-                        onClick={() => toggleFullscreen(camera.id)}
-                        className="p-3 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-                      >
-                        <Maximize2 className="h-5 w-5 text-gray-600 dark:text-gray-400" />
-                      </button>
+                      
                       <button 
                         onClick={() => downloadRecording(camera.id, camera.name)}
                         className="p-3 rounded-full bg-blue-600 hover:bg-blue-700 transition-colors"
                       >
                         <Download className="h-5 w-5 text-white" />
+                      </button>
+                      <button
+                        onClick={() => deleteCamera(camera.id)}
+                        className="p-3 rounded-full bg-red-600 hover:bg-red-700 transition-colors"
+                        title="Delete Camera"
+                      >
+                        <Trash2 className="h-5 w-5 text-white" />
                       </button>
                     </div>
                   </div>

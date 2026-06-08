@@ -13,8 +13,6 @@ import {
   Heart,
   Apple,
   Box,
-  BarChart3,
-  Calendar,
   Target,
   Zap,
   Sprout,
@@ -181,24 +179,6 @@ const Analytics = () => {
       CONSUMABLES: []
     }
   });
-
-  // Helper functions for live profit trend data
-  const generateProfitTrendData = (): Array<{ label: number; profit: number; percentage: number }> => {
-    // In production, this would fetch actual historical profit data
-    // For now, return empty structure to avoid mock data
-    const dataPoints = dateFilter === 'last7days' ? 7 : 12;
-    return Array.from({ length: dataPoints }, (_, index) => ({
-      label: index + 1,
-      profit: 0,
-      percentage: 0
-    }));
-  };
-
-  const calculateProfitGrowth = () => {
-    // In production, this would calculate growth from historical data
-    // For now, return 0 to avoid mock data
-    return 0;
-  };
 
   useEffect(() => {
     console.log('🔄 useEffect triggered - dateFilter changed to:', dateFilter);
@@ -674,69 +654,6 @@ const Analytics = () => {
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Advanced Analytics</h2>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-            {/* Profit Trend Chart */}
-            <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
-                  <BarChart3 className="h-5 w-5 mr-2 text-blue-600" />
-                  Profit Trend Analysis
-                </h3>
-                <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                  <Calendar className="h-4 w-4 mr-1" />
-                  Last 30 days
-                </div>
-              </div>
-              
-              {/* Live Profit Trend Chart */}
-              <div className="space-y-4">
-                {financialLoading ? (
-                  <div className="flex items-center justify-center h-32">
-                    <div className="animate-pulse flex space-x-1">
-                      {[...Array(12)].map((_, i) => (
-                        <div key={i} className="w-8 bg-gray-300 dark:bg-gray-600 rounded-t" style={{ height: `${Math.random() * 80 + 20}%` }}></div>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    <div className="flex items-end justify-between h-32">
-                      {generateProfitTrendData().map((data, index) => (
-                        <div key={index} className="flex-1 flex flex-col items-center">
-                          <div 
-                            className={`w-full rounded-t-md hover:from-blue-700 hover:to-blue-500 transition-colors ${
-                              data.profit >= 0 
-                                ? 'bg-gradient-to-t from-green-600 to-green-400' 
-                                : 'bg-gradient-to-t from-red-600 to-red-400'
-                            }`}
-                            style={{ height: `${Math.abs(data.percentage)}%` }}
-                            title={`${data.label}: ${formatCompactCurrency(data.profit)}`}
-                          ></div>
-                          <span className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                            {data.label}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600 dark:text-gray-400">
-                        {dateFilter === 'allTime' ? 'All Time Profit Trend' : 
-                         dateFilter === 'last30days' ? '30-Day Profit Trend' :
-                         dateFilter === 'last7days' ? '7-Day Profit Trend' :
-                         dateFilter === 'today' ? 'Today\'s Profit Trend' :
-                         dateFilter === 'yesterday' ? 'Yesterday\'s Profit Trend' :
-                         `${new Date(0, selectedMonth).toLocaleString('default', { month: 'long' })} Profit Trend`}
-                      </span>
-                      <span className={`font-medium ${
-                        calculateProfitGrowth() >= 0 ? 'text-green-600' : 'text-red-600'
-                      }`}>
-                        {calculateProfitGrowth() >= 0 ? '+' : ''}{calculateProfitGrowth()}% vs last period
-                      </span>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-
             {/* Quick Stats */}
             <div className="space-y-4">
               <div className="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 dark:border-green-800 rounded-xl p-4">
@@ -775,7 +692,7 @@ const Analytics = () => {
                   <div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">Growth Rate</p>
                     <p className="text-xl font-bold font-jetbrains-mono text-gray-900 dark:text-white">
-                      {calculateProfitGrowth() !== 0 ? `${calculateProfitGrowth() >= 0 ? '+' : ''}${calculateProfitGrowth()}%` : 'N/A'}
+                      N/A
                     </p>
                   </div>
                   <div className="p-2 bg-purple-500 rounded-lg">
@@ -824,32 +741,80 @@ const Analytics = () => {
                     <p className="text-gray-400 dark:text-gray-500 text-xs mt-1">Create income entries to see category breakdowns</p>
                   </div>
                 ) : (
-                  <div className="space-y-4">
-                    {financialSummary.incomeByCategory.map((item, index) => {
-                      const totalIncome = financialSummary.incomeByCategory.reduce((sum, cat) => sum + cat.amount, 0);
-                      const percentage = totalIncome > 0 ? (item.amount / totalIncome) * 100 : 0;
-                      return (
-                        <div key={index} className="flex items-center justify-between">
-                          <div className="flex-1">
-                            <div className="flex justify-between items-center mb-2">
-                              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{item.category}</span>
-                              <span className="text-sm font-semibold font-jetbrains-mono text-gray-900 dark:text-white">
-                                {formatCurrency(item.amount)}
-                              </span>
+                  <div className="flex flex-col lg:flex-row gap-6">
+                    {/* Pie Chart */}
+                    <div className="flex-shrink-0">
+                      <div className="relative w-40 h-40 mx-auto">
+                        {(() => {
+                          const totalIncome = financialSummary.incomeByCategory.reduce((sum, cat) => sum + cat.amount, 0);
+                          let currentAngle = 0;
+                          const colors = ['#10B981', '#059669', '#047857', '#065F46', '#064E3B', '#065F46'];
+                          
+                          return (
+                            <div
+                              className="w-full h-full rounded-full"
+                              style={{
+                                background: `conic-gradient(${financialSummary.incomeByCategory.map((item, index) => {
+                                  const percentage = totalIncome > 0 ? (item.amount / totalIncome) * 100 : 0;
+                                  const angle = (percentage / 100) * 360;
+                                  const color = colors[index % colors.length];
+                                  const gradient = `${color} ${currentAngle}deg ${currentAngle + angle}deg`;
+                                  currentAngle += angle;
+                                  return gradient;
+                                }).join(', ')})`
+                              }}
+                            >
+                              <div className="absolute inset-4 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center">
+                                <div className="text-center">
+                                  <p className="text-lg font-bold text-gray-900 dark:text-white">
+                                    {formatCompactCurrency(totalIncome)}
+                                  </p>
+                                  <p className="text-xs text-gray-500 dark:text-gray-400">Total</p>
+                                </div>
+                              </div>
                             </div>
-                            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                              <div
-                                className="bg-green-500 h-2 rounded-full transition-all duration-300"
-                                style={{ width: `${percentage}%` }}
-                              ></div>
+                          );
+                        })()}
+                      </div>
+                    </div>
+                    
+                    {/* Legend and Details */}
+                    <div className="flex-1 space-y-4">
+                      {financialSummary.incomeByCategory.map((item, index) => {
+                        const totalIncome = financialSummary.incomeByCategory.reduce((sum, cat) => sum + cat.amount, 0);
+                        const percentage = totalIncome > 0 ? (item.amount / totalIncome) * 100 : 0;
+                        const colors = ['#10B981', '#059669', '#047857', '#065F46', '#064E3B', '#065F46'];
+                        const color = colors[index % colors.length];
+                        
+                        return (
+                          <div key={index} className="flex items-center justify-between">
+                            <div className="flex-1">
+                              <div className="flex justify-between items-center mb-2">
+                                <div className="flex items-center">
+                                  <div 
+                                    className="w-3 h-3 rounded-full mr-2"
+                                    style={{ backgroundColor: color }}
+                                  ></div>
+                                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{item.category}</span>
+                                </div>
+                                <span className="text-sm font-semibold font-jetbrains-mono text-gray-900 dark:text-white">
+                                  {formatCurrency(item.amount)}
+                                </span>
+                              </div>
+                              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                <div
+                                  className="h-2 rounded-full transition-all duration-300"
+                                  style={{ width: `${percentage}%`, backgroundColor: color }}
+                                ></div>
+                              </div>
+                            </div>
+                            <div className="ml-4 text-sm text-gray-500 dark:text-gray-400 w-12 text-right">
+                              {percentage.toFixed(1)}%
                             </div>
                           </div>
-                          <div className="ml-4 text-sm text-gray-500 dark:text-gray-400 w-12 text-right">
-                            {percentage.toFixed(1)}%
-                          </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
                 )}
               </div>
@@ -890,32 +855,80 @@ const Analytics = () => {
                     <p className="text-gray-400 dark:text-gray-500 text-xs mt-1">Create expense entries to see category breakdowns</p>
                   </div>
                 ) : (
-                  <div className="space-y-4">
-                    {financialSummary.expensesByCategory.map((item, index) => {
-                      const totalExpenses = financialSummary.expensesByCategory.reduce((sum, cat) => sum + cat.amount, 0);
-                      const percentage = totalExpenses > 0 ? (item.amount / totalExpenses) * 100 : 0;
-                      return (
-                        <div key={index} className="flex items-center justify-between">
-                          <div className="flex-1">
-                            <div className="flex justify-between items-center mb-2">
-                              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{item.category}</span>
-                              <span className="text-sm font-semibold font-jetbrains-mono text-gray-900 dark:text-white">
-                                {formatCurrency(item.amount)}
-                              </span>
+                  <div className="flex flex-col lg:flex-row gap-6">
+                    {/* Pie Chart */}
+                    <div className="flex-shrink-0">
+                      <div className="relative w-40 h-40 mx-auto">
+                        {(() => {
+                          const totalExpenses = financialSummary.expensesByCategory.reduce((sum, cat) => sum + cat.amount, 0);
+                          let currentAngle = 0;
+                          const colors = ['#EF4444', '#DC2626', '#B91C1C', '#991B1B', '#7F1D1D', '#7F1D1D'];
+                          
+                          return (
+                            <div
+                              className="w-full h-full rounded-full"
+                              style={{
+                                background: `conic-gradient(${financialSummary.expensesByCategory.map((item, index) => {
+                                  const percentage = totalExpenses > 0 ? (item.amount / totalExpenses) * 100 : 0;
+                                  const angle = (percentage / 100) * 360;
+                                  const color = colors[index % colors.length];
+                                  const gradient = `${color} ${currentAngle}deg ${currentAngle + angle}deg`;
+                                  currentAngle += angle;
+                                  return gradient;
+                                }).join(', ')})`
+                              }}
+                            >
+                              <div className="absolute inset-4 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center">
+                                <div className="text-center">
+                                  <p className="text-lg font-bold text-gray-900 dark:text-white">
+                                    {formatCompactCurrency(totalExpenses)}
+                                  </p>
+                                  <p className="text-xs text-gray-500 dark:text-gray-400">Total</p>
+                                </div>
+                              </div>
                             </div>
-                            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                              <div
-                                className="bg-red-500 h-2 rounded-full transition-all duration-300"
-                                style={{ width: `${percentage}%` }}
-                              ></div>
+                          );
+                        })()}
+                      </div>
+                    </div>
+                    
+                    {/* Legend and Details */}
+                    <div className="flex-1 space-y-4">
+                      {financialSummary.expensesByCategory.map((item, index) => {
+                        const totalExpenses = financialSummary.expensesByCategory.reduce((sum, cat) => sum + cat.amount, 0);
+                        const percentage = totalExpenses > 0 ? (item.amount / totalExpenses) * 100 : 0;
+                        const colors = ['#EF4444', '#DC2626', '#B91C1C', '#991B1B', '#7F1D1D', '#7F1D1D'];
+                        const color = colors[index % colors.length];
+                        
+                        return (
+                          <div key={index} className="flex items-center justify-between">
+                            <div className="flex-1">
+                              <div className="flex justify-between items-center mb-2">
+                                <div className="flex items-center">
+                                  <div 
+                                    className="w-3 h-3 rounded-full mr-2"
+                                    style={{ backgroundColor: color }}
+                                  ></div>
+                                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{item.category}</span>
+                                </div>
+                                <span className="text-sm font-semibold font-jetbrains-mono text-gray-900 dark:text-white">
+                                  {formatCurrency(item.amount)}
+                                </span>
+                              </div>
+                              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                <div
+                                  className="h-2 rounded-full transition-all duration-300"
+                                  style={{ width: `${percentage}%`, backgroundColor: color }}
+                                ></div>
+                              </div>
+                            </div>
+                            <div className="ml-4 text-sm text-gray-500 dark:text-gray-400 w-12 text-right">
+                              {percentage.toFixed(1)}%
                             </div>
                           </div>
-                          <div className="ml-4 text-sm text-gray-500 dark:text-gray-400 w-12 text-right">
-                            {percentage.toFixed(1)}%
-                          </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
                 )}
               </div>
