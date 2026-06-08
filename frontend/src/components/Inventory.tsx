@@ -2539,11 +2539,11 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
             {/* Content */}
             <div className="flex-1 overflow-y-auto px-8 py-6">
               {/* Item Header Card */}
-              <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700/50 dark:to-gray-800/50 rounded-xl p-6 mb-6 border border-gray-200 dark:border-gray-700">
-                <div className="flex items-start justify-between">
+              <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700/50 dark:to-gray-800/50 rounded-xl p-4 sm:p-6 mb-6 border border-gray-200 dark:border-gray-700">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                   <div className="flex-1">
-                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{itemToView.name}</h3>
-                    <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400">
+                    <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-2">{itemToView.name}</h3>
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-2 sm:space-y-0 text-sm text-gray-600 dark:text-gray-400">
                       <span className="flex items-center">
                         <Package className="w-4 h-4 mr-1" />
                         {getCategoryName(itemToView.categoryId)}
@@ -2554,12 +2554,12 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                       </span>
                     </div>
                   </div>
-                  <div className="flex flex-col items-end space-y-2">
+                  <div className="flex flex-row sm:flex-col sm:items-end sm:space-y-2 items-center justify-between sm:justify-end space-x-4 sm:space-x-0">
                     <span className={`inline-flex px-3 py-1 text-sm font-semibold rounded-full border ${getStockStatus(itemToView).color}`}>
                       {getStockStatus(itemToView).label}
                     </span>
                     <div className="text-right">
-                      <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                      <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                         {formatNumber(itemToView.quantity)}
                       </p>
                       <p className="text-sm text-gray-600 dark:text-gray-400">{itemToView.unit || 'pieces'}</p>
