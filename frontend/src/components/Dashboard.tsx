@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
-import { formatCurrency } from '../utils/currency';
+import { formatCurrency, formatCompactCurrency } from '../utils/currency';
 import { TrendingUp, TrendingDown, ShoppingCart, Calculator } from 'lucide-react';
 import { 
   DashboardSkeleton
@@ -251,16 +251,16 @@ const Dashboard = () => {
     <div className="space-y-6">
       {/* Welcome Section */}
       <div className="rounded-lg p-0">
-        <h1 className="text-2xl font-jetbrains-mono font-regular text-gray-900 dark:text-white mb-0">
+        <h1 className="text-xl font-jetbrains-mono font-regular text-gray-900 dark:text-white mb-0">
           {getGreeting()} {user.name?.split(' ')[0]}! 
         </h1>
         <p className="font-inter text-gray-600 text-sm mt-0">
-          Here is your business update..
+          Here's your business update..
         </p>
       </div>
 
       {canViewFinancials && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
           <div 
             onClick={() => navigate('/income')}
             className="group bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-3 dark:border-green-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
@@ -293,7 +293,8 @@ const Dashboard = () => {
             </div>
             <div className="flex items-center">
               <p className="text-3xl font-bold font-jetbrains-mono text-green-600 dark:text-green-400">
-                {formatCurrency(todayIncome.toString(), { includeSymbol: true })}
+                {/*{formatCompactCurrency(todayIncome.toString(), { includeSymbol: true })}*/}
+                {formatCompactCurrency(todayIncome)}
               </p>
             </div>
           </div>
@@ -330,7 +331,8 @@ const Dashboard = () => {
             </div>
             <div className="flex items-center">
               <p className="text-3xl font-bold font-jetbrains-mono text-red-600 dark:text-red-400">
-                {formatCurrency(todayExpenses.toString(), { includeSymbol: true })}
+                {/*{formatCompactCurrency(todayExpenses.toString(), { includeSymbol: true })}*/}
+                {formatCompactCurrency(todayExpenses)}
               </p>
             </div>
           </div>
@@ -348,7 +350,7 @@ const Dashboard = () => {
                    dateFilter === 'month' ? "VAT" :
                    dateFilter === 'thisMonth' ? "VAT" :
                    dateFilter === 'thisYear' ? "VAT" :
-                   dateFilter === 'allTime' ? "All Time VAT" :
+                   dateFilter === 'allTime' ? "All Time VATax" :
                    dateFilter === 'customMonth' ? `${new Date(selectedYear, selectedMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} VAT` :
                    `${selectedYear} VAT`}
                 </h3>
@@ -367,7 +369,8 @@ const Dashboard = () => {
             </div>
             <div className="flex items-center">
               <p className="text-3xl font-bold font-jetbrains-mono text-purple-600 dark:text-purple-400">
-                {formatCurrency(todayVAT.toString(), { includeSymbol: true })}
+                {/*{formatCompactCurrency(todayVAT.toString(), { includeSymbol: true })}*/}
+                {formatCompactCurrency(todayVAT)}
               </p>
             </div>
           </div>
@@ -427,7 +430,8 @@ const Dashboard = () => {
                   netProfit >= 0 ? 'text-green-600 dark:text-green-400' : 
                   'text-red-600 dark:text-red-400'
               }`}>
-                {formatCurrency(netProfit.toString(), { includeSymbol: true })}
+                {/*{formatCompactCurrency(netProfit.toString(), { includeSymbol: true })}*/}
+                {formatCompactCurrency(netProfit)}
               </p>
             </div>
           </div>
@@ -540,7 +544,7 @@ const Dashboard = () => {
       {/* Quick Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div>
-          <h2 className="text-xl font-jetbrains-mono font-semibold mb-4">Quick Actions</h2>
+          <h2 className="text-xl font-jetbrains-mono font-semibold mb-4 dark:text-white">Quick Actions</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <Link to="/income" className="font-inter btn btn-primary text-center">
               Record Income
@@ -562,7 +566,7 @@ const Dashboard = () => {
           
           {/* Quick Stats */}
           <div className="mt-6">
-            <h3 className="text-lg font-jetbrains-mono font-semibold mb-4">Quick Stats</h3>
+            <h3 className="text-lg font-jetbrains-mono font-semibold mb-4 dark:text-white">Quick Stats</h3>
             <div className="grid grid-cols-2 gap-3">
               <div 
                 onClick={() => handleCardClick('income')}

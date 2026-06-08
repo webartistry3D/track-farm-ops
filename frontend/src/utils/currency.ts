@@ -53,3 +53,9 @@ export const validateCurrencyInput = (value: string): boolean => {
   // Allow only numbers, decimal point, and commas (for thousand separators)
   return /^[\d,]*\.?\d*$/.test(value) || value === '';
 };
+
+export const formatCompactCurrency = (value: number) =>
+  `₦${new Intl.NumberFormat('en', {
+    notation: 'compact',
+    maximumFractionDigits: 2,
+  }).format(value)}`;

@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
-import { formatCurrency } from '../utils/currency';
+import { formatCurrency, formatCompactCurrency } from '../utils/currency';
 import { useSubscriptionRestrictions } from '../utils/subscriptionRestrictions';
 import type { InventoryItem } from '../types';
 import Pagination from './Pagination';
@@ -932,7 +932,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
       
       <div className="w-full px-0 sm:px-0 lg:px-0 py-0">
         {/* Stats Overview */}
-        <div className="grid grid-cols-2 md:grid-cols-2 gap-6 mb-6">
+        <div className="grid grid-cols-1   md:grid-cols-3 gap-3 mb-3">
           {/* First Row: Items, Categories, Value (double width) */}
           <div 
             onClick={() => {
@@ -973,20 +973,18 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
               </div>
             </div>
           </div>
-        </div>
-
-        <div
+          <div
             onClick={() => {
               // Show high-value items or filter by value
               console.log('Total Value clicked');
             }}
-            className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Value</p>
                 <p className="text-3xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
-                  {formatCurrency(totals.totalValue)}
+                  {formatCompactCurrency(totals.totalValue)}
                 </p>
               </div>
               <div className="p-3 bg-green-100 dark:bg-green-900 rounded-lg">
@@ -994,9 +992,12 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
               </div>
             </div>
           </div>
+        </div>
+
+        
 
         {/* Second Row: Livestock, Produce, Consumables, Low Stock */}
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
           <div 
             onClick={() => {
               // Navigate to livestock items
