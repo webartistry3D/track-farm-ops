@@ -71,8 +71,9 @@ const PopoverMenu = ({ trigger, items, isOpen, onToggle, position = 'top' }: Pop
                 // Render submenu item with children
                 return (
                   <div key={item.id} className="border-b border-gray-100 dark:border-gray-700 last:border-0">
-                    <div className="px-4 py-3 text-sm font-medium text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900">
-                      {item.icon} {item.name}
+                    <div className="px-4 py-3 text-sm font-medium text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900 flex items-center space-x-3">
+                      <item.icon size={18} />
+                      <span>{item.name}</span>
                     </div>
                     {item.children.map((child) => {
                       const isChildRestricted = child.feature && !canAccessFeature(child.feature);
@@ -91,7 +92,7 @@ const PopoverMenu = ({ trigger, items, isOpen, onToggle, position = 'top' }: Pop
                               : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                           }`}
                         >
-                          <span className="text-lg">{child.icon}</span>
+                          <child.icon size={18} />
                           <span className="text-sm font-medium">{child.name}</span>
                         </Link>
                       );
@@ -112,7 +113,7 @@ const PopoverMenu = ({ trigger, items, isOpen, onToggle, position = 'top' }: Pop
                       : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                   }`}
                 >
-                  <span className="text-lg">{item.icon}</span>
+                  <item.icon size={18} />
                   <span className="text-sm font-medium">{item.name}</span>
                 </Link>
               );
