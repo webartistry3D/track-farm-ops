@@ -10,7 +10,7 @@ They experience difficulty tracking:
 - Feed
 - Fertilizers
 - Chemicals usage
-- Seeds 
+- Seed
 - Harvested produce
 - Consumables
 leading to losses, theft, and wastage.
