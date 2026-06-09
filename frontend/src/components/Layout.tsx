@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { SubscriptionRestrictions } from '../utils/subscriptionRestrictions';
 import FirstTimePasswordPrompt from './FirstTimePasswordPrompt';
 import ConfirmModal from './ConfirmModal';
+import BottomNav from './BottomNav';
 import api from '../lib/api';
 // import { InactivityWarning } from './InactivityWarning'; // DISABLED
 
@@ -20,13 +21,10 @@ const Layout = ({ children }: LayoutProps) => {
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-  // Notification pagination state
   const [notificationPage, setNotificationPage] = useState(1);
   const notificationItemsPerPage = 10;
-  // Notification sound state
   const [hasPlayedNotificationSound, setHasPlayedNotificationSound] = useState(false);
-  // const [showInactivityWarning, setShowInactivityWarning] = useState(false); // DISABLED
-  const { user, logout, setUser } = useAuth();
+  const { user, logout } = useAuth();
   const { isDark, toggleTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
@@ -176,8 +174,6 @@ const Layout = ({ children }: LayoutProps) => {
     return item.allowedRoles.includes(user.role);
   });
 
-  const isAdmin = user ? (user.role === 'OWNER' || user.role === 'MANAGER' || user.role === 'ACCOUNTANT' || user.role === 'INVENTORY' || user.role === 'VETERINARIAN') : false;
-
   const unreadCount = notifications.filter((n: any) => !n.read).length;
 
   // Play notification sound
@@ -307,108 +303,13 @@ const Layout = ({ children }: LayoutProps) => {
   }
 
   return (
-    <div className="h-screen flex overflow-hidden bg-gray-100 dark:bg-gray-900">
-      {/* Mobile sidebar overlay */}
-      {sidebarOpen && (
-        <div className="fixed inset-0 z-40 lg:hidden">
-          <div 
-            className="fixed inset-0 bg-transparent" 
-            onClick={() => setSidebarOpen(false)}
-          />
-        </div>
-      )}
-
-      {/* Sidebar */}
-      <div className={`
-        sidebar-container fixed inset-y-0 left-0 z-40 w-56 sm:w-64 md:w-72 bg-white dark:bg-gray-800 shadow-lg transform transition-transform duration-300 ease-in-out
-        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-        lg:fixed lg:inset-y-0 lg:left-0 lg:transition-all lg:duration-300 lg:ease-in-out lg:w-48
-        ${!sidebarOpen ? 'lg:w-12 lg:opacity-75' : 'lg:w-48 lg:opacity-100'}
-      `}>
-        <div className="flex items-center justify-between h-16 px-6 bg-green-600 dark:bg-green-700">
-          <button
-            onClick={() => setSidebarOpen(false)}
-            className="lg:hidden text-white hover:text-gray-200"
-          >
-            ✕
-          </button>
-          <div className="flex items-center">
-            <span className="text-white text-md font-bold">TrackFarmOps</span>
-          </div>
-        </div>
-        
-        {/* Sidebar content - hide when collapsed */}
-        <div className={`transition-opacity duration-300 ${sidebarOpen ? 'lg:opacity-100' : 'lg:opacity-0 lg:hidden'}`}>
-          <nav className="mt-8 px-4">
-            <ul className="space-y-1">
-              {navigation.map((item) => (
-                <li key={item.name}>
-                  <Link
-                    to={item.href}
-                    onClick={() => {
-                      // Close mobile sidebar when navigation item is clicked
-                      if (window.innerWidth < 1024) {
-                        setSidebarOpen(false);
-                      }
-                    }}
-                    className={`
-                      group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors
-                      ${item.current
-                        ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 border-l-4 border-green-600 dark:border-green-400'
-                        : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
-                      }
-                    `}
-                  >
-                    <span className="mr-3 text-lg">{item.icon}</span>
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          <div className="absolute bottom-0 left-0 right-0 p-4">
-            {/*<div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 mb-3">
-              <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Logged in as</div>
-              <div className="text-sm font-medium text-gray-900 dark:text-white">{user.name}</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">{user.role}</div>
-            </div>*/}
-            <button
-              onClick={() => {
-                setShowLogoutModal(true);
-              }}
-              className="w-full flex items-center justify-center space-x-2 px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors duration-200 text-sm font-medium"
-            >
-              <span>🚪</span>
-              <span>Logout</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
+    <div className="h-screen flex flex-col overflow-hidden bg-gray-100 dark:bg-gray-900">
       {/* Main content */}
-      <div className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ease-in-out ${sidebarOpen ? 'lg:ml-48' : 'lg:ml-0'}`}>
+      <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top navigation */}
         <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 relative z-50">
           <div className="px-3 sm:px-4 md:px-6 lg:px-8">
             <div className="flex items-center justify-between h-14 sm:h-16">
-              {/* Mobile menu button */}
-              <button
-                onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="sidebar-toggle-button lg:hidden p-1.5 sm:p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
-              >
-                ☰
-              </button>
-
-              {/* Desktop menu button */}
-              <button
-                onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="sidebar-toggle-button hidden lg:block p-1.5 sm:p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
-                title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
-              >
-                {sidebarOpen ? '◀' : '☰'}
-              </button>
-
               {/* Page title */}
               <div className="flex-1 flex justify-center lg:justify-start px-2 sm:px-4">
                 <h1 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white truncate">
@@ -539,46 +440,14 @@ const Layout = ({ children }: LayoutProps) => {
                   )}
                 </div>
 
-                {/* Profile dropdown */}
-                <div className="relative profile-dropdown">
-                  <button
-                    onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                    className="flex items-center space-x-2 sm:space-x-3 p-1.5 sm:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
-                  >
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-medium text-xs sm:text-sm">
-                      {user.name.charAt(0).toUpperCase()}
-                    </div>
-                    <span className="hidden lg:block text-sm font-medium text-gray-700 dark:text-gray-300">{user.name}</span>
-                  </button>
-
-                  {profileDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-44 sm:w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
-                      <div className="p-2 sm:p-3 border-b border-gray-200 dark:border-gray-700">
-                        <p className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white truncate">{user.name}</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user.email}</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">{user.role}</p>
-                      </div>
-                      <div className="py-1">
-                        <Link
-                          to="/profile"
-                          className="block px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                          onClick={() => setProfileDropdownOpen(false)}
-                        >
-                          👤 Profile
-                        </Link>
-                        {isAdmin && (
-                          <Link
-                            to="/settings"
-                            className="block px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                            onClick={() => setProfileDropdownOpen(false)}
-                          >
-                            ⚙️ Settings
-                          </Link>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
+                {/* Theme Toggle */}
+                <button
+                  onClick={toggleTheme}
+                  className="p-1.5 sm:p-2 rounded-full text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 relative"
+                  title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+                >
+                  {isDark ? '☀️' : '🌙'}
+                </button>
               </div>
             </div>
           </div>
@@ -586,22 +455,15 @@ const Layout = ({ children }: LayoutProps) => {
 
         {/* Main content area */}
         <main className="flex-1 overflow-auto">
-          <div className="py-6">
+          <div className="py-12 pb-24">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               {children}
             </div>
           </div>
         </main>
 
-        {/* Inactivity Warning Modal - DISABLED */}
-        {/*showInactivityWarning && (
-          <InactivityWarning 
-            onLogout={() => {
-              setShowInactivityWarning(false);
-              logout();
-            }}
-          />
-        )*/}
+        {/* Mobile Bottom Navigation - For all users including Superuser */}
+        <BottomNav onLogout={() => setShowLogoutModal(true)} />
 
         {/* First-time password change prompt */}
         {user && (
@@ -611,11 +473,11 @@ const Layout = ({ children }: LayoutProps) => {
             user={user}
             onSuccess={() => {
               // Update user state to reflect password change
-              setUser({
-                ...user,
-                requiresPasswordChange: false,
-                passwordChangeCount: (user.passwordChangeCount || 0) + 1
-              });
+              // setUser({
+              //   ...user,
+              //   requiresPasswordChange: false,
+              //   passwordChangeCount: (user.passwordChangeCount || 0) + 1
+              // });
             }}
           />
         )}
