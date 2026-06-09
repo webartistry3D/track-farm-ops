@@ -1,0 +1,123 @@
+1. Poor Financial Visibility
+Many farmers cannot answer these questions:
+- How much did we earn this month?
+- How much did we spend?
+- Which farm unit is profitable?
+- Where is money leaking?
+
+2. Weak Inventory Control
+They experience difficulty tracking:
+- Feed
+- Fertilizers
+- Chemicals usage
+- Seeds 
+- Harvested produce
+- Consumables
+leading to losses, theft, and wastage.
+
+3. Poor Asset Management 
+They often struggle to monitor:
+- Tractors
+- Irrigation systems
+- Generators
+- Vehicles
+- Processing equipment
+including maintenance schedules and depreciation.
+
+4. Workforce Accountability
+Managers have limited visibility into:
+- Worker attendance
+- Assigned tasks
+- Task completion
+- Daily field activities
+
+5. Fragmented Operations
+Information is scattered across:
+- WhatsApp chats
+- Exercise books
+- Excel sheets
+- Individual managers
+
+
+TrackFarmOps solves these problems.
+1. Income Manager
+Tracks:
+Produce sales
+Livestock sales
+Service income
+Other farm revenue
+Features:
+Revenue dashboard
+Income trends
+Profit reports
+Payment tracking
+
+2. Expense Manager
+Tracks:
+Feed purchases
+Fertilizer purchases
+Labor costs
+Transportation
+Utilities
+Equipment maintenance
+Features:
+Expense categorization
+Monthly reports
+Budget monitoring
+
+3. Asset Manager
+Tracks:
+Tractors
+Generators
+Vehicles
+Farm tools
+Irrigation systems
+Features:
+Asset register
+Maintenance scheduling
+Repair history
+Asset utilization
+
+4. Inventory Manager
+Tracks:
+Seeds
+Feed
+Fertilizers
+Agrochemicals
+Harvested produce
+Features:
+Stock levels
+Low-stock alerts
+Inventory movement logs
+Waste tracking
+
+5. Workforce Manager
+Tracks:
+Employees
+Farm workers
+Attendance
+Payroll
+Task assignments
+Features:
+Worker profiles
+Task tracking
+Performance records
+Farm Operations
+Track:
+Planting activities
+Harvest activities
+Livestock activities
+Farm schedules
+Daily logs
+
+6. Livestock Health
+Track:
+
+7. Analytics & Reporting
+Provide:
+Income vs Expenses
+Profitability
+Asset utilization
+Inventory consumption
+Operational efficiency
+This is one of the most important parts of the platform because it converts raw farm data into business intelligence

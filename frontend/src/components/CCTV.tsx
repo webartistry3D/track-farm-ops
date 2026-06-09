@@ -656,7 +656,12 @@ const CCTV = () => {
                       >
                         <RefreshCw className={`h-5 w-5 text-gray-600 dark:text-gray-400 ${refreshing[camera.id] ? 'animate-spin' : ''}`} />
                       </button>
-                      
+                      <button
+                        onClick={() => toggleFullscreen(camera.id)}
+                        className="p-3 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                      >
+                        <Maximize2 className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                      </button>
                       <button 
                         onClick={() => downloadRecording(camera.id, camera.name)}
                         className="p-3 rounded-full bg-blue-600 hover:bg-blue-700 transition-colors"

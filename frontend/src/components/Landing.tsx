@@ -355,6 +355,112 @@ const Landing = () => {
         </div>
       </div>
 
+      {/* Problems. Solutions. Section */}
+      <div
+        ref={addToRefs}
+        data-section="problems-solutions"
+        className="py-20 bg-gradient-to-br from-red-50 via-orange-50 to-green-50 relative overflow-hidden"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className={`text-center mb-16 transition-all duration-1000 transform ${
+            visibleHeaders.has('problems-solutions')
+              ? 'opacity-100 translate-y-0'
+              : 'opacity-0 translate-y-16'
+          }`}>
+            <h2 className="text-3xl md:text-4xl font-jetbrains-mono font-bold text-gray-900 mb-4">
+              Problems. Solutions.
+            </h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              TrackFarmOps addresses the critical challenges farmers face daily
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* Problems Column */}
+            <div className={`space-y-6 transition-all duration-700 transform ${
+              visibleSections.has('problems-solutions')
+                ? 'opacity-100 translate-x-0'
+                : 'opacity-0 -translate-x-16'
+            }`} style={{
+              transitionDelay: visibleSections.has('problems-solutions') ? '200ms' : '0ms'
+            }}>
+              <h3 className="text-2xl font-jetbrains-mono font-bold text-red-600 mb-6 flex items-center">
+                <span className="bg-red-100 p-2 rounded-lg mr-3">⚠️</span>
+                Common Problems
+              </h3>
+              
+              <div className="space-y-4">
+                <div className="bg-white rounded-lg p-6 shadow-md border-l-4 border-red-500">
+                  <h4 className="font-jetbrains-mono font-semibold text-gray-900 mb-2">Poor Financial Visibility</h4>
+                  <p className="font-inter text-gray-600 text-sm">Farmers cannot answer: How much did we earn? Where is money leaking? Which unit is profitable?</p>
+                </div>
+
+                <div className="bg-white rounded-lg p-6 shadow-md border-l-4 border-red-500">
+                  <h4 className="font-jetbrains-mono font-semibold text-gray-900 mb-2">Weak Inventory Control</h4>
+                  <p className="font-inter text-gray-600 text-sm">Difficulty tracking feed, fertilizers, chemicals, seeds, produce - leading to losses, theft, and wastage.</p>
+                </div>
+
+                <div className="bg-white rounded-lg p-6 shadow-md border-l-4 border-red-500">
+                  <h4 className="font-jetbrains-mono font-semibold text-gray-900 mb-2">Poor Asset Management</h4>
+                  <p className="font-inter text-gray-600 text-sm">Struggle to monitor tractors, irrigation, generators, vehicles, including maintenance and depreciation.</p>
+                </div>
+
+                <div className="bg-white rounded-lg p-6 shadow-md border-l-4 border-red-500">
+                  <h4 className="font-jetbrains-mono font-semibold text-gray-900 mb-2">Workforce Accountability</h4>
+                  <p className="font-inter text-gray-600 text-sm">Limited visibility into worker attendance, tasks, completion, and daily field activities.</p>
+                </div>
+
+                <div className="bg-white rounded-lg p-6 shadow-md border-l-4 border-red-500">
+                  <h4 className="font-jetbrains-mono font-semibold text-gray-900 mb-2">Fragmented Operations</h4>
+                  <p className="font-inter text-gray-600 text-sm">Information scattered across WhatsApp, exercise books, Excel sheets, and individual managers.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Solutions Column */}
+            <div className={`space-y-6 transition-all duration-700 transform ${
+              visibleSections.has('problems-solutions')
+                ? 'opacity-100 translate-x-0'
+                : 'opacity-0 translate-x-16'
+            }`} style={{
+              transitionDelay: visibleSections.has('problems-solutions') ? '400ms' : '0ms'
+            }}>
+              <h3 className="text-2xl font-jetbrains-mono font-bold text-green-600 mb-6 flex items-center">
+                <span className="bg-green-100 p-2 rounded-lg mr-3">✅</span>
+                TrackFarmOps Solutions
+              </h3>
+              
+              <div className="space-y-4">
+                <div className="bg-white rounded-lg p-6 shadow-md border-l-4 border-green-500">
+                  <h4 className="font-jetbrains-mono font-semibold text-gray-900 mb-2">Income & Expense Manager</h4>
+                  <p className="font-inter text-gray-600 text-sm">Track produce sales, livestock sales, expenses, with revenue dashboard, trends, and profit reports.</p>
+                </div>
+
+                <div className="bg-white rounded-lg p-6 shadow-md border-l-4 border-green-500">
+                  <h4 className="font-jetbrains-mono font-semibold text-gray-900 mb-2">Asset Manager</h4>
+                  <p className="font-inter text-gray-600 text-sm">Track tractors, generators, vehicles with asset register, maintenance scheduling, and utilization tracking.</p>
+                </div>
+
+                <div className="bg-white rounded-lg p-6 shadow-md border-l-4 border-green-500">
+                  <h4 className="font-jetbrains-mono font-semibold text-gray-900 mb-2">Inventory Manager</h4>
+                  <p className="font-inter text-gray-600 text-sm">Track seeds, feed, fertilizers, agrochemicals with stock levels, low-stock alerts, and waste tracking.</p>
+                </div>
+
+                <div className="bg-white rounded-lg p-6 shadow-md border-l-4 border-green-500">
+                  <h4 className="font-jetbrains-mono font-semibold text-gray-900 mb-2">Workforce Manager</h4>
+                  <p className="font-inter text-gray-600 text-sm">Track employees, attendance, payroll, task assignments with worker profiles and performance records.</p>
+                </div>
+
+                <div className="bg-white rounded-lg p-6 shadow-md border-l-4 border-green-500">
+                  <h4 className="font-jetbrains-mono font-semibold text-gray-900 mb-2">Analytics & Reporting</h4>
+                  <p className="font-inter text-gray-600 text-sm">Convert raw farm data into business intelligence: income vs expenses, profitability, and operational efficiency.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Image Cards Section */}
       {/*<div 
         id="everything-you-need-section"
