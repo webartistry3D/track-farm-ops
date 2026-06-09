@@ -174,7 +174,7 @@ const LivestockHealth = () => {
     }
   };
 
-  // Load data on component mount
+  //Load data on component mount
   useEffect(() => {
     fetchLivestock();
     fetchHealthRecords();
