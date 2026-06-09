@@ -360,7 +360,7 @@ const Layout = ({ children }: LayoutProps) => {
                   )}
                 </div>
 
-                {/* Theme Toggle */}
+                {/* Theme Toggle 
                 <button
                   onClick={toggleTheme}
                   className="p-1.5 sm:p-2 rounded-full text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 relative"
@@ -368,6 +368,7 @@ const Layout = ({ children }: LayoutProps) => {
                 >
                   {isDark ? '☀️' : '🌙'}
                 </button>
+                */}
 
                 {/* Notifications */}
                 <div className="relative notifications-dropdown">

@@ -85,8 +85,8 @@ const BottomNav = ({ onLogout }: BottomNavProps) => {
                       : 'text-gray-500 dark:text-gray-400'
                   }`}
                 >
-                  <item.icon size={20} className="sm:size-24" />
-                  <span className="text-[10px] sm:text-xs font-medium truncate w-full text-center">{item.name}</span>
+                  <item.icon size={10} className="sm:size-10 size-8" />
+                  <span className="text-[10px] sm:text-[10px] font-medium truncate w-full text-center">{item.name}</span>
                 </button>
               ) : (
                 <Link
@@ -98,8 +98,8 @@ const BottomNav = ({ onLogout }: BottomNavProps) => {
                       : 'text-gray-500 dark:text-gray-400'
                   }`}
                 >
-                  <item.icon size={28} className="sm:size-20" />
-                  <span className="text-[10px] sm:text-xs font-medium truncate w-full text-center">{item.name}</span>
+                  <item.icon size={10} className="sm:size-10 size-8" />
+                  <span className="text-[10px] sm:text-[10px] font-medium truncate w-full text-center">{item.name}</span>
                 </Link>
               )}
 
