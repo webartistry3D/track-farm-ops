@@ -105,7 +105,7 @@ const BottomNav = ({ onLogout }: BottomNavProps) => {
 
               {/* Popover Menu */}
               {hasChildren && (
-                <div className={`absolute bottom-full left-1/2 mb-2 bg-white dark:bg-gray-800 rounded-t-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden min-w-[150px] sm:min-w-[180px] transition-all duration-300 ease-out ${
+                <div className={`absolute bottom-full right-0 mb-2 bg-white dark:bg-gray-800 rounded-t-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden min-w-[100px] sm:min-w-[100px] transition-all duration-300 ease-out ${
                   isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
                 }`}>
                   <div className="max-h-64 overflow-y-auto">
