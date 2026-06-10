@@ -5,6 +5,7 @@ import type { SubscriptionLimits } from '../utils/subscriptionRestrictions';
 import type { LucideIcon } from 'lucide-react';
 import {
   LayoutDashboard,
+  Wallet,
   DollarSign,
   CreditCard,
   Package,
@@ -54,13 +55,13 @@ const DASHBOARD_CATEGORY: NavItem = {
 const FINANCE_CATEGORY: NavItem = {
   id: 'finance',
   name: 'Finance',
-  icon: DollarSign,
+  icon: Wallet,
   allowedRoles: ['WORKER', 'VETERINARIAN', 'INVENTORY', 'MANAGER', 'ACCOUNTANT', 'OWNER'],
   children: [
     {
       id: 'income',
       name: 'Income',
-      icon: DollarSign,
+      icon: Wallet,
       href: '/income',
       allowedRoles: ['WORKER', 'VETERINARIAN', 'INVENTORY', 'MANAGER', 'ACCOUNTANT', 'OWNER'],
     },
