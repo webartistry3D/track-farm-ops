@@ -398,6 +398,7 @@ const Settings = () => {
           >
             Profile
           </button>
+          {/*}
           <button
             onClick={() => setActiveTab('notifications')}
             className={`py-2 px-3 sm:px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
@@ -408,6 +409,7 @@ const Settings = () => {
           >
             Notifications
           </button>
+          */}
           {user?.role === 'OWNER' && (
             <button
               onClick={() => setActiveTab('workers')}
@@ -796,7 +798,7 @@ const Settings = () => {
                 • All payments are processed securely through Paystack
               </p>
               <p className="text-sm text-blue-800 dark:text-blue-200 mb-2">
-                • You can pay with Naira debit/credit cards, bank transfer, or USSD
+                • You can pay with Naira debit cards or bank transfer
               </p>
               <p className="text-sm text-blue-800 dark:text-blue-200">
                 • Your subscription will auto-renew at the end of each billing period
@@ -812,7 +814,7 @@ const Settings = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 sm:p-4">
                 <div className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">Application Version</div>
-                <div className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">FarmOps v2.0.0</div>
+                <div className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">TrackFarmOps v2.0.0</div>
               </div>
               
               <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 sm:p-4">
