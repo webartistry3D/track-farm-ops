@@ -89,6 +89,7 @@ const AppRoutes = () => {
           user 
             ? <Navigate to={
                 user.role === 'MANAGER' ? '/analytics' :
+                user.role === 'INVENTORY' ? '/inventory' :
                 user.role === 'WORKER' ? '/income' :
                 user.role === 'VETERINARIAN' ? '/livestock-health' :
                 '/dashboard'
@@ -102,6 +103,7 @@ const AppRoutes = () => {
           user 
             ? <Navigate to={
                 user.role === 'MANAGER' ? '/analytics' :
+                user.role === 'INVENTORY' ? '/inventory' :
                 user.role === 'WORKER' ? '/income' :
                 user.role === 'VETERINARIAN' ? '/livestock-health' :
                 '/dashboard'
@@ -117,7 +119,14 @@ const AppRoutes = () => {
       <Route path="/super-user-signup" element={<SuperUserSignup />} />
       
       {/* Superuser Routes - Separate from regular user routes */}
-      <Route path="/super-user/*" element={<SuperUserRoutes />} />
+      <Route 
+        path="/super-user/*" 
+        element={
+          <ProtectedRoute>
+            <SuperUserRoutes />
+          </ProtectedRoute>
+        } 
+      />
       
       <Route 
         path="/dashboard" 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import api from '../lib/api';
@@ -153,8 +153,12 @@ const SuperUserDashboard = () => {
       }
     };
     
+    const [searchParams] = useSearchParams();
     const [sidebarOpen, setSidebarOpen] = useState(true);
-    const [activeTab, setActiveTab] = useState('overview');
+    const [activeTab, setActiveTab] = useState(() => {
+      const tabParam = searchParams.get('tab');
+      return tabParam || 'overview';
+    });
     const [searchTerm, setSearchTerm] = useState('');
     const [filterStatus, setFilterStatus] = useState('all');
     const [loading, setLoading] = useState(true);
@@ -226,6 +230,13 @@ const SuperUserDashboard = () => {
       console.log('🔍 DEBUG: User is SUPERUSER, calling fetchDashboardData');
       fetchDashboardData();
     }, [user, navigate]);
+
+    useEffect(() => {
+      const tabParam = searchParams.get('tab');
+      if (tabParam) {
+        setActiveTab(tabParam);
+      }
+    }, [searchParams]);
 
     const fetchDashboardData = async () => {
       console.log('🔍 DEBUG: fetchDashboardData called');
@@ -866,6 +877,7 @@ const SuperUserDashboard = () => {
       </div>
     </div>
   );
+  
 
   const renderOrganizations = () => (
     <div className="space-y-6">

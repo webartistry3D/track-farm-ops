@@ -2,6 +2,8 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import SuperUserSignup from './SuperUserSignup';
 import SuperUserDashboard from './SuperUserDashboard';
+import SuperUserOverview from './SuperUserOverview';
+import UserManagement from './UserManagement';
 import { useAuth } from '../contexts/AuthContext';
 
 const SuperUserRoutes: React.FC = () => {
@@ -42,8 +44,8 @@ const SuperUserRoutes: React.FC = () => {
         path="dashboard" 
         element={
           (() => {
-            console.log('🎯 SUPERUSER ROUTES - Rendering SuperUserDashboard component');
-            return isSuperUser ? <SuperUserDashboard /> : <Navigate to="" replace />;
+            console.log('🎯 SUPERUSER ROUTES - Rendering SuperUserOverview component');
+            return isSuperUser ? <SuperUserOverview /> : <Navigate to="" replace />;
           })()
         } 
       />
@@ -51,13 +53,8 @@ const SuperUserRoutes: React.FC = () => {
         path="users" 
         element={
           (() => {
-            console.log('👥 SUPERUSER ROUTES - Rendering Users page (placeholder)');
-            return isSuperUser ? (
-              <div className="p-6">
-                <h1 className="text-2xl font-bold mb-4">Users Management</h1>
-                <p className="text-gray-600">Users management page - Coming soon</p>
-              </div>
-            ) : <Navigate to="" replace />;
+            console.log('👥 SUPERUSER ROUTES - Rendering Users page');
+            return isSuperUser ? <UserManagement /> : <Navigate to="" replace />;
           })()
         } 
       />
@@ -90,7 +87,7 @@ const SuperUserRoutes: React.FC = () => {
         } 
       />
       <Route 
-        path="activity-monitor" 
+        path="activity" 
         element={
           (() => {
             console.log('📊 SUPERUSER ROUTES - Rendering Activity Monitor page (placeholder)');
@@ -104,21 +101,7 @@ const SuperUserRoutes: React.FC = () => {
         } 
       />
       <Route 
-        path="system-health" 
-        element={
-          (() => {
-            console.log('❤️ SUPERUSER ROUTES - Rendering System Health page (placeholder)');
-            return isSuperUser ? (
-              <div className="p-6">
-                <h1 className="text-2xl font-bold mb-4">System Health</h1>
-                <p className="text-gray-600">System health page - Coming soon</p>
-              </div>
-            ) : <Navigate to="" replace />;
-          })()
-        } 
-      />
-      <Route 
-        path="system-logs" 
+        path="logs" 
         element={
           (() => {
             console.log('📝 SUPERUSER ROUTES - Rendering System Logs page (placeholder)');
@@ -126,34 +109,6 @@ const SuperUserRoutes: React.FC = () => {
               <div className="p-6">
                 <h1 className="text-2xl font-bold mb-4">System Logs</h1>
                 <p className="text-gray-600">System logs page - Coming soon</p>
-              </div>
-            ) : <Navigate to="" replace />;
-          })()
-        } 
-      />
-      <Route 
-        path="analytics" 
-        element={
-          (() => {
-            console.log('📊 SUPERUSER ROUTES - Rendering Analytics page (placeholder)');
-            return isSuperUser ? (
-              <div className="p-6">
-                <h1 className="text-2xl font-bold mb-4">Superuser Analytics</h1>
-                <p className="text-gray-600">Superuser analytics page - Coming soon</p>
-              </div>
-            ) : <Navigate to="" replace />;
-          })()
-        } 
-      />
-      <Route 
-        path="settings" 
-        element={
-          (() => {
-            console.log('⚙️ SUPERUSER ROUTES - Rendering Settings page (placeholder)');
-            return isSuperUser ? (
-              <div className="p-6">
-                <h1 className="text-2xl font-bold mb-4">Superuser Settings</h1>
-                <p className="text-gray-600">Superuser settings page - Coming soon</p>
               </div>
             ) : <Navigate to="" replace />;
           })()

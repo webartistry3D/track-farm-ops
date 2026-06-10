@@ -157,7 +157,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
   const [inventorySettings] = useState({
     lowStockThreshold: 10,
     mediumStockThreshold: 50,
-    currency: 'USD'
+    currency: 'NGN'
   });
 
   // Utility functions

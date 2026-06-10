@@ -22,8 +22,10 @@ import {
   Server,
   FileCode,
 } from 'lucide-react';
+import api from '../lib/api';
+import renderUsers from '../components/SuperUserDashboard';
 
-export type UserRole = 'WORKER' | 'VETERINARIAN' | 'MANAGER' | 'ACCOUNTANT' | 'OWNER' | 'SUPERUSER';
+export type UserRole = 'WORKER' | 'VETERINARIAN' | 'INVENTORY' | 'MANAGER' | 'ACCOUNTANT' | 'OWNER' | 'SUPERUSER';
 
 export interface NavItem {
   id: string;
@@ -54,21 +56,21 @@ const FINANCE_CATEGORY: NavItem = {
   id: 'finance',
   name: 'Finance',
   icon: DollarSign,
-  allowedRoles: ['WORKER', 'VETERINARIAN', 'MANAGER', 'ACCOUNTANT', 'OWNER'],
+  allowedRoles: ['WORKER', 'VETERINARIAN', 'INVENTORY', 'MANAGER', 'ACCOUNTANT', 'OWNER'],
   children: [
     {
       id: 'income',
       name: 'Income',
       icon: DollarSign,
       href: '/income',
-      allowedRoles: ['WORKER', 'MANAGER', 'ACCOUNTANT', 'OWNER'],
+      allowedRoles: ['WORKER', 'VETERINARIAN', 'INVENTORY', 'MANAGER', 'ACCOUNTANT', 'OWNER'],
     },
     {
       id: 'expense',
       name: 'Expense',
       icon: CreditCard,
       href: '/expenses',
-      allowedRoles: ['WORKER', 'VETERINARIAN', 'MANAGER', 'ACCOUNTANT', 'OWNER'],
+      allowedRoles: ['WORKER', 'VETERINARIAN', 'INVENTORY', 'MANAGER', 'ACCOUNTANT', 'OWNER'],
     },
   ],
 };
@@ -77,14 +79,14 @@ const MONITOR_CATEGORY: NavItem = {
   id: 'monitor',
   name: 'Monitor',
   icon: Monitor,
-  allowedRoles: ['WORKER', 'VETERINARIAN', 'MANAGER', 'ACCOUNTANT', 'OWNER'],
+  allowedRoles: ['WORKER', 'VETERINARIAN', 'INVENTORY', 'MANAGER', 'ACCOUNTANT', 'OWNER'],
   children: [
     {
       id: 'inventory',
       name: 'Inventory',
       icon: Package,
       href: '/inventory',
-      allowedRoles: ['WORKER', 'VETERINARIAN', 'MANAGER', 'ACCOUNTANT', 'OWNER'],
+      allowedRoles: ['WORKER', 'VETERINARIAN', 'INVENTORY', 'MANAGER', 'ACCOUNTANT', 'OWNER'],
       feature: 'inventoryTransactions',
     },
     {
@@ -100,7 +102,7 @@ const MONITOR_CATEGORY: NavItem = {
       name: 'CCTV',
       icon: Camera,
       href: '/cctv',
-      allowedRoles: ['WORKER', 'VETERINARIAN', 'MANAGER', 'ACCOUNTANT', 'OWNER'],
+      allowedRoles: ['WORKER', 'VETERINARIAN', 'INVENTORY', 'MANAGER', 'ACCOUNTANT', 'OWNER'],
       feature: 'inventoryTransactions',
     },
   ],
@@ -111,7 +113,7 @@ const LIVESTOCK_HEALTH_CATEGORY: NavItem = {
   name: 'Health',
   icon: Heart,
   href: '/livestock-health',
-  allowedRoles: ['WORKER', 'VETERINARIAN', 'MANAGER', 'ACCOUNTANT', 'OWNER'],
+  allowedRoles: ['WORKER', 'VETERINARIAN', 'INVENTORY', 'MANAGER', 'ACCOUNTANT', 'OWNER'],
   feature: 'inventoryTransactions',
 };
 
@@ -119,7 +121,7 @@ const OTHERS_CATEGORY: NavItem = {
   id: 'others',
   name: 'Others',
   icon: Settings,
-  allowedRoles: ['WORKER', 'VETERINARIAN', 'MANAGER', 'ACCOUNTANT', 'OWNER'],
+  allowedRoles: ['WORKER', 'VETERINARIAN', 'INVENTORY', 'MANAGER', 'ACCOUNTANT', 'OWNER'],
   children: [
     {
       id: 'analytics',
@@ -142,13 +144,13 @@ const OTHERS_CATEGORY: NavItem = {
       name: 'Settings',
       icon: Settings,
       href: '/settings',
-      allowedRoles: ['WORKER', 'VETERINARIAN', 'MANAGER', 'ACCOUNTANT', 'OWNER'],
+      allowedRoles: ['WORKER', 'VETERINARIAN', 'INVENTORY', 'MANAGER', 'ACCOUNTANT', 'OWNER'],
     },
     {
       id: 'logout',
       name: 'Logout',
       icon: LogOut,
-      allowedRoles: ['WORKER', 'VETERINARIAN', 'MANAGER', 'ACCOUNTANT', 'OWNER'],
+      allowedRoles: ['WORKER', 'VETERINARIAN', 'INVENTORY', 'MANAGER', 'ACCOUNTANT', 'OWNER'],
     },
   ],
 };
@@ -156,7 +158,7 @@ const OTHERS_CATEGORY: NavItem = {
 // Superuser navigation configuration
 const SUPERUSER_DASHBOARD_CATEGORY: NavItem = {
   id: 'superuser-dashboard',
-  name: 'Dashboard',
+  name: 'Overview',
   icon: LayoutDashboard,
   href: '/super-user/dashboard',
   allowedRoles: ['SUPERUSER'],
@@ -172,14 +174,16 @@ const SUPERUSER_PEOPLE_CATEGORY: NavItem = {
       id: 'users',
       name: 'Users',
       icon: Users,
-      href: '/super-user/users',
+      href: '/super-user/user/',
+      api: api.get('/super-user/user'),
       allowedRoles: ['SUPERUSER'],
     },
     {
       id: 'organizations',
       name: 'Organizations',
       icon: Building2,
-      href: '/super-user/organizations',
+      href: '/super-user/organization',
+      api: api.get('/super-user/organization'),
       allowedRoles: ['SUPERUSER'],
     },
   ],
@@ -196,13 +200,15 @@ const SUPERUSER_MONITOR_CATEGORY: NavItem = {
       name: 'Subscriptions',
       icon: CreditCard,
       href: '/super-user/subscriptions',
+      api: api.get('/super-user/subscription'),
       allowedRoles: ['SUPERUSER'],
     },
     {
-      id: 'activity-monitor',
+      id: 'activity',
       name: 'Activity Monitor',
       icon: Monitor,
-      href: '/super-user/activity-monitor',
+      href: '/super-user/activity',
+      api: api.get('/super-user/activity'),
       allowedRoles: ['SUPERUSER'],
     },
   ],
@@ -219,13 +225,14 @@ const SUPERUSER_SYSTEM_CATEGORY: NavItem = {
       name: 'System Health',
       icon: Heart,
       href: '/super-user/system-health',
+      api: api.get('/super-user/system-health'),
       allowedRoles: ['SUPERUSER'],
     },
     {
       id: 'system-logs',
       name: 'System Logs',
       icon: FileCode,
-      href: '/super-user/system-logs',
+      href: '/super-user/logs',
       allowedRoles: ['SUPERUSER'],
     },
   ],
@@ -242,6 +249,7 @@ const SUPERUSER_OTHERS_CATEGORY: NavItem = {
       name: 'Analytics',
       icon: BarChart3,
       href: '/super-user/analytics',
+      api: api.get('/super-user/analytics'),
       allowedRoles: ['SUPERUSER'],
     },
     {
@@ -249,6 +257,7 @@ const SUPERUSER_OTHERS_CATEGORY: NavItem = {
       name: 'Settings',
       icon: Settings,
       href: '/super-user/settings',
+      api: api.get('/super-user/settings'),
       allowedRoles: ['SUPERUSER'],
     },
     {
@@ -271,6 +280,14 @@ export const ROLE_NAVIGATION_CONFIG: RoleNavigationConfig = {
     ],
   },
   VETERINARIAN: {
+    bottomNav: [
+      FINANCE_CATEGORY,
+      MONITOR_CATEGORY,
+      LIVESTOCK_HEALTH_CATEGORY,
+      OTHERS_CATEGORY,
+    ],
+  },
+  INVENTORY: {
     bottomNav: [
       FINANCE_CATEGORY,
       MONITOR_CATEGORY,

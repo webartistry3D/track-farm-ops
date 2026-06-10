@@ -226,12 +226,12 @@ const Dashboard = () => {
     return <div>Please log in to view the dashboard.</div>;
   }
 
-  const isOwner = user.role === 'OWNER' || user.role === 'ACCOUNTANT' || user.role === 'VETERINARIAN';
+  const isOwner = user.role === 'OWNER' || user.role === 'ACCOUNTANT' || user.role === 'VETERINARIAN'|| user.role === 'INVENTORY';
   const canViewFinancials = user.role === 'OWNER' || user.role === 'ACCOUNTANT';
   const netProfit = todayIncome - todayExpenses;
 
   // INVENTORY role restriction - no access to Dashboard
-  if (user.role === 'INVENTORY') {
+  if (user.role === 'INVENTORY' ) {
     return (
       <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 rounded-lg p-6">
         <h3 className="text-lg font-medium text-yellow-900 mb-2">Access Restricted</h3>

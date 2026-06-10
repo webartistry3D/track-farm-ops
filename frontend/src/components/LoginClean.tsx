@@ -66,12 +66,16 @@ const LoginClean = () => {
       await login(credentials);
       
       // Redirect based on user role
-      if (user?.role === 'MANAGER') {
+      if (user?.role === 'SUPERUSER') {
+        navigate('/super-user/dashboard');
+      } else if (user?.role === 'MANAGER') {
         navigate('/analytics');
       } else if (user?.role === 'WORKER') {
         navigate('/income');
       } else if (user?.role === 'VETERINARIAN') {
         navigate('/livestock-health');
+      } else if (user?.role === 'INVENTORY') {
+        navigate('/inventory');
       } else {
         navigate('/dashboard');
       }
