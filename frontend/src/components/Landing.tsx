@@ -130,10 +130,10 @@ const Landing = () => {
               }, 500);
             }, 500);
           }
-        }, 40); // Typing speed
+        }, 20); // Typing speed
 
         return () => clearInterval(typingInterval);
-      }, animationCompletionTime + 600); // Add 600ms delay after hero animation completes
+      }, animationCompletionTime + 2); // Add 600ms delay after hero animation completes
     }
   }, [visibleWords.size, words.length]);
 
@@ -318,7 +318,7 @@ const Landing = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button 
                 onClick={() => {
-                  const section = document.getElementById('everything-you-need-section');
+                  const section = document.getElementById('problems-solutions');
                   if (section) {
                     section.scrollIntoView({ 
                       behavior: 'smooth',
@@ -332,7 +332,7 @@ const Landing = () => {
                     : 'opacity-0 scale-50 translate-y-4'
                 }`}
                 style={{
-                  transitionDelay: buttonVisible.includes(0) ? '1500ms' : '0ms'
+                  transitionDelay: buttonVisible.includes(0) ? '1000ms' : '0ms'
                 }}
               >
                 Learn More
@@ -345,7 +345,7 @@ const Landing = () => {
                     : 'opacity-0 scale-50 translate-y-4'
                 }`}
                 style={{
-                  transitionDelay: buttonVisible.includes(1) ? '1500ms' : '0ms'
+                  transitionDelay: buttonVisible.includes(1) ? '1200ms' : '0ms'
                 }}
               >
                 Sign In
@@ -367,12 +367,15 @@ const Landing = () => {
               ? 'opacity-100 translate-y-0'
               : 'opacity-0 translate-y-16'
           }`}>
+            {/* <h2 className="text-3xl md:text-4xl font-jetbrains-mono font-bold text-gray-900 mb-4">
+              Problems. Solutions.Critical Challenges farmers face daily
+            </h2> */}
             <h2 className="text-3xl md:text-4xl font-jetbrains-mono font-bold text-gray-900 mb-4">
-              Problems. Solutions.
+              Farmers face critical challenges daily
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            {/* <p className="text-lg text-gray-600 max-w-3xl mx-auto">
               TrackFarmOps addresses the critical challenges farmers face daily
-            </p>
+            </p> */}
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -386,7 +389,7 @@ const Landing = () => {
             }}>
               <h3 className="text-2xl font-jetbrains-mono font-bold text-red-600 mb-6 flex items-center">
                 <span className="bg-red-100 p-2 rounded-lg mr-3">⚠️</span>
-                Common Problems
+                Pain points
               </h3>
               
               <div className="space-y-4">
@@ -427,7 +430,7 @@ const Landing = () => {
             }}>
               <h3 className="text-2xl font-jetbrains-mono font-bold text-green-600 mb-6 flex items-center">
                 <span className="bg-green-100 p-2 rounded-lg mr-3">✅</span>
-                TrackFarmOps Solutions
+                Solutions - TrackFarmOps
               </h3>
               
               <div className="space-y-4">
