@@ -32,6 +32,7 @@ export interface NavItem {
   name: string;
   icon: LucideIcon;
   href?: string;
+  apiEndpoint?: string;
   children?: NavItem[];
   allowedRoles: UserRole[];
   feature?: keyof SubscriptionLimits['features'];
@@ -175,7 +176,7 @@ const SUPERUSER_PEOPLE_CATEGORY: NavItem = {
       name: 'Users',
       icon: Users,
       href: '/super-user/user/',
-      api: api.get('/super-user/user'),
+      apiEndpoint: '/super-user/user',
       allowedRoles: ['SUPERUSER'],
     },
     {
@@ -183,7 +184,7 @@ const SUPERUSER_PEOPLE_CATEGORY: NavItem = {
       name: 'Organizations',
       icon: Building2,
       href: '/super-user/organization',
-      api: api.get('/super-user/organization'),
+      apiEndpoint: '/super-user/organization',
       allowedRoles: ['SUPERUSER'],
     },
   ],
@@ -200,7 +201,7 @@ const SUPERUSER_MONITOR_CATEGORY: NavItem = {
       name: 'Subscriptions',
       icon: CreditCard,
       href: '/super-user/subscriptions',
-      api: api.get('/super-user/subscription'),
+      apiEndpoint: '/super-user/subscription',
       allowedRoles: ['SUPERUSER'],
     },
     {
@@ -208,7 +209,7 @@ const SUPERUSER_MONITOR_CATEGORY: NavItem = {
       name: 'Activity Monitor',
       icon: Monitor,
       href: '/super-user/activity',
-      api: api.get('/super-user/activity'),
+      apiEndpoint: '/super-user/activity',
       allowedRoles: ['SUPERUSER'],
     },
   ],
@@ -225,7 +226,7 @@ const SUPERUSER_SYSTEM_CATEGORY: NavItem = {
       name: 'System Health',
       icon: Heart,
       href: '/super-user/system-health',
-      api: api.get('/super-user/system-health'),
+      apiEndpoint: '/super-user/system-health',
       allowedRoles: ['SUPERUSER'],
     },
     {
@@ -249,7 +250,7 @@ const SUPERUSER_OTHERS_CATEGORY: NavItem = {
       name: 'Analytics',
       icon: BarChart3,
       href: '/super-user/analytics',
-      api: api.get('/super-user/analytics'),
+      apiEndpoint: '/super-user/analytics',
       allowedRoles: ['SUPERUSER'],
     },
     {
@@ -257,7 +258,7 @@ const SUPERUSER_OTHERS_CATEGORY: NavItem = {
       name: 'Settings',
       icon: Settings,
       href: '/super-user/settings',
-      api: api.get('/super-user/settings'),
+      apiEndpoint: '/super-user/settings',
       allowedRoles: ['SUPERUSER'],
     },
     {
