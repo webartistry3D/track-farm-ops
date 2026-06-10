@@ -6,7 +6,6 @@ import type { LucideIcon } from 'lucide-react';
 import {
   LayoutDashboard,
   Wallet,
-  DollarSign,
   CreditCard,
   Package,
   Tractor,
