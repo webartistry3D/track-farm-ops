@@ -22,8 +22,6 @@ import {
   Server,
   FileCode,
 } from 'lucide-react';
-import api from '../lib/api';
-import renderUsers from '../components/SuperUserDashboard';
 
 export type UserRole = 'WORKER' | 'VETERINARIAN' | 'INVENTORY' | 'MANAGER' | 'ACCOUNTANT' | 'OWNER' | 'SUPERUSER';
 
