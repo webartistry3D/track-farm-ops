@@ -3,6 +3,7 @@
 
 import type { SubscriptionLimits } from '../utils/subscriptionRestrictions';
 import type { LucideIcon } from 'lucide-react';
+import { NairaIcon } from '../components/NairaIcon';
 import {
   LayoutDashboard,
   Wallet,
@@ -28,7 +29,7 @@ export type UserRole = 'WORKER' | 'VETERINARIAN' | 'INVENTORY' | 'MANAGER' | 'AC
 export interface NavItem {
   id: string;
   name: string;
-  icon: LucideIcon;
+  icon: LucideIcon | React.ComponentType<any>;
   href?: string;
   apiEndpoint?: string;
   children?: NavItem[];
@@ -54,20 +55,20 @@ const DASHBOARD_CATEGORY: NavItem = {
 const FINANCE_CATEGORY: NavItem = {
   id: 'finance',
   name: 'Finance',
-  icon: Wallet,
+  icon: CreditCard,
   allowedRoles: ['WORKER', 'VETERINARIAN', 'INVENTORY', 'MANAGER', 'ACCOUNTANT', 'OWNER'],
   children: [
     {
       id: 'income',
       name: 'Income',
-      icon: Wallet,
+      icon: NairaIcon,
       href: '/income',
       allowedRoles: ['WORKER', 'VETERINARIAN', 'INVENTORY', 'MANAGER', 'ACCOUNTANT', 'OWNER'],
     },
     {
       id: 'expense',
       name: 'Expense',
-      icon: CreditCard,
+      icon: Wallet,
       href: '/expenses',
       allowedRoles: ['WORKER', 'VETERINARIAN', 'INVENTORY', 'MANAGER', 'ACCOUNTANT', 'OWNER'],
     },
