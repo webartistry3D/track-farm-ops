@@ -230,7 +230,8 @@ const Dashboard = () => {
   const canViewFinancials = user.role === 'OWNER' || user.role === 'ACCOUNTANT';
   const netProfit = todayIncome - todayExpenses;
 
-  // INVENTORY role restriction - no access to Dashboard
+  /*
+  INVENTORY role restriction - no access to Dashboard
   if (user.role === 'INVENTORY' ) {
     return (
       <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 rounded-lg p-6">
@@ -241,6 +242,7 @@ const Dashboard = () => {
       </div>
     );
   }
+  */
 
   // Show skeleton while loading
   if (loading) {
