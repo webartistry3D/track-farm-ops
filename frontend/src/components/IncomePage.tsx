@@ -1996,7 +1996,7 @@ Generated on: ${new Date().toLocaleString()}
                 <span className="h-4 w-4 flex items-center justify-center text-sm font-bold">₦</span>
                 Income Records
               </button>
-              {!isManager && user.role !== 'WORKER' && user.role !== 'VETERINARIAN' && (
+              {!isManager && user.role !== 'WORKER' && user.role !== 'VETERINARIAN' && user.role !== 'INVENTORY' && (
                 <>
                   <button
                     onClick={() => handleTabChange('vat' as any)}
