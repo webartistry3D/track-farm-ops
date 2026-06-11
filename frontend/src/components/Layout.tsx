@@ -313,7 +313,8 @@ const Layout = ({ children }: LayoutProps) => {
               {/* Page title */}
               <div className="flex-1 flex justify-left lg:justify-start px-2 sm:px-4">
                 <h1 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white truncate">
-                  {navigation.find(item => item.current)?.name || 'TrackFarmOps'}
+                  {'TFO > '}
+                  {navigation.find(item => item.current)?.name || 'Settings'}
                 </h1>
               </div>
 

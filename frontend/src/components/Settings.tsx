@@ -25,10 +25,10 @@ const Settings = () => {
     confirmPassword: ''
   });
   const [notifications, setNotifications] = useState({
-    emailNotifications: true,
-    lowStockAlerts: true,
+    emailNotifications: false,
+    lowStockAlerts: false,
     dailyReports: false,
-    weeklyReports: true
+    weeklyReports: false
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -379,11 +379,11 @@ const Settings = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="mb-4 sm:mb-6">
+    <div className="max-w-4xl mx-auto px-0 sm:px-6 lg:px-8">
+      {/*<div className="mb-4 sm:mb-6">
         <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Settings</h1>
-        {/*<p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-1">Manage your account and application preferences</p>*/}
-      </div>
+        <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-1">Manage your account and application preferences</p>
+      </div>*/}
 
       {/* Tabs */}
       <div className="border-b border-gray-200 dark:border-gray-700 mb-6">
@@ -398,7 +398,7 @@ const Settings = () => {
           >
             Profile
           </button>
-          {user?.role === 'OWNER' && (
+          {/*{user?.role === 'OWNER' && (
             <button
               onClick={() => setActiveTab('notifications')}
               className={`py-2 px-3 sm:px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
@@ -409,7 +409,7 @@ const Settings = () => {
             >
               Notifications
             </button>
-          )}
+          )}*/}
           {user?.role === 'OWNER' && (
             <button
               onClick={() => setActiveTab('workers')}
@@ -564,7 +564,7 @@ const Settings = () => {
                   <div className="font-medium text-gray-900 dark:text-white text-sm sm:text-base">Email Notifications</div>
                   <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Receive important updates via email</div>
                 </div>
-                <button
+                  <button
                   type="button"
                   onClick={() => handleNotificationChange('emailNotifications')}
                   className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
@@ -816,7 +816,7 @@ const Settings = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 sm:p-4">
                 <div className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">Application Version</div>
-                <div className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">TrackFarmOps v2.0.0</div>
+                <div className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">TrackFarmOps v1.0.0</div>
               </div>
               
               <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 sm:p-4">

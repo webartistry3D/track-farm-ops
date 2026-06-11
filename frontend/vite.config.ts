@@ -14,7 +14,7 @@ export default defineConfig({
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
         name: 'TrackFarmOps',
-        short_name: 'FarmOps',
+        short_name: 'TrackFarmOps',
         description: 'Comprehensive farm operations management system for tracking activities, inventory, finances, and more',
         theme_color: '#05190d',
         background_color: '#ffffff',

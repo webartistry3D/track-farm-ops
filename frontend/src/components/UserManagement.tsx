@@ -390,18 +390,22 @@ const UserManagement = () => {
       {/* Instructions */}
       <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
         <h3 className="text-lg font-medium text-blue-900 dark:text-blue-100 mb-3">User Management Guide</h3>
-        <div className="space-y-2 text-blue-700 dark:text-blue-300">
-          <p>• <strong>Workers:</strong> Can record income, expenses, and update inventory</p>
-          <p>• <strong>Managers:</strong> Can do everything workers can plus view reports</p>
-          <p>• <strong>Owners:</strong> Full access to all features including user management</p>
-          <p>• <strong>Accountants:</strong> Can manage financial records, invoices, and VAT</p>
-          <p>• <strong>Inventory Managers:</strong> Can manage inventory items, categories, and transactions</p>
-          <p>• <strong>Veterinarians:</strong> Can manage livestock health records and treatments</p>
+        <div className="text-sm space-y-2 text-blue-700 dark:text-blue-300">
+          {/*<p>• <strong>Workers:</strong> Can record income, expenses, and update inventory</p>*/}
+          <h3>• <strong>Worker:</strong> Can record income and expenses</h3>
+          <h3>• <strong>Veterinarian:</strong> Can manage livestock health records and treatments</h3>
+          <h3>• <strong>Inventory Manager:</strong> Can manage inventory items, categories, and transactions</h3>
+          <h3>• <strong>Manager:</strong> Can record income and expenses, manage inventory and assets, view livestock health records and farm analaytics</h3>
+          <h3>• <strong>Accountant:</strong> Can manage financial records, invoices, and VAT</h3>
+          <h3>• <strong>Owner:</strong> Full access to all features including user management</h3>
+          
+          
+          
         </div>
         <div className="mt-4 pt-4 border-t border-blue-200 dark:border-blue-800">
-          <p className="text-sm text-blue-600 dark:text-blue-400">
-            <strong>Note:</strong> Workers cannot sign up themselves. Only owners can create user accounts.
-          </p>
+          <h2 className="text-sm text-blue-600 dark:text-blue-400">
+            Only owners can create user accounts.
+          </h2>
         </div>
       </div>
     </div>
