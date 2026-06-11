@@ -593,7 +593,7 @@ const Analytics = () => {
         </div>
 
         {/* Financial Overview */}
-        {!isManager && (
+        {!isManager && !isInventory && (
           <div className="mb-8">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Financial Overview</h2>
             {financialLoading ? (
