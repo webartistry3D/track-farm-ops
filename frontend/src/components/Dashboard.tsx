@@ -239,7 +239,7 @@ const Dashboard = () => {
         <p className="text-yellow-700">
           Dashboard access is not available for your role. Please use the navigation menu to access your assigned features.
         </p>
-      </div>
+      </div> 
     );
   }
   */
