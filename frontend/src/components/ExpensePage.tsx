@@ -455,6 +455,7 @@ const ExpensePage = () => {
   }
 
   // INVENTORY role restriction - no access to ExpensePage
+  /*
   if (isInventory) {
     return (
       <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 rounded-lg p-6">
@@ -465,6 +466,7 @@ const ExpensePage = () => {
       </div>
     );
   }
+  */
 
   return (
     <div className="max-w-7xl mx-auto p-0">

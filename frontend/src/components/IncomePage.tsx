@@ -1771,6 +1771,7 @@ Generated on: ${new Date().toLocaleString()}
   }
 
   // INVENTORY role restriction - no access to IncomePage
+  /*
   if (isInventory) {
     return (
       <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 rounded-lg p-6">
@@ -1781,6 +1782,7 @@ Generated on: ${new Date().toLocaleString()}
       </div>
     );
   }
+  */
 
   // Confirmation Modal for Marking Invoice as Paid
   if (showPaidConfirmationModal && invoiceToMarkAsPaid) {
