@@ -956,7 +956,7 @@ const Analytics = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 py-4">
               <div onClick={() => setShowTotalItemsModal(true)} className="cursor-pointer">
                 <StatCard
-                  title="Total Items"
+                  title="Items"
                   value={inventorySummary?.totalItems?.toString() || '0'}
                   icon={<Package className="w-6 h-6 text-white" />}
                   color="bg-blue-500"
@@ -1091,7 +1091,7 @@ const Analytics = () => {
 
         {/* Agricultural Analytics Widgets */}
         <div className="mb-4 py-4">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Farm Operations Analytics</h2>
+          <h2 className="text-xl font-regular text-gray-900 dark:text-white mb-6">Farm Operations Analytics</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             {/* Crop Management Widget */}

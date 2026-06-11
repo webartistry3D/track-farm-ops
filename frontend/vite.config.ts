@@ -16,7 +16,7 @@ export default defineConfig({
         name: 'TrackFarmOps',
         short_name: 'TrackFarmOps',
         description: 'Comprehensive farm operations management system for tracking activities, inventory, finances, and more',
-        theme_color: '#05190d',
+        theme_color: '#000',
         background_color: '#ffffff',
         display: 'standalone',
         orientation: 'portrait-primary',

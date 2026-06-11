@@ -49,7 +49,7 @@ const DASHBOARD_CATEGORY: NavItem = {
   name: 'Dashboard',
   icon: LayoutDashboard,
   href: '/dashboard',
-  allowedRoles: ['OWNER', 'ACCOUNTANT'],
+  allowedRoles: ['OWNER', 'ACCOUNTANT', 'MANAGER', 'INVENTORY', 'WORKER'],
 };
 
 const FINANCE_CATEGORY: NavItem = {
@@ -273,6 +273,7 @@ const SUPERUSER_OTHERS_CATEGORY: NavItem = {
 export const ROLE_NAVIGATION_CONFIG: RoleNavigationConfig = {
   WORKER: {
     bottomNav: [
+      DASHBOARD_CATEGORY,
       FINANCE_CATEGORY,
       MONITOR_CATEGORY,
       LIVESTOCK_HEALTH_CATEGORY,
@@ -281,6 +282,7 @@ export const ROLE_NAVIGATION_CONFIG: RoleNavigationConfig = {
   },
   VETERINARIAN: {
     bottomNav: [
+      DASHBOARD_CATEGORY,
       FINANCE_CATEGORY,
       MONITOR_CATEGORY,
       LIVESTOCK_HEALTH_CATEGORY,
@@ -289,6 +291,7 @@ export const ROLE_NAVIGATION_CONFIG: RoleNavigationConfig = {
   },
   INVENTORY: {
     bottomNav: [
+      DASHBOARD_CATEGORY,
       FINANCE_CATEGORY,
       MONITOR_CATEGORY,
       LIVESTOCK_HEALTH_CATEGORY,
@@ -297,6 +300,7 @@ export const ROLE_NAVIGATION_CONFIG: RoleNavigationConfig = {
   },
   MANAGER: {
     bottomNav: [
+      DASHBOARD_CATEGORY,
       FINANCE_CATEGORY,
       MONITOR_CATEGORY,
       LIVESTOCK_HEALTH_CATEGORY,

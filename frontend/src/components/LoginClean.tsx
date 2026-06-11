@@ -69,13 +69,13 @@ const LoginClean = () => {
       if (user?.role === 'SUPERUSER') {
         navigate('/super-user/dashboard');
       } else if (user?.role === 'MANAGER') {
-        navigate('/analytics');
+        navigate('/dashboard');
       } else if (user?.role === 'WORKER') {
-        navigate('/income');
+        navigate('/dashboard');
       } else if (user?.role === 'VETERINARIAN') {
         navigate('/livestock-health');
       } else if (user?.role === 'INVENTORY') {
-        navigate('/inventory');
+        navigate('/dashboard');
       } else {
         navigate('/dashboard');
       }

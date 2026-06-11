@@ -88,9 +88,9 @@ const AppRoutes = () => {
         element={
           user 
             ? <Navigate to={
-                user.role === 'MANAGER' ? '/analytics' :
+                user.role === 'MANAGER' ? '/dashboard' :
                 user.role === 'INVENTORY' ? '/inventory' :
-                user.role === 'WORKER' ? '/income' :
+                user.role === 'WORKER' ? '/dashboard' :
                 user.role === 'VETERINARIAN' ? '/livestock-health' :
                 '/dashboard'
               } replace /> 
@@ -102,9 +102,9 @@ const AppRoutes = () => {
         element={
           user 
             ? <Navigate to={
-                user.role === 'MANAGER' ? '/analytics' :
+                user.role === 'MANAGER' ? '/dashboard' :
                 user.role === 'INVENTORY' ? '/inventory' :
-                user.role === 'WORKER' ? '/income' :
+                user.role === 'WORKER' ? '/dashboard' :
                 user.role === 'VETERINARIAN' ? '/livestock-health' :
                 '/dashboard'
               } replace /> 
