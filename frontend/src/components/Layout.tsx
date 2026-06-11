@@ -311,7 +311,7 @@ const Layout = ({ children }: LayoutProps) => {
           <div className="px-3 sm:px-4 md:px-6 lg:px-8">
             <div className="flex items-center justify-between h-14 sm:h-16">
               {/* Page title */}
-              <div className="flex-1 flex justify-center lg:justify-start px-2 sm:px-4">
+              <div className="flex-1 flex justify-left lg:justify-start px-2 sm:px-4">
                 <h1 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white truncate">
                   {navigation.find(item => item.current)?.name || 'TrackFarmOps'}
                 </h1>
@@ -320,7 +320,7 @@ const Layout = ({ children }: LayoutProps) => {
               {/* Right side buttons */}
               <div className="flex items-center space-x-2 sm:space-x-4">
                 {/* User Info */}
-                <div className="hidden md:flex items-center space-x-2 sm:space-x-3 text-xs sm:text-sm">
+                <div className="md:flex items-center space-x-2 sm:space-x-3 text-xs sm:text-sm">
                   <div className="flex items-center space-x-1 sm:space-x-2">
                     <span className="font-medium text-gray-700 dark:text-gray-300 truncate max-w-[80px] sm:max-w-none">
                       {user.role}
@@ -334,7 +334,7 @@ const Layout = ({ children }: LayoutProps) => {
                       </>
                     )}
                   </div>
-                  <span className={`inline-flex items-center px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium ${
+                  <span className={`inline-flex items-center px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-[10px] hidden sm:text-xs font-medium ${
                     user.role === 'OWNER' 
                       ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
                       : user.role === 'MANAGER'

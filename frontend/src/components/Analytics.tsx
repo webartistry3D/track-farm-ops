@@ -587,7 +587,7 @@ const Analytics = () => {
           </div>*/}
           
           {/* KPI Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-0">
             {/* Inventory Items and Efficiency cards will be moved after Financial Overview */}
           </div>
         </div>
@@ -595,7 +595,7 @@ const Analytics = () => {
         {/* Financial Overview */}
         {!isManager && (
           <div className="mb-8">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Financial Overview</h2>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Financial Overview</h2>
             {financialLoading ? (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {[...Array(3)].map((_, i) => (
@@ -651,9 +651,9 @@ const Analytics = () => {
         {/* Advanced Analytics Charts */}
         {!shouldHideFinancialSections && (
           <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Advanced Analytics</h2>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Advanced Analytics</h2>
           
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-4">
             {/* Quick Stats */}
             <div className="space-y-4">
               <div className="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 dark:border-green-800 rounded-xl p-4">
@@ -708,7 +708,7 @@ const Analytics = () => {
         {!shouldHideFinancialSections && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             <div>
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
                 <TrendingUp className="w-5 h-5 mr-2 text-green-500" />
                 Income by Category
               </h2>
@@ -822,7 +822,7 @@ const Analytics = () => {
           </div>
 
           <div>
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
               <ShoppingCart className="w-5 h-5 mr-2 text-red-500" />
               Expense by Category
             </h2>
@@ -938,7 +938,7 @@ const Analytics = () => {
         )}
 
         <div>
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-0 flex items-center">
             <Package className="w-5 h-5 mr-2 text-blue-500" />
             Inventory Overview
           </h2>
@@ -990,7 +990,7 @@ const Analytics = () => {
           )}
         </div>
 
-        <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-8">
+        <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-4">
           <div className="flex flex-col gap-4">
             <div className="overflow-x-auto pb-2">
               <div className="flex items-center gap-2 min-w-max">
@@ -1090,8 +1090,8 @@ const Analytics = () => {
         </div>
 
         {/* Agricultural Analytics Widgets */}
-        <div className="mb-8 py-8">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Farm Operations Analytics</h2>
+        <div className="mb-4 py-4">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Farm Operations Analytics</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             {/* Crop Management Widget */}
