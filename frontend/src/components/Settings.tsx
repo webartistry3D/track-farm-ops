@@ -472,6 +472,7 @@ const Settings = () => {
                     Full Name
                   </label>
                   <input
+                    disabled
                     type="text"
                     id="name"
                     value={formData.name}
@@ -486,6 +487,7 @@ const Settings = () => {
                     Email Address
                   </label>
                   <input
+                    disabled
                     type="email"
                     id="email"
                     value={formData.email}
@@ -506,6 +508,7 @@ const Settings = () => {
                     Current Password
                   </label>
                   <input
+                    disabled
                     type="password"
                     id="currentPassword"
                     value={formData.currentPassword}
@@ -519,6 +522,7 @@ const Settings = () => {
                     New Password
                   </label>
                   <input
+                    disabled
                     type="password"
                     id="newPassword"
                     value={formData.newPassword}
@@ -532,6 +536,7 @@ const Settings = () => {
                     Confirm New Password
                   </label>
                   <input
+                    disabled
                     type="password"
                     id="confirmPassword"
                     value={formData.confirmPassword}
