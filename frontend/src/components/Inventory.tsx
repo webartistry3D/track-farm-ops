@@ -1313,7 +1313,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                             {status.icon}
                           </div>
                           
-                          <div className="flex items-center space-x-2">
+                          <div className="flex items-center space-x-6">
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
