@@ -700,6 +700,59 @@ router.post('/expenses', authenticate, async (req: AuthRequest, res) => {
 });
 
 /**
+ * Delete income entry
+ * DELETE /api/finance/income/:id
+ */
+router.delete('/income/:id', authenticate, async (req: AuthRequest, res) => {
+  try {
+    const currentUser = req.user!;
+    const incomeId = parseInt(req.params.id as string);
+
+    console.log(`🗑️ Deleting income entry ${incomeId} by ${currentUser.name} (ID: ${currentUser.id})`);
+
+    if (isNaN(incomeId)) {
+      return res.status(400).json({ error: 'Invalid income ID' });
+    }
+
+    const currentUserOrg = await prisma.user.findUnique({
+      where: { id: currentUser.id },
+      select: { organizationId: true }
+    });
+
+    if (!currentUserOrg || !currentUserOrg.organizationId) {
+      return res.status(403).json({
+        error: 'Access denied. User must be assigned to an organization.',
+        code: 'NO_ORGANIZATION'
+      });
+    }
+
+    const existingIncome = await prisma.incomeEntry.findFirst({
+      where: {
+        id: incomeId,
+        organizationId: currentUserOrg.organizationId
+      }
+    });
+
+    if (!existingIncome) {
+      return res.status(404).json({ error: 'Income entry not found or access denied' });
+    }
+
+    await prisma.incomeEntry.delete({ where: { id: incomeId } });
+
+    console.log(`✅ Income entry deleted: ${existingIncome.category} - ₦${existingIncome.amount}`);
+
+    res.json({ success: true, message: 'Income entry deleted successfully' });
+
+  } catch (error) {
+    console.error('Delete income error:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to delete income entry'
+    });
+  }
+});
+
+/**
  * Delete expense entry
  * DELETE /api/finance/expenses/:id
  */

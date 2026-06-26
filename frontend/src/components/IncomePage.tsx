@@ -171,6 +171,8 @@ const IncomePage = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [invoiceToDelete, setInvoiceToDelete] = useState<any>(null);
+  const [showIncomeDeleteModal, setShowIncomeDeleteModal] = useState(false);
+  const [incomeToDelete, setIncomeToDelete] = useState<any>(null);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [showActionsModal, setShowActionsModal] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState<any>(null);
@@ -1349,6 +1351,38 @@ TrackFarmOps Team`;
   const handleCancelDelete = () => {
     setShowDeleteModal(false);
     setInvoiceToDelete(null);
+  };
+
+  // Income record delete functions
+  const deleteIncomeEntry = async (incomeId: number) => {
+    try {
+      console.log(`🗑️ Deleting income entry ${incomeId}`);
+      await api.delete(`/finance/income/${incomeId}`);
+      console.log('✅ Income entry deleted successfully');
+      fetchIncomes(currentPage);
+      setSuccess('Income record deleted successfully!');
+    } catch (error: any) {
+      console.error('❌ Failed to delete income entry:', error);
+      setError(error.response?.data?.error || 'Failed to delete income record');
+    }
+  };
+
+  const handleIncomeDeleteClick = (income: any) => {
+    setIncomeToDelete(income);
+    setShowIncomeDeleteModal(true);
+  };
+
+  const handleConfirmIncomeDelete = () => {
+    if (incomeToDelete) {
+      deleteIncomeEntry(incomeToDelete.id);
+      setShowIncomeDeleteModal(false);
+      setIncomeToDelete(null);
+    }
+  };
+
+  const handleCancelIncomeDelete = () => {
+    setShowIncomeDeleteModal(false);
+    setIncomeToDelete(null);
   };
 
     
@@ -3464,6 +3498,48 @@ Generated on: ${new Date().toLocaleString()}
             </div>
           )}
 
+          {/* Income Record Delete Confirmation Modal */}
+          {showIncomeDeleteModal && incomeToDelete && (
+            <div className="fixed inset-0 bg-gray-600 dark:bg-gray-900 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+              <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+                <div className="mt-3">
+                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Delete Income Record</h3>
+
+                  <div className="mb-4">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                      Are you sure you want to delete this income record? This action cannot be undone.
+                    </p>
+                    <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                      <div className="flex items-center mb-2">
+                        <div className="h-2 w-2 bg-red-400 rounded-full mr-3"></div>
+                        <div>
+                          <p className="font-medium text-gray-900 dark:text-white">{incomeToDelete.description || incomeToDelete.category}</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">{new Date(incomeToDelete.date).toLocaleDateString()}</p>
+                          <p className="text-sm text-gray-500 dark:text-gray-500">{formatCurrency(incomeToDelete.amount, { includeSymbol: true })}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex space-x-3">
+                    <button
+                      onClick={handleConfirmIncomeDelete}
+                      className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex-1"
+                    >
+                      Yes, Delete
+                    </button>
+                    <button
+                      onClick={handleCancelIncomeDelete}
+                      className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors flex-1"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Actions Modal */}
           {showActionsModal && selectedInvoice && (
             <div className="fixed inset-0 bg-black/20 backdrop-blur-sm overflow-y-auto h-full w-full z-50">
@@ -3803,6 +3879,9 @@ Generated on: ${new Date().toLocaleString()}
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                           Approved By
                         </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                          Actions
+                        </th>
                       </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
@@ -3884,6 +3963,18 @@ Generated on: ${new Date().toLocaleString()}
                                 return income.user?.name || 'Unknown User';
                               })()}
                             </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm">
+                            {user?.role === 'OWNER' && (
+                              <button
+                                onClick={() => handleIncomeDeleteClick(income)}
+                                className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-red-600 dark:text-red-400 hover:text-white hover:bg-red-600 dark:hover:bg-red-600 border border-red-300 dark:border-red-500 rounded-md transition-colors"
+                                title="Delete income record"
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                                Delete
+                              </button>
+                            )}
                           </td>
                         </tr>
                       ))}
