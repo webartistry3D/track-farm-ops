@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
+import crypto from 'crypto';
 import { prisma } from '../lib/prisma';
 import { generateToken, hashPassword, comparePassword } from '../utils/auth';
 import { AuthRequest, getReqBody } from '../middleware/auth';
 import { autoSeedIfEmpty } from '../utils/autoSeeding';
+import { sendWelcomeEmail } from '../utils/emailService';
 
 export const signup = async (req: Request, res: Response) => {
   try {
@@ -39,6 +41,8 @@ export const signup = async (req: Request, res: Response) => {
         }
       });
       
+      const emailToken = crypto.randomBytes(32).toString('hex');
+
       // Create user linked to organization
       newUser = await prisma.user.create({
         data: {
@@ -46,11 +50,17 @@ export const signup = async (req: Request, res: Response) => {
           email,
           password: hashedPassword,
           role: defaultRole,
-          organizationId: organization.id
+          organizationId: organization.id,
+          emailVerificationToken: emailToken
         }
       });
       
       console.log(`✅ Created owner ${name} with organization: ${farmName} (Farm Type: ${farmType || 'Not specified'})`);
+
+      // Send welcome/verification email (non-blocking — don't fail signup if email fails)
+      sendWelcomeEmail(email, name, emailToken).catch(err =>
+        console.error('Welcome email failed:', (err as Error).message)
+      );
       
       // 🌾 SAFE AUTO-SEED NIGERIAN MIXED FARM PRESET ONLY FOR EMPTY ORGANIZATIONS
       const seedingSuccess = await autoSeedIfEmpty(organization.id, farmName);

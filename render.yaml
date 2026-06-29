@@ -11,17 +11,17 @@ services:
       - key: NODE_ENV
         value: production
       - key: VITE_API_URL
-        value: https://your-backend.onrender.com
+        value: https://track-farm-ops-api.onrender.com
     routes:
       - type: rewrite
         src: /api/*
-        dest: https://your-backend.onrender.com/api/:splat
+        dest: https://track-farm-ops-api.onrender.com/api/:splat
 
   # API Service (Backend)
   api:
     type: web
     rootDir: backend
-    buildCommand: cd backend && npm run build:deploy
+    buildCommand: cd backend && npm run build:render
     startCommand: cd backend && npm start
     envVars:
       - key: NODE_ENV
@@ -31,7 +31,23 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: CORS_ORIGIN
-        value: https://your-frontend.onrender.com
+        value: https://track-farm-ops.onrender.com
+      - key: FRONTEND_URL
+        value: https://track-farm-ops.onrender.com
+      - key: SUPERUSER_ADMIN_KEY
+        sync: false
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_SECURE
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: SMTP_FROM
+        sync: false
     healthCheckPath: /api/health
     autoDeploy: true
 
@@ -40,7 +56,7 @@ services:
     type: worker
     rootDir: backend
     buildCommand: cd backend && npm install
-    startCommand: cd backend && node scripts/migrate-password-features.js
+    startCommand: cd backend && npx prisma migrate deploy
     envVars:
       - key: NODE_ENV
         value: production
@@ -63,7 +79,7 @@ build:
     - cd backend && npm ci
   postBuildCommand:
     - echo "Running database migration..."
-    - cd backend && node scripts/migrate-password-features.js || echo "Migration may have already run"
+    - cd backend && npx prisma migrate deploy || echo "Migration may have already run"
 
 # Health checks
 health:

@@ -22,7 +22,6 @@ api.interceptors.request.use((config) => {
     method: config.method?.toUpperCase(),
     url: `${API_BASE_URL}${config.url}`,
     hasToken: !!token,
-    headers: config.headers
   });
   
   return config;
@@ -55,10 +54,14 @@ api.interceptors.response.use(
     });
     
     if (error.response?.status === 401) {
-      console.error('🚨 AUTH ERROR: Token expired or invalid');
-      localStorage.removeItem('trackfarmops_token');
-      localStorage.removeItem('trackfarmops_user');
-      window.location.href = '/login';
+      const url = error.config?.url || '';
+      const isLoginRequest = url.includes('/auth/login');
+      if (!isLoginRequest) {
+        console.error('🚨 AUTH ERROR: Token expired or invalid');
+        localStorage.removeItem('trackfarmops_token');
+        localStorage.removeItem('trackfarmops_user');
+        window.location.href = '/login';
+      }
     } else if (error.response?.status === 403) {
       console.error('🚨 AUTH ERROR: Access forbidden');
       // Don't redirect on 403, let user see error message

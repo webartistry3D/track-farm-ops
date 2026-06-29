@@ -50,18 +50,6 @@ const PasswordChangeForm: React.FC<PasswordChangeFormProps> = ({
     isValid: boolean;
   }>({ score: 0, strength: 'very-weak', isValid: false });
 
-  // Update password strength when new password changes
-  useEffect(() => {
-    if (state.newPassword) {
-      // Simple validation (in real app, this would come from API)
-      const score = calculatePasswordScore(state.newPassword, userEmail);
-      const strength = getStrengthLevel(score);
-      setPasswordStrength({ score, strength, isValid: score >= 4 });
-    } else {
-      setPasswordStrength({ score: 0, strength: 'very-weak', isValid: false });
-    }
-  }, [state.newPassword, userEmail]);
-
   const calculatePasswordScore = (password: string, email?: string): number => {
     let score = 0;
     
@@ -86,6 +74,17 @@ const PasswordChangeForm: React.FC<PasswordChangeFormProps> = ({
     if (score === 4) return 'good';
     return 'strong';
   };
+
+  // Update password strength when new password changes
+  useEffect(() => {
+    if (state.newPassword) {
+      const score = calculatePasswordScore(state.newPassword, userEmail);
+      const strength = getStrengthLevel(score);
+      setPasswordStrength({ score, strength, isValid: score >= 4 });
+    } else {
+      setPasswordStrength({ score: 0, strength: 'very-weak', isValid: false });
+    }
+  }, [state.newPassword, userEmail]);
 
   const updateState = (updates: Partial<PasswordChangeState>) => {
     setState(prev => ({ ...prev, ...updates }));

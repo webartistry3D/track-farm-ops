@@ -1,126 +1,49 @@
 import { Router } from 'express';
 import { signup, createUser, getUsers, getProfile, createTestUsers, deleteUser } from '../controllers/authController';
 import { authenticate, AuthRequest } from '../middleware/auth';
-import { passwordChangeRateLimiter } from '../middleware/rateLimiter';
+import { passwordChangeRateLimiter, authRateLimiter } from '../middleware/rateLimiter';
 import { logPasswordChange } from '../utils/auditLogger';
 import { uploadProfileImage, uploadProfileImageMiddleware } from './profileImage';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 import { prisma } from '../lib/prisma';
+import { generateToken } from '../utils/auth';
 import PasswordValidator from '../utils/passwordValidation';
+import { sendPasswordResetEmail } from '../utils/emailService';
 
 const router = Router();
 
 // Public routes
-router.post('/login', async (req, res) => {
+router.post('/login', authRateLimiter.middleware, async (req, res) => {
   try {
-    const startTime = Date.now();
-    const requestId = `login_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
-    console.log(` [${requestId}] Login attempt started`);
-    console.log(` [${requestId}] Email: ${req.body.email}`);
-    console.log(` [${requestId}] IP: ${req.ip}`);
-    console.log(` [${requestId}] User-Agent: ${req.headers['user-agent']}`);
-    console.log(` [${requestId}] Request body keys:`, Object.keys(req.body));
-    
     const { email, password } = req.body;
 
-    // Validate input
     if (!email || !password) {
-      console.log(` [${requestId}] Missing credentials - Email: ${!!email}, Password: ${!!password}`);
-      return res.status(400).json({ 
-        error: 'Email and password are required',
-        requestId,
-        debug: {
-          emailProvided: !!email,
-          passwordProvided: !!password,
-          requestBodyKeys: Object.keys(req.body)
-        }
-      });
+      return res.status(400).json({ error: 'Email and password are required' });
     }
 
-    console.log(` [${requestId}] Looking up user: ${email}`);
-    
     // Find user with organization
     const user = await prisma.user.findUnique({
       where: { email },
       include: {
         organization: {
-          select: {
-            id: true,
-            name: true
-          }
+          select: { id: true, name: true }
         }
       }
     });
 
-    console.log(` [${requestId}] User found: ${!!user}`);
-    if (user) {
-      console.log(` [${requestId}] User details:`, {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        organizationId: user.organizationId,
-        hasOrganization: !!user.organization,
-        organizationName: user.organization?.name
-      });
-    }
-
     if (!user) {
-      console.log(` [${requestId}] User not found: ${email}`);
-      return res.status(401).json({ 
-        error: 'Invalid credentials',
-        requestId,
-        debug: {
-          email,
-          userFound: false,
-          lookupTime: Date.now() - startTime
-        }
-      });
+      return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    console.log(` [${requestId}] Comparing password for user: ${user.id}`);
-    
-    // Compare password
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    console.log(` [${requestId}] Password valid: ${isPasswordValid}`);
-
     if (!isPasswordValid) {
-      console.log(` [${requestId}] Invalid password for user: ${email}`);
-      return res.status(401).json({ 
-        error: 'Invalid credentials',
-        requestId,
-        debug: {
-          email,
-          userFound: true,
-          passwordValid: false,
-          lookupTime: Date.now() - startTime
-        }
-      });
+      return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    console.log(` [${requestId}] Authentication successful for: ${user.name} (${user.role})`);
+    // Generate JWT token using shared utility (ensures consistent secret)
+    const token = generateToken(user);
 
-    // Generate JWT token
-    const token = jwt.sign(
-      { 
-        id: user.id, 
-        email: user.email, 
-        role: user.role,
-        name: user.name,
-        organizationId: user.organizationId
-      },
-      process.env.JWT_SECRET || 'fallback-secret',
-      { expiresIn: '24h' }
-    );
-
-    console.log(` [${requestId}] Token generated successfully`);
-
-    const responseTime = Date.now() - startTime;
-    console.log(` [${requestId}] Login completed in ${responseTime}ms`);
-
-    // Return user data and token
     res.json({
       user: {
         id: user.id,
@@ -131,34 +54,12 @@ router.post('/login', async (req, res) => {
         organizationName: user.organization?.name,
         createdAt: user.createdAt
       },
-      token,
-      requestId,
-      debug: {
-        responseTime: `${responseTime}ms`,
-        timestamp: new Date().toISOString()
-      }
+      token
     });
-
-    console.log(` [${requestId}] Login response sent successfully`);
 
   } catch (error) {
-    const requestId = req.body.email ? `error_${Date.now()}` : 'unknown';
-    console.error(` [${requestId}] Login error:`, {
-      error: (error as Error).message,
-      stack: (error as Error).stack,
-      email: req.body.email,
-      ip: req.ip,
-      userAgent: req.headers['user-agent']
-    });
-
-    res.status(500).json({ 
-      error: 'Internal server error',
-      requestId,
-      debug: {
-        error: (error as Error).message,
-        timestamp: new Date().toISOString()
-      }
-    });
+    console.error('Login error:', (error as Error).message);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
@@ -212,18 +113,8 @@ router.post('/superuser-signup', async (req, res) => {
 
     console.log(`✅ Superuser created: ${superuser.name} (${superuser.email})`);
 
-    // Generate JWT token
-    const token = jwt.sign(
-      { 
-        id: superuser.id, 
-        email: superuser.email, 
-        role: superuser.role,
-        name: superuser.name,
-        organizationId: null // Superusers don't have organizations
-      },
-      process.env.JWT_SECRET || 'fallback-secret',
-      { expiresIn: '24h' }
-    );
+    // Generate JWT token using shared utility (ensures consistent secret)
+    const token = generateToken(superuser);
 
     res.status(201).json({
       message: 'Superuser account created successfully',
@@ -247,8 +138,129 @@ router.post('/superuser-signup', async (req, res) => {
   }
 });
 
+// Forgot password — generates reset token and emails the user
+router.post('/forgot-password', authRateLimiter.middleware, async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+
+    const user = await prisma.user.findUnique({ where: { email } });
+
+    // Always return success to prevent user enumeration
+    if (!user) {
+      return res.json({ message: 'If that email exists, a reset link has been sent.' });
+    }
+
+    const token = crypto.randomBytes(32).toString('hex');
+    const expiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { passwordResetToken: token, passwordResetExpiry: expiry }
+    });
+
+    try {
+      await sendPasswordResetEmail(user.email, user.name, token);
+    } catch (emailError) {
+      console.error('Failed to send password reset email:', (emailError as Error).message);
+    }
+
+    res.json({ message: 'If that email exists, a reset link has been sent.' });
+
+  } catch (error) {
+    console.error('Forgot password error:', (error as Error).message);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Reset password — validates token and sets new password
+router.post('/reset-password', async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+
+    if (!token || !newPassword) {
+      return res.status(400).json({ error: 'Token and new password are required' });
+    }
+
+    const user = await prisma.user.findFirst({
+      where: {
+        passwordResetToken: token,
+        passwordResetExpiry: { gt: new Date() }
+      }
+    });
+
+    if (!user) {
+      return res.status(400).json({ error: 'Invalid or expired reset token' });
+    }
+
+    const passwordValidation = PasswordValidator.validate(newPassword, user.email);
+    if (!passwordValidation.isValid) {
+      return res.status(400).json({
+        error: 'Password does not meet security requirements',
+        feedback: passwordValidation.feedback
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        password: hashedPassword,
+        passwordResetToken: null,
+        passwordResetExpiry: null,
+        lastPasswordChange: new Date()
+      }
+    });
+
+    res.json({ message: 'Password reset successfully. You can now log in.' });
+
+  } catch (error) {
+    console.error('Reset password error:', (error as Error).message);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Verify email address via token from welcome email
+router.get('/verify-email', async (req, res) => {
+  try {
+    const { token } = req.query;
+
+    if (!token || typeof token !== 'string') {
+      return res.status(400).json({ error: 'Verification token is required' });
+    }
+
+    const user = await prisma.user.findFirst({
+      where: { emailVerificationToken: token }
+    });
+
+    if (!user) {
+      return res.status(400).json({ error: 'Invalid or already used verification token' });
+    }
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { emailVerified: true, emailVerificationToken: null }
+    });
+
+    res.json({ message: 'Email verified successfully. You can now log in.' });
+
+  } catch (error) {
+    console.error('Email verification error:', (error as Error).message);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 router.post('/signup', signup);
-router.post('/setup-test-users', createTestUsers);
+
+if (process.env.NODE_ENV !== 'production') {
+  router.post('/setup-test-users', createTestUsers);
+} else {
+  router.post('/setup-test-users', (_req, res) => res.status(404).json({ error: 'Not found' }));
+}
 
 // Protected routes
 router.get('/profile', authenticate, getProfile);
@@ -259,24 +271,12 @@ router.delete('/users/:id', authenticate, deleteUser);
 // Change password endpoint
 router.post('/change-password', authenticate, passwordChangeRateLimiter.middleware, async (req: AuthRequest, res) => {
   try {
-    const startTime = Date.now();
-    const requestId = `pwd_change_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
-    console.log(`[${requestId}] Password change request started`);
-    console.log(`[${requestId}] User ID: ${req.user?.id}`);
-    console.log(`[${requestId}] Email: ${req.user?.email}`);
-    console.log(`[${requestId}] IP: ${req.ip}`);
-
     const { currentPassword, newPassword } = req.body;
     const currentUser = req.user!;
 
     // Validate input
     if (!currentPassword || !newPassword) {
-      console.log(`[${requestId}] Missing required fields`);
-      return res.status(400).json({ 
-        error: 'Current password and new password are required',
-        requestId
-      });
+      return res.status(400).json({ error: 'Current password and new password are required' });
     }
 
     // Get current user with password
@@ -293,42 +293,28 @@ router.post('/change-password', authenticate, passwordChangeRateLimiter.middlewa
     });
 
     if (!user) {
-      console.log(`[${requestId}] User not found`);
-      return res.status(404).json({ 
-        error: 'User not found',
-        requestId
-      });
+      return res.status(404).json({ error: 'User not found' });
     }
 
     // Verify current password
     const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password);
     if (!isCurrentPasswordValid) {
-      console.log(`[${requestId}] Invalid current password`);
-      return res.status(400).json({ 
-        error: 'Current password is incorrect',
-        requestId
-      });
+      return res.status(400).json({ error: 'Current password is incorrect' });
     }
 
     // Check if new password is same as current
     const isSamePassword = await bcrypt.compare(newPassword, user.password);
     if (isSamePassword) {
-      console.log(`[${requestId}] New password is same as current`);
-      return res.status(400).json({ 
-        error: 'New password must be different from current password',
-        requestId
-      });
+      return res.status(400).json({ error: 'New password must be different from current password' });
     }
 
     // Validate new password strength
     const passwordValidation = PasswordValidator.validate(newPassword, user.email);
     if (!passwordValidation.isValid) {
-      console.log(`[${requestId}] Password validation failed`);
       return res.status(400).json({ 
         error: 'New password does not meet security requirements',
         feedback: passwordValidation.feedback,
-        strength: passwordValidation.strength,
-        requestId
+        strength: passwordValidation.strength
       });
     }
 
@@ -345,11 +331,6 @@ router.post('/change-password', authenticate, passwordChangeRateLimiter.middlewa
       }
     });
 
-    // Log the password change
-    console.log(`[${requestId}] Password changed successfully for user ${user.email} (${user.name})`);
-    console.log(`[${requestId}] Password strength: ${passwordValidation.strength}`);
-    console.log(`[${requestId}] Processing time: ${Date.now() - startTime}ms`);
-
     // Log successful password change
     logPasswordChange(
       user.id,
@@ -364,7 +345,6 @@ router.post('/change-password', authenticate, passwordChangeRateLimiter.middlewa
 
     res.json({
       message: 'Password changed successfully',
-      requestId,
       strength: passwordValidation.strength,
       changedAt: new Date().toISOString()
     });

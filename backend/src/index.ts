@@ -23,13 +23,10 @@ import storageRoutes from './routes/storageRoutes';
 import superuserRoutes from './routes/superuser';
 import cctvRoutes from './routes/cctvRoutes';
 import livestockRoutes from './routes/livestock';
+import farmOperationsRoutes from './routes/farmOperationsRoutes';
 import { prisma } from './lib/prisma';
 
-// Import our enhanced security middleware (temporarily disabled for compilation)
-// import { requireOrganization } from './middleware/rowLevelSecurity';
-// import { authRateLimiter, generalRateLimiter, dataIntensiveRateLimiter } from './middleware/rateLimiter';
-// import { securityMiddleware } from './middleware/inputValidation';
-// import { logAccess, logAuth } from './utils/auditLogger';
+import { securityMiddleware } from './middleware/inputValidation';
 
 // Load environment variables
 if (process.env.NODE_ENV !== 'production') {
@@ -125,6 +122,9 @@ if (process.env.NODE_ENV === 'production') {
 // Basic middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Security middleware — SQL injection + XSS detection on all API routes
+app.use('/api/', securityMiddleware);
 
 // Disable ETag generation globally to prevent 304 responses
 app.disable('etag');
@@ -233,6 +233,7 @@ app.use('/api/storage', storageRoutes);
 app.use('/api/superuser', superuserRoutes);
 app.use('/api/cctv', cctvRoutes);
 app.use('/api/livestock', livestockRoutes);
+app.use('/api/farm-operations', farmOperationsRoutes);
 app.use('/ocr', ocrRoutes);
 
 // Serve static files from uploads directory
@@ -245,37 +246,31 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads'), {
 // Serve static files from temp directory
 app.use('/temp', express.static(path.join(__dirname, '../temp')));
 
-// Error handling middleware
+// 404 handler - must be registered BEFORE the error handler
+app.use((req, res, next) => {
+  res.status(404).json({
+    error: 'Not found',
+    message: `Route ${req.originalUrl} not found`,
+    availableEndpoints: ['/api/auth', '/api/finance', '/api/inventory', '/api/inventory-transactions', '/api/health']
+  });
+});
+
+// Error handling middleware - must be last (4-argument signature)
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
   console.error('Error:', err);
   
   if (process.env.NODE_ENV === 'production') {
-    // Don't leak error details in production
     res.status(500).json({
       error: 'Internal server error',
       message: 'Something went wrong',
       requestId: req.headers['x-request-id'] || 'unknown'
     });
   } else {
-    // Detailed error in development
     res.status(500).json({
       error: 'Internal server error',
       message: err.message,
       stack: err.stack
     });
-  }
-});
-
-// 404 handler - catch all routes that don't match
-app.use((req, res, next) => {
-  if (!req.route) {
-    res.status(404).json({
-      error: 'Not found',
-      message: `Route ${req.originalUrl} not found`,
-      availableEndpoints: ['/api/auth', '/api/finance', '/api/inventory', '/api/inventory-transactions', '/api/health']
-    });
-  } else {
-    next();
   }
 });
 

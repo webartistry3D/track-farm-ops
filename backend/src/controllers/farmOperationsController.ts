@@ -67,8 +67,8 @@ const getEquipmentStatusData = async (req: Request, res: Response) => {
       });
     }
 
-    // Get all equipment for the organization
-    const equipment = await prisma.equipment.findMany({
+    // Get all equipment status records for the organization
+    const equipment = await prisma.equipmentStatus.findMany({
       where: {
         organizationId: organizationId
       }
@@ -77,11 +77,11 @@ const getEquipmentStatusData = async (req: Request, res: Response) => {
     const operationalCount = equipment.filter(eq => eq.status === 'OPERATIONAL').length;
     const MAINTENANCECount = equipment.filter(eq => eq.status === 'MAINTENANCE' || eq.status === 'REPAIR').length;
     const totalCount = equipment.length;
-    const avgutilization = totalCount > 0 ? Math.round(equipment.reduce((sum, eq) => sum + eq.utilization, 0) / totalCount) : 0;
+    const avgutilization = totalCount > 0 ? Math.round((operationalCount / totalCount) * 100) : 0;
 
     const nextServiceDates = equipment
-      .filter(eq => eq.nextService)
-      .map(eq => new Date(eq.nextService))
+      .filter(eq => eq.nextMaintenance)
+      .map(eq => new Date(eq.nextMaintenance!))
       .sort((a, b) => a.getTime() - b.getTime());
     
     const nextService = nextServiceDates.length > 0 
@@ -152,8 +152,8 @@ const getFieldActivityData = async (req: Request, res: Response) => {
     });
 
     const activeWorkers = todayActivities.filter(a => a.status === 'IN_PROGRESS').length;
-    const tasksCompleted = todayActivities.reduce((sum, a) => sum + a.tasksCompleted, 0);
-    const tasksTotal = todayActivities.reduce((sum, a) => sum + a.tasksTotal, 0);
+    const tasksCompleted = todayActivities.filter(a => a.status === 'COMPLETED').length;
+    const tasksTotal = todayActivities.length;
 
     const efficiencyPercentage = tasksTotal > 0 ? (tasksCompleted / tasksTotal) * 100 : 0;
     let efficiency = 'LOW';
@@ -280,22 +280,14 @@ const getWeatherData = async (req: Request, res: Response) => {
       });
     }
 
-    const latestWeatherData = await prisma.weatherData.findFirst({
-      where: {
-        organizationId: organizationId
-      },
-      orderBy: {
-        createdAt: 'desc'
-      }
-    });
-
+    // Weather data model not yet implemented in schema — return placeholder
     const weatherData = {
-      temperature: latestWeatherData?.temperature || 0,
-      humidity: latestWeatherData?.humidity || 0,
-      windSpeed: latestWeatherData?.windSpeed || 0,
-      rainfall: latestWeatherData?.rainfall || 0,
-      forecast: latestWeatherData?.forecast || 'No data',
-      lastUpdated: latestWeatherData?.createdAt?.toISOString() || new Date().toISOString()
+      temperature: 0,
+      humidity: 0,
+      windSpeed: 0,
+      rainfall: 0,
+      forecast: 'Weather integration not available',
+      lastUpdated: new Date().toISOString()
     };
 
     res.json({
@@ -323,7 +315,7 @@ const getIrrigationStatusData = async (req: Request, res: Response) => {
       });
     }
 
-    const latestIrrigationStatus = await prisma.irrigationStatus.findFirst({
+    const latestIrrigationSchedule = await prisma.irrigationSchedule.findFirst({
       where: {
         organizationId: organizationId
       },
@@ -333,13 +325,13 @@ const getIrrigationStatusData = async (req: Request, res: Response) => {
     });
 
     const irrigationData = {
-      zone: latestIrrigationStatus?.zone || 'No data',
-      duration: latestIrrigationStatus?.duration || 0,
-      waterAmount: latestIrrigationStatus?.waterAmount || 0,
-      efficiency: latestIrrigationStatus?.efficiency || 0,
-      nextSchedule: latestIrrigationStatus?.nextSchedule ? 
-        new Date(latestIrrigationStatus.nextSchedule).toLocaleString() : 'No schedule',
-      lastUpdated: latestIrrigationStatus?.createdAt?.toISOString() || new Date().toISOString()
+      zone: latestIrrigationSchedule?.zone || 'No data',
+      duration: latestIrrigationSchedule?.duration || 0,
+      waterAmount: latestIrrigationSchedule?.waterAmount || 0,
+      efficiency: 0,
+      nextSchedule: latestIrrigationSchedule?.nextRun ? 
+        new Date(latestIrrigationSchedule.nextRun).toLocaleString() : 'No schedule',
+      lastUpdated: latestIrrigationSchedule?.updatedAt?.toISOString() || new Date().toISOString()
     };
 
     res.json({

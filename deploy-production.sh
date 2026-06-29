@@ -97,8 +97,8 @@ migrate_database() {
     
     cd "$BACKEND_DIR"
     
-    # Run the migration script
-    node scripts/migrate-password-features.js
+    # Run Prisma migrations
+    npx prisma migrate deploy
     
     if [[ $? -eq 0 ]]; then
         success "Database migration completed"

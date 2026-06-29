@@ -86,7 +86,6 @@ const Layout = ({ children }: LayoutProps) => {
       
       // Fetch subscription data for navbar indicator
       try {
-        const { api } = await import('../lib/api');
         const response = await api.get('/subscription/current');
         setSubscription(response.data.subscription || response.data);
       } catch (error) {

@@ -31,9 +31,18 @@ async function buildProduction() {
       throw new Error(`Prisma client generation failed: ${prismaError.message}`);
     }
     
-    // Step 3: Skip database migrations (PRESERVE DATA)
-    console.log('⚠️ Skipping migrations to preserve existing data');
-    console.log('📊 Database migrations disabled to prevent data loss');
+    // Step 3: Apply pending database migrations
+    console.log('🗄️ Applying database migrations...');
+    try {
+      execSync('npx prisma migrate deploy', {
+        stdio: 'inherit',
+        timeout: 60000 // 1 minute timeout
+      });
+      console.log('✅ Database migrations applied successfully');
+    } catch (migrateError) {
+      console.error('❌ Database migration failed:', migrateError.message);
+      throw new Error(`Database migration failed: ${migrateError.message}`);
+    }
     
     // Step 4: Skip user seeding (DISABLED - ONE-TIME SETUP COMPLETED)
     console.log('🚫 User seeding disabled - one-time setup completed');

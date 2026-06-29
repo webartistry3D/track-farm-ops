@@ -1,10 +1,17 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { User } from '../types';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-key';
 
-export const generateToken = (user: User): string => {
+interface TokenPayloadSource {
+  id: number;
+  email: string;
+  role: string;
+  name: string;
+  organizationId?: number | null;
+}
+
+export const generateToken = (user: TokenPayloadSource): string => {
   return jwt.sign(
     { 
       id: user.id, 

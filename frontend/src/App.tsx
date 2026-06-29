@@ -27,6 +27,11 @@ import Terms from './components/Terms';
 import Pricing from './components/Pricing';
 import SuperUserRoutes from './components/SuperUserRoutes';
 import SuperUserSignup from './components/SuperUserSignup';
+import ErrorBoundary from './components/ErrorBoundary';
+import NotFound from './components/NotFound';
+import ForgotPassword from './components/ForgotPassword';
+import ResetPassword from './components/ResetPassword';
+import VerifyEmail from './components/VerifyEmail';
 import { useAuth } from './contexts/AuthContext';
 
 const queryClient = new QueryClient();
@@ -88,10 +93,9 @@ const AppRoutes = () => {
         element={
           user 
             ? <Navigate to={
-                user.role === 'MANAGER' ? '/dashboard' :
-                user.role === 'INVENTORY' ? '/inventory' :
-                user.role === 'WORKER' ? '/dashboard' :
+                user.role === 'SUPERUSER' ? '/super-user/dashboard' :
                 user.role === 'VETERINARIAN' ? '/livestock-health' :
+                user.role === 'INVENTORY' ? '/inventory' :
                 '/dashboard'
               } replace /> 
             : <LoginClean key="login-page" />
@@ -102,10 +106,9 @@ const AppRoutes = () => {
         element={
           user 
             ? <Navigate to={
-                user.role === 'MANAGER' ? '/dashboard' :
-                user.role === 'INVENTORY' ? '/inventory' :
-                user.role === 'WORKER' ? '/dashboard' :
+                user.role === 'SUPERUSER' ? '/super-user/dashboard' :
                 user.role === 'VETERINARIAN' ? '/livestock-health' :
+                user.role === 'INVENTORY' ? '/inventory' :
                 '/dashboard'
               } replace /> 
             : <Signup />
@@ -224,25 +227,30 @@ const AppRoutes = () => {
           </ProtectedRoute>
         } 
       />
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/verify-email" element={<VerifyEmail />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <AuthProvider>
-          <ToastProvider>
-            <Router>
-              <ScrollToTop />
-              <AppRoutes />
-            </Router>
-          </ToastProvider>
-        </AuthProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <AuthProvider>
+            <ToastProvider>
+              <Router>
+                <ScrollToTop />
+                <AppRoutes />
+              </Router>
+            </ToastProvider>
+          </AuthProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 

@@ -1501,39 +1501,44 @@ TrackFarmOps Team`;
       const params: any = {};
       
       switch (vatDateFilter) {
-        case 'today':
+        case 'today': {
           startDate = today.toISOString().split('T')[0];
           endDate = today.toISOString().split('T')[0];
           break;
-        case 'yesterday':
+        }
+        case 'yesterday': {
           // Use UTC-based calculation to avoid timezone issues
           const todayUTC = new Date();
           const yesterdayUTC = new Date(Date.UTC(todayUTC.getFullYear(), todayUTC.getMonth(), todayUTC.getDate() - 1));
           startDate = yesterdayUTC.toISOString().split('T')[0];
           endDate = yesterdayUTC.toISOString().split('T')[0];
           break;
-          break;
-        case 'last7days':
+        }
+        case 'last7days': {
           const weekAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
           startDate = weekAgo.toISOString().split('T')[0];
           endDate = today.toISOString().split('T')[0];
           break;
-        case 'last30days':
+        }
+        case 'last30days': {
           const thirtyDaysAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30);
           startDate = thirtyDaysAgo.toISOString().split('T')[0];
           endDate = today.toISOString().split('T')[0];
           break;
-        case 'custom':
+        }
+        case 'custom': {
           const customDate = new Date(vatSelectedYear, vatSelectedMonth, 1);
           const lastDayOfCustomMonth = new Date(vatSelectedYear, vatSelectedMonth + 1, 0);
           startDate = customDate.toISOString().split('T')[0];
           endDate = lastDayOfCustomMonth.toISOString().split('T')[0];
           break;
-        case 'allTime':
+        }
+        case 'allTime': {
           // For all time, don't set date limits
           startDate = '';
           endDate = '';
           break;
+        }
       }
       
       if (startDate && endDate) {

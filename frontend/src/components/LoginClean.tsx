@@ -15,7 +15,7 @@ const LoginClean = () => {
   const [fieldErrors, setFieldErrors] = useState<{email?: string; password?: string}>({});
   const [showPassword, setShowPassword] = useState(false);
   
-  const { login, user } = useAuth();
+  const { login } = useAuth();
   const { isDark, toggleTheme } = useTheme();
 
   // Clear form fields on initial mount
@@ -63,19 +63,15 @@ const LoginClean = () => {
     setIsLoading(true);
 
     try {
-      await login(credentials);
+      const loggedInUser = await login(credentials);
       
-      // Redirect based on user role
-      if (user?.role === 'SUPERUSER') {
+      // Redirect based on role from the login response — do NOT read
+      // from the `user` context state here; React setState is async and
+      // user will still be null at this point in the closure.
+      if (loggedInUser.role === 'SUPERUSER') {
         navigate('/super-user/dashboard');
-      } else if (user?.role === 'MANAGER') {
-        navigate('/dashboard');
-      } else if (user?.role === 'WORKER') {
-        navigate('/dashboard');
-      } else if (user?.role === 'VETERINARIAN') {
+      } else if (loggedInUser.role === 'VETERINARIAN') {
         navigate('/livestock-health');
-      } else if (user?.role === 'INVENTORY') {
-        navigate('/dashboard');
       } else {
         navigate('/dashboard');
       }
@@ -244,9 +240,9 @@ const LoginClean = () => {
             </div>
 
             <div className="text-sm">
-              <a href="#" className="font-medium text-green-600 hover:text-green-500 dark:text-green-400 dark:hover:text-green-300">
+              <Link to="/forgot-password" className="font-medium text-green-600 hover:text-green-500 dark:text-green-400 dark:hover:text-green-300">
                 Forgot your password?
-              </a>
+              </Link>
             </div>
           </div>
 

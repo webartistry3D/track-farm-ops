@@ -1,7 +1,22 @@
 import { Request, Response } from 'express';
-import { PrismaClient, NotificationType } from '@prisma/client';
+import { NotificationType } from '@prisma/client';
 
-const prisma = new PrismaClient();
+// NOTE: The NotificationPreference model is not yet in schema.prisma.
+// Until it is added and migrated, all preference endpoints return in-memory
+// defaults (all notifications enabled). No data is persisted.
+
+const buildDefaultPreferences = (
+  userId: number,
+  organizationId: number
+) =>
+  Object.values(NotificationType).map(type => ({
+    userId,
+    organizationId,
+    notificationType: type,
+    enabled: true,
+    emailEnabled: false,
+    pushEnabled: true,
+  }));
 
 // Get user's notification preferences
 export const getUserNotificationPreferences = async (req: Request, res: Response) => {
@@ -13,16 +28,7 @@ export const getUserNotificationPreferences = async (req: Request, res: Response
       return res.status(401).json({ error: 'User not authenticated' });
     }
 
-    const preferences = await prisma.notificationPreference.findMany({
-      where: {
-        userId,
-        organizationId,
-      },
-      orderBy: {
-        notificationType: 'asc',
-      },
-    });
-
+    const preferences = buildDefaultPreferences(userId, organizationId);
     res.json({ preferences });
   } catch (error) {
     console.error('Error fetching notification preferences:', error);
@@ -45,28 +51,14 @@ export const updateNotificationPreference = async (req: Request, res: Response) 
       return res.status(400).json({ error: 'Invalid notification type' });
     }
 
-    const preference = await prisma.notificationPreference.upsert({
-      where: {
-        userId_notificationType: {
-          userId,
-          notificationType,
-        },
-      },
-      update: {
-        enabled: enabled !== undefined ? enabled : undefined,
-        emailEnabled: emailEnabled !== undefined ? emailEnabled : undefined,
-        pushEnabled: pushEnabled !== undefined ? pushEnabled : undefined,
-        updatedAt: new Date(),
-      },
-      create: {
-        userId,
-        organizationId,
-        notificationType,
-        enabled: enabled !== undefined ? enabled : true,
-        emailEnabled: emailEnabled !== undefined ? emailEnabled : false,
-        pushEnabled: pushEnabled !== undefined ? pushEnabled : true,
-      },
-    });
+    const preference = {
+      userId,
+      organizationId,
+      notificationType,
+      enabled: enabled !== undefined ? enabled : true,
+      emailEnabled: emailEnabled !== undefined ? emailEnabled : false,
+      pushEnabled: pushEnabled !== undefined ? pushEnabled : true,
+    };
 
     res.json({ preference });
   } catch (error) {
@@ -90,36 +82,20 @@ export const updateMultiplePreferences = async (req: Request, res: Response) => 
       return res.status(400).json({ error: 'Preferences must be an array' });
     }
 
-    const updatePromises = preferences.map(async (pref: any) => {
+    for (const pref of preferences) {
       if (!Object.values(NotificationType).includes(pref.notificationType)) {
-        throw new Error(`Invalid notification type: ${pref.notificationType}`);
+        return res.status(400).json({ error: `Invalid notification type: ${pref.notificationType}` });
       }
+    }
 
-      return prisma.notificationPreference.upsert({
-        where: {
-          userId_notificationType: {
-            userId,
-            notificationType: pref.notificationType,
-          },
-        },
-        update: {
-          enabled: pref.enabled !== undefined ? pref.enabled : undefined,
-          emailEnabled: pref.emailEnabled !== undefined ? pref.emailEnabled : undefined,
-          pushEnabled: pref.pushEnabled !== undefined ? pref.pushEnabled : undefined,
-          updatedAt: new Date(),
-        },
-        create: {
-          userId,
-          organizationId,
-          notificationType: pref.notificationType,
-          enabled: pref.enabled !== undefined ? pref.enabled : true,
-          emailEnabled: pref.emailEnabled !== undefined ? pref.emailEnabled : false,
-          pushEnabled: pref.pushEnabled !== undefined ? pref.pushEnabled : true,
-        },
-      });
-    });
-
-    const results = await Promise.all(updatePromises);
+    const results = preferences.map((pref: any) => ({
+      userId,
+      organizationId,
+      notificationType: pref.notificationType,
+      enabled: pref.enabled !== undefined ? pref.enabled : true,
+      emailEnabled: pref.emailEnabled !== undefined ? pref.emailEnabled : false,
+      pushEnabled: pref.pushEnabled !== undefined ? pref.pushEnabled : true,
+    }));
 
     res.json({ preferences: results });
   } catch (error) {
@@ -138,31 +114,11 @@ export const resetPreferencesToDefaults = async (req: Request, res: Response) =>
       return res.status(401).json({ error: 'User not authenticated' });
     }
 
-    // Delete existing preferences
-    await prisma.notificationPreference.deleteMany({
-      where: {
-        userId,
-        organizationId,
-      },
-    });
+    const preferences = buildDefaultPreferences(userId, organizationId);
 
-    // Create default preferences
-    const defaultPreferences = Object.values(NotificationType).map(type => ({
-      userId,
-      organizationId,
-      notificationType: type,
-      enabled: true,
-      emailEnabled: false,
-      pushEnabled: true,
-    }));
-
-    const results = await prisma.notificationPreference.createMany({
-      data: defaultPreferences,
-    });
-
-    res.json({ 
+    res.json({
       message: 'Preferences reset to defaults',
-      preferences: results 
+      preferences,
     });
   } catch (error) {
     console.error('Error resetting notification preferences:', error);
@@ -176,20 +132,5 @@ export const isNotificationEnabled = async (
   organizationId: number,
   notificationType: NotificationType
 ): Promise<boolean> => {
-  try {
-    const preference = await prisma.notificationPreference.findUnique({
-      where: {
-        userId_notificationType: {
-          userId,
-          notificationType,
-        },
-      },
-    });
-
-    // If no preference exists, default to enabled
-    return preference ? preference.enabled : true;
-  } catch (error) {
-    console.error('Error checking notification preference:', error);
-    return true; // Default to enabled on error
-  }
+  return true; // Default to enabled until NotificationPreference model is added to schema
 };

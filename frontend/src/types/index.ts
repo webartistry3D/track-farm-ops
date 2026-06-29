@@ -150,7 +150,7 @@ export interface InventoryTransaction {
   inventoryItem: {
     id: number;
     name: string;
-    type: 'LIVESTOCK' | 'PRODUCE' | 'CONSUMABLES';
+    type: 'LIVESTOCK' | 'PRODUCE' | 'CONSUMABLES' | 'SEEDS' | 'FERTILIZERS' | 'PESTICIDES' | 'EQUIPMENT' | 'SUPPLIES' | 'MEDICINE' | 'FEED' | 'OTHER';
     unit: string;
   };
 }

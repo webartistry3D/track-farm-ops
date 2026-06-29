@@ -24,6 +24,10 @@ model User {
   address               String?
   phone                 String?
   profileImageUrl       String?                @map("profile_image_url")
+  passwordResetToken    String?                @map("password_reset_token")
+  passwordResetExpiry   DateTime?              @map("password_reset_expiry")
+  emailVerified         Boolean                @default(false) @map("email_verified")
+  emailVerificationToken String?               @map("email_verification_token")
   expenseEntries        ExpenseEntry[]
   incomeEntries         IncomeEntry[]
   inventoryTransactions InventoryTransaction[]

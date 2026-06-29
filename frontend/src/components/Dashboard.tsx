@@ -62,47 +62,55 @@ const Dashboard = () => {
         case 'today':
           startDate = endDate = today.toISOString().split('T')[0];
           break;
-        case 'yesterday':
+        case 'yesterday': {
           const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
           startDate = endDate = yesterday.toISOString().split('T')[0];
           break;
-        case 'week':
+        }
+        case 'week': {
           const weekAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
           startDate = weekAgo.toISOString().split('T')[0];
           endDate = today.toISOString().split('T')[0];
           break;
-        case 'month':
+        }
+        case 'month': {
           const monthAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30);
           startDate = monthAgo.toISOString().split('T')[0];
           endDate = today.toISOString().split('T')[0];
           break;
-        case 'thisMonth':
+        }
+        case 'thisMonth': {
           const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
           startDate = firstDayOfMonth.toISOString().split('T')[0];
           endDate = today.toISOString().split('T')[0];
           break;
-        case 'thisYear':
+        }
+        case 'thisYear': {
           const firstDayOfYear = new Date(today.getFullYear(), 0, 1);
           startDate = firstDayOfYear.toISOString().split('T')[0];
           endDate = today.toISOString().split('T')[0];
           break;
-        case 'allTime':
+        }
+        case 'allTime': {
           // For all time, don't set date filters
           startDate = undefined;
           endDate = undefined;
           break;
-        case 'customMonth':
+        }
+        case 'customMonth': {
           const firstDayOfCustomMonth = new Date(selectedYear, selectedMonth, 1);
           const lastDayOfCustomMonth = new Date(selectedYear, selectedMonth + 1, 0);
           startDate = firstDayOfCustomMonth.toISOString().split('T')[0];
           endDate = lastDayOfCustomMonth.toISOString().split('T')[0];
           break;
-        case 'customYear':
+        }
+        case 'customYear': {
           const firstDayOfCustomYear = new Date(selectedYear, 0, 1);
           const lastDayOfCustomYear = new Date(selectedYear, 11, 31);
           startDate = firstDayOfCustomYear.toISOString().split('T')[0];
           endDate = lastDayOfCustomYear.toISOString().split('T')[0];
           break;
+        }
         default:
           startDate = endDate = today.toISOString().split('T')[0];
       }
@@ -207,13 +215,14 @@ const Dashboard = () => {
           type: 'Asset'
         }));
         break;
-      case 'transactions':
+      case 'transactions': {
         const allTransactions = [
           ...incomeEntries.map(entry => ({ ...entry, type: 'Income' })),
           ...expenseEntries.map(entry => ({ ...entry, type: 'Expense' }))
         ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         data = allTransactions;
         break;
+      }
     }
     
     setModalType(type);

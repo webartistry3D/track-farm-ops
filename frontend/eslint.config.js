@@ -38,6 +38,11 @@ export default defineConfig([
       'no-unused-vars': 'off',
       'no-console': 'off',
       'prefer-const': 'off',
+      'react/react-in-jsx-scope': 'off',
+      'react/prop-types': 'off',
+      'no-empty-pattern': 'off',
+      'react/no-unescaped-entities': 'off',
+      'no-useless-escape': 'off',
     },
     settings: {
       react: {

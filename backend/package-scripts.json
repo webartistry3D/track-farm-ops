@@ -1,6 +1,0 @@
-{
-  "scripts": {
-    "fix-invoice-data": "ts-node src/scripts/fixInvoiceData.ts",
-    "fix-specific-invoice": "ts-node src/scripts/fixInvoiceData.ts --specific"
-  }
-}

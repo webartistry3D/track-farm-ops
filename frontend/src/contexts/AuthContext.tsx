@@ -4,7 +4,7 @@ import api from '../lib/api';
 
 interface AuthContextType {
   user: User | null;
-  login: (credentials: LoginRequest) => Promise<void>;
+  login: (credentials: LoginRequest) => Promise<User>;
   logout: () => void;
   setUser: (user: User | null) => void;
   isLoading: boolean;
@@ -95,7 +95,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         validFormat: !!token && token.includes('.')
       });
       
-      console.log('🔍 [Frontend] Debug info:', debug);
+      if (debug) console.log('🔍 [Frontend] Debug info:', debug);
       console.log('🆔 [Frontend] Request ID:', requestId);
 
       // Store in localStorage
@@ -117,6 +117,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.log('✅ [Frontend] User set in context:', userData);
       
       console.log('🎉 [Frontend] Login process completed successfully!');
+      return userData;
       
     } catch (error: any) {
       console.error('❌ [Frontend] Login error:', {
@@ -194,17 +195,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(null);
       
       console.log('✅ [AuthContext] Logout completed successfully');
-      
-      // Force a small delay to ensure state updates
-      setTimeout(() => {
-        console.log('🔄 [AuthContext] Navigating to login...');
-        window.location.href = '/login';
-      }, 100);
+      window.location.replace('/login');
       
     } catch (error) {
       console.error('❌ [AuthContext] Logout error:', error);
-      // Fallback: force redirect anyway
-      window.location.href = '/login';
+      window.location.replace('/login');
     }
   };
 

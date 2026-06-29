@@ -157,17 +157,21 @@ const Signup = () => {
       setMessage('Account created successfully! Logging you in...');
       
       // Auto-login after successful signup
-      setTimeout(async () => {
-        try {
-          await login({
-            email: formData.email,
-            password: formData.password
-          });
+      try {
+        const loggedInUser = await login({
+          email: formData.email,
+          password: formData.password
+        });
+        if (loggedInUser.role === 'SUPERUSER') {
+          navigate('/super-user/dashboard');
+        } else if (loggedInUser.role === 'VETERINARIAN') {
+          navigate('/livestock-health');
+        } else {
           navigate('/dashboard');
-        } catch (loginError) {
-          setError('Account created but login failed. Please try logging in manually.');
         }
-      }, 2000);
+      } catch (loginError) {
+        setError('Account created but login failed. Please try logging in manually.');
+      }
 
     } catch (err: any) {
       setError(err.response?.data?.error || 'Failed to create account');
