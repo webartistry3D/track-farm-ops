@@ -21,8 +21,8 @@ services:
   api:
     type: web
     rootDir: backend
-    buildCommand: cd backend && npm run build:render
-    startCommand: cd backend && npm start
+    buildCommand: npm run build:render
+    startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
