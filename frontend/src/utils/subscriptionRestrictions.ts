@@ -88,28 +88,28 @@ export const SUBSCRIPTION_LIMITS: Record<string, SubscriptionLimits> = {
     farmLocations: 1,
     workers: 3,
     invoices: {
-      maxCreate: 999,
-      maxMarkAsPaid: 999
+      maxCreate: 99999,
+      maxMarkAsPaid: 99999
     },
     expenses: {
-      maxRecord: 999
+      maxRecord: 99999
     },
     inventory: {
-      maxItemsCreate: 999
+      maxItemsCreate: 99999
     },
     assets: {
-      maxItemsCreate: 999
+      maxItemsCreate: 99999
     },
     features: {
       incomeTracking: 'full',
       expenseTracking: 'full',
       inventoryTransactions: true,
       ownerDashboard: true,
-      financialReports: 'simple',
-      analytics: false,
-      auditLogs: false,
+      financialReports: 'advanced',
+      analytics: true,
+      auditLogs: true,
       dataExport: true,
-      prioritySupport: false
+      prioritySupport: true
     }
   },
   growth: {

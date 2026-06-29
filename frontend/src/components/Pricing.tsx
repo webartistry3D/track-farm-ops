@@ -37,6 +37,27 @@ const Pricing = () => {
       popular: false
     },
     {
+      id: 'starter',
+      name: 'Starter',
+      emoji: '🌱',
+      description: 'Everything in Freemium, plus...',
+      price: { monthly: 10000, annual: 96000 },
+      features: [
+        '1 farm location',
+        '1 Farm Owner',
+        '1 Farm Manager',
+        'Up to 3 Farm Workers',
+        'Full Income & Expense tracking',
+        'Full Inventory transactions',
+        'Full Assets management',
+        'Financial Reports management',
+        'Data export (CSV / Excel)',
+        'Priority email support'
+      ],
+      highlighted: false,
+      popular: false
+    },
+    {
       id: 'growth',
       name: 'Growth',
       emoji: '🌾',
@@ -166,7 +187,7 @@ const Pricing = () => {
         </div>
 
         {/* Pricing Plans */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20 max-w-7xl mx-auto items-start">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20 max-w-7xl mx-auto items-start">
           {plans.map((plan) => (
             <div
               key={plan.id}
@@ -232,7 +253,7 @@ const Pricing = () => {
                       : 'bg-green-100 text-green-700 hover:bg-green-200 border-2 border-green-300'
                   }`}
                 >
-                  {plan.id === 'freemium' ? 'Start Free' : 'Get Started'}
+                  {plan.id === 'freemium' ? 'Start Free' : plan.id === 'starter' ? 'Get Starter' : 'Get Started'}
                 </Link>
               </div>
             </div>

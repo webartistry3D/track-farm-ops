@@ -91,6 +91,25 @@ const Settings = () => {
       description: 'Perfect for trying out FarmOps'
     },
     {
+      id: 'starter',
+      name: 'Starter',
+      price: 10000,
+      features: [
+        '1 farm location',
+        '1 Farm Owner',
+        '1 Farm Manager',
+        'Up to 3 Farm Workers',
+        'Full Income & Expense tracking',
+        'Full Inventory transactions',
+        'Full Assets management',
+        'Financial Reports management',
+        'Data export (CSV / Excel)',
+        'Priority email support'
+      ],
+      emoji: '🌱',
+      description: 'Everything in Freemium, plus...'
+    },
+    {
       id: 'growth',
       name: 'Growth',
       price: 39000,
@@ -737,7 +756,7 @@ const Settings = () => {
             </div>
 
             {/* Available Plans */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
               {plans.map((plan) => {
                 const isCurrentPlan = subscriptionData?.plan === plan.id;
                 const price = billingCycle === 'annual' ? plan.price * 12 * 0.8 : plan.price;
