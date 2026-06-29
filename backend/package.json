@@ -10,6 +10,7 @@
     "build": "node scripts/build-production.js",
     "build:types": "tsc --project ./tsconfig.json",
     "build:render": "node scripts/build-production.js",
+    "build:deploy": "node scripts/build-production.js",
     "start": "ts-node src/index.ts",
     "start:render": "node scripts/render-start.js",
     "migrate:all": "npx prisma migrate deploy",
