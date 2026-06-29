@@ -83,8 +83,7 @@ const Settings = () => {
         'Limited Income & Expense tracking',
         'Limited inventory transactions',
         'Limited Assets management',
-        'Financial Reports management',
-        'Basic Analytics & trends',
+        'Limited Financial Reports & Analytics',
         'Email support'
       ],
       emoji: '🆓',
@@ -95,9 +94,6 @@ const Settings = () => {
       name: 'Starter',
       price: 10000,
       features: [
-        '1 farm location',
-        '1 Farm Owner',
-        '1 Farm Manager',
         'Up to 3 Farm Workers',
         'Full Income & Expense tracking',
         'Full Inventory transactions',
@@ -115,19 +111,11 @@ const Settings = () => {
       price: 39000,
       features: [
         '1 farm location',
-        '1 Farm Owner',
-        'Up to 2 Farm Managers',
         'Up to 18 Farm workers',
-        'Full Income & Expense tracking',
-        'Full Inventory transactions',
-        'Full Assets management',
-        'Financial Reports management',
-        'Data export (CSV / Excel)',
-        'Advanced analytics & trends',
         'Priority support'
       ],
       emoji: '🌾',
-      description: 'Everything in Free, plus...'
+      description: 'Everything in Starter, plus...'
     },
     {
       id: 'pro',
@@ -135,8 +123,7 @@ const Settings = () => {
       price: 99000,
       features: [
         '3 farm locations',
-        'Up to 6 Farm managers',
-        'Up to 75 workers',
+        'Up to 75 Farm workers',
         'Priority support'
       ],
       emoji: '🚜',
@@ -756,7 +743,7 @@ const Settings = () => {
             </div>
 
             {/* Available Plans */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               {plans.map((plan) => {
                 const isCurrentPlan = subscriptionData?.plan === plan.id;
                 const price = billingCycle === 'annual' ? plan.price * 12 * 0.8 : plan.price;

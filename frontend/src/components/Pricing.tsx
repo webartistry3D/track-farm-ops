@@ -29,8 +29,7 @@ const Pricing = () => {
         'Limited Income & Expense tracking',
         'Limited inventory transactions',
         'Limited Assets management',
-        'Financial Reports management',
-        'Basic Analytics & trends',
+        'Limited Financial Reports & Analytics',
         'Email support'
       ],
       highlighted: false,
@@ -43,9 +42,6 @@ const Pricing = () => {
       description: 'Everything in Freemium, plus...',
       price: { monthly: 10000, annual: 96000 },
       features: [
-        '1 farm location',
-        '1 Farm Owner',
-        '1 Farm Manager',
         'Up to 3 Farm Workers',
         'Full Income & Expense tracking',
         'Full Inventory transactions',
@@ -65,15 +61,7 @@ const Pricing = () => {
       price: { monthly: 39000, annual: 374400 },
       features: [
         '1 farm location',
-        '1 Farm Owner',
-        'Up to 2 Farm Managers',
         'Up to 18 Farm workers',
-        'Full Income & Expense tracking',
-        'Full Inventory transactions',
-        'Full Assets management',
-        'Financial Reports management',
-        'Data export (CSV / Excel)',
-        'Advanced analytics & trends',
         'Priority support'
       ],
       highlighted: true,
@@ -87,8 +75,7 @@ const Pricing = () => {
       price: { monthly: 99000, annual: 950400 },
       features: [
         '3 farm locations',
-        'Up to 6 Farm managers',
-        'Up to 75 workers',
+        'Up to 75 Farm workers',
         'Priority support'
       ],
       highlighted: false,
@@ -187,7 +174,7 @@ const Pricing = () => {
         </div>
 
         {/* Pricing Plans */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20 max-w-7xl mx-auto items-start">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-20 max-w-4xl mx-auto items-start">
           {plans.map((plan) => (
             <div
               key={plan.id}
