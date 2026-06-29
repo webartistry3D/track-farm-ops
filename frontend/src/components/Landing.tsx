@@ -318,7 +318,7 @@ const Landing = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button 
                 onClick={() => {
-                  const section = document.getElementById('problems-solutions');
+                  const section = document.getElementById('pain-points-section');
                   if (section) {
                     section.scrollIntoView({ 
                       behavior: 'smooth',
@@ -357,6 +357,7 @@ const Landing = () => {
 
       {/* Problems. Solutions. Section */}
       <div
+        id="pain-points-section"
         ref={addToRefs}
         data-section="problems-solutions"
         className="py-20 bg-gradient-to-br from-red-50 via-orange-50 to-green-50 relative overflow-hidden"
