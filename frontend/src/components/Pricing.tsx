@@ -196,19 +196,6 @@ const Pricing = () => {
                   <p className="text-gray-600 font-inter mb-6">
                     {plan.description}
                   </p>
-                  <div className="mb-4">
-                    <span className="text-4xl font-jetbrains-mono font-bold text-gray-900">
-                      {formatCurrency(plan.price[billingCycle].toString())}
-                    </span>
-                    <span className="text-lg text-gray-600 font-normal">
-                      /{billingCycle === 'monthly' ? 'month' : 'year'}
-                    </span>
-                  </div>
-                  {billingCycle === 'annual' && (
-                    <div className="text-sm text-green-600 font-medium">
-                      Save {formatCurrency((plan.price.monthly * 12 - plan.price.annual).toString())} per year
-                    </div>
-                  )}
                 </div>
 
                 {/* Features */}
@@ -224,6 +211,23 @@ const Pricing = () => {
                     </li>
                   ))}
                 </ul>
+
+                {/* Pricing Amount */}
+                <div className="text-center mb-6">
+                  <div className="mb-2">
+                    <span className="text-4xl font-jetbrains-mono font-bold text-gray-900">
+                      {formatCurrency(plan.price[billingCycle].toString())}
+                    </span>
+                    <span className="text-lg text-gray-600 font-normal">
+                      /{billingCycle === 'monthly' ? 'month' : 'year'}
+                    </span>
+                  </div>
+                  {billingCycle === 'annual' && (
+                    <div className="text-sm text-green-600 font-medium">
+                      Save {formatCurrency((plan.price.monthly * 12 - plan.price.annual).toString())} per year
+                    </div>
+                  )}
+                </div>
 
                 {/* CTA Button */}
                 <Link
