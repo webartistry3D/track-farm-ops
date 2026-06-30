@@ -76,10 +76,7 @@ const Settings = () => {
       name: 'Freemium',
       price: 0,
       features: [
-        '1 farm location',
-        '1 Farm Owner',
-        '1 Farm Manager',
-        '1 Farm Worker',
+        '1 Farm, 1 Owner, 1 Manager, 1 Worker',
         'Limited Income & Expense tracking',
         'Limited inventory transactions',
         'Limited Assets management',
@@ -94,7 +91,6 @@ const Settings = () => {
       name: 'Starter',
       price: 10000,
       features: [
-        'Up to 3 Farm Workers',
         'Full Income & Expense tracking',
         'Full Inventory transactions',
         'Full Assets management',
@@ -110,8 +106,8 @@ const Settings = () => {
       name: 'Growth',
       price: 39000,
       features: [
-        '1 farm location',
-        'Up to 18 Farm workers',
+        '1 Farm location',
+        'Up to 18 Farm managers & workers',
         'Priority support'
       ],
       emoji: '🌾',
@@ -122,7 +118,7 @@ const Settings = () => {
       name: 'Mega',
       price: 99000,
       features: [
-        '3 farm locations',
+        '3 Farm locations',
         'Up to 75 Farm workers',
         'Priority support'
       ],

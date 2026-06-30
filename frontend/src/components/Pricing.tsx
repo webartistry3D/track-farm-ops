@@ -22,10 +22,7 @@ const Pricing = () => {
       description: 'Perfect for trying out FarmOps',
       price: { monthly: 0, annual: 0 },
       features: [
-        '1 farm location',
-        '1 Farm Owner',
-        '1 Farm Manager',
-        '1 Farm Worker',
+        '1 Farm, 1 Owner, 1 Manager, 1 Worker',
         'Limited Income & Expense tracking',
         'Limited inventory transactions',
         'Limited Assets management',
@@ -42,7 +39,6 @@ const Pricing = () => {
       description: 'Everything in Freemium, plus...',
       price: { monthly: 10000, annual: 96000 },
       features: [
-        'Up to 3 Farm Workers',
         'Full Income & Expense tracking',
         'Full Inventory transactions',
         'Full Assets management',
@@ -60,8 +56,8 @@ const Pricing = () => {
       description: 'Everything in Free, plus...',
       price: { monthly: 39000, annual: 374400 },
       features: [
-        '1 farm location',
-        'Up to 18 Farm workers',
+        '1 Farm location',
+        'Up to 18 Farm managers & workers',
         'Priority support'
       ],
       highlighted: true,
@@ -74,8 +70,8 @@ const Pricing = () => {
       emoji: '🚜',
       price: { monthly: 99000, annual: 950400 },
       features: [
-        '3 farm locations',
-        'Up to 75 Farm workers',
+        '3 Farm locations',
+        'Up to 75 Farm managers & workers',
         'Priority support'
       ],
       highlighted: false,
