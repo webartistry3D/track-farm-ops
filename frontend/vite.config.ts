@@ -63,8 +63,8 @@ export default defineConfig({
       workbox: {
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5MB
         globPatterns: ['**/*.{js,css,html,ico,svg,woff,woff2}', 'icon-*.png'],
-        navigateFallback: '/offline.html',
-        navigateFallbackDenylist: [/^\/api\//],
+        navigateFallback: '/index.html',
+        navigateFallbackDenylist: [/^\/api\//, /^\/@vite\//, /^\/node_modules\//, /\.js$/, /\.css$/, /\.woff2?$/, /\.png$/, /\.jpg$/, /\.svg$/, /\.ico$/],
         runtimeCaching: [
           {
             urlPattern: /\/api\/.*/i,
