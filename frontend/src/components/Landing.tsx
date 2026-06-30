@@ -199,7 +199,7 @@ const Landing = () => {
           <div className="absolute inset-0 bg-black bg-opacity-40"></div>
         </div>
         
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-24 w-full relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-36 sm:pt-48 md:pt-56 pb-12 sm:pb-16 md:pb-24 w-full relative z-10">
           <div className="text-center">
             <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-jetbrains-mono font-bold text-white mb-4 sm:mb-6 relative leading-tight">
               {words.map((word, index) => (
@@ -693,10 +693,7 @@ const Landing = () => {
                 transitionDelay: visibleSections.has('features') ? '200ms' : '0ms'
               }}>
                 <div className="bg-transparent p-6">
-                  <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-2xl font-jetbrains-mono font-bold text-green-600">1</span>
-                  </div>
-                  <div className="bg-green-100 rounded-lg px-4 py-3 shadow-lg">
+                                    <div className="bg-green-100 rounded-lg px-4 py-3 shadow-lg">
                     <h3 className="text-xl font-jetbrains-mono font-semibold text-green-600 mb-2">Income & Expense Tracker</h3>
                     <p className="text-green-600">Track produce sales, livestock sales, expenses, with revenue dashboard, trends, and profit reports.</p>
                   </div>
@@ -711,9 +708,6 @@ const Landing = () => {
                 transitionDelay: visibleSections.has('features') ? '300ms' : '0ms'
               }}>
                 <div className="bg-transparent p-6">
-                  <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-2xl font-jetbrains-mono font-bold text-green-600">2</span>
-                  </div>
                   <div className="bg-green-100 rounded-lg px-4 py-3 shadow-lg">
                     <h3 className="text-xl font-jetbrains-mono font-semibold text-green-600 mb-2">Inventory & Assets Manager</h3>
                     <p className="text-green-600">Track seeds, feed, fertilizers, agrochemicals with stock levels, low-stock alerts, and waste tracking.</p>
@@ -729,9 +723,7 @@ const Landing = () => {
                 transitionDelay: visibleSections.has('features') ? '400ms' : '0ms'
               }}>
                 <div className="bg-transparent p-6">
-                  <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-2xl font-jetbrains-mono font-bold text-green-600">3</span>
-                  </div>
+                  
                   <div className="bg-green-100 rounded-lg px-4 py-3 shadow-lg">
                     <h3 className="text-xl font-jetbrains-mono font-semibold text-green-600 mb-2">Livestock Health Manager</h3>
                     <p className="text-green-600">Track health status, vaccinations, checkups, and treatments with veterinarian role access.</p>
@@ -746,9 +738,7 @@ const Landing = () => {
                 transitionDelay: visibleSections.has('features') ? '500ms' : '0ms'
               }}>
                 <div className="bg-transparent p-6">
-                  <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-2xl font-jetbrains-mono font-bold text-green-600">4</span>
-                  </div>
+                  
                   <div className="bg-green-100 rounded-lg px-4 py-3 shadow-lg">
                     <h3 className="text-xl font-jetbrains-mono font-semibold text-green-600 mb-2">Analytics & Reports</h3>
                     <p className="text-green-600">Convert raw farm data into business intelligence: income vs expenses, profitability, and operational efficiency.</p>
@@ -764,9 +754,7 @@ const Landing = () => {
                 transitionDelay: visibleSections.has('features') ? '600ms' : '0ms'
               }}>
                 <div className="bg-transparent p-6">
-                  <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-2xl font-jetbrains-mono font-bold text-green-600">5</span>
-                  </div>
+                  
                   <div className="bg-green-100 rounded-lg px-4 py-3 shadow-lg">
                     <h3 className="text-xl font-jetbrains-mono font-semibold text-green-600 mb-2">Multi-User Access</h3>
                     <p className="text-green-600">Assign roles and permissions to workers, managers, and owners for secure collaboration.</p>
@@ -782,9 +770,7 @@ const Landing = () => {
                 transitionDelay: visibleSections.has('features') ? '700ms' : '0ms'
               }}>
                 <div className="bg-transparent p-6">
-                  <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-2xl font-jetbrains-mono font-bold text-green-600">6</span>
-                  </div>
+                  
                   <div className="bg-green-100 rounded-lg px-4 py-3 shadow-lg">
                     <h3 className="text-xl font-jetbrains-mono font-semibold text-green-600 mb-2">Mobile Optimized</h3>
                     <p className="text-green-600">Works perfectly on smartphones and tablets — manage your farm from anywhere in the field.</p>
@@ -799,15 +785,6 @@ const Landing = () => {
               }`} style={{
                 transitionDelay: visibleSections.has('features') ? '800ms' : '0ms'
               }}>
-                <div className="bg-transparent p-6">
-                  <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-2xl font-jetbrains-mono font-bold text-green-600">7</span>
-                  </div>
-                  <div className="bg-green-100 rounded-lg px-4 py-3 shadow-lg">
-                    <h3 className="text-xl font-jetbrains-mono font-semibold text-green-600 mb-2">Secure & Reliable</h3>
-                    <p className="text-green-600">Enterprise-grade security with data encryption, role-based access, and complete audit trails.</p>
-                  </div>
-                </div>
               </div>
 
             </div>
