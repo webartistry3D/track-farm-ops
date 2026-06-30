@@ -20,7 +20,7 @@ const Landing = () => {
       
       @keyframes starPulse {
         0% { transform: scale(0.2); opacity: 0; }
-        50% { transform: scale(3); opacity: 1; }
+        50% { transform: scale(6); opacity: 1; }
         100% { transform: scale(1); opacity: 1; }
       }
       
