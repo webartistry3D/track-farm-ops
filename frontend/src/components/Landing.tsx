@@ -66,9 +66,13 @@ const Landing = () => {
   const sectionsRef = useRef<(HTMLElement | null)[]>([]);
   const [buttonVisible, setButtonVisible] = useState<number[]>([]);
 
-  // Typing animation for subtitle
-  const [typedText, setTypedText] = useState('');
-  const fullText = "A complete farm management system.\n Track income, expenses, inventory and assets.\nMonitor day-to-day operations from anywhere.";
+  // Typing animation for subtitle - 3 separate items
+  const [typedText1, setTypedText1] = useState('');
+  const [typedText2, setTypedText2] = useState('');
+  const [typedText3, setTypedText3] = useState('');
+  const text1 = "A complete farm management system.";
+  const text2 = "Track income, expenses, inventory and assets.";
+  const text3 = "Monitor day-to-day operations from anywhere.";
 
   // Word pop-up animation for title
   const words = ["Track", "Farm", "Operations"  ];
@@ -106,34 +110,67 @@ const Landing = () => {
       const animationCompletionTime = lastWordStartTime + 800;
       
       // Add additional delay before starting subtitle animation
-      setTimeout(() => {
-        let currentIndex = 0;
-        const typingInterval = setInterval(() => {
-          if (currentIndex <= fullText.length) {
-            setTypedText(fullText.slice(0, currentIndex));
-            currentIndex++;
+      const timeout = setTimeout(() => {
+        // Type first text
+        let currentIndex1 = 0;
+        const typingInterval1 = setInterval(() => {
+          if (currentIndex1 <= text1.length) {
+            setTypedText1(text1.slice(0, currentIndex1));
+            currentIndex1++;
           } else {
-            clearInterval(typingInterval);
-            // Show star ratings after typing is complete
-            setTimeout(() => {
-              setStarsVisible(true);
-              
-              // Animate stars from center to normal size
+            clearInterval(typingInterval1);
+          }
+        }, 30);
+
+        // Type second text after first completes
+        const timeout2 = setTimeout(() => {
+          let currentIndex2 = 0;
+          const typingInterval2 = setInterval(() => {
+            if (currentIndex2 <= text2.length) {
+              setTypedText2(text2.slice(0, currentIndex2));
+              currentIndex2++;
+            } else {
+              clearInterval(typingInterval2);
+            }
+          }, 30);
+        }, text1.length * 30 + 200);
+
+        // Type third text after second completes
+        const timeout3 = setTimeout(() => {
+          let currentIndex3 = 0;
+          const typingInterval3 = setInterval(() => {
+            if (currentIndex3 <= text3.length) {
+              setTypedText3(text3.slice(0, currentIndex3));
+              currentIndex3++;
+            } else {
+              clearInterval(typingInterval3);
+              // Show star ratings after all typing is complete
               setTimeout(() => {
-                // Show buttons sequentially
+                setStarsVisible(true);
+                
+                // Animate stars from center to normal size
                 setTimeout(() => {
-                  setButtonVisible(prev => [...prev, 0]); // Show first button
-                }, 400);
-                setTimeout(() => {
-                  setButtonVisible(prev => [...prev, 1]); // Show second button
+                  // Show buttons sequentially
+                  setTimeout(() => {
+                    setButtonVisible(prev => [...prev, 0]); // Show first button
+                  }, 400);
+                  setTimeout(() => {
+                    setButtonVisible(prev => [...prev, 1]); // Show second button
+                  }, 500);
                 }, 500);
               }, 500);
-            }, 500);
-          }
-        }, 20); // Typing speed
+            }
+          }, 30);
+        }, (text1.length + text2.length) * 30 + 400);
 
-        return () => clearInterval(typingInterval);
-      }, animationCompletionTime + 2); // Add 600ms delay after hero animation completes
+        return () => {
+          clearInterval(typingInterval1);
+          clearTimeout(timeout2);
+          clearTimeout(timeout3);
+        };
+      }, animationCompletionTime + 500);
+
+      return () => clearTimeout(timeout);
     }
   }, [visibleWords.size, words.length]);
 
@@ -199,7 +236,7 @@ const Landing = () => {
           <div className="absolute inset-0 bg-black bg-opacity-40"></div>
         </div>
         
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-36 sm:pt-48 md:pt-56 pb-12 sm:pb-16 md:pb-24 w-full relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-32 md:pt-40 pb-12 sm:pb-16 md:pb-24 w-full relative z-10">
           <div className="text-center">
             <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-jetbrains-mono font-bold text-white mb-4 sm:mb-6 relative leading-tight">
               {words.map((word, index) => (
@@ -220,19 +257,40 @@ const Landing = () => {
                 </span>
               ))}
             </h1>
-            <p className="text-sm font-inter text-white mb-8 max-w-3xl mx-auto h-[4.5em] leading-relaxed sm:text-base md:text-lg lg:text-lg xl:text-lg">
-              <span className="inline-block whitespace-pre-line">
-                {typedText}
-              </span>
+            <p className="text-sm font-inter text-white mb-8 max-w-6xl mx-auto sm:text-base md:text-lg lg:text-lg xl:text-lg">
+              <div className="flex flex-col md:flex-row lg:flex-row items-center justify-center gap-4 md:gap-6 lg:gap-6">
+                <span className="text-center">• {typedText1}</span>
+                <span className="text-center">• {typedText2}</span>
+                <span className="text-center">• {typedText3}</span>
+              </div>
             </p>
             
-            {/* Star Ratings */}
-            <div className="flex justify-center items-center mb-8">
-              <div className="flex items-center gap-1">
-                {[1, 2, 3, 4].map((star) => (
+            {/* Social Proof - Stars, User Profiles, and Trusted Text */}
+            <div className="flex flex-col md:flex-row lg:flex-row items-center justify-center gap-6 md:gap-8 lg:gap-8 mb-8">
+              {/* Star Ratings */}
+              <div className="flex justify-center items-center">
+                <div className="flex items-center gap-1">
+                  {[1, 2, 3, 4].map((star) => (
+                    <svg
+                      key={star}
+                      className={`w-12 h-12 text-yellow-400 fill-current transition-all duration-500 ease-out ${
+                        starsVisible
+                          ? 'opacity-100 scale-100'
+                          : 'opacity-0 scale-0'
+                      }`}
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                      style={{
+                        transitionDelay: starsVisible ? `${star * 100}ms` : '0ms',
+                        animation: starsVisible ? `starPulse ${0.5 + star * 0.1}s ease-out ${star * 0.1}s` : 'none'
+                      }}
+                    >
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                  ))}
+                  {/* Half full star */}
                   <svg
-                    key={star}
-                    className={`w-12 h-12 text-yellow-400 fill-current transition-all duration-500 ease-out ${
+                    className={`w-12 h-12 transition-all duration-500 ease-out ${
                       starsVisible
                         ? 'opacity-100 scale-100'
                         : 'opacity-0 scale-0'
@@ -240,79 +298,63 @@ const Landing = () => {
                     viewBox="0 0 20 20"
                     xmlns="http://www.w3.org/2000/svg"
                     style={{
-                      transitionDelay: starsVisible ? `${star * 100}ms` : '0ms',
-                      animation: starsVisible ? `starPulse ${0.5 + star * 0.1}s ease-out ${star * 0.1}s` : 'none'
+                      transitionDelay: starsVisible ? '500ms' : '0ms',
+                      animation: starsVisible ? `starPulse 0.6s ease-out 0.5s` : 'none'
                     }}
                   >
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    <defs>
+                      <linearGradient id="starGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="50%" stopColor="#FBBF24" />
+                        <stop offset="50%" stopColor="#6B7280" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" fill="url(#starGradient)"/>
                   </svg>
-                ))}
-                {/* Half full star */}
-                <svg
-                  className={`w-12 h-12 transition-all duration-500 ease-out ${
-                    starsVisible
-                      ? 'opacity-100 scale-100'
-                      : 'opacity-0 scale-0'
+                  <span className={`ml-2 text-sm font-inter text-white transition-all duration-500 ease-out ${
+                    starsVisible ? 'opacity-100' : 'opacity-0'
                   }`}
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                  style={{
-                    transitionDelay: starsVisible ? '500ms' : '0ms',
-                    animation: starsVisible ? `starPulse 0.6s ease-out 0.5s` : 'none'
-                  }}
-                >
-                  <defs>
-                    <linearGradient id="starGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="50%" stopColor="#FBBF24" />
-                      <stop offset="50%" stopColor="#6B7280" />
-                    </linearGradient>
-                  </defs>
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" fill="url(#starGradient)"/>
-                </svg>
-                <span className={`ml-2 text-sm font-inter text-white transition-all duration-500 ease-out ${
-                  starsVisible ? 'opacity-100' : 'opacity-0'
-                }`}
-                  style={{
-                    transitionDelay: starsVisible ? '1200ms' : '0ms'
-                  }}
-                >
-                  4.7 out of 5
-                </span>
-              </div>
-            </div>
-            
-            {/* User Profiles */}
-            <div className="flex justify-center items-center mb-8">
-              <div className="flex items-center">
-                <div className={`flex -space-x-2 transition-all duration-500 ease-out ${
-                  starsVisible ? 'opacity-100' : 'opacity-0'
-                }`}
-                  style={{
-                    transitionDelay: starsVisible ? '1500ms' : '0ms'
-                  }}
-                >
-                  {/* User 1 */}
-                  <img src="/Alex.jpg" alt="John Davis" className="w-8 h-8 rounded-full border-2 border-white object-cover" />
-                  {/* User 2 */}
-                  <img src="/Sarah.jpg" alt="Sarah Miller" className="w-8 h-8 rounded-full border-2 border-white object-cover" />
-                  {/* User 3 */}
-                  <img src="/Ngozi.jpg" alt="Ngozi Okafor" className="w-8 h-8 rounded-full border-2 border-white object-cover" />
-                  {/* User 4 */}
-                  <img src="/Uche.jpg" alt="User" className="w-8 h-8 rounded-full border-2 border-white object-cover" />
-                  {/* User 5 */}
-                  <img src="/Amina.jpg" alt="User" className="w-8 h-8 rounded-full border-2 border-white object-cover" />
-                  {/* User 6 */}
-                  <img src="/Emeka.jpg" alt="User" className="w-8 h-8 rounded-full border-2 border-white object-cover" />
+                    style={{
+                      transitionDelay: starsVisible ? '1200ms' : '0ms'
+                    }}
+                  >
+                    4.7 out of 5
+                  </span>
                 </div>
-                <span className={`ml-3 text-sm font-inter text-white transition-all duration-500 ease-out ${
-                  starsVisible ? 'opacity-100' : 'opacity-0'
-                }`}
-                  style={{
-                    transitionDelay: starsVisible ? '1700ms' : '0ms'
-                  }}
-                >
-                  Trusted by farmers nationwide
-                </span>
+              </div>
+              
+              {/* User Profiles */}
+              <div className="flex justify-center items-center">
+                <div className="flex items-center">
+                  <div className={`flex -space-x-2 transition-all duration-500 ease-out ${
+                    starsVisible ? 'opacity-100' : 'opacity-0'
+                  }`}
+                    style={{
+                      transitionDelay: starsVisible ? '1500ms' : '0ms'
+                    }}
+                  >
+                    {/* User 1 */}
+                    <img src="/Alex.jpg" alt="John Davis" className="w-8 h-8 rounded-full border-2 border-white object-cover" />
+                    {/* User 2 */}
+                    <img src="/Sarah.jpg" alt="Sarah Miller" className="w-8 h-8 rounded-full border-2 border-white object-cover" />
+                    {/* User 3 */}
+                    <img src="/Ngozi.jpg" alt="Ngozi Okafor" className="w-8 h-8 rounded-full border-2 border-white object-cover" />
+                    {/* User 4 */}
+                    <img src="/Uche.jpg" alt="User" className="w-8 h-8 rounded-full border-2 border-white object-cover" />
+                    {/* User 5 */}
+                    <img src="/Amina.jpg" alt="User" className="w-8 h-8 rounded-full border-2 border-white object-cover" />
+                    {/* User 6 */}
+                    <img src="/Emeka.jpg" alt="User" className="w-8 h-8 rounded-full border-2 border-white object-cover" />
+                  </div>
+                  <span className={`ml-3 text-sm font-inter text-white transition-all duration-500 ease-out ${
+                    starsVisible ? 'opacity-100' : 'opacity-0'
+                  }`}
+                    style={{
+                      transitionDelay: starsVisible ? '1700ms' : '0ms'
+                    }}
+                  >
+                    Trusted by farmers nationwide
+                  </span>
+                </div>
               </div>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
