@@ -257,13 +257,13 @@ const Landing = () => {
                 </span>
               ))}
             </h1>
-            <p className="text-sm font-inter text-white mb-8 max-w-6xl mx-auto sm:text-base md:text-lg lg:text-lg xl:text-lg">
+            <div className="text-sm font-inter text-white mb-8 max-w-6xl mx-auto sm:text-base md:text-lg lg:text-lg xl:text-lg">
               <div className="flex flex-col md:flex-row lg:flex-row items-center justify-center gap-4 md:gap-6 lg:gap-6">
                 <span className="text-center">• {typedText1}</span>
                 <span className="text-center">• {typedText2}</span>
                 <span className="text-center">• {typedText3}</span>
               </div>
-            </p>
+            </div>
             
             {/* Social Proof - Stars, User Profiles, and Trusted Text */}
             <div className="flex flex-col md:flex-row lg:flex-row items-center justify-center gap-6 md:gap-8 lg:gap-8 mb-8">
@@ -411,7 +411,7 @@ const Landing = () => {
               : 'opacity-0 translate-y-16'
           }`}>
             <h2 className="text-3xl md:text-4xl font-jetbrains-mono font-bold text-gray-900 mb-4">
-              Farmers face critical challenges daily
+              Africans farmers face critical challenges daily
             </h2>
           </div>
 
@@ -970,6 +970,12 @@ const Landing = () => {
             </div>
           </div>
         </div>
+
+        <svg className="absolute bottom-0 left-0 w-full h-24 -mb-8" viewBox="0 0 1200 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0,120 L0,75 C20,70 40,45 60,55 C80,65 100,100 120,90 C140,80 160,35 180,45 C200,55 220,110 240,100 C260,90 280,25 300,35 C320,45 340,120 360,110 C380,100 400,20 420,30 C440,40 460,115 480,105 C500,95 520,15 540,25 C560,35 580,120 600,110 C620,100 640,5 660,15 C680,25 700,115 720,105 C740,95 760,10 780,20 C800,30 820,120 840,110 C860,100 880,0 900,10 C920,20 940,115 960,105 C980,95 1000,5 1020,15 C1040,25 1060,110 1080,100 C1100,90 1120,15 1140,25 C1160,35 1180,95 1200,85 L1200,120 Z" fill="#16a34a" opacity="0.9"/>
+          <path d="M0,120 L0,90 C30,80 50,50 80,60 C110,70 130,115 160,105 C190,95 210,45 240,55 C270,65 290,120 320,110 C350,100 370,40 400,50 C430,60 450,115 480,105 C510,95 530,35 560,45 C590,55 610,120 640,110 C670,100 690,50 720,60 C750,70 770,125 800,115 C830,105 850,40 880,50 C910,60 930,115 960,105 C990,95 1010,40 1040,50 C1070,60 1090,120 1120,110 C1150,100 1170,50 1200,60 L1200,120 Z" fill="#22c55e" opacity="0.85"/>
+          <path d="M0,120 L0,105 C40,95 60,65 100,75 C140,85 160,115 200,105 C240,95 260,65 300,75 C340,85 360,115 400,105 C440,95 460,65 500,75 C540,85 560,115 600,105 C640,95 660,65 700,75 C740,85 760,115 800,105 C840,95 860,65 900,75 C940,85 960,115 1000,105 C1040,95 1060,65 1100,75 C1140,85 1160,115 1200,105 L1200,120 Z" fill="#4ade80" opacity="0.8"/>
+        </svg>
       </div>
 
       {/* Testimonials Section */}

@@ -115,7 +115,7 @@ const Pricing = () => {
       //description: 'No deleted records — complete audit trail'
     },
     {
-      emoji: '🇳🇬',
+      emoji: 'nigeria-flag',
       title: 'Built for Nigerian farmers',
       //description: 'Designed specifically for Nigerian farm realities'
     },
@@ -349,7 +349,15 @@ const Pricing = () => {
                 className="text-center group"
               >
                 <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                  {benefit.emoji}
+                  {benefit.emoji === 'nigeria-flag' ? (
+                    <svg className="w-16 h-12 mx-auto rounded-md shadow-sm" viewBox="0 0 6 4" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="2" height="4" fill="#008751"/>
+                      <rect x="2" width="2" height="4" fill="#FFFFFF"/>
+                      <rect x="4" width="2" height="4" fill="#008751"/>
+                    </svg>
+                  ) : (
+                    benefit.emoji
+                  )}
                 </div>
                 <h3 className="font-jetbrains-mono font-semibold text-gray-900 mb-2">
                   {benefit.title}
@@ -381,6 +389,43 @@ const Pricing = () => {
         </div>
 
       </div>
+
+      <svg className="w-full h-32 opacity-15" viewBox="0 0 1200 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <g fill="#166534">
+          <path d="M0,120 L0,105 C50,100 100,85 150,90 C200,95 250,110 300,105 C350,100 400,80 450,85 C500,90 550,105 600,100 C650,95 700,75 750,80 C800,85 850,105 900,100 C950,95 1000,80 1050,85 C1100,90 1150,105 1200,100 L1200,120 Z"/>
+          
+          <path d="M120,118 L120,78 L160,78 L180,58 L200,58 L200,118 Z"/>
+          <rect x="185" y="92" width="20" height="26"/>
+          
+          <rect x="230" y="70" width="40" height="48" rx="2"/>
+          <path d="M230,70 L250,50 L270,70 Z"/>
+          <rect x="245" y="88" width="10" height="30" fill="#f0fdf4"/>
+          
+          <circle cx="240" cy="112" r="10"/>
+          <circle cx="280" cy="112" r="14"/>
+          <rect x="250" y="75" width="30" height="20" rx="3"/>
+          <path d="M265,75 L265,65 L270,65 L270,75"/>
+          
+          <rect x="380" y="80" width="30" height="40" rx="15"/>
+          <rect x="392" y="110" width="6" height="10"/>
+          
+          <path d="M480,118 L480,70 L520,50 L560,70 L560,118 Z"/>
+          <rect x="510" y="95" width="20" height="23" fill="#f0fdf4"/>
+          
+          <rect x="590" y="60" width="25" height="58" rx="2"/>
+          <path d="M590,60 A12.5,12.5 0 0,1 615,60 Z"/>
+          
+          <rect x="680" y="85" width="8" height="33"/>
+          <circle cx="684" cy="75" r="18"/>
+          
+          <rect x="760" y="70" width="4" height="48"/>
+          <path d="M762,70 L762,45 M762,70 L790,70 M762,70 L762,95 M762,70 L734,70" stroke="#166534" strokeWidth="4" fill="none"/>
+          
+          <path d="M860,118 L865,88 L870,118 L875,85 L880,118 L885,88 L890,118 L895,85 L900,118"/>
+          <path d="M920,118 L925,90 L930,118 L935,88 L940,118 L945,90 L950,118"/>
+          <path d="M980,118 L985,92 L990,118 L995,90 L1000,118"/>
+        </g>
+      </svg>
     </div>
   );
 };

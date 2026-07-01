@@ -349,7 +349,7 @@ const Dashboard = () => {
           </div>
           
           <div 
-            onClick={() => navigate('/vat')}
+            onClick={() => navigate('/income?tab=vat')}
             className="group bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-3 dark:border-purple-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
           >
             <div className="flex items-start justify-between mb-3">
