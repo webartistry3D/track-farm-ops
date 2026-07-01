@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -28,6 +28,7 @@ const Layout = ({ children }: LayoutProps) => {
   const { isDark, toggleTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
+  const mainRef = useRef<HTMLElement>(null);
 
   // Inactivity detection state - DISABLED
   // const [inactivityTimer, setInactivityTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
@@ -174,6 +175,12 @@ const Layout = ({ children }: LayoutProps) => {
   });
 
   const unreadCount = notifications.filter((n: any) => !n.read).length;
+
+  useEffect(() => {
+    if (mainRef.current) {
+      mainRef.current.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    }
+  }, [location.pathname]);
 
   // Play notification sound
   const playNotificationSound = () => {
@@ -455,7 +462,7 @@ const Layout = ({ children }: LayoutProps) => {
         </header>
 
         {/* Main content area */}
-        <main className="flex-1 overflow-auto">
+        <main ref={mainRef} className="flex-1 overflow-auto">
           <div className="py-12 pb-24">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               {children}
