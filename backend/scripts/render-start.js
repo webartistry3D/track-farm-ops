@@ -4,7 +4,12 @@ const { execSync } = require('child_process');
 console.log('🚀 Starting Render server with robust database handling...');
 
 try {
-  // Start the server directly - let the application handle database connection
+  // Run database migrations before starting
+  console.log('🗄️ Running database migrations...');
+  execSync('npx prisma migrate deploy', { stdio: 'inherit' });
+  console.log('✅ Migrations complete.');
+
+  // Start the server
   console.log('🚀 Starting application server...');
   require('ts-node/register');
   require('../src/index.ts');
