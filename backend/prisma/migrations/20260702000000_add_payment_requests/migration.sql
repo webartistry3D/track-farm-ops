@@ -1,7 +1,11 @@
--- CreateEnum
-CREATE TYPE IF NOT EXISTS "PaymentStatus" AS ENUM ('PENDING', 'UNDER_REVIEW', 'APPROVED', 'REJECTED', 'EXPIRED');
+-- CreateEnum PaymentStatus
+DO $$ BEGIN
+  CREATE TYPE "PaymentStatus" AS ENUM ('PENDING', 'UNDER_REVIEW', 'APPROVED', 'REJECTED', 'EXPIRED');
+EXCEPTION
+  WHEN duplicate_object THEN null;
+END $$;
 
--- CreateEnum (add BANK_TRANSFER and PAYSTACK to subscriptions payment method if not exists)
+-- CreateEnum SubscriptionPaymentMethod
 DO $$ BEGIN
   CREATE TYPE "SubscriptionPaymentMethod" AS ENUM ('BANK_TRANSFER', 'PAYSTACK');
 EXCEPTION

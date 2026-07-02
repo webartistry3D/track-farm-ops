@@ -31,7 +31,19 @@ async function buildProduction() {
       throw new Error(`Prisma client generation failed: ${prismaError.message}`);
     }
     
-    // Step 3: Apply pending database migrations
+    // Step 3: Resolve any previously failed migration, then apply pending migrations
+    console.log('🗄️ Resolving any failed migrations...');
+    try {
+      execSync('npx prisma migrate resolve --rolled-back 20260702000000_add_payment_requests', {
+        stdio: 'inherit',
+        timeout: 30000
+      });
+      console.log('✅ Failed migration marked as rolled back');
+    } catch (resolveError) {
+      // Ignore errors - migration may not exist or may not be in failed state
+      console.log('ℹ️ No failed migration to resolve (or already resolved)');
+    }
+
     console.log('🗄️ Applying database migrations...');
     try {
       execSync('npx prisma migrate deploy', {
