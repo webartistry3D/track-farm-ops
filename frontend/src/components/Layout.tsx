@@ -6,6 +6,7 @@ import { SubscriptionRestrictions } from '../utils/subscriptionRestrictions';
 import FirstTimePasswordPrompt from './FirstTimePasswordPrompt';
 import ConfirmModal from './ConfirmModal';
 import BottomNav from './BottomNav';
+import { LogOut } from 'lucide-react';
 import api from '../lib/api';
 // import { InactivityWarning } from './InactivityWarning'; // DISABLED
 
@@ -455,6 +456,15 @@ const Layout = ({ children }: LayoutProps) => {
                   title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
                 >
                   {isDark ? '☀️' : '🌙'}
+                </button>
+
+                {/* Logout */}
+                <button
+                  onClick={() => setShowLogoutModal(true)}
+                  className="p-1.5 sm:p-2 rounded-full text-red-500 hover:text-red-600 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
+                  title="Logout"
+                >
+                  <LogOut className="w-5 h-5" />
                 </button>
               </div>
             </div>

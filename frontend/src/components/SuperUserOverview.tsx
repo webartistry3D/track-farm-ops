@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useTheme } from '../contexts/ThemeContext';
 import api from '../lib/api';
 import {
   Users, Building, Activity, Server, Database, Globe, TrendingUp,
-  UserCheck, RefreshCw
+  UserCheck
 } from 'lucide-react';
 
 interface SuperUserStats {
@@ -47,11 +46,9 @@ interface Activity {
 }
 
 const SuperUserOverview = () => {
-  const { isDark, toggleTheme } = useTheme();
   const [stats, setStats] = useState<SuperUserStats | null>(null);
   const [activities, setActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -74,54 +71,22 @@ const SuperUserOverview = () => {
     }
   };
 
-  const handleRefresh = async () => {
-    setRefreshing(true);
-    await fetchData();
-    setRefreshing(false);
-  };
-
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center">
+      <div className="flex-1 flex items-center justify-center py-12">
         <div className="text-center">
-          <div className="relative">
+          <div className="relative w-16 h-16 mx-auto mb-6">
             <div className="w-16 h-16 border-4 border-gray-200 dark:border-gray-700 rounded-full"></div>
             <div className="w-16 h-16 border-4 border-green-500 border-t-transparent rounded-full animate-spin absolute top-0 left-0"></div>
           </div>
-          <p className="mt-6 text-lg font-medium text-gray-600 dark:text-gray-400">Loading overview...</p>
+          <p className="text-lg font-medium text-gray-600 dark:text-gray-400">Loading overview...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 py-6 pb-24">
-      {/* Header */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Overview</h1>
-            <p className="text-sm text-slate-600 dark:text-slate-400">Complete system oversight and control</p>
-          </div>
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
-              title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-            >
-              {isDark ? '☀️' : '🌙'}
-            </button>
-            <button
-              onClick={handleRefresh}
-              disabled={refreshing}
-              className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
-            >
-              <RefreshCw className={`w-5 h-5 text-slate-600 dark:text-slate-300 ${refreshing ? 'animate-spin' : ''}`} />
-            </button>
-          </div>
-        </div>
-      </div>
-
+    <div>
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         {/* Stats Grid */}

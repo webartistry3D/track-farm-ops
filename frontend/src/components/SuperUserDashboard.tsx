@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { useTheme } from '../contexts/ThemeContext';
 import api from '../lib/api';
+import SuperUserPaymentReview from './SuperUserPaymentReview';
 import {
   Users, Building, Activity, Database, Settings, Globe, TrendingUp,
-  Eye, Lock, Unlock, Search, RefreshCw, BarChart3, LineChart,
-  UserCheck, LogOut, Bell, Menu, X, Server, FileText, Trash2, Plus, CreditCard, DollarSign, Calendar
+  Eye, Lock, Unlock, Search, RefreshCw, BarChart3,
+  UserCheck, X, Server, Trash2, Plus, CreditCard, DollarSign, Calendar
 } from 'lucide-react';
 
 console.log('🔍 SUPERUSER DASHBOARD - All imports loaded successfully');
@@ -131,34 +131,36 @@ const SuperUserDashboard = () => {
     console.log('🔍 INSIDE TRY BLOCK');
     
     const navigate = useNavigate();
-    const { user, logout } = useAuth();
-    const { isDark, toggleTheme } = useTheme();
+    const { user } = useAuth();
     console.log('🔍 HOOKS CALLED SUCCESSFULLY');
-
-    const handleLogout = () => {
-      try {
-        console.log('🚪 [SuperUserDashboard] Starting logout...');
-        
-        // Call the logout function from AuthContext
-        logout();
-        
-        // Navigate to login page
-        navigate('/login');
-        
-        console.log('✅ [SuperUserDashboard] Logout initiated successfully');
-      } catch (error) {
-        console.error('❌ [SuperUserDashboard] Logout error:', error);
-        // Fallback navigation
-        window.location.href = '/login';
-      }
-    };
     
-    const [searchParams] = useSearchParams();
-    const [sidebarOpen, setSidebarOpen] = useState(true);
-    const [activeTab, setActiveTab] = useState(() => {
-      const tabParam = searchParams.get('tab');
-      return tabParam || 'overview';
-    });
+    const location = useLocation();
+
+    const getTabFromPathname = (pathname: string): string => {
+      const path = pathname.replace('/super-user/', '').replace(/\/$/, '') || 'dashboard';
+      const tabMap: Record<string, string> = {
+        'dashboard': 'overview',
+        'user': 'users',
+        'users': 'users',
+        'organization': 'organizations',
+        'organizations': 'organizations',
+        'subscriptions': 'subscriptions',
+        'subscription': 'subscriptions',
+        'payments': 'payments',
+        'payment-review': 'payments',
+        'activity': 'activity',
+        'activity-monitor': 'activity',
+        'system-health': 'system',
+        'system': 'system',
+        'logs': 'logs',
+        'system-logs': 'logs',
+        'analytics': 'analytics',
+        'settings': 'settings'
+      };
+      return tabMap[path] || 'overview';
+    };
+
+    const [activeTab, setActiveTab] = useState(() => getTabFromPathname(location.pathname));
     const [searchTerm, setSearchTerm] = useState('');
     const [filterStatus, setFilterStatus] = useState('all');
     const [loading, setLoading] = useState(true);
@@ -204,18 +206,6 @@ const SuperUserDashboard = () => {
     const [cacheLoading, setCacheLoading] = useState(false);
     const [orgActionLoading, setOrgActionLoading] = useState<string | null>(null); // Track which org is being acted upon
 
-    const menuItems = [
-      { id: 'overview', label: 'Overview', icon: BarChart3 },
-      { id: 'users', label: 'Users', icon: Users },
-      { id: 'organizations', label: 'Organizations', icon: Building },
-      { id: 'subscriptions', label: 'Subscriptions', icon: CreditCard },
-      { id: 'activity', label: 'Activity Monitor', icon: Activity },
-      { id: 'system', label: 'System Health', icon: Server },
-      { id: 'logs', label: 'System Logs', icon: FileText },
-      { id: 'analytics', label: 'Analytics', icon: LineChart },
-      { id: 'settings', label: 'Settings', icon: Settings }
-    ];
-
     useEffect(() => {
       console.log('🔍 DEBUG: SuperUserDashboard useEffect triggered');
       console.log('🔍 DEBUG: User object:', user);
@@ -232,11 +222,9 @@ const SuperUserDashboard = () => {
     }, [user, navigate]);
 
     useEffect(() => {
-      const tabParam = searchParams.get('tab');
-      if (tabParam) {
-        setActiveTab(tabParam);
-      }
-    }, [searchParams]);
+      const tabFromPath = getTabFromPathname(location.pathname);
+      setActiveTab(tabFromPath);
+    }, [location.pathname]);
 
     const fetchDashboardData = async () => {
       console.log('🔍 DEBUG: fetchDashboardData called');
@@ -1260,6 +1248,10 @@ const SuperUserDashboard = () => {
     );
   };
 
+  const renderPayments = () => (
+    <SuperUserPaymentReview />
+  );
+
   const renderActivityMonitor = () => (
     <div className="space-y-6">
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
@@ -1629,7 +1621,6 @@ const SuperUserDashboard = () => {
       console.log('🔍 DEBUG: Loading state:', loading);
       console.log('🔍 DEBUG: Stats data:', stats);
       console.log('🔍 DEBUG: Users data:', users);
-      console.log('🔍 DEBUG: Sidebar open:', sidebarOpen);
 
       // Don't check loading state here - it's handled at component level
       if (!stats) {
@@ -1650,6 +1641,7 @@ const SuperUserDashboard = () => {
         case 'users': return renderUsers();
         case 'organizations': return renderOrganizations();
         case 'subscriptions': return renderSubscriptions();
+        case 'payments': return renderPayments();
         case 'activity': return renderActivityMonitor();
         case 'system': return renderSystemHealth();
         case 'logs': return renderSystemLogs();
@@ -1661,204 +1653,23 @@ const SuperUserDashboard = () => {
 
     if (loading) {
       return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
-          {/* Sidebar (always visible during loading) */}
-          <div className="fixed inset-y-0 left-0 z-50 w-48 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0">
-            <div className="flex items-center justify-between h-16 px-6 border-b border-slate-200 dark:border-slate-700">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center">
-                  <Server className="w-5 h-5 text-white" />
-                </div>
-                <h1 className="text-xl font-bold text-slate-900 dark:text-white">SuperUser</h1>
-              </div>
+        <div className="flex-1 flex items-center justify-center py-12">
+          <div className="text-center">
+            <div className="relative w-16 h-16 mx-auto mb-6">
+              <div className="w-16 h-16 border-4 border-gray-200 dark:border-gray-700 rounded-full"></div>
+              <div className="w-16 h-16 border-4 border-green-500 border-t-transparent rounded-full animate-spin absolute top-0 left-0"></div>
             </div>
-            <nav className="mt-6 px-4">
-              <div className="space-y-2">
-                {menuItems.map((item) => (
-                  <button
-                    key={item.id}
-                    className="w-full flex items-center space-x-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700"
-                  >
-                    <item.icon className="w-5 h-5" />
-                    <span>{item.label}</span>
-                  </button>
-                ))}
-              </div>
-            </nav>
-          </div>
-
-          {/* Main Content Area with Centered Loading */}
-          <div className="lg:ml-64 flex items-center justify-center min-h-screen">
-            <div className="text-center">
-              <div className="relative">
-                <div className="w-16 h-16 border-4 border-gray-200 dark:border-gray-700 rounded-full"></div>
-                <div className="w-16 h-16 border-4 border-green-500 border-t-transparent rounded-full animate-spin absolute top-0 left-0"></div>
-              </div>
-              <p className="mt-6 text-lg font-medium text-gray-600 dark:text-gray-400">Loading dashboard...</p>
-              <p className="mt-2 text-sm text-gray-500 dark:text-gray-500">Please wait while we fetch your data</p>
-            </div>
+            <p className="text-lg font-medium text-gray-600 dark:text-gray-400">Loading dashboard...</p>
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-500">Please wait while we fetch your data</p>
           </div>
         </div>
       );
     }
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
-        {/* Mobile Header */}
-        <div className="lg:hidden bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-40">
-          <div className="flex items-center justify-between p-3">
-            <div className="flex items-center space-x-2">
-              <button
-                onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
-              >
-                <Menu className="w-5 h-5 text-slate-600 dark:text-slate-300" />
-              </button>
-              <h1 className="text-base font-semibold text-slate-900 dark:text-white">Superuser Panel</h1>
-            </div>
-            <div className="flex items-center space-x-1">
-              {/* Theme Toggle */}
-              <button
-                onClick={toggleTheme}
-                className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
-                title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-              >
-                {isDark ? '☀️' : '🌙'}
-              </button>
-              <button className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
-                <Bell className="w-5 h-5 text-slate-600 dark:text-slate-300" />
-              </button>
-              <button
-                onClick={handleRefresh}
-                disabled={refreshing}
-                className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
-              >
-                <RefreshCw className={`w-5 h-5 text-slate-600 dark:text-slate-300 ${refreshing ? 'animate-spin' : ''}`} />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex">
-          {/* Sidebar - Desktop: Fixed, Mobile: Overlay */}
-          <div className={`
-            ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} 
-            lg:translate-x-0 fixed lg:static inset-y-0 left-0 z-30
-            w-48 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700
-            transition-transform duration-300 ease-in-out
-            lg:border-r lg:border-slate-200 lg:dark:border-slate-700
-          `}>
-            <div className="flex flex-col h-full">
-              {/* Sidebar Header */}
-              <div className="p-4 border-slate-200 dark:border-slate-700">
-                <div className="flex items-center justify-between">
-                  <h1 className="text-lg font-bold text-slate-900 dark:text-white">Superuser Panel</h1>
-                  <button
-                    onClick={() => setSidebarOpen(!sidebarOpen)}
-                    className="lg:hidden p-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-700"
-                  >
-                    <X className="w-5 h-5 text-slate-500" />
-                  </button>
-                </div>
-              </div>
-              
-              {/* Navigation */}
-              <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
-                {menuItems.map(item => (
-                  <button
-                    key={item.id}
-                    onClick={() => {
-                      setActiveTab(item.id);
-                      if (window.innerWidth < 1024) {
-                        setSidebarOpen(false);
-                      }
-                    }}
-                    className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                      activeTab === item.id
-                        ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300 shadow-sm'
-                        : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700/50'
-                    }`}
-                  >
-                    <item.icon className="w-5 h-5 flex-shrink-0" />
-                    <span className="truncate">{item.label}</span>
-                  </button>
-                ))}
-              </nav>
-              
-              {/* User Profile */}
-              <div className="p-3 border-t border-slate-200 dark:border-slate-700">
-                <div className="flex items-center space-x-3 p-2 rounded-lg bg-slate-50 dark:bg-slate-700/50">
-                  <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center text-white font-semibold shadow-sm text-xs">
-                    {user?.name?.charAt(0).toUpperCase()}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-slate-900 dark:text-white truncate">{user?.name}</p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">Superuser</p>
-                  </div>
-                </div>
-                <button
-                  onClick={handleLogout}
-                  className="w-full mt-2 flex items-center justify-center space-x-2 px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors duration-200 text-sm font-medium"
-                >
-                  <LogOut className="w-4 h-4" />
-                  <span>Logout</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Mobile Sidebar Overlay */}
-          {sidebarOpen && (
-            <div 
-              className="lg:hidden fixed inset-0 bg-black/50 z-20"
-              onClick={() => setSidebarOpen(false)}
-            />
-          )}
-
-          {/* Main Content */}
-          <div className="flex-1 min-w-0">
-            {/* Desktop Header */}
-            <div className="hidden lg:block bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-30">
-              <div className="px-6 py-2">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white capitalize">
-                      {activeTab.replace('-', ' ')}
-                    </h2>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                      Complete system oversight and control
-                    </p>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    {/* Theme Toggle */}
-                    <button
-                      onClick={toggleTheme}
-                      className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
-                      title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-                    >
-                      {isDark ? '☀️' : '🌙'}
-                    </button>
-                    <button className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
-                      <Bell className="w-5 h-5 text-slate-600 dark:text-slate-300" />
-                    </button>
-                    <button
-                      onClick={handleRefresh}
-                      disabled={refreshing}
-                      className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
-                    >
-                      <RefreshCw className={`w-5 h-5 text-slate-600 dark:text-slate-300 ${refreshing ? 'animate-spin' : ''}`} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Page Content */}
-            <main className="p-4 lg:p-6 max-w-7xl mx-auto">
-              {renderContent()}
-            </main>
-          </div>
-        </div>
+      <div className="w-full">
+        {/* Page Content */}
+        {renderContent()}
 
         {/* User Details Modal */}
         {showUserModal && selectedUser && (
@@ -2236,122 +2047,128 @@ const SuperUserDashboard = () => {
 
         {/* Subscription Details Modal */}
         {showSubModal && selectedSub && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Subscription Details</h3>
-                <button
-                  onClick={closeSubModal}
-                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-              
-              <div className="space-y-6">
-                {/* Subscription Header */}
-                <div className="flex items-center space-x-4">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white">
-                    <CreditCard className="w-8 h-8" />
-                  </div>
-                  <div>
-                    <h4 className="text-xl font-semibold text-gray-900 dark:text-white">{selectedSub.plan}</h4>
-                    <p className="text-gray-600 dark:text-gray-400">{selectedSub.userName}</p>
-                  </div>
+          <div className="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto z-50">
+            <div className="flex min-h-full items-start justify-center py-6 px-4">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-4 max-w-xl w-full max-h-[80vh] flex flex-col">
+                <div className="flex justify-between items-center pb-3 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Subscription Details</h3>
+                  <button
+                    onClick={closeSubModal}
+                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
                 </div>
-                
-                {/* Subscription Stats */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Amount</span>
-                      <DollarSign className="w-4 h-4 text-gray-400" />
+
+                <div className="overflow-y-auto flex-1 py-3">
+                  <div className="space-y-4">
+                    {/* Subscription Header */}
+                    <div className="flex items-center space-x-3">
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white">
+                        <CreditCard className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white capitalize">{selectedSub.plan}</h4>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">{selectedSub.userName}</p>
+                      </div>
                     </div>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">₦{selectedSub.amount.toLocaleString()}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">per {selectedSub.billingCycle}</p>
-                  </div>
-                  <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Status</span>
-                      <Activity className="w-4 h-4 text-gray-400" />
-                    </div>
-                    <span className={`inline-block mt-2 px-2 py-1 text-xs font-semibold rounded-full ${
-                      selectedSub.status === 'active' ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' :
-                      selectedSub.status === 'trial' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300' :
-                      selectedSub.status === 'inactive' ? 'bg-gray-100 text-gray-800 dark:bg-gray-900/50 dark:text-gray-300' :
-                      selectedSub.status === 'cancelled' ? 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300' :
-                      'bg-orange-100 text-orange-800 dark:bg-orange-900/50 dark:text-orange-300'
-                    }`}>
-                      {selectedSub.status}
-                    </span>
-                  </div>
-                  <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Billing Cycle</span>
-                      <Calendar className="w-4 h-4 text-gray-400" />
-                    </div>
-                    <p className="text-lg font-bold text-gray-900 dark:text-white mt-2 capitalize">{selectedSub.billingCycle}</p>
-                  </div>
-                  <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Auto Renew</span>
-                      <RefreshCw className="w-4 h-4 text-gray-400" />
-                    </div>
-                    <p className="text-lg font-bold text-gray-900 dark:text-white mt-2">
-                      {selectedSub.autoRenew ? 'Yes' : 'No'}
-                    </p>
-                  </div>
-                </div>
-                
-                {/* Subscription Information */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">User Email:</span>
-                    <span className="ml-2 font-medium text-gray-900 dark:text-white">{selectedSub.userEmail}</span>
-                  </div>
-                  <div>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Organization:</span>
-                    <span className="ml-2 font-medium text-gray-900 dark:text-white">{selectedSub.organization}</span>
-                  </div>
-                  <div>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Payment Method:</span>
-                    <span className="ml-2 font-medium text-gray-900 dark:text-white">{selectedSub.paymentMethod}</span>
-                  </div>
-                  <div>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Currency:</span>
-                    <span className="ml-2 font-medium text-gray-900 dark:text-white">{selectedSub.currency}</span>
-                  </div>
-                  <div>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Start Date:</span>
-                    <span className="ml-2 font-medium text-gray-900 dark:text-white">{new Date(selectedSub.startDate).toLocaleDateString()}</span>
-                  </div>
-                  <div>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">End Date:</span>
-                    <span className="ml-2 font-medium text-gray-900 dark:text-white">{new Date(selectedSub.endDate).toLocaleDateString()}</span>
-                  </div>
-                  <div>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Next Billing:</span>
-                    <span className="ml-2 font-medium text-gray-900 dark:text-white">{new Date(selectedSub.nextBillingDate).toLocaleDateString()}</span>
-                  </div>
-                  <div>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Last Payment:</span>
-                    <span className="ml-2 font-medium text-gray-900 dark:text-white">{selectedSub.lastPaymentDate ? new Date(selectedSub.lastPaymentDate).toLocaleDateString() : 'N/A'}</span>
-                  </div>
-                </div>
-                
-                {/* Features */}
-                {selectedSub.features && selectedSub.features.length > 0 && (
-                  <div>
-                    <h5 className="text-sm font-medium text-gray-900 dark:text-white mb-3">Features</h5>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedSub.features.map((feature, index) => (
-                        <span key={index} className="px-2 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 text-xs rounded-full">
-                          {feature}
+
+                    {/* Subscription Stats */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-gray-600 dark:text-gray-400">Amount</span>
+                          <DollarSign className="w-3 h-3 text-gray-400" />
+                        </div>
+                        <p className="text-lg font-bold text-gray-900 dark:text-white mt-1">₦{selectedSub.amount.toLocaleString()}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">per {selectedSub.billingCycle}</p>
+                      </div>
+                      <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-gray-600 dark:text-gray-400">Status</span>
+                          <Activity className="w-3 h-3 text-gray-400" />
+                        </div>
+                        <span className={`inline-block mt-1 px-2 py-1 text-xs font-semibold rounded-full ${
+                          selectedSub.status === 'active' ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' :
+                          selectedSub.status === 'trial' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300' :
+                          selectedSub.status === 'inactive' ? 'bg-gray-100 text-gray-800 dark:bg-gray-900/50 dark:text-gray-300' :
+                          selectedSub.status === 'cancelled' ? 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300' :
+                          'bg-orange-100 text-orange-800 dark:bg-orange-900/50 dark:text-orange-300'
+                        }`}>
+                          {selectedSub.status}
                         </span>
-                      ))}
+                      </div>
+                      <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-gray-600 dark:text-gray-400">Billing Cycle</span>
+                          <Calendar className="w-3 h-3 text-gray-400" />
+                        </div>
+                        <p className="text-sm font-bold text-gray-900 dark:text-white mt-1 capitalize">{selectedSub.billingCycle}</p>
+                      </div>
+                      <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-gray-600 dark:text-gray-400">Auto Renew</span>
+                          <RefreshCw className="w-3 h-3 text-gray-400" />
+                        </div>
+                        <p className="text-sm font-bold text-gray-900 dark:text-white mt-1">
+                          {selectedSub.autoRenew ? 'Yes' : 'No'}
+                        </p>
+                      </div>
                     </div>
+
+                    {/* Subscription Information */}
+                    <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 space-y-2">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+                        <div className="flex flex-col">
+                          <span className="text-xs text-gray-500 dark:text-gray-400">User Email</span>
+                          <span className="font-medium text-gray-900 dark:text-white break-all">{selectedSub.userEmail}</span>
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-xs text-gray-500 dark:text-gray-400">Organization</span>
+                          <span className="font-medium text-gray-900 dark:text-white">{selectedSub.organization}</span>
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-xs text-gray-500 dark:text-gray-400">Payment Method</span>
+                          <span className="font-medium text-gray-900 dark:text-white capitalize">{selectedSub.paymentMethod || 'N/A'}</span>
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-xs text-gray-500 dark:text-gray-400">Currency</span>
+                          <span className="font-medium text-gray-900 dark:text-white">{selectedSub.currency}</span>
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-xs text-gray-500 dark:text-gray-400">Start Date</span>
+                          <span className="font-medium text-gray-900 dark:text-white">{new Date(selectedSub.startDate).toLocaleDateString()}</span>
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-xs text-gray-500 dark:text-gray-400">End Date</span>
+                          <span className="font-medium text-gray-900 dark:text-white">{new Date(selectedSub.endDate).toLocaleDateString()}</span>
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-xs text-gray-500 dark:text-gray-400">Next Billing</span>
+                          <span className="font-medium text-gray-900 dark:text-white">{new Date(selectedSub.nextBillingDate).toLocaleDateString()}</span>
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-xs text-gray-500 dark:text-gray-400">Last Payment</span>
+                          <span className="font-medium text-gray-900 dark:text-white">{selectedSub.lastPaymentDate ? new Date(selectedSub.lastPaymentDate).toLocaleDateString() : 'N/A'}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Features */}
+                    {selectedSub.features && selectedSub.features.length > 0 && (
+                      <div>
+                        <h5 className="text-xs font-medium text-gray-900 dark:text-white mb-2">Features</h5>
+                        <div className="flex flex-wrap gap-2">
+                          {selectedSub.features.map((feature, index) => (
+                            <span key={index} className="px-2 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 text-xs rounded-full">
+                              {feature}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                )}
+                </div>
               </div>
             </div>
           </div>

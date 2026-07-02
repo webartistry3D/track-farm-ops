@@ -22,6 +22,7 @@ import {
   Monitor,
   Server,
   FileCode,
+  DollarSign,
 } from 'lucide-react';
 
 export type UserRole = 'WORKER' | 'VETERINARIAN' | 'INVENTORY' | 'MANAGER' | 'ACCOUNTANT' | 'OWNER' | 'SUPERUSER';
@@ -209,6 +210,14 @@ const SUPERUSER_MONITOR_CATEGORY: NavItem = {
       icon: Monitor,
       href: '/super-user/activity',
       apiEndpoint: '/super-user/activity',
+      allowedRoles: ['SUPERUSER'],
+    },
+    {
+      id: 'payment-review',
+      name: 'Payment Review',
+      icon: DollarSign,
+      href: '/super-user/payment-review',
+      apiEndpoint: '/super-user/payment-review',
       allowedRoles: ['SUPERUSER'],
     },
   ],
