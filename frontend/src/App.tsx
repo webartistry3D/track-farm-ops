@@ -46,19 +46,29 @@ const ScrollToTop = () => {
   return null;
 };
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+const ProtectedRoute = ({ children, useLayout = true }: { children: React.ReactNode; useLayout?: boolean }) => {
   const { user, isLoading } = useAuth();
   
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-lg">Loading...</div>
+      <div className="fixed inset-0 bg-white dark:bg-gray-900 flex items-center justify-center z-50">
+        <div className="text-center">
+          <div className="relative w-12 h-12 mx-auto mb-4">
+            <div className="w-12 h-12 border-4 border-gray-200 dark:border-gray-700 rounded-full"></div>
+            <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin absolute top-0 left-0"></div>
+          </div>
+          <div className="text-lg text-gray-900 dark:text-white">Loading...</div>
+        </div>
       </div>
     );
   }
   
   if (!user) {
     return <Navigate to="/login" replace />;
+  }
+  
+  if (!useLayout) {
+    return <>{children}</>;
   }
   
   return <Layout>{children}</Layout>;
@@ -79,8 +89,14 @@ const AppRoutes = () => {
   if (isLoading) {
     console.log('🔍 APP ROUTES - Showing loading screen');
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-lg">Loading...</div>
+      <div className="fixed inset-0 bg-white dark:bg-gray-900 flex items-center justify-center z-50">
+        <div className="text-center">
+          <div className="relative w-12 h-12 mx-auto mb-4">
+            <div className="w-12 h-12 border-4 border-gray-200 dark:border-gray-700 rounded-full"></div>
+            <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin absolute top-0 left-0"></div>
+          </div>
+          <div className="text-lg text-gray-900 dark:text-white">Loading...</div>
+        </div>
       </div>
     );
   }
@@ -125,7 +141,7 @@ const AppRoutes = () => {
       <Route 
         path="/super-user/*" 
         element={
-          <ProtectedRoute>
+          <ProtectedRoute useLayout={false}>
             <SuperUserRoutes />
           </ProtectedRoute>
         } 

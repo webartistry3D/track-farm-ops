@@ -4,6 +4,7 @@ import api from '../lib/api';
 import UserManagement from './UserManagement';
 import { formatCurrency } from '../utils/currency';
 import ConfirmModal from './ConfirmModal';
+import BankTransferModal from './BankTransferModal';
 
 interface SubscriptionPlan {
   id: string;
@@ -69,6 +70,9 @@ const Settings = () => {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly');
   const [paystackScriptLoaded, setPaystackScriptLoaded] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showBankTransferModal, setShowBankTransferModal] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan | null>(null);
+  const [currentPaymentRequest, setCurrentPaymentRequest] = useState<any>(null);
 
   const plans: SubscriptionPlan[] = [
     {
@@ -135,8 +139,9 @@ const Settings = () => {
     script.onload = () => setPaystackScriptLoaded(true);
     document.body.appendChild(script);
 
-    // Fetch current subscription
+    // Fetch current subscription and payment request
     fetchSubscriptionData();
+    fetchCurrentPaymentRequest();
 
     return () => {
       if (document.body.contains(script)) {
@@ -147,11 +152,22 @@ const Settings = () => {
 
   const handleRefreshSubscription = async () => {
     await fetchSubscriptionData();
+    await fetchCurrentPaymentRequest();
     
     // Refresh subscription restrictions to update access controls
     const { SubscriptionRestrictions } = await import('../utils/subscriptionRestrictions');
     await SubscriptionRestrictions.refresh();
     console.log('✅ Subscription data and restrictions refreshed');
+  };
+
+  const fetchCurrentPaymentRequest = async () => {
+    try {
+      const response = await api.get('/payments/current');
+      setCurrentPaymentRequest(response.data.paymentRequest);
+    } catch (err: any) {
+      console.log('No current payment request:', err);
+      setCurrentPaymentRequest(null);
+    }
   };
 
   const fetchSubscriptionData = async () => {
@@ -244,6 +260,16 @@ const Settings = () => {
     }
   };
 
+  const handleBankTransfer = (planId: string) => {
+    const plan = plans.find(p => p.id === planId);
+    if (!plan) {
+      setError('Invalid plan selected.');
+      return;
+    }
+    setSelectedPlan(plan);
+    setShowBankTransferModal(true);
+  };
+
   const handleSubscriptionPayment = (planId: string) => {
     if (!paystackScriptLoaded) {
       setError('Payment system is loading. Please try again in a moment.');
@@ -272,8 +298,12 @@ const Settings = () => {
       email: user.email
     });
     
-    // Use test keys from environment
-    const publicKey = 'pk_test_12c94edc534339c597d502b912719c26f857a92a';
+    // Use Paystack public key from environment
+    const publicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
+    if (!publicKey) {
+      setError('Paystack payment is not configured. Please use bank transfer.');
+      return;
+    }
     
     try {
       const handler = (window as any).PaystackPop.setup({
@@ -677,6 +707,31 @@ const Settings = () => {
               </button>
             </div>
             
+            {/* Pending Payment Alert */}
+            {currentPaymentRequest && (
+              <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-4 sm:p-6 border border-yellow-200 dark:border-yellow-800 mb-4">
+                <div className="flex items-start gap-3">
+                  <div className="text-2xl">⏳</div>
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-yellow-900 dark:text-yellow-100 mb-1">
+                      Payment Awaiting Verification
+                    </h4>
+                    <p className="text-sm text-yellow-700 dark:text-yellow-400 mb-2">
+                      Reference: <strong>{currentPaymentRequest.paymentReference}</strong>
+                    </p>
+                    <p className="text-sm text-yellow-700 dark:text-yellow-400">
+                      Status: <span className="capitalize font-medium">{currentPaymentRequest.status.toLowerCase().replace('_', ' ')}</span>
+                    </p>
+                    {currentPaymentRequest.paymentRequestExpiresAt && (
+                      <p className="text-xs text-yellow-600 dark:text-yellow-500 mt-1">
+                        Expires: {new Date(currentPaymentRequest.paymentRequestExpiresAt).toLocaleString()}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Current Subscription Status */}
             {subscriptionData && (
               <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-lg p-4 sm:p-6 border border-green-200 dark:border-green-800">
@@ -784,17 +839,30 @@ const Settings = () => {
                       ))}
                     </ul>
                     
-                    <button
-                      onClick={() => handleSubscriptionPayment(plan.id)}
-                      disabled={isCurrentPlan || loading || (!paystackScriptLoaded && !subscriptionData)}
-                      className={`w-full py-2 px-3 sm:px-4 rounded-lg font-medium transition-all duration-200 text-xs sm:text-sm ${
-                        isCurrentPlan
-                          ? 'bg-gray-300 dark:bg-gray-600 text-gray-600 dark:text-gray-400 cursor-not-allowed'
-                          : 'bg-green-600 text-white hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed'
-                      }`}
-                    >
-                      {isCurrentPlan ? 'Current Plan' : loading ? 'Processing...' : (!paystackScriptLoaded && !subscriptionData) ? 'Loading Payment...' : `Upgrade to ${plan.name}`}
-                    </button>
+                    <div className="space-y-2">
+                      <button
+                        onClick={() => handleBankTransfer(plan.id)}
+                        disabled={isCurrentPlan || loading || currentPaymentRequest !== null}
+                        className={`w-full py-2 px-3 sm:px-4 rounded-lg font-medium transition-all duration-200 text-xs sm:text-sm ${
+                          isCurrentPlan
+                            ? 'bg-gray-300 dark:bg-gray-600 text-gray-600 dark:text-gray-400 cursor-not-allowed'
+                            : 'bg-green-600 text-white hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed'
+                        }`}
+                      >
+                        {isCurrentPlan ? 'Current Plan' : loading ? 'Processing...' : currentPaymentRequest ? 'Payment Pending' : `Pay via Bank Transfer`}
+                      </button>
+                      <button
+                        onClick={() => handleSubscriptionPayment(plan.id)}
+                        disabled={isCurrentPlan || loading || currentPaymentRequest !== null || !paystackScriptLoaded}
+                        className={`w-full py-2 px-3 sm:px-4 rounded-lg font-medium transition-all duration-200 text-xs sm:text-sm border ${
+                          isCurrentPlan
+                            ? 'bg-gray-300 dark:bg-gray-600 text-gray-600 dark:text-gray-400 cursor-not-allowed border-transparent'
+                            : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed'
+                        }`}
+                      >
+                        {isCurrentPlan ? 'Current Plan' : loading ? 'Processing...' : currentPaymentRequest ? 'Payment Pending' : 'Instant Payment (Paystack)'}
+                      </button>
+                    </div>
                   </div>
                 );
               })}
@@ -804,10 +872,13 @@ const Settings = () => {
             <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
               <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">💳 Payment Information</h4>
               <p className="text-sm text-blue-800 dark:text-blue-200 mb-2">
-                • All payments are processed securely through Paystack
+                • Recommended: Pay via Bank Transfer (manual verification within 24 hours)
               </p>
               <p className="text-sm text-blue-800 dark:text-blue-200 mb-2">
-                • You can pay with Naira debit cards or bank transfer
+                • Instant: Pay with Paystack (Naira debit cards)
+              </p>
+              <p className="text-sm text-blue-800 dark:text-blue-200 mb-2">
+                • Use the exact payment reference when making bank transfers
               </p>
               <p className="text-sm text-blue-800 dark:text-blue-200">
                 • Your subscription will auto-renew at the end of each billing period
@@ -870,6 +941,28 @@ const Settings = () => {
         cancelText="Keep Subscription"
         type="danger"
       />
+
+      {/* Bank Transfer Modal */}
+      {selectedPlan && (
+        <BankTransferModal
+          isOpen={showBankTransferModal}
+          onClose={() => {
+            setShowBankTransferModal(false);
+            setSelectedPlan(null);
+          }}
+          planId={selectedPlan.id}
+          planName={selectedPlan.name}
+          amount={billingCycle === 'annual' ? selectedPlan.price * 12 * 0.8 : selectedPlan.price}
+          billingCycle={billingCycle}
+          onSubmitted={async () => {
+            await fetchCurrentPaymentRequest();
+            await fetchSubscriptionData();
+            setShowBankTransferModal(false);
+            setSelectedPlan(null);
+            setMessage('Payment submitted for verification. You will be notified once reviewed.');
+          }}
+        />
+      )}
     </div>
   );
 };

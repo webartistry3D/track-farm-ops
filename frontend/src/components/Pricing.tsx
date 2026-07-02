@@ -229,6 +229,12 @@ const Pricing = () => {
                   )}
                 </div>
 
+                {/* Payment Methods */}
+                <div className="flex flex-wrap justify-center gap-2 mb-4 text-xs text-gray-600 dark:text-gray-400">
+                  <span className="px-2 py-1 bg-green-50 dark:bg-green-900/20 rounded">Bank Transfer</span>
+                  <span className="px-2 py-1 bg-green-50 dark:bg-green-900/20 rounded">Paystack</span>
+                </div>
+
                 {/* CTA Button */}
                 <Link
                   to="/signup"
@@ -240,7 +246,7 @@ const Pricing = () => {
                       : 'bg-green-100 text-green-700 hover:bg-green-200 border-2 border-green-300'
                   }`}
                 >
-                  {plan.id === 'freemium' ? 'Start Free' : plan.id === 'starter' ? 'Get Starter' : 'Get Started'}
+                  {plan.id === 'freemium' ? 'Start Free' : 'Choose Plan'}
                 </Link>
               </div>
             </div>

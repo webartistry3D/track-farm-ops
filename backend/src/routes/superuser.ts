@@ -12,6 +12,7 @@ import {
   toggleOrganizationStatus,
   deleteOrganization
 } from '../controllers/superuserController';
+import { getPendingPayments, approvePayment, rejectPayment } from '../controllers/paymentController';
 import { prisma } from '../lib/prisma';
 
 const router = Router();
@@ -43,6 +44,11 @@ router.delete('/organizations/:orgId', deleteOrganization);
 // Subscription management
 router.get('/subscriptions', getAllSubscriptions);
 router.post('/subscriptions/:subId/:action', toggleSubscriptionStatus);
+
+// Payment review management
+router.get('/payments', getPendingPayments);
+router.patch('/payments/:id/approve', approvePayment);
+router.patch('/payments/:id/reject', rejectPayment);
 
 // System logs (real logging)
 router.get('/logs', async (req: AuthRequest, res) => {

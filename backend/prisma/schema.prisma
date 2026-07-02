@@ -34,6 +34,9 @@ model User {
   paidInvoices          Invoice[]              @relation("InvoicePaidBy")
   invoices              Invoice[]
   subscriptions         Subscription[]
+  paymentRequests       PaymentRequest[]
+  reviewedPaymentRequests PaymentRequest[]       @relation("PaymentReviewer")
+  subscriptionAuditLogs SubscriptionAuditLog[]
   passwordHistory       PasswordHistory[]
   cctvCameras           CctvCamera[]
   notifications        Notification[]
@@ -55,6 +58,7 @@ model Organization {
   inventoryCategories InventoryCategory[]
   inventoryItems      InventoryItem[]
   subscriptions       Subscription[]
+  paymentRequests       PaymentRequest[]
   users               User[]
   vatRecords          VatRecord[]
   cctvCameras         CctvCamera[]
@@ -248,23 +252,84 @@ model Asset {
 }
 
 model Subscription {
-  id                Int          @id @default(autoincrement())
-  userId            Int          @map("user_id")
-  organizationId    Int          @map("organization_id")
+  id                Int             @id @default(autoincrement())
+  userId            Int             @map("user_id")
+  organizationId    Int             @map("organization_id")
   plan              String
   status            String
   billingCycle      String
-  price             Decimal      @db.Decimal(10, 2)
-  paystackReference String?      @map("paystack_reference")
-  expiresAt         DateTime?    @map("expires_at")
-  activatedAt       DateTime?    @map("activated_at")
-  cancelledAt       DateTime?    @map("cancelled_at")
-  createdAt         DateTime     @default(now()) @map("created_at")
-  updatedAt         DateTime     @updatedAt @map("updated_at")
-  organization      Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  user              User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  price             Decimal         @db.Decimal(10, 2)
+  paymentMethod     SubscriptionPaymentMethod?  @map("payment_method")
+  paystackReference String?                       @map("paystack_reference")
+  expiresAt         DateTime?       @map("expires_at")
+  activatedAt       DateTime?       @map("activated_at")
+  cancelledAt       DateTime?       @map("cancelled_at")
+  createdAt         DateTime        @default(now()) @map("created_at")
+  updatedAt         DateTime        @updatedAt @map("updated_at")
+  organization      Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  paymentRequests   PaymentRequest[]
 
   @@map("subscriptions")
+}
+
+model PaymentRequest {
+  id                     Int           @id @default(autoincrement())
+  userId                 Int           @map("user_id")
+  organizationId         Int           @map("organization_id")
+  subscriptionId         Int?          @map("subscription_id")
+  planId                 String        @map("plan_id")
+  billingCycle           String        @map("billing_cycle")
+  paymentReference       String        @unique @map("payment_reference")
+  amount                 Decimal       @db.Decimal(10, 2)
+  currency               String        @default("NGN")
+  paymentMethod          SubscriptionPaymentMethod @default(BANK_TRANSFER) @map("payment_method")
+  status                 PaymentStatus @default(PENDING)
+  submittedAt            DateTime?     @map("submitted_at")
+  reviewedAt             DateTime?     @map("reviewed_at")
+  reviewedBy             Int?          @map("reviewed_by")
+  reviewerNote           String?       @map("reviewer_note")
+  paymentRequestExpiresAt DateTime?    @map("payment_request_expires_at")
+  createdAt              DateTime      @default(now()) @map("created_at")
+  updatedAt              DateTime      @updatedAt @map("updated_at")
+  organization           Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user                   User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subscription           Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  reviewer               User?         @relation("PaymentReviewer", fields: [reviewedBy], references: [id], onDelete: SetNull)
+
+  @@map("payment_requests")
+}
+
+model SubscriptionAuditLog {
+  id             Int      @id @default(autoincrement())
+  userId         Int      @map("user_id")
+  organizationId Int?     @map("organization_id")
+  action         String
+  entityType     String   @map("entity_type")
+  entityId       Int?     @map("entity_id")
+  oldValue       String?  @map("old_value")
+  newValue       String?  @map("new_value")
+  ipAddress      String?  @map("ip_address")
+  userAgent      String?  @map("user_agent")
+  endpoint       String?
+  metadata       Json?
+  createdAt      DateTime @default(now()) @map("created_at")
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("subscription_audit_logs")
+}
+
+enum PaymentStatus {
+  PENDING
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  EXPIRED
+}
+
+enum SubscriptionPaymentMethod {
+  BANK_TRANSFER
+  PAYSTACK
 }
 
 model VatRecord {

@@ -171,9 +171,9 @@ export const createSubscription = async (req: AuthRequest, res: Response) => {
 
     // Calculate price based on plan and billing cycle
     const planPrices: Record<string, { monthly: number; annual: number }> = {
-      starter: { monthly: 15000, annual: 135000 },
-      growth: { monthly: 40000, annual: 360000 },
-      pro: { monthly: 100000, annual: 900000 }
+      starter: { monthly: 10000, annual: 96000 },
+      growth: { monthly: 39000, annual: 374400 },
+      pro: { monthly: 99000, annual: 950400 }
     };
 
     const expectedAmount = planPrices[planId as keyof typeof planPrices][billingCycle as keyof typeof planPrices[string]];
@@ -244,7 +244,11 @@ export const verifyPayment = async (req: AuthRequest, res: Response) => {
     // For now, we'll simulate successful verification
     
     // Verify payment with Paystack (test implementation)
-    const paystackSecretKey = process.env.PAYSTACK_SECRET_KEY || 'sk_test_1568a218d0623b8afd24bebbdd3b7f2ecdf74db1';
+    const paystackSecretKey = process.env.PAYSTACK_SECRET_KEY;
+    if (!paystackSecretKey) {
+      console.error('❌ PAYSTACK_SECRET_KEY is not configured');
+      return res.status(500).json({ error: 'Payment provider not configured' });
+    }
     
     try {
       // In production, make actual API call to Paystack
