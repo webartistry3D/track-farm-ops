@@ -2,11 +2,18 @@ import webPush from 'web-push';
 import { Prisma, NotificationType } from '@prisma/client';
 import { prisma } from '../lib/prisma';
 
-webPush.setVapidDetails(
-  process.env.VAPID_SUBJECT || 'mailto:admin@trackfarmops.com',
-  process.env.VAPID_PUBLIC_KEY!,
-  process.env.VAPID_PRIVATE_KEY!
-);
+const vapidConfigured = () =>
+  Boolean(process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY);
+
+const ensureVapid = () => {
+  if (!vapidConfigured()) return false;
+  webPush.setVapidDetails(
+    process.env.VAPID_SUBJECT || 'mailto:admin@trackfarmops.com',
+    process.env.VAPID_PUBLIC_KEY!,
+    process.env.VAPID_PRIVATE_KEY!
+  );
+  return true;
+};
 
 interface PushPayload {
   title: string;
@@ -18,6 +25,7 @@ interface PushPayload {
 }
 
 export const sendPushToUser = async (userId: number, payload: PushPayload): Promise<void> => {
+  if (!ensureVapid()) return;
   const subs = await prisma.pushSubscription.findMany({ where: { userId } });
   const data = JSON.stringify(payload);
 
@@ -52,7 +60,7 @@ export const createAndDispatchNotification = async (data: {
   const notification = await prisma.notification.create({ data });
 
   // Fire-and-forget push dispatch
-  if (process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
+  if (vapidConfigured()) {
     sendPushToUser(notification.userId, {
       title: notification.title,
       body: notification.message,

@@ -316,18 +316,16 @@ const Settings = () => {
           >
             Profile
           </button>
-          {/*{user?.role === 'OWNER' && (
-            <button
-              onClick={() => setActiveTab('notifications')}
-              className={`py-2 px-3 sm:px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
-                activeTab === 'notifications'
-                  ? 'border-green-500 text-green-600 dark:text-green-400'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-              }`}
-            >
-              Notifications
-            </button>
-          )}*/}
+          <button
+            onClick={() => setActiveTab('notifications')}
+            className={`py-2 px-3 sm:px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
+              activeTab === 'notifications'
+                ? 'border-green-500 text-green-600 dark:text-green-400'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+            }`}
+          >
+            Notifications
+          </button>
           {user?.role === 'OWNER' && (
             <button
               onClick={() => setActiveTab('workers')}
