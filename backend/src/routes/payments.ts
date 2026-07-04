@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   initiateManualPayment,
   submitManualPayment,
+  cancelManualPayment,
   getPaymentHistory,
   getBankDetailsPublic,
   getCurrentPaymentRequest
@@ -17,6 +18,9 @@ router.post('/manual/initiate', initiateManualPayment);
 
 // Submit "I've Sent the Money"
 router.post('/manual/submit', submitManualPayment);
+
+// Cancel pending manual payment request
+router.post('/manual/cancel', cancelManualPayment);
 
 // Get current pending/under-review payment request
 router.get('/current', getCurrentPaymentRequest);

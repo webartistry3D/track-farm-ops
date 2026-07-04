@@ -8,6 +8,11 @@ import {
   createNotification,
   getNotificationStats
 } from '../controllers/notificationController';
+import {
+  getVapidPublicKey,
+  subscribePush,
+  unsubscribePush
+} from '../controllers/pushNotificationController';
 
 const router = Router();
 
@@ -22,6 +27,11 @@ router.get('/stats', getNotificationStats);
 
 // Create a new notification
 router.post('/', createNotification);
+
+// Push notification endpoints
+router.get('/push/vapid-public-key', getVapidPublicKey);
+router.post('/push/subscribe', subscribePush);
+router.post('/push/unsubscribe', unsubscribePush);
 
 // Mark a specific notification as read
 router.patch('/:notificationId/read', markNotificationAsRead);

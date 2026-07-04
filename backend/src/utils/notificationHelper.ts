@@ -1,5 +1,6 @@
 import { prisma } from '../lib/prisma';
 import { UserRole } from '@prisma/client';
+import { sendPushToUser } from './pushNotification';
 
 /**
  * Notification types for different activities
@@ -113,6 +114,24 @@ export async function createActivityNotification(
         }
       }))
     });
+
+    // Fire-and-forget push dispatch for each recipient
+    if (process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
+      recipientIds.forEach(recipientId => {
+        sendPushToUser(recipientId, {
+          title: details.title,
+          body: details.message,
+          icon: '/icon-192x192.png',
+          badge: '/icon-192x192.png',
+          tag: `activity-${details.relatedEntityId || activityType}`,
+          data: {
+            relatedEntity: details.relatedEntity,
+            relatedEntityId: details.relatedEntityId,
+            url: '/notifications'
+          }
+        }).catch(err => console.error('Push dispatch failed for recipient', recipientId, err));
+      });
+    }
 
     console.log(`✅ Created ${notifications.count} notifications for ${activityType}`);
     return notifications;

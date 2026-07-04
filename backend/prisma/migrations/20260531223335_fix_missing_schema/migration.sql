@@ -45,8 +45,16 @@ CREATE TABLE IF NOT EXISTS password_history (
   user_agent TEXT
 );
 
--- Create index if it doesn't exist
-CREATE INDEX IF NOT EXISTS idx_password_history_user_id_created_at ON password_history(user_id, created_at DESC);
+-- Create index if it doesn't exist and the created_at column exists
+DO $$
+BEGIN
+    IF EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name = 'password_history' AND column_name = 'created_at'
+    ) THEN
+        CREATE INDEX IF NOT EXISTS idx_password_history_user_id_created_at ON password_history(user_id, created_at DESC);
+    END IF;
+END $$;
 
 -- Create audit_logs table if it doesn't exist
 CREATE TABLE IF NOT EXISTS audit_logs (

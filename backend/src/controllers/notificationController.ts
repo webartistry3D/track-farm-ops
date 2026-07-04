@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { AuthRequest } from '../middleware/auth';
 import { prisma } from '../lib/prisma';
+import { createAndDispatchNotification } from '../utils/pushNotification';
 
 // Get all notifications for the authenticated user
 export const getNotifications = async (req: AuthRequest, res: Response) => {
@@ -147,17 +148,15 @@ export const createNotification = async (req: AuthRequest, res: Response) => {
 
     const { title, message, type, relatedEntity, relatedEntityId, metadata } = req.body;
     
-    const notification = await prisma.notification.create({
-      data: {
-        title: title || 'New Notification',
-        message: message || 'You have a new notification',
-        type: type || 'INFO',
-        userId,
-        organizationId,
-        relatedEntity,
-        relatedEntityId,
-        metadata
-      }
+    const notification = await createAndDispatchNotification({
+      title: title || 'New Notification',
+      message: message || 'You have a new notification',
+      type: type || 'INFO',
+      userId,
+      organizationId,
+      relatedEntity,
+      relatedEntityId,
+      metadata
     });
     
     res.status(201).json({

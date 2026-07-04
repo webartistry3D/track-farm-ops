@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { prisma } from '../lib/prisma';
 import { AuthRequest } from '../middleware/auth';
 import crypto from 'crypto';
+import { sendPushToUser } from '../utils/pushNotification';
 
 const planPrices: Record<string, { monthly: number; annual: number }> = {
   starter: { monthly: 10000, annual: 96000 },
@@ -112,6 +113,24 @@ const createPaymentNotifications = async (
         metadata: metadata ? JSON.stringify(metadata) : null
       }))
     });
+
+    // Fire-and-forget push dispatch for each recipient
+    if (process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
+      recipientIds.forEach(userId => {
+        sendPushToUser(userId, {
+          title,
+          body: message,
+          icon: '/icon-192x192.png',
+          badge: '/icon-192x192.png',
+          tag: `payment-${relatedEntityId}`,
+          data: {
+            relatedEntity,
+            relatedEntityId,
+            url: '/settings'
+          }
+        }).catch(err => console.error('Push dispatch failed for user', userId, err));
+      });
+    }
   } catch (error) {
     console.error('Failed to create payment notifications:', error);
   }
@@ -291,6 +310,53 @@ export const submitManualPayment = async (req: AuthRequest, res: Response) => {
     });
   } catch (error) {
     console.error('Submit manual payment error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const cancelManualPayment = async (req: AuthRequest, res: Response) => {
+  try {
+    const currentUser = req.user!;
+
+    const currentUserOrg = await prisma.user.findUnique({
+      where: { id: currentUser.id },
+      select: { organizationId: true }
+    });
+
+    if (!currentUserOrg || !currentUserOrg.organizationId) {
+      return res.status(403).json({ error: 'Access denied. User must be assigned to an organization.', code: 'NO_ORGANIZATION' });
+    }
+
+    const paymentRequest = await prisma.paymentRequest.findFirst({
+      where: {
+        organizationId: currentUserOrg.organizationId,
+        status: { in: ['PENDING', 'UNDER_REVIEW'] },
+        userId: currentUser.id
+      },
+      include: { subscription: true }
+    });
+
+    if (!paymentRequest) {
+      return res.status(404).json({ error: 'No pending payment request found', code: 'PAYMENT_NOT_FOUND' });
+    }
+
+    await prisma.$transaction([
+      prisma.paymentRequest.delete({
+        where: { id: paymentRequest.id }
+      }),
+      prisma.subscription.delete({
+        where: { id: paymentRequest.subscriptionId! }
+      })
+    ]);
+
+    await auditLog(req, 'PAYMENT_CANCELLED', 'PaymentRequest', paymentRequest.id, paymentRequest.status, 'CANCELLED');
+
+    res.json({
+      success: true,
+      message: 'Payment request cancelled successfully'
+    });
+  } catch (error) {
+    console.error('Cancel manual payment error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };

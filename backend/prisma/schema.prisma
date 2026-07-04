@@ -40,6 +40,7 @@ model User {
   passwordHistory       PasswordHistory[]
   cctvCameras           CctvCamera[]
   notifications        Notification[]
+  pushSubscriptions    PushSubscription[]
   organization          Organization?          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   healthRecords         HealthRecord[]
 
@@ -628,6 +629,20 @@ model Notification {
   user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("notifications")
+}
+
+model PushSubscription {
+  id        Int      @id @default(autoincrement())
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  userId    Int      @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@map("push_subscriptions")
 }
 
 enum NotificationType {

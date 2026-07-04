@@ -169,10 +169,10 @@ class RateLimiter {
 
 // Predefined rate limit configurations
 export const rateLimitConfigs = {
-  // Authentication endpoints - very strict
+  // Authentication endpoints
   auth: {
     windowMs: 15 * 60 * 1000,  // 15 minutes
-    maxRequests: 5,              // 5 attempts per 15 minutes
+    maxRequests: 21,             // 21 attempts per 15 minutes
     message: 'Too many authentication attempts, please try again later.'
   },
 

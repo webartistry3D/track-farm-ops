@@ -50,7 +50,13 @@
     "nodemon": "^3.1.11",
     "sharp": "^0.34.5",
     "tesseract.js": "^7.0.0",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "web-push": "^3.6.7",
+    "workbox-core": "^7.4.1",
+    "workbox-expiration": "^7.4.1",
+    "workbox-precaching": "^7.4.1",
+    "workbox-routing": "^7.4.1",
+    "workbox-strategies": "^7.4.1"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
@@ -62,7 +68,9 @@
     "@types/morgan": "^1.9.10",
     "@types/multer": "^2.1.0",
     "@types/nodemailer": "^8.0.1",
+    "@types/web-push": "^3.6.4",
     "prisma": "^5.19.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "workbox-build": "^7.4.1"
   }
 }

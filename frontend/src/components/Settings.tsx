@@ -5,6 +5,7 @@ import UserManagement from './UserManagement';
 import { formatCurrency } from '../utils/currency';
 import ConfirmModal from './ConfirmModal';
 import BankTransferModal from './BankTransferModal';
+import { requestPushPermission, unsubscribePush } from '../lib/pushNotifications';
 
 interface SubscriptionPlan {
   id: string;
@@ -31,6 +32,22 @@ const Settings = () => {
     dailyReports: false,
     weeklyReports: false
   });
+  const [pushEnabled, setPushEnabled] = useState(false);
+  const [pushError, setPushError] = useState('');
+
+  const togglePush = async () => {
+    setPushError('');
+    if (pushEnabled) {
+      await unsubscribePush();
+      setPushEnabled(false);
+    } else {
+      const enabled = await requestPushPermission();
+      setPushEnabled(enabled);
+      if (!enabled) {
+        setPushError('Push notifications were blocked. Enable them in your browser settings to receive alerts.');
+      }
+    }
+  };
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -68,7 +85,6 @@ const Settings = () => {
   }, [activeTab]);
   const [subscriptionData, setSubscriptionData] = useState<any>(null);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly');
-  const [paystackScriptLoaded, setPaystackScriptLoaded] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showBankTransferModal, setShowBankTransferModal] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan | null>(null);
@@ -132,22 +148,9 @@ const Settings = () => {
   ];
 
   useEffect(() => {
-    // Load Paystack script
-    const script = document.createElement('script');
-    script.src = 'https://js.paystack.co/v1/inline.js';
-    script.async = true;
-    script.onload = () => setPaystackScriptLoaded(true);
-    document.body.appendChild(script);
-
     // Fetch current subscription and payment request
     fetchSubscriptionData();
     fetchCurrentPaymentRequest();
-
-    return () => {
-      if (document.body.contains(script)) {
-        document.body.removeChild(script);
-      }
-    };
   }, []);
 
   const handleRefreshSubscription = async () => {
@@ -268,123 +271,6 @@ const Settings = () => {
     }
     setSelectedPlan(plan);
     setShowBankTransferModal(true);
-  };
-
-  const handleSubscriptionPayment = (planId: string) => {
-    if (!paystackScriptLoaded) {
-      setError('Payment system is loading. Please try again in a moment.');
-      return;
-    }
-
-    const plan = plans.find(p => p.id === planId);
-    if (!plan) {
-      setError('Invalid plan selected.');
-      return;
-    }
-
-    const price = billingCycle === 'annual' ? plan.price * 12 * 0.8 : plan.price; // 20% discount for annual
-    
-    // Validate email
-    if (!user?.email) {
-      setError('User email is required for payment.');
-      return;
-    }
-    
-    console.log('Initiating payment:', {
-      planId,
-      planName: plan.name,
-      price,
-      billingCycle,
-      email: user.email
-    });
-    
-    // Use Paystack public key from environment
-    const publicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
-    if (!publicKey) {
-      setError('Paystack payment is not configured. Please use bank transfer.');
-      return;
-    }
-    
-    try {
-      const handler = (window as any).PaystackPop.setup({
-        key: publicKey,
-        email: user.email,
-        amount: price * 100, // Paystack expects amount in kobo (cents)
-        currency: 'NGN',
-        ref: `FARMOPS_${user.id}_${Date.now()}`,
-        callback: function(response: any) {
-          console.log('Payment successful:', response);
-          verifyPayment(response.reference, planId, billingCycle, price);
-        },
-        onClose: function() {
-          console.log('Payment window closed');
-          setError('Payment was cancelled. Please try again.');
-        },
-        onError: function(error: any) {
-          console.error('Payment error:', error);
-          setError('Payment failed. Please try again.');
-        }
-      });
-
-      handler.openIframe();
-    } catch (error) {
-      console.error('Paystack setup error:', error);
-      setError('Failed to initialize payment. Please try again.');
-    }
-  };
-
-  const verifyPayment = async (reference: string, planId: string, cycle: string, amount: number) => {
-    try {
-      setLoading(true);
-      await api.post('/subscription/verify', {
-        reference,
-        planId,
-        billingCycle: cycle,
-        amount
-      });
-      
-      setMessage('Subscription activated successfully! 🎉');
-      
-      // Add delay and retry mechanism to fetch subscription data
-      const fetchWithRetry = async (retries = 3) => {
-        for (let i = 0; i < retries; i++) {
-          try {
-            await fetchSubscriptionData();
-            console.log('✅ Subscription data fetched successfully');
-            
-            // Refresh subscription restrictions to update access controls
-            const { SubscriptionRestrictions } = await import('../utils/subscriptionRestrictions');
-            await SubscriptionRestrictions.refresh();
-            console.log('✅ Subscription restrictions refreshed');
-            
-            return; // Success, exit the retry loop
-          } catch (err: any) {
-            console.log(`⚠️ Attempt ${i + 1} failed:`, err.response?.status || err.message);
-            if (i === retries - 1) {
-              // Last attempt failed, don't show error to user, just log it
-              console.log('❌ All retry attempts failed, but payment was successful');
-              return;
-            }
-            // Wait before retry (exponential backoff)
-            await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
-          }
-        }
-      };
-      
-      // Start fetching after 2 seconds to ensure payment is fully processed
-      setTimeout(() => {
-        fetchWithRetry();
-      }, 2000);
-    } catch (err: any) {
-      console.error('Payment verification error:', err);
-      if (err.code === 'ERR_CONNECTION_REFUSED' || err.code === 'ECONNREFUSED') {
-        setError('Backend server is temporarily unavailable. Please refresh and try again.');
-      } else {
-        setError('Payment verification failed. Please contact support.');
-      }
-    } finally {
-      setLoading(false);
-    }
   };
 
   const handleCancelSubscription = async () => {
@@ -675,6 +561,29 @@ const Settings = () => {
                   />
                 </button>
               </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex-1 pr-4">
+                  <div className="font-medium text-gray-900 dark:text-white text-sm sm:text-base">Push Notifications</div>
+                  <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Receive notifications on your device even when the app is closed</div>
+                </div>
+                <button
+                  type="button"
+                  onClick={togglePush}
+                  className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                    pushEnabled ? 'bg-green-600' : 'bg-gray-200 dark:bg-gray-600'
+                  }`}
+                >
+                  <span
+                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                      pushEnabled ? 'translate-x-5' : 'translate-x-0'
+                    }`}
+                  />
+                </button>
+              </div>
+              {pushError && (
+                <div className="text-xs text-red-600 dark:text-red-400 mt-2">{pushError}</div>
+              )}
             </div>
 
             <div className="flex justify-end">
@@ -851,7 +760,8 @@ const Settings = () => {
                       >
                         {isCurrentPlan ? 'Current Plan' : loading ? 'Processing...' : currentPaymentRequest ? 'Payment Pending' : `Pay via Bank Transfer`}
                       </button>
-                      <button
+                      {/* Instant Payment button commented out */}
+                      {/* <button
                         onClick={() => handleSubscriptionPayment(plan.id)}
                         disabled={isCurrentPlan || loading || currentPaymentRequest !== null || !paystackScriptLoaded}
                         className={`w-full py-2 px-3 sm:px-4 rounded-lg font-medium transition-all duration-200 text-xs sm:text-sm border ${
@@ -861,7 +771,7 @@ const Settings = () => {
                         }`}
                       >
                         {isCurrentPlan ? 'Current Plan' : loading ? 'Processing...' : currentPaymentRequest ? 'Payment Pending' : 'Instant Payment (Paystack)'}
-                      </button>
+                      </button> */}
                     </div>
                   </div>
                 );

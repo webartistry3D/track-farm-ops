@@ -44,7 +44,7 @@ const BankTransferModal = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    if (isOpen && !paymentData && step === 'details') {
+    if (isOpen && !paymentData) {
       initiatePayment();
     }
   }, [isOpen]);
@@ -110,7 +110,16 @@ const BankTransferModal = ({
     });
   };
 
-  const handleClose = () => {
+  const handleClose = async () => {
+    if (paymentData && step !== 'success') {
+      try {
+        await api.post('/payments/manual/cancel');
+      } catch (err: any) {
+        console.log('Cancel payment request on close:', err.response?.data?.error || err.message);
+        // Continue closing the modal even if cancel fails
+      }
+    }
+
     setStep('details');
     setPaymentData(null);
     setError('');
@@ -166,6 +175,8 @@ const BankTransferModal = ({
 
     return (
       <div className="space-y-4">
+        <h4 className="font-semibold text-green-900 dark:text-green-100 text-center">Confirm Bank Transfer Payment</h4>
+
         {/* Plan Summary */}
         <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 border border-green-200 dark:border-green-800">
           <div className="flex justify-between items-center mb-2">
@@ -265,7 +276,7 @@ const BankTransferModal = ({
           <ol className="list-decimal list-inside space-y-1">
             <li>Transfer {formatCurrency(amount)} to the account above</li>
             <li>Use reference: <strong>{paymentRequest.paymentReference}</strong></li>
-            <li>Click "I've Sent the Money" below</li>
+            <li>Click "I've Paid the Money" below</li>
             <li>Wait for verification (usually within 24 hours)</li>
           </ol>
         </div>
@@ -288,7 +299,7 @@ const BankTransferModal = ({
             disabled={isSubmitting}
             className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            {isSubmitting ? 'Submitting...' : "I've Sent the Money"}
+            {isSubmitting ? 'Submitting...' : "I've Paid the Money"}
           </button>
         </div>
       </div>
