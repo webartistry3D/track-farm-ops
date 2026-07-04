@@ -259,9 +259,9 @@ const Landing = () => {
             </h1>
             <div className="text-sm font-inter text-white mb-8 max-w-6xl mx-auto sm:text-base md:text-lg lg:text-lg xl:text-lg">
               <div className="flex flex-col md:flex-row lg:flex-row items-center justify-center gap-4 md:gap-6 lg:gap-6">
-                <span className="text-center bg-green-600/50 px-4 py-2 rounded-lg">• {typedText1}</span>
-                <span className="text-center bg-blue-600/50 px-4 py-2 rounded-lg">• {typedText2}</span>
-                <span className="text-center bg-orange-600/50 px-4 py-2 rounded-lg">• {typedText3}</span>
+                <span className="text-center bg-green-600 bg-opacity-50 px-4 py-2 rounded-lg">• {typedText1}</span>
+                <span className="text-center bg-blue-600 bg-opacity-50 px-4 py-2 rounded-lg">• {typedText2}</span>
+                <span className="text-center bg-orange-600 bg-opacity-50 px-4 py-2 rounded-lg">• {typedText3}</span>
               </div>
             </div>
             
