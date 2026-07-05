@@ -1,8 +1,9 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import { AuthRequest } from '../middleware/auth';
 import { prisma } from '../lib/prisma';
 
 // Get user's notification preferences
-export const getUserNotificationPreferences = async (req: Request, res: Response) => {
+export const getUserNotificationPreferences = async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user?.id;
 
@@ -37,7 +38,7 @@ export const getUserNotificationPreferences = async (req: Request, res: Response
 };
 
 // Update notification preferences
-export const updateNotificationPreferences = async (req: Request, res: Response) => {
+export const updateNotificationPreferences = async (req: AuthRequest, res: Response) => {
   try {
     const { emailNotifications, lowStockAlerts, dailyReports, weeklyReports } = req.body;
     const userId = req.user?.id;

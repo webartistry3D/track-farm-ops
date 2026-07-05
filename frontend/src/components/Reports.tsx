@@ -322,7 +322,7 @@ const Reports: React.FC = () => {
 
         {/* Report Tabs */}
         <div className="bg-white dark:bg-gray-900 shadow rounded-lg p-0 mb-6">
-          <div className="overflow-x-auto pb-0">
+          <div className="overflow-x-auto pb-0 scrollbar-hide">
             <div className="flex items-center justify-between gap-4 min-w-max border-b border-gray-200 dark:border-gray-700">
               <div className="flex items-center gap-4">
                 <button
