@@ -29,20 +29,6 @@ const SYSTEM_PRESET_CATEGORIES = [
     metadata: { keywords: ['medicine', 'veterinary', 'health', 'treatment'] }
   },
   {
-    name: 'Equipment & Tools',
-    description: 'Farm equipment and tools',
-    icon: '🔧',
-    color: 'bg-blue-100 text-blue-700 border-blue-200',
-    metadata: { keywords: ['equipment', 'tools', 'machinery', 'implements'] }
-  },
-  {
-    name: 'Seeds & Planting',
-    description: 'Seeds, seedlings, and planting materials',
-    icon: '🌱',
-    color: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-    metadata: { keywords: ['seeds', 'seedlings', 'planting', 'germination'] }
-  },
-  {
     name: 'Fertilizers & Soil',
     description: 'Fertilizers and soil amendments',
     icon: '🧪',
@@ -67,61 +53,32 @@ const SYSTEM_PRESET_CATEGORIES = [
 
 // 📦 Nigerian Mixed Farm Preset Items
 const SYSTEM_PRESET_ITEMS = [
-  // Livestock (3 items)
-  { name: 'Broiler Chickens', type: 'LIVESTOCK', unit: 'pieces', categoryId: 1, quantity: 0, pricePerUnit: null },
-  { name: 'Layer Chickens', type: 'LIVESTOCK', unit: 'pieces', categoryId: 1, quantity: 0, pricePerUnit: null },
-  { name: 'Goats', type: 'LIVESTOCK', unit: 'pieces', categoryId: 1, quantity: 0, pricePerUnit: null },
-  
-  // Feed & Nutrition (6 items)
+  // Livestock (2 items)
+  { name: 'Broilers', type: 'LIVESTOCK', unit: 'pieces', categoryId: 1, quantity: 0, pricePerUnit: null },
+  { name: 'Layers', type: 'LIVESTOCK', unit: 'pieces', categoryId: 1, quantity: 0, pricePerUnit: null },
+
+  // Feed & Nutrition (2 items)
   { name: 'Broiler Feed', type: 'CONSUMABLES', unit: 'kg', categoryId: 2, quantity: 0, pricePerUnit: null },
   { name: 'Layer Feed', type: 'CONSUMABLES', unit: 'kg', categoryId: 2, quantity: 0, pricePerUnit: null },
-  { name: 'Grower Feed', type: 'CONSUMABLES', unit: 'kg', categoryId: 2, quantity: 0, pricePerUnit: null },
-  { name: 'Starter Feed', type: 'CONSUMABLES', unit: 'kg', categoryId: 2, quantity: 0, pricePerUnit: null },
-  { name: 'Vitamin Supplements', type: 'CONSUMABLES', unit: 'liters', categoryId: 2, quantity: 0, pricePerUnit: null },
-  { name: 'Mineral Blocks', type: 'CONSUMABLES', unit: 'pieces', categoryId: 2, quantity: 0, pricePerUnit: null },
-  
-  // Medicine & Health (6 items)
+
+  // Medicine & Health (4 items)
   { name: 'Antibiotics', type: 'CONSUMABLES', unit: 'bottles', categoryId: 3, quantity: 0, pricePerUnit: null },
   { name: 'Vaccines', type: 'CONSUMABLES', unit: 'vials', categoryId: 3, quantity: 0, pricePerUnit: null },
-  { name: 'Dewormers', type: 'CONSUMABLES', unit: 'tablets', categoryId: 3, quantity: 0, pricePerUnit: null },
   { name: 'Vitamins', type: 'CONSUMABLES', unit: 'bottles', categoryId: 3, quantity: 0, pricePerUnit: null },
   { name: 'Disinfectants', type: 'CONSUMABLES', unit: 'liters', categoryId: 3, quantity: 0, pricePerUnit: null },
-  { name: 'Syringes', type: 'CONSUMABLES', unit: 'pieces', categoryId: 3, quantity: 0, pricePerUnit: null },
-  
-  // Equipment & Tools (8 items)
-  { name: 'Wheelbarrow', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 0, pricePerUnit: null },
-  { name: 'Shovel', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 0, pricePerUnit: null },
-  { name: 'Hoe', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 0, pricePerUnit: null },
-  { name: 'Water Buckets', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 0, pricePerUnit: null },
-  { name: 'Feed Troughs', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 0, pricePerUnit: null },
-  { name: 'Nesting Boxes', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 0, pricePerUnit: null },
-  { name: 'Watering Cans', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 0, pricePerUnit: null },
-  { name: 'Cutlasses', type: 'EQUIPMENT', unit: 'pieces', categoryId: 4, quantity: 0, pricePerUnit: null },
-  
-  // Seeds & Planting (6 items)
-  { name: 'Maize Seeds', type: 'PRODUCE', unit: 'kg', categoryId: 5, quantity: 0, pricePerUnit: null },
-  { name: 'Rice Seeds', type: 'PRODUCE', unit: 'kg', categoryId: 5, quantity: 0, pricePerUnit: null },
-  { name: 'Bean Seeds', type: 'PRODUCE', unit: 'kg', categoryId: 5, quantity: 0, pricePerUnit: null },
-  { name: 'Tomato Seeds', type: 'PRODUCE', unit: 'packets', categoryId: 5, quantity: 0, pricePerUnit: null },
-  { name: 'Pepper Seeds', type: 'PRODUCE', unit: 'packets', categoryId: 5, quantity: 0, pricePerUnit: null },
-  { name: 'Vegetable Seeds', type: 'PRODUCE', unit: 'packets', categoryId: 5, quantity: 0, pricePerUnit: null },
-  
-  // Fertilizers & Soil (6 items)
-  { name: 'NPK Fertilizer', type: 'CONSUMABLES', unit: 'kg', categoryId: 6, quantity: 0, pricePerUnit: null },
-  { name: 'Urea', type: 'CONSUMABLES', unit: 'kg', categoryId: 6, quantity: 0, pricePerUnit: null },
-  { name: 'Compost', type: 'CONSUMABLES', unit: 'kg', categoryId: 6, quantity: 0, pricePerUnit: null },
-  { name: 'Manure', type: 'CONSUMABLES', unit: 'kg', categoryId: 6, quantity: 0, pricePerUnit: null },
-  { name: 'Lime', type: 'CONSUMABLES', unit: 'kg', categoryId: 6, quantity: 0, pricePerUnit: null },
-  { name: 'Organic Fertilizer', type: 'CONSUMABLES', unit: 'kg', categoryId: 6, quantity: 0, pricePerUnit: null },
-  
-  // Harvested Produce (4 items)
-  { name: 'Fresh Tomatoes', type: 'PRODUCE', unit: 'kg', categoryId: 7, quantity: 0, pricePerUnit: null },
-  { name: 'Fresh Peppers', type: 'PRODUCE', unit: 'kg', categoryId: 7, quantity: 0, pricePerUnit: null },
-  { name: 'Fresh Leafy Vegetables', type: 'PRODUCE', unit: 'bunches', categoryId: 7, quantity: 0, pricePerUnit: null },
-  { name: 'Fresh Maize', type: 'PRODUCE', unit: 'kg', categoryId: 7, quantity: 0, pricePerUnit: null },
-  
+
+  // Fertilizers & Soil (3 items)
+  { name: 'Urea', type: 'CONSUMABLES', unit: 'kg', categoryId: 4, quantity: 0, pricePerUnit: null },
+  { name: 'Compost', type: 'CONSUMABLES', unit: 'kg', categoryId: 4, quantity: 0, pricePerUnit: null },
+  { name: 'Manure', type: 'CONSUMABLES', unit: 'kg', categoryId: 4, quantity: 0, pricePerUnit: null },
+
+  // Harvested Produce (3 items)
+  { name: 'Tomatoes', type: 'PRODUCE', unit: 'kg', categoryId: 5, quantity: 0, pricePerUnit: null },
+  { name: 'Peppers', type: 'PRODUCE', unit: 'kg', categoryId: 5, quantity: 0, pricePerUnit: null },
+  { name: 'Maize', type: 'PRODUCE', unit: 'kg', categoryId: 5, quantity: 0, pricePerUnit: null },
+
   // Animal Products (1 item)
-  { name: 'Farm Eggs', type: 'PRODUCE', unit: 'crates', categoryId: 8, quantity: 0, pricePerUnit: null }
+  { name: 'Eggs', type: 'PRODUCE', unit: 'crates', categoryId: 6, quantity: 0, pricePerUnit: null }
 ];
 
 /**

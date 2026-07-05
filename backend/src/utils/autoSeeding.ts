@@ -21,7 +21,7 @@ export async function autoSeedNigerianFarmPresets(organizationId: number, organi
     
     if (seedingSuccess) {
       console.log(`🎉 Successfully seeded Nigerian Mixed Farm presets for ${organizationName}`);
-      console.log(`📦 8 Categories and 40 Items applied automatically`);
+      console.log(`📦 6 Categories and 15 Items applied automatically`);
       return true;
     } else {
       console.error(`❌ Failed to seed presets for ${organizationName}`);
