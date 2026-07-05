@@ -1,34 +1,34 @@
 import { Request, Response } from 'express';
-import { NotificationType } from '@prisma/client';
-
-// NOTE: The NotificationPreference model is not yet in schema.prisma.
-// Until it is added and migrated, all preference endpoints return in-memory
-// defaults (all notifications enabled). No data is persisted.
-
-const buildDefaultPreferences = (
-  userId: number,
-  organizationId: number
-) =>
-  Object.values(NotificationType).map(type => ({
-    userId,
-    organizationId,
-    notificationType: type,
-    enabled: true,
-    emailEnabled: false,
-    pushEnabled: true,
-  }));
+import { prisma } from '../lib/prisma';
 
 // Get user's notification preferences
 export const getUserNotificationPreferences = async (req: Request, res: Response) => {
   try {
     const userId = req.user?.id;
-    const organizationId = req.user?.organizationId;
 
-    if (!userId || !organizationId) {
+    if (!userId) {
       return res.status(401).json({ error: 'User not authenticated' });
     }
 
-    const preferences = buildDefaultPreferences(userId, organizationId);
+    let preference = await prisma.notificationPreference.findUnique({
+      where: { userId }
+    });
+
+    // Create default preferences if not exists
+    if (!preference) {
+      preference = await prisma.notificationPreference.create({
+        data: { userId }
+      });
+    }
+
+    // Return in frontend format
+    const preferences = {
+      emailNotifications: preference.emailNotifications,
+      lowStockAlerts: preference.lowStockAlerts,
+      dailyReports: preference.dailyReports,
+      weeklyReports: preference.weeklyReports
+    };
+
     res.json({ preferences });
   } catch (error) {
     console.error('Error fetching notification preferences:', error);
@@ -36,101 +36,72 @@ export const getUserNotificationPreferences = async (req: Request, res: Response
   }
 };
 
-// Update notification preference
-export const updateNotificationPreference = async (req: Request, res: Response) => {
+// Update notification preferences
+export const updateNotificationPreferences = async (req: Request, res: Response) => {
   try {
-    const { notificationType, enabled, emailEnabled, pushEnabled } = req.body;
+    const { emailNotifications, lowStockAlerts, dailyReports, weeklyReports } = req.body;
     const userId = req.user?.id;
-    const organizationId = req.user?.organizationId;
 
-    if (!userId || !organizationId) {
+    if (!userId) {
       return res.status(401).json({ error: 'User not authenticated' });
     }
 
-    if (!Object.values(NotificationType).includes(notificationType)) {
-      return res.status(400).json({ error: 'Invalid notification type' });
-    }
+    // Upsert preferences
+    const preference = await prisma.notificationPreference.upsert({
+      where: { userId },
+      update: {
+        emailNotifications: emailNotifications !== undefined ? emailNotifications : undefined,
+        lowStockAlerts: lowStockAlerts !== undefined ? lowStockAlerts : undefined,
+        dailyReports: dailyReports !== undefined ? dailyReports : undefined,
+        weeklyReports: weeklyReports !== undefined ? weeklyReports : undefined
+      },
+      create: {
+        userId,
+        emailNotifications: emailNotifications !== undefined ? emailNotifications : false,
+        lowStockAlerts: lowStockAlerts !== undefined ? lowStockAlerts : true,
+        dailyReports: dailyReports !== undefined ? dailyReports : false,
+        weeklyReports: weeklyReports !== undefined ? weeklyReports : false
+      }
+    });
 
-    const preference = {
-      userId,
-      organizationId,
-      notificationType,
-      enabled: enabled !== undefined ? enabled : true,
-      emailEnabled: emailEnabled !== undefined ? emailEnabled : false,
-      pushEnabled: pushEnabled !== undefined ? pushEnabled : true,
+    const preferences = {
+      emailNotifications: preference.emailNotifications,
+      lowStockAlerts: preference.lowStockAlerts,
+      dailyReports: preference.dailyReports,
+      weeklyReports: preference.weeklyReports
     };
 
-    res.json({ preference });
+    res.json({ preferences });
   } catch (error) {
-    console.error('Error updating notification preference:', error);
-    res.status(500).json({ error: 'Failed to update notification preference' });
-  }
-};
-
-// Update multiple notification preferences
-export const updateMultiplePreferences = async (req: Request, res: Response) => {
-  try {
-    const { preferences } = req.body;
-    const userId = req.user?.id;
-    const organizationId = req.user?.organizationId;
-
-    if (!userId || !organizationId) {
-      return res.status(401).json({ error: 'User not authenticated' });
-    }
-
-    if (!Array.isArray(preferences)) {
-      return res.status(400).json({ error: 'Preferences must be an array' });
-    }
-
-    for (const pref of preferences) {
-      if (!Object.values(NotificationType).includes(pref.notificationType)) {
-        return res.status(400).json({ error: `Invalid notification type: ${pref.notificationType}` });
-      }
-    }
-
-    const results = preferences.map((pref: any) => ({
-      userId,
-      organizationId,
-      notificationType: pref.notificationType,
-      enabled: pref.enabled !== undefined ? pref.enabled : true,
-      emailEnabled: pref.emailEnabled !== undefined ? pref.emailEnabled : false,
-      pushEnabled: pref.pushEnabled !== undefined ? pref.pushEnabled : true,
-    }));
-
-    res.json({ preferences: results });
-  } catch (error) {
-    console.error('Error updating multiple notification preferences:', error);
+    console.error('Error updating notification preferences:', error);
     res.status(500).json({ error: 'Failed to update notification preferences' });
   }
 };
 
-// Reset preferences to defaults
-export const resetPreferencesToDefaults = async (req: Request, res: Response) => {
+// Check if a specific preference is enabled
+export const isPreferenceEnabled = async (
+  userId: number,
+  preferenceKey: 'emailNotifications' | 'lowStockAlerts' | 'dailyReports' | 'weeklyReports'
+): Promise<boolean> => {
   try {
-    const userId = req.user?.id;
-    const organizationId = req.user?.organizationId;
+    const preference = await prisma.notificationPreference.findUnique({
+      where: { userId }
+    });
 
-    if (!userId || !organizationId) {
-      return res.status(401).json({ error: 'User not authenticated' });
+    if (!preference) {
+      // Default values for new users
+      const defaults = {
+        emailNotifications: false,
+        lowStockAlerts: true,
+        dailyReports: false,
+        weeklyReports: false
+      };
+      return defaults[preferenceKey];
     }
 
-    const preferences = buildDefaultPreferences(userId, organizationId);
-
-    res.json({
-      message: 'Preferences reset to defaults',
-      preferences,
-    });
+    return preference[preferenceKey];
   } catch (error) {
-    console.error('Error resetting notification preferences:', error);
-    res.status(500).json({ error: 'Failed to reset notification preferences' });
+    console.error('Error checking preference:', error);
+    return true; // Default to enabled on error
   }
-};
-
-// Check if notification type is enabled for user
-export const isNotificationEnabled = async (
-  userId: number,
-  organizationId: number,
-  notificationType: NotificationType
-): Promise<boolean> => {
-  return true; // Default to enabled until NotificationPreference model is added to schema
 };

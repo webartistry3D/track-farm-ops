@@ -13,6 +13,10 @@ import {
   subscribePush,
   unsubscribePush
 } from '../controllers/pushNotificationController';
+import {
+  getUserNotificationPreferences,
+  updateNotificationPreferences
+} from '../controllers/notificationPreferencesController';
 
 const router = Router();
 
@@ -27,6 +31,10 @@ router.get('/stats', getNotificationStats);
 
 // Create a new notification
 router.post('/', createNotification);
+
+// Notification preferences endpoints
+router.get('/preferences', getUserNotificationPreferences);
+router.put('/preferences', updateNotificationPreferences);
 
 // Push notification endpoints
 router.get('/push/vapid-public-key', getVapidPublicKey);

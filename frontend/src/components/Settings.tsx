@@ -34,6 +34,7 @@ const Settings = () => {
   });
   const [pushEnabled, setPushEnabled] = useState(false);
   const [pushError, setPushError] = useState('');
+  const [preferencesLoading, setPreferencesLoading] = useState(false);
 
   const togglePush = async () => {
     setPushError('');
@@ -70,12 +71,15 @@ const Settings = () => {
   // Load notification preferences on component mount
   useEffect(() => {
     const loadNotificationPreferences = async () => {
+      setPreferencesLoading(true);
       try {
         const response = await api.get('/notifications/preferences');
         setNotifications(response.data.preferences);
       } catch (err: any) {
         console.error('Failed to load notification preferences:', err);
         // Keep default values if API fails
+      } finally {
+        setPreferencesLoading(false);
       }
     };
 
@@ -478,7 +482,13 @@ const Settings = () => {
         {activeTab === 'notifications' && (
           <form onSubmit={handleNotificationSubmit} className="space-y-4 sm:space-y-6">
             <h3 className="text-base sm:text-lg font-medium text-gray-900 dark:text-white mb-3 sm:mb-4">Notification Preferences</h3>
-            
+
+            {preferencesLoading ? (
+              <div className="flex items-center justify-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+              </div>
+            ) : (
+            <>
             <div className="space-y-3 sm:space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex-1 pr-4">
@@ -500,7 +510,7 @@ const Settings = () => {
                 </button>
               </div>
 
-              <div className="flex items-center justify-between">
+              {/* <div className="flex items-center justify-between">
                 <div className="flex-1 pr-4">
                   <div className="font-medium text-gray-900 dark:text-white text-sm sm:text-base">Low Stock Alerts</div>
                   <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Get notified when inventory items are running low</div>
@@ -518,9 +528,9 @@ const Settings = () => {
                     }`}
                   />
                 </button>
-              </div>
+              </div> */}
 
-              <div className="flex items-center justify-between">
+              {/* <div className="flex items-center justify-between">
                 <div className="flex-1 pr-4">
                   <div className="font-medium text-gray-900 dark:text-white text-sm sm:text-base">Daily Reports</div>
                   <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Receive daily summary of farm operations</div>
@@ -538,9 +548,9 @@ const Settings = () => {
                     }`}
                   />
                 </button>
-              </div>
+              </div> */}
 
-              <div className="flex items-center justify-between">
+              {/* <div className="flex items-center justify-between">
                 <div className="flex-1 pr-4">
                   <div className="font-medium text-gray-900 dark:text-white text-sm sm:text-base">Weekly Reports</div>
                   <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Receive weekly comprehensive reports</div>
@@ -558,7 +568,7 @@ const Settings = () => {
                     }`}
                   />
                 </button>
-              </div>
+              </div> */}
 
               <div className="flex items-center justify-between">
                 <div className="flex-1 pr-4">
@@ -593,6 +603,8 @@ const Settings = () => {
                 {loading ? 'Saving...' : 'Save Preferences'}
               </button>
             </div>
+            </>
+            )}
           </form>
         )}
 
@@ -782,15 +794,15 @@ const Settings = () => {
               <p className="text-sm text-blue-800 dark:text-blue-200 mb-2">
                 • Recommended: Pay via Bank Transfer (manual verification within 24 hours)
               </p>
-              <p className="text-sm text-blue-800 dark:text-blue-200 mb-2">
+              {/* <p className="text-sm text-blue-800 dark:text-blue-200 mb-2">
                 • Instant: Pay with Paystack (Naira debit cards)
-              </p>
+              </p> */}
               <p className="text-sm text-blue-800 dark:text-blue-200 mb-2">
                 • Use the exact payment reference when making bank transfers
               </p>
-              <p className="text-sm text-blue-800 dark:text-blue-200">
+              {/* <p className="text-sm text-blue-800 dark:text-blue-200">
                 • Your subscription will auto-renew at the end of each billing period
-              </p>
+              </p> */}
             </div>
           </div>
         )}
@@ -820,18 +832,6 @@ const Settings = () => {
               <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 sm:p-4">
                 <div className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">Last Login</div>
                 <div className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Today</div>
-              </div>
-            </div>
-
-            <div className="border-t border-gray-200 dark:border-gray-700 pt-4 sm:pt-6">
-              <h4 className="text-sm sm:text-md font-medium text-gray-900 dark:text-white mb-3 sm:mb-4">Data Management</h4>
-              <div className="space-y-2 sm:space-y-3">
-                <button className="px-3 sm:px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors w-full sm:w-auto text-xs sm:text-sm">
-                  📥 Export Data
-                </button>
-                <button className="px-3 sm:px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors w-full sm:w-auto ml-0 sm:ml-3 text-xs sm:text-sm">
-                  📊 Generate Report
-                </button>
               </div>
             </div>
           </div>

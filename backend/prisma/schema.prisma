@@ -41,6 +41,7 @@ model User {
   cctvCameras           CctvCamera[]
   notifications        Notification[]
   pushSubscriptions    PushSubscription[]
+  notificationPreferences NotificationPreference?
   organization          Organization?          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   healthRecords         HealthRecord[]
 
@@ -643,6 +644,22 @@ model PushSubscription {
 
   @@index([userId])
   @@map("push_subscriptions")
+}
+
+model NotificationPreference {
+  id                Int      @id @default(autoincrement())
+  userId            Int      @unique @map("user_id")
+  emailNotifications Boolean @default(false) @map("email_notifications")
+  lowStockAlerts    Boolean  @default(true)  @map("low_stock_alerts")
+  dailyReports      Boolean  @default(false) @map("daily_reports")
+  weeklyReports     Boolean  @default(false) @map("weekly_reports")
+  pushNotifications Boolean  @default(true)  @map("push_notifications")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("notification_preferences")
 }
 
 enum NotificationType {
