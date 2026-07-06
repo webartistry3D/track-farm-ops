@@ -732,6 +732,20 @@ const Settings = () => {
                       <div className="text-2xl sm:text-3xl mb-2">{plan.emoji}</div>
                       <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-1">{plan.name}</h4>
                       <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-2 sm:mb-3">{plan.description}</p>
+                    </div>
+
+                    <ul className="space-y-1 sm:space-y-2 mb-3 sm:mb-4 text-xs sm:text-sm">
+                      {plan.features.map((feature, index) => (
+                        <li key={index} className="flex items-start">
+                          <svg className="w-3 sm:w-4 h-3 sm:h-4 text-green-500 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                          <span className="text-gray-700 dark:text-gray-300">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    <div className="text-center mb-3 sm:mb-4">
                       <div className="mb-1 sm:mb-2">
                         <span className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                           {formatCurrency(price.toString())}
@@ -746,18 +760,7 @@ const Settings = () => {
                         </div>
                       )}
                     </div>
-                    
-                    <ul className="space-y-1 sm:space-y-2 mb-3 sm:mb-4 text-xs sm:text-sm">
-                      {plan.features.map((feature, index) => (
-                        <li key={index} className="flex items-start">
-                          <svg className="w-3 sm:w-4 h-3 sm:h-4 text-green-500 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                          </svg>
-                          <span className="text-gray-700 dark:text-gray-300">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    
+
                     <div className="space-y-2">
                       <button
                         onClick={() => handleBankTransfer(plan.id)}

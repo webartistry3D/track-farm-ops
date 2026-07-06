@@ -231,8 +231,8 @@ const Pricing = () => {
 
                 {/* Payment Methods */}
                 <div className="flex flex-wrap justify-center gap-2 mb-4 text-xs text-gray-600 dark:text-gray-400">
-                  <span className="px-2 py-1 bg-green-50 dark:bg-green-900/20 rounded">Bank Transfer</span>
-                  <span className="px-2 py-1 bg-green-50 dark:bg-green-900/20 rounded">Paystack</span>
+                  {/* <span className="px-2 py-1 bg-green-50 dark:bg-green-900/20 rounded">Bank Transfer</span> */}
+                  {/* <span className="px-2 py-1 bg-green-50 dark:bg-green-900/20 rounded">Paystack</span> */}
                 </div>
 
                 {/* CTA Button */}
