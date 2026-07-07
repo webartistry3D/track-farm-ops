@@ -52,7 +52,7 @@ const IncomePage = () => {
   const isManager = user?.role === 'MANAGER';
   const isAccountant = user?.role === 'ACCOUNTANT';
   const isInventory = user?.role === 'INVENTORY';
-  const allowedTabs = isManager ? ['record', 'invoice', 'records', 'invoices'] : isAccountant ? ['record', 'invoice', 'records', 'invoices', 'vat'] : isInventory ? [] : ['record', 'invoice', 'records', 'invoices'];
+  const allowedTabs = isManager ? ['record', 'invoice', 'records', 'invoices'] : isAccountant ? ['record', 'invoice', 'records', 'invoices', 'vat'] : isInventory ? [] : ['record', 'invoice', 'records', 'invoices', 'vat'];
 
   // Redirect to allowed tab if current tab is not allowed
   useEffect(() => {
@@ -220,12 +220,12 @@ const IncomePage = () => {
     }
   }, [success]);
   
-  // Refetch VAT data when date filter changes
+  // Refetch VAT data when date filter or page size changes
   useEffect(() => {
     if (activeTab === 'vat') {
       fetchVatRecords(true);
     }
-  }, [vatDateFilter, vatSelectedMonth, vatSelectedYear]);
+  }, [vatDateFilter, vatSelectedMonth, vatSelectedYear, vatEntriesPerPage]);
 
   // Fetch data when tab changes
   useEffect(() => {
@@ -1485,12 +1485,13 @@ TrackFarmOps Team`;
   const fetchVatRecords = async (isFilterChange: boolean = false) => {
     if (!user) return;
     
-    setVatLoading(true);
+    const pageToUse = isFilterChange ? 1 : vatCurrentPage;
     if (isFilterChange) {
-      setVatFilterChanging(true);
-      // Small delay to show loading state
-      setTimeout(() => setVatFilterChanging(false), 300);
+      setVatCurrentPage(1);
     }
+
+    setVatLoading(true);
+    setVatFilterChanging(true);
 
     try {
       // Calculate date range based on filter
@@ -1545,8 +1546,11 @@ TrackFarmOps Team`;
         params.startDate = startDate;
         params.endDate = endDate;
       }
-      
-      console.log(`💰 Fetching VAT records for user ${user.name} (ID: ${user.id}): dateFilter=${vatDateFilter}, page=${vatCurrentPage}, limit=${vatEntriesPerPage}, isFilterChange=${isFilterChange}`);
+
+      params.limit = vatEntriesPerPage;
+      params.offset = (pageToUse - 1) * vatEntriesPerPage;
+
+      console.log(`💰 Fetching VAT records for user ${user.name} (ID: ${user.id}): dateFilter=${vatDateFilter}, page=${pageToUse}, limit=${vatEntriesPerPage}, isFilterChange=${isFilterChange}`);
       console.log(`📅 Date range: startDate=${startDate}, endDate=${endDate}`);
       
       // Fetch current period data
@@ -1625,11 +1629,13 @@ TrackFarmOps Team`;
         previousParams.startDate = previousStartDate;
         previousParams.endDate = previousEndDate;
       }
-      
-      // Fetch previous period data
+
+      // Fetch previous period data (no pagination — compare full periods)
       let previousRecords = [];
       if (previousStartDate && previousEndDate) {
         try {
+          delete previousParams.limit;
+          delete previousParams.offset;
           const previousResponse = await api.get('/finance/vat/records', { params: previousParams });
           previousRecords = previousResponse.data?.records || [];
         } catch (error) {
@@ -1643,21 +1649,30 @@ TrackFarmOps Team`;
       const highestVat = updatedRecords.length > 0 ? Math.max(...updatedRecords.map((r: any) => parseFloat(r.vatAmount?.toString() || '0'))) : 0;
       const lowestVat = updatedRecords.length > 0 ? Math.min(...updatedRecords.map((r: any) => parseFloat(r.vatAmount?.toString() || '0'))) : 0;
       
+      // Prefer backend summary (full period) for current period comparison
+      const currentSummary = response.data?.summary || {
+        totalVat,
+        averageVat,
+        highestVat,
+        lowestVat,
+        totalTransactions: updatedRecords.reduce((sum: number, record: any) => sum + (record.transactionCount || 0), 0)
+      };
+
       // Calculate previous period summary
       const previousTotalVat = previousRecords.reduce((sum: number, record: any) => sum + parseFloat(record.vatAmount?.toString() || '0'), 0);
       const previousAverageVat = previousRecords.length > 0 ? previousTotalVat / previousRecords.length : 0;
       const previousHighestVat = previousRecords.length > 0 ? Math.max(...previousRecords.map((r: any) => parseFloat(r.vatAmount?.toString() || '0'))) : 0;
       const previousLowestVat = previousRecords.length > 0 ? Math.min(...previousRecords.map((r: any) => parseFloat(r.vatAmount?.toString() || '0'))) : 0;
-      
+
       // Calculate percentage changes (handle edge cases)
-      const totalVatChange = previousTotalVat > 0 ? ((totalVat - previousTotalVat) / previousTotalVat) * 100 : 
-                                 (totalVat > 0 ? 100 : 0); // Show 100% if this is first period with VAT
-      const averageVatChange = previousAverageVat > 0 ? ((averageVat - previousAverageVat) / previousAverageVat) * 100 : 
-                                   (averageVat > 0 ? 100 : 0);
-      const highestVatChange = previousHighestVat > 0 ? ((highestVat - previousHighestVat) / previousHighestVat) * 100 : 
-                                   (highestVat > 0 ? 100 : 0);
-      const lowestVatChange = previousLowestVat > 0 ? ((lowestVat - previousLowestVat) / previousLowestVat) * 100 : 
-                                 (lowestVat > 0 ? 100 : 0);
+      const totalVatChange = previousTotalVat > 0 ? ((currentSummary.totalVat - previousTotalVat) / previousTotalVat) * 100 :
+                                 (currentSummary.totalVat > 0 ? 100 : 0); // Show 100% if this is first period with VAT
+      const averageVatChange = previousAverageVat > 0 ? ((currentSummary.averageVat - previousAverageVat) / previousAverageVat) * 100 :
+                                   (currentSummary.averageVat > 0 ? 100 : 0);
+      const highestVatChange = previousHighestVat > 0 ? ((currentSummary.highestVat - previousHighestVat) / previousHighestVat) * 100 :
+                                   (currentSummary.highestVat > 0 ? 100 : 0);
+      const lowestVatChange = previousLowestVat > 0 ? ((currentSummary.lowestVat - previousLowestVat) / previousLowestVat) * 100 :
+                                 (currentSummary.lowestVat > 0 ? 100 : 0);
       
       // Debug: Log the calculation values
       console.log('📈 Percentage calculation debug:', {
@@ -1677,20 +1692,14 @@ TrackFarmOps Team`;
       
       console.log('🔍 DEBUG: setVatRecords called with:', updatedRecords.length, 'records');
       setVatRecords(updatedRecords);
-      setVatSummary({
-        totalVat,
-        averageVat,
-        highestVat,
-        lowestVat,
-        totalTransactions: updatedRecords.reduce((sum: number, record: any) => sum + (record.transactionCount || 0), 0)
-      });
+      setVatSummary(currentSummary);
       setVatPercentageChanges({
         totalVatChange,
         averageVatChange,
         highestVatChange,
         lowestVatChange
       });
-      setVatTotalPages(Math.ceil(response.data?.total || updatedRecords.length / vatEntriesPerPage));
+      setVatTotalPages(Math.ceil((response.data?.total || updatedRecords.length) / vatEntriesPerPage));
       setVatTotalRecords(response.data?.total || updatedRecords.length);
       
       console.log(`✅ VAT records fetched successfully: ${updatedRecords.length} records`);

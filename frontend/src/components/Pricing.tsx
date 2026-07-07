@@ -19,7 +19,7 @@ const Pricing = () => {
       id: 'freemium',
       name: 'Freemium',
       emoji: '🆓',
-      description: 'Perfect for trying out FarmOps',
+      description: 'Perfect for trying out TrackFarmOps',
       price: { monthly: 0, annual: 0 },
       features: [
         '1 Farm, 1 Owner, 1 Manager, 1 Worker',

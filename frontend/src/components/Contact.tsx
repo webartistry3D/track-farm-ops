@@ -235,9 +235,7 @@ const Contact = () => {
                     Email Addresses
                   </h3>
                   <p className="font-inter text-gray-600">
-                    General: info@trackfarmops.ng<br />
-                    Support: support@trackfarmops.ng<br />
-                    Sales: sales@trackfarmops.ng
+                    Sales / Support: trackfarmops@gmail.com<br />
                   </p>
                 </div>
               </div>

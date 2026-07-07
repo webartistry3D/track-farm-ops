@@ -985,15 +985,20 @@ router.get('/vat/records', authenticate, async (req: AuthRequest, res) => {
 
     console.log(`🏢 User belongs to organization: ${currentUserOrg.organization?.name} (ID: ${currentUserOrg.organizationId})`);
 
+    const where = {
+      // Filter by organization - get entries from ALL users in the same organization
+      user: {
+        organizationId: currentUserOrg.organizationId
+      },
+      date: dateFilter
+    };
+
+    // Get real total count across the entire date range
+    const totalCount = await prisma.incomeEntry.count({ where });
+
     // Fetch ALL income entries for the organization (not just current user)
     const incomeEntries = await prisma.incomeEntry.findMany({
-      where: {
-        // Filter by organization - get entries from ALL users in the same organization
-        user: {
-          organizationId: currentUserOrg.organizationId
-        },
-        date: dateFilter
-      },
+      where,
       include: {
         user: {
           select: {
@@ -1056,33 +1061,36 @@ router.get('/vat/records', authenticate, async (req: AuthRequest, res) => {
       };
     });
 
-    // Apply pagination
-    const totalCount = vatRecords.length;
-    const paginatedRecords = vatRecords.slice(Number(offset), Number(offset) + Number(limit));
-    
-    console.log(`📊 Final VAT Records Summary:`, {
-      totalRecords: totalCount,
-      paginatedRecords: paginatedRecords.length,
-      sampleRecords: paginatedRecords.slice(0, 3)
+    // Aggregate summary across the entire date range (not just the current page)
+    const vatSummaryAgg = await prisma.incomeEntry.aggregate({
+      where,
+      _sum: { vatAmount: true },
+      _avg: { vatAmount: true },
+      _max: { vatAmount: true },
+      _min: { vatAmount: true },
+      _count: { vatAmount: true }
     });
-    
-    // Calculate summary
-    const totalVat = vatRecords.reduce((sum: number, record: any) => sum + (record.vatAmount || 0), 0);
-    const totalTransactions = vatRecords.reduce((sum: number, record: any) => sum + (record.transactionCount || 0), 0);
-    const averageVat = totalTransactions > 0 ? totalVat / totalTransactions : 0;
-    const highestVat = vatRecords.length > 0 ? Math.max(...vatRecords.map((r: any) => r.vatAmount || 0)) : 0;
-    
-    console.log(`💰 VAT Summary:`, {
-      totalVat,
-      totalTransactions,
-      averageVat,
-      highestVat
+
+    const summary = {
+      totalVat: Number(vatSummaryAgg._sum.vatAmount || 0),
+      averageVat: Number(vatSummaryAgg._avg.vatAmount || 0),
+      highestVat: Number(vatSummaryAgg._max.vatAmount || 0),
+      lowestVat: Number(vatSummaryAgg._min.vatAmount || 0),
+      totalTransactions: vatSummaryAgg._count.vatAmount || 0
+    };
+
+    console.log(`� Final VAT Records Summary:`, {
+      totalRecords: totalCount,
+      paginatedRecords: vatRecords.length,
+      summary,
+      sampleRecords: vatRecords.slice(0, 3)
     });
 
     res.json({
       success: true,
-      records: paginatedRecords,
+      records: vatRecords,
       total: totalCount,
+      summary,
       message: 'VAT records retrieved successfully'
     });
   } catch (error) {

@@ -167,11 +167,11 @@ const Dashboard = () => {
         return sum + (amount || 0);
       }, 0);
       
-      // Calculate VAT total from income entries that have invoiceVat
+      // Calculate VAT total from all income entries with VAT enabled
       const vatTotal = incomeData.reduce((sum: number, entry: any) => {
-        if (entry.invoiceVat) {
-          const vatAmount = typeof entry.invoiceVat === 'string' ? parseFloat(entry.invoiceVat) : entry.invoiceVat;
-          return sum + (vatAmount || 0);
+        if (entry.enableVAT && entry.vatAmount) {
+          const amount = typeof entry.vatAmount === 'string' ? parseFloat(entry.vatAmount) : entry.vatAmount;
+          return sum + (amount || 0);
         }
         return sum;
       }, 0);
@@ -361,7 +361,7 @@ const Dashboard = () => {
                    dateFilter === 'month' ? "This Month's VAT" :
                    dateFilter === 'thisMonth' ? "This Month's VAT" :
                    dateFilter === 'thisYear' ? "This Year's VAT" :
-                   dateFilter === 'allTime' ? "All Time VATax" :
+                   dateFilter === 'allTime' ? "All Time VAT" :
                    dateFilter === 'customMonth' ? `${new Date(selectedYear, selectedMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} VAT` :
                    `${selectedYear} VAT`}
                 </h3>

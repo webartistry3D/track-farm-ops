@@ -210,9 +210,9 @@ const Privacy = () => {
               </p>
               <div className="bg-gray-50 rounded-lg p-4">
                 <p className="text-gray-600 font-inter">
-                  <strong>Email:</strong> info@trackfarmops.com.ng<br />
+                  <strong>Email:</strong> trackfarmops@gmail.com<br />
                   <strong>Phone:</strong> +234 701 718 8070<br />
-                  <strong>Address:</strong> 123 Farm Road, Festac, Lagos, Nigeria
+                  <strong>Address:</strong> 5th Avenue, F1 Close, Festac, Lagos, Nigeria
                 </p>
               </div>
             </section>
