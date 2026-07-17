@@ -30,6 +30,24 @@ const Layout = ({ children }: LayoutProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const mainRef = useRef<HTMLElement>(null);
+  const notificationRef = useRef<HTMLDivElement>(null);
+  const [notificationStyle, setNotificationStyle] = useState<{ right: number; top: number; maxWidth: number } | null>(null);
+
+  useEffect(() => {
+    const updateNotificationStyle = () => {
+      const el = notificationRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const right = window.innerWidth - rect.right;
+      const top = rect.bottom + 8;
+      const maxWidth = Math.min(320, window.innerWidth - right - 16);
+      setNotificationStyle({ right, top, maxWidth });
+    };
+
+    updateNotificationStyle();
+    window.addEventListener('resize', updateNotificationStyle);
+    return () => window.removeEventListener('resize', updateNotificationStyle);
+  }, []);
 
   // Inactivity detection state - DISABLED
   // const [inactivityTimer, setInactivityTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
@@ -379,7 +397,7 @@ const Layout = ({ children }: LayoutProps) => {
                 */}
 
                 {/* Notifications */}
-                <div className="relative notifications-dropdown">
+                <div ref={notificationRef} className="relative notifications-dropdown">
                   <button
                     onClick={() => setNotificationsOpen(!notificationsOpen)}
                     className="p-1.5 sm:p-2 rounded-full text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 relative"
@@ -389,9 +407,16 @@ const Layout = ({ children }: LayoutProps) => {
                       <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-400 ring-2 ring-white dark:ring-gray-800"></span>
                     )}
                   </button>
-                  
-                  {notificationsOpen && (
-                    <div className="absolute right-0 sm:right-0 mt-2 w-72 sm:w-80 md:w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50 max-w-[calc(100vw-1rem)] sm:max-w-[calc(100vw-2rem)] md:max-w-none">
+
+                  {notificationsOpen && notificationStyle && (
+                    <div
+                      style={{
+                        right: notificationStyle.right,
+                        top: notificationStyle.top,
+                        maxWidth: notificationStyle.maxWidth,
+                      }}
+                      className="fixed w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50"
+                    >
                       <div className="p-2 sm:p-3 md:p-4 border-b border-gray-200 dark:border-gray-700">
                         <h3 className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white">Notifications</h3>
                       </div>

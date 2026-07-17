@@ -1,23 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscriptionRestrictions } from '../utils/subscriptionRestrictions';
 import { getNavigationForRole, type NavItem, type UserRole } from '../config/navigationConfig';
-
-// Add custom animation styles
-const slideUpAnimation = `
-  @keyframes slideUp {
-    from {
-      transform: translate(-50%, 100%);
-    }
-    to {
-      transform: translate(-50%, 0);
-    }
-  }
-  .animate-slide-up {
-    animation: slideUp 0.3s ease-out forwards;
-  }
-`;
 
 interface BottomNavProps {
   onLogout?: () => void;
@@ -28,11 +13,31 @@ const BottomNav = ({ onLogout }: BottomNavProps) => {
   const location = useLocation();
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const { canAccessFeature } = useSubscriptionRestrictions();
+  const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const [trayPositions, setTrayPositions] = useState<Record<string, number>>({});
 
   if (!user) return null;
 
   const userRole = user.role as UserRole;
   const navigationItems = getNavigationForRole(userRole);
+
+  useEffect(() => {
+    const updatePositions = () => {
+      const positions: Record<string, number> = {};
+      navigationItems.forEach(item => {
+        const el = itemRefs.current[item.id];
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          positions[item.id] = rect.left + rect.width / 2;
+        }
+      });
+      setTrayPositions(positions);
+    };
+
+    updatePositions();
+    window.addEventListener('resize', updatePositions);
+    return () => window.removeEventListener('resize', updatePositions);
+  }, [navigationItems]);
 
   const handleMenuToggle = (menuId: string) => {
     setActiveMenu(activeMenu === menuId ? null : menuId);
@@ -62,84 +67,104 @@ const BottomNav = ({ onLogout }: BottomNavProps) => {
 
   return (
     <>
-      <style>{slideUpAnimation}</style>
-      <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-50">
-      <div className="flex items-center justify-around h-16 px-2 sm:px-4">
-        {navigationItems.map((item) => {
-          const hasChildren = item.children && item.children.length > 0;
-          const isItemActive = isActive(item.href) || isMenuActive(item);
-          const isMenuOpen = activeMenu === item.id;
+      {/* Slide-up Trays - rendered as siblings behind the bottom navbar */}
+      {navigationItems.map(item => {
+        const hasChildren = item.children && item.children.length > 0;
+        if (!hasChildren) return null;
 
-          // Check subscription restrictions for restricted items
-          const isRestricted = item.feature && !canAccessFeature(item.feature);
-          if (isRestricted) return null;
+        const isRestricted = item.feature && !canAccessFeature(item.feature);
+        if (isRestricted) return null;
 
-          return (
-            <div key={item.id} className="relative flex-1 min-w-0 max-w-[120px]">
-              {hasChildren ? (
-                <button
-                  onClick={() => handleMenuToggle(item.id)}
-                  className={`w-full h-full flex flex-col items-center justify-center space-y-0.5 transition-colors px-1 ${
-                    isItemActive || isMenuOpen
-                      ? 'text-green-600 dark:text-green-400'
-                      : 'text-gray-500 dark:text-gray-400'
-                  }`}
-                >
-                  <item.icon className="w-5 h-5 sm:w-8 sm:h-8" />
-                  <span className="text-[10px] sm:text-[10px] font-medium truncate w-full text-center">{item.name}</span>
-                </button>
-              ) : (
-                <Link
-                  to={item.href || '#'}
-                  onClick={() => handleItemClick(item)}
-                  className={`w-full h-full flex flex-col items-center justify-center space-y-0.5 transition-colors px-1 ${
-                    isItemActive
-                      ? 'text-green-600 dark:text-green-400'
-                      : 'text-gray-500 dark:text-gray-400'
-                  }`}
-                >
-                  <item.icon className="w-5 h-5 sm:w-8 sm:h-8" />
-                  <span className="text-[10px] sm:text-[10px] font-medium truncate w-full text-center">{item.name}</span>
-                </Link>
-              )}
+        const isMenuOpen = activeMenu === item.id;
+        const centerX = trayPositions[item.id];
 
-              {/* Popover Menu */}
-              {hasChildren && (
-                <div className={`absolute bottom-full right-0 mb-2 bg-white dark:bg-gray-800 rounded-t-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden min-w-[100px] sm:min-w-[100px] transition-all duration-300 ease-out ${
-                  isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
-                }`}>
-                  <div className="max-h-64 overflow-y-auto">
-                    {item.children?.map((child) => {
-                      // Check subscription restrictions for child items
-                      const isChildRestricted = child.feature && !canAccessFeature(child.feature);
-                      if (isChildRestricted) return null;
+        return (
+          <div
+            key={`tray-${item.id}`}
+            style={{ left: centerX ?? '50%' }}
+            className={`fixed bottom-16 -translate-x-1/2 min-w-[160px] max-w-[90vw] bg-white dark:bg-gray-800 rounded-t-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden transform transition-transform duration-300 ease-out z-40 ${
+              isMenuOpen
+                ? 'translate-y-0 pointer-events-auto'
+                : 'translate-y-full pointer-events-none'
+            }`}
+          >
+            <div className="max-h-64 overflow-y-auto">
+              {item.children?.map(child => {
+                const isChildRestricted = child.feature && !canAccessFeature(child.feature);
+                if (isChildRestricted) return null;
 
-                      const isChildActive = isActive(child.href);
+                const isChildActive = isActive(child.href);
 
-                      return (
-                        <Link
-                          key={child.id}
-                          to={child.href || '#'}
-                          onClick={() => handleItemClick(child)}
-                          className={`flex items-center space-x-3 px-4 py-3 transition-colors ${
-                            isChildActive
-                              ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400'
-                              : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
-                          }`}
-                        >
-                          <child.icon size={18} />
-                          <span className="text-sm font-medium">{child.name}</span>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
+                return (
+                  <Link
+                    key={child.id}
+                    to={child.href || '#'}
+                    onClick={() => handleItemClick(child)}
+                    className={`flex items-center space-x-3 px-4 py-3 transition-colors ${
+                      isChildActive
+                        ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400'
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                    }`}
+                  >
+                    <child.icon size={18} />
+                    <span className="text-sm font-medium">{child.name}</span>
+                  </Link>
+                );
+              })}
             </div>
-          );
-        })}
+          </div>
+        );
+      })}
+
+      {/* Bottom Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-50">
+        <div className="flex items-center justify-around h-16 px-2 sm:px-4">
+          {navigationItems.map((item) => {
+            const hasChildren = item.children && item.children.length > 0;
+            const isItemActive = isActive(item.href) || isMenuActive(item);
+            const isMenuOpen = activeMenu === item.id;
+
+            // Check subscription restrictions for restricted items
+            const isRestricted = item.feature && !canAccessFeature(item.feature);
+            if (isRestricted) return null;
+
+            return (
+              <div
+                key={item.id}
+                ref={el => { itemRefs.current[item.id] = el; }}
+                className="relative flex-1 min-w-0 max-w-[120px]"
+              >
+                {hasChildren ? (
+                  <button
+                    onClick={() => handleMenuToggle(item.id)}
+                    className={`w-full h-full flex flex-col items-center justify-center space-y-0.5 transition-colors px-1 ${
+                      isItemActive || isMenuOpen
+                        ? 'text-green-600 dark:text-green-400'
+                        : 'text-gray-500 dark:text-gray-400'
+                    }`}
+                  >
+                    <item.icon className="w-5 h-5 sm:w-8 sm:h-8" />
+                    <span className="text-[10px] sm:text-[10px] font-medium truncate w-full text-center">{item.name}</span>
+                  </button>
+                ) : (
+                  <Link
+                    to={item.href || '#'}
+                    onClick={() => handleItemClick(item)}
+                    className={`w-full h-full flex flex-col items-center justify-center space-y-0.5 transition-colors px-1 ${
+                      isItemActive
+                        ? 'text-green-600 dark:text-green-400'
+                        : 'text-gray-500 dark:text-gray-400'
+                    }`}
+                  >
+                    <item.icon className="w-5 h-5 sm:w-8 sm:h-8" />
+                    <span className="text-[10px] sm:text-[10px] font-medium truncate w-full text-center">{item.name}</span>
+                  </Link>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
-    </div>
     </>
   );
 };
