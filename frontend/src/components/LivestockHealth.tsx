@@ -1,11 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
 import { 
   Search, Plus, AlertTriangle, TrendingUp, Eye, 
-  Activity, Stethoscope, PawPrint, ClipboardList, Syringe, Shield, AlertCircle
+  Activity, Stethoscope, PawPrint, ClipboardList, Syringe, Shield, AlertCircle,
+  FileText
 } from 'lucide-react';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 
 interface Livestock {
   id: string;
@@ -84,7 +87,35 @@ const LivestockHealth = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSpecies, setSelectedSpecies] = useState('all');
   const [selectedHealthStatus, setSelectedHealthStatus] = useState('all');
-  const [activeTab, setActiveTab] = useState<'livestock' | 'healthRecords' | 'vaccinations'>('livestock');
+  const [activeTab, setActiveTab] = useState<'livestock' | 'healthRecords' | 'vaccinations' | 'healthReport'>('livestock');
+
+  // Health report date filter state
+  type ReportRange = 'daily' | 'weekly' | 'monthly' | 'yearly' | 'custom';
+  const [reportRange, setReportRange] = useState<ReportRange>('daily');
+  const [reportDate, setReportDate] = useState(new Date().toISOString().split('T')[0]);
+  const [reportStartDate, setReportStartDate] = useState(new Date().toISOString().split('T')[0]);
+  const [reportEndDate, setReportEndDate] = useState(new Date().toISOString().split('T')[0]);
+  const [reportNotes, setReportNotes] = useState('');
+  const [reportNotesSaved, setReportNotesSaved] = useState(false);
+  const reportRef = useRef<HTMLDivElement>(null);
+
+  // Load/save veterinarian notes per report period
+  const getReportNotesKey = () => {
+    if (reportRange === 'custom') {
+      return `vet-report-notes-${reportStartDate}-${reportEndDate}`;
+    }
+    return `vet-report-notes-${reportRange}-${reportDate}`;
+  };
+
+  useEffect(() => {
+    const saved = localStorage.getItem(getReportNotesKey());
+    setReportNotes(saved || '');
+    setReportNotesSaved(false);
+  }, [reportRange, reportDate, reportStartDate, reportEndDate]);
+
+  useEffect(() => {
+    localStorage.setItem(getReportNotesKey(), reportNotes);
+  }, [reportNotes, reportRange, reportDate, reportStartDate, reportEndDate]);
   
   // Health records search and filter state
   const [healthSearchTerm, setHealthSearchTerm] = useState('');
@@ -209,6 +240,112 @@ const LivestockHealth = () => {
     const matchesVaccineType = selectedVaccineType === 'all' || vaccination.vaccineType === selectedVaccineType;
     return matchesSearch && matchesVaccineType;
   });
+
+  // Health report date helpers
+  const getReportDateRange = () => {
+    const base = new Date(reportDate + 'T00:00:00');
+    let start: Date;
+    let end: Date;
+
+    switch (reportRange) {
+      case 'daily':
+        start = new Date(base);
+        end = new Date(base);
+        end.setDate(end.getDate() + 1);
+        break;
+      case 'weekly': {
+        const day = base.getDay();
+        start = new Date(base);
+        start.setDate(base.getDate() - day);
+        end = new Date(start);
+        end.setDate(start.getDate() + 7);
+        break;
+      }
+      case 'monthly':
+        start = new Date(base.getFullYear(), base.getMonth(), 1);
+        end = new Date(base.getFullYear(), base.getMonth() + 1, 1);
+        break;
+      case 'yearly':
+        start = new Date(base.getFullYear(), 0, 1);
+        end = new Date(base.getFullYear() + 1, 0, 1);
+        break;
+      case 'custom':
+      default:
+        start = new Date(reportStartDate + 'T00:00:00');
+        end = new Date(reportEndDate + 'T00:00:00');
+        end.setDate(end.getDate() + 1);
+        break;
+    }
+    return { start, end };
+  };
+
+  const { start: reportStart, end: reportEnd } = getReportDateRange();
+
+  const isInReportRange = (dateString: string) => {
+    const d = new Date(dateString);
+    return d >= reportStart && d < reportEnd;
+  };
+
+  const reportHealthRecords = healthRecords.filter(r => isInReportRange(r.date));
+  const reportVaccinations = vaccinations.filter(v => isInReportRange(v.administrationDate));
+
+  const reportStats = {
+    totalLivestock: livestock.length,
+    healthy: livestock.filter(a => a.healthStatus === 'healthy').length,
+    sick: livestock.filter(a => a.healthStatus === 'sick').length,
+    quarantine: livestock.filter(a => a.healthStatus === 'quarantine').length,
+    critical: livestock.filter(a => a.healthStatus === 'critical').length,
+    recovery: livestock.filter(a => a.healthStatus === 'recovery').length,
+    checkups: reportHealthRecords.filter(r => r.recordType === 'checkup').length,
+    treatments: reportHealthRecords.filter(r => r.recordType === 'treatment').length,
+    surgeries: reportHealthRecords.filter(r => r.recordType === 'surgery').length,
+    vaccinations: reportVaccinations.length,
+    deaths: reportHealthRecords.filter(r => {
+      if (r.recordType !== 'other') return false;
+      const text = `${r.diagnosis} ${r.treatment} ${r.notes}`.toLowerCase();
+      return text.includes('death') || text.includes('deceased') || text.includes('mortality');
+    }).length
+  };
+
+  const exportHealthReportPDF = async () => {
+    if (!reportRef.current) return;
+    const element = reportRef.current;
+    try {
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        onclone: (clonedDoc) => {
+          clonedDoc.documentElement.classList.remove('dark');
+          clonedDoc.body.style.backgroundColor = '#ffffff';
+        }
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = pageWidth;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      let heightLeft = imgHeight;
+      let position = 0;
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      const periodLabel = reportRange === 'custom' ? `${reportStartDate}_to_${reportEndDate}` : reportDate;
+      pdf.save(`health-report-${periodLabel}.pdf`);
+    } catch (err) {
+      console.error('Failed to export health report PDF:', err);
+    }
+  };
 
   // Get health status color
   const getHealthStatusColor = (status: string) => {
@@ -437,6 +574,17 @@ const LivestockHealth = () => {
           >
             <Syringe className="h-4 w-4" />
             Vaccinations
+          </button>
+          <button
+            onClick={() => setActiveTab('healthReport')}
+            className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${
+              activeTab === 'healthReport'
+                ? 'border-red-500 text-red-600 dark:text-red-400'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+            }`}
+          >
+            <FileText className="h-4 w-4" />
+            Health Report
           </button>
         </nav>
       </div>
@@ -732,6 +880,228 @@ const LivestockHealth = () => {
             )}
           </div>
         </div>
+      )}
+
+      {/* Health Report Tab */}
+      {activeTab === 'healthReport' && (
+        <div>
+          <div className="flex justify-end mb-4">
+            <button
+              onClick={exportHealthReportPDF}
+              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2"
+            >
+              <FileText className="h-4 w-4" />
+              Export as PDF
+            </button>
+          </div>
+
+          <div ref={reportRef} className="bg-white dark:bg-gray-900 p-4 rounded-lg">
+          {/* Date Range Controls */}
+          <div className="mb-6 flex flex-col lg:flex-row gap-4 items-end">
+            <div className="flex-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Report Period</label>
+              <select
+                value={reportRange}
+                onChange={(e) => setReportRange(e.target.value as ReportRange)}
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 dark:bg-gray-700 dark:text-white"
+              >
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+                <option value="yearly">Yearly</option>
+                <option value="custom">Custom Date Range</option>
+              </select>
+            </div>
+            {reportRange !== 'custom' ? (
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Reference Date</label>
+                <input
+                  type="date"
+                  value={reportDate}
+                  onChange={(e) => setReportDate(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 dark:bg-gray-700 dark:text-white"
+                />
+              </div>
+            ) : (
+              <>
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Start Date</label>
+                  <input
+                    type="date"
+                    value={reportStartDate}
+                    onChange={(e) => setReportStartDate(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 dark:bg-gray-700 dark:text-white"
+                  />
+                </div>
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">End Date</label>
+                  <input
+                    type="date"
+                    value={reportEndDate}
+                    onChange={(e) => setReportEndDate(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 dark:bg-gray-700 dark:text-white"
+                  />
+                </div>
+              </>
+            )}
+            <div className="text-sm text-gray-600 dark:text-gray-400 pb-2">
+              {reportStart.toLocaleDateString()} - {new Date(reportEnd.getTime() - 1).toLocaleDateString()}
+            </div>
+          </div>
+
+          {/* Summary Cards */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+            {[
+              { label: 'Total Livestock', value: reportStats.totalLivestock, color: 'bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-200' },
+              { label: 'Healthy', value: reportStats.healthy, color: 'bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200' },
+              { label: 'Sick', value: reportStats.sick, color: 'bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-200' },
+              { label: 'Quarantine', value: reportStats.quarantine, color: 'bg-yellow-50 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-200' },
+              { label: 'Critical', value: reportStats.critical, color: 'bg-purple-50 dark:bg-purple-900/20 text-purple-800 dark:text-purple-200' },
+              { label: 'Recovery', value: reportStats.recovery, color: 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-800 dark:text-indigo-200' },
+              { label: 'Checkups', value: reportStats.checkups, color: 'bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-200' },
+              { label: 'Treatments', value: reportStats.treatments, color: 'bg-orange-50 dark:bg-orange-900/20 text-orange-800 dark:text-orange-200' },
+              { label: 'Surgeries', value: reportStats.surgeries, color: 'bg-pink-50 dark:bg-pink-900/20 text-pink-800 dark:text-pink-200' },
+              { label: 'Vaccinations', value: reportStats.vaccinations, color: 'bg-teal-50 dark:bg-teal-900/20 text-teal-800 dark:text-teal-200' },
+              { label: 'Deaths', value: reportStats.deaths, color: 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100' }
+            ].map((stat, i) => (
+              <div key={i} className={`rounded-lg p-4 ${stat.color}`}>
+                <div className="text-2xl font-bold">{stat.value}</div>
+                <div className="text-xs font-medium uppercase tracking-wide opacity-80">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* General Summary */}
+          <div className="mb-6 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+              <Activity className="h-5 w-5 text-red-500" />
+              General Summary
+            </h3>
+            <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+              During the selected period, {reportStats.totalLivestock} animal{reportStats.totalLivestock !== 1 ? 's are' : ' is'} registered, with {reportStats.healthy} healthy, {reportStats.sick} sick, {reportStats.quarantine} in quarantine, {reportStats.critical} critical, and {reportStats.recovery} in recovery. There {reportStats.treatments === 1 ? 'was' : 'were'} {reportStats.treatments} treatment{reportStats.treatments !== 1 ? 's' : ''}, {reportStats.checkups} checkup{reportStats.checkups !== 1 ? 's' : ''}, {reportStats.surgeries} surgery{reportStats.surgeries !== 1 ? 'ies' : ''}, and {reportStats.vaccinations} vaccination{reportStats.vaccinations !== 1 ? 's' : ''}. {reportStats.deaths > 0 ? `${reportStats.deaths} death${reportStats.deaths !== 1 ? 's' : ''} recorded.` : 'No deaths recorded.'}
+            </p>
+          </div>
+
+          {/* Veterinarian Notes */}
+          <div className="mb-6 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+              <ClipboardList className="h-5 w-5 text-red-500" />
+              Veterinarian Notes
+            </h3>
+            {isVeterinarian ? (
+              <div>
+                <textarea
+                  rows={4}
+                  value={reportNotes}
+                  onChange={(e) => setReportNotes(e.target.value)}
+                  placeholder="Add observations, recommendations, follow-up actions or any additional notes..."
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 dark:bg-gray-700 dark:text-white mb-3"
+                />
+                <div className="flex items-center justify-between">
+                  <button
+                    onClick={() => {
+                      localStorage.setItem(getReportNotesKey(), reportNotes);
+                      setReportNotesSaved(true);
+                      setTimeout(() => setReportNotesSaved(false), 2000);
+                    }}
+                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm flex items-center gap-2"
+                  >
+                    <ClipboardList className="h-4 w-4" />
+                    Save Notes
+                  </button>
+                  {reportNotesSaved && (
+                    <span className="text-sm text-green-600 dark:text-green-400">Notes saved!</span>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className="text-sm text-gray-700 dark:text-gray-300 min-h-[4rem] whitespace-pre-wrap">
+                {reportNotes || 'No additional notes provided.'}
+              </div>
+            )}
+          </div>
+
+          {/* Health Records in Period */}
+          <div className="mb-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-x-auto">
+            <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+              <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                <Stethoscope className="h-4 w-4 text-red-500" />
+                Health Records ({reportHealthRecords.length})
+              </h3>
+            </div>
+            <table className="w-full min-w-[700px]">
+              <thead className="bg-gray-50 dark:bg-gray-700">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Date</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Livestock</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Type</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Diagnosis</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Treatment</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Veterinarian</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                {reportHealthRecords.map((record) => (
+                  <tr key={record.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                    <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{new Date(record.date).toLocaleDateString()}</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{livestock.find(l => l.id === record.livestockId)?.name || 'Unknown'}</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 dark:text-white capitalize">{record.recordType.replace('_', ' ')}</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{record.diagnosis || '-'}</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{record.treatment || '-'}</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{record.veterinarian || '-'}</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 dark:text-white capitalize">{record.status}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {reportHealthRecords.length === 0 && (
+              <div className="text-center py-8">
+                <ClipboardList className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                <p className="text-gray-600 dark:text-gray-400">No health records in this period</p>
+              </div>
+            )}
+          </div>
+
+          {/* Vaccinations in Period */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-x-auto">
+            <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+              <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                <Syringe className="h-4 w-4 text-red-500" />
+                Vaccinations ({reportVaccinations.length})
+              </h3>
+            </div>
+            <table className="w-full min-w-[600px]">
+              <thead className="bg-gray-50 dark:bg-gray-700">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Date</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Livestock</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Vaccine</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Veterinarian</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Batch</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                {reportVaccinations.map((vaccination) => (
+                  <tr key={vaccination.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                    <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{new Date(vaccination.administrationDate).toLocaleDateString()}</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{livestock.find(l => l.id === vaccination.livestockId)?.name || 'Unknown'}</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{vaccination.vaccineName}</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{vaccination.veterinarian || '-'}</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{vaccination.batchNumber || '-'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {reportVaccinations.length === 0 && (
+              <div className="text-center py-8">
+                <Syringe className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                <p className="text-gray-600 dark:text-gray-400">No vaccinations in this period</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
       )}
 
       {/* Add Livestock Modal */}

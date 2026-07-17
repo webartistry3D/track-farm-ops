@@ -146,7 +146,9 @@ const IncomePage = () => {
     subtotal: 0,
     tax: 0,
     total: 0,
-    paymentMethod: 'TRANSFER'
+    paymentMethod: 'TRANSFER',
+    enableVAT: false,
+    vatRate: 7.5
   });
   const [isGeneratingInvoice, setIsGeneratingInvoice] = useState(false);
   const [generatedInvoice, setGeneratedInvoice] = useState<any>(null);
@@ -160,10 +162,8 @@ const IncomePage = () => {
   const [inventoryItems, setInventoryItems] = useState<any[]>([]);
   const [inventoryCategories, setInventoryCategories] = useState<any[]>([]);
   const [inventoryLoading, setInventoryLoading] = useState(false);
-  const [inventoryRefreshed, setInventoryRefreshed] = useState(false); // Add refresh flag
   const [showPaidConfirmationModal, setShowPaidConfirmationModal] = useState(false);
   const [invoiceToMarkAsPaid, setInvoiceToMarkAsPaid] = useState<any>(null);
-  const [inventoryImpact, setInventoryImpact] = useState<any[]>([]);
   const [totalInvoices, setTotalInvoices] = useState(0);
   const [invoiceTotalPages, setInvoiceTotalPages] = useState(0);
   const invoiceEntriesPerPage = 10;
@@ -419,7 +419,9 @@ const IncomePage = () => {
       subtotal: 0,
       tax: 0,
       total: 0,
-      paymentMethod: 'TRANSFER'
+      paymentMethod: 'TRANSFER',
+      enableVAT: false,
+      vatRate: 7.5
     });
     setGeneratedInvoice(null);
   };
@@ -433,59 +435,29 @@ const IncomePage = () => {
     return `INV-${year}${month}${day}-${random}`;
   };
 
-  const updateInvoiceItem = (index: number, field: string, value: any) => {
-    console.log('🔍 DEBUG - updateInvoiceItem called:', { index, field, value });
-    console.log('🔍 DEBUG - Current invoiceData.items before update:', invoiceData.items);
-    
-    const newItems = [...invoiceData.items];
-    const oldItem = { ...newItems[index] };
-    newItems[index] = { ...newItems[index], [field]: value };
-    
-    console.log('🔍 DEBUG - Item update comparison:', {
-      index,
-      oldItem,
-      newItem: newItems[index],
-      field,
-      oldValue: (oldItem as any)[field],
-      newValue: value
-    });
-    
-    // Calculate item total
-    if (field === 'quantity' || field === 'unitPrice') {
-      const qty = parseFloat(newItems[index].quantity) || 0;
-      const price = parseFloat(newItems[index].unitPrice) || 0;
-      newItems[index].total = qty * price;
-      console.log('🔍 DEBUG - Calculated item total:', { qty, price, total: newItems[index].total });
-    }
-    
-    console.log('🔍 DEBUG - About to call setInvoiceData with newItems:', newItems);
-    
+  const updateInvoiceItem = (index: number, fieldOrUpdates: string | object, value?: any) => {
     setInvoiceData(prev => {
-      console.log('🔍 DEBUG - setInvoiceData callback - previous state:', prev);
-      
-      const subtotal = newItems.reduce((sum, item) => sum + item.total, 0);
-      const tax = subtotal * 0.075; // 7.5% tax
+      const newItems = [...prev.items];
+      const item = { ...newItems[index] };
+
+      if (typeof fieldOrUpdates === 'string') {
+        (item as any)[fieldOrUpdates] = value;
+      } else {
+        Object.assign(item, fieldOrUpdates);
+      }
+
+      const qty = parseFloat(item.quantity) || 0;
+      const price = parseFloat(item.unitPrice) || 0;
+      item.total = qty * price;
+
+      newItems[index] = item;
+
+      const subtotal = newItems.reduce((sum, it) => sum + it.total, 0);
+      const tax = prev.enableVAT ? subtotal * (prev.vatRate / 100) : 0;
       const total = subtotal + tax;
-      
-      const newState = {
-        ...prev,
-        items: newItems,
-        subtotal,
-        tax,
-        total
-      };
-      
-      console.log('🔍 DEBUG - setInvoiceData callback - new state:', newState);
-      console.log('🔍 DEBUG - Specifically, updated item:', newState.items[index]);
-      
-      return newState;
+
+      return { ...prev, items: newItems, subtotal, tax, total };
     });
-    
-    // Add setTimeout to check state after update
-    setTimeout(() => {
-      console.log('🔍 DEBUG - State check after update - invoiceData.items[index]:', invoiceData.items[index]);
-      console.log('🔍 DEBUG - State check after update - inventoryItemId field:', invoiceData.items[index]?.inventoryItemId);
-    }, 100);
   };
 
   const addInvoiceItem = () => {
@@ -503,17 +475,24 @@ const IncomePage = () => {
   };
 
   const removeInvoiceItem = (index: number) => {
-    setInvoiceData(prev => ({
-      ...prev,
-      items: prev.items.filter((_, i) => i !== index)
-    }));
+    setInvoiceData(prev => {
+      const newItems = prev.items.filter((_, i) => i !== index);
+      const subtotal = newItems.reduce((sum, it) => sum + it.total, 0);
+      const tax = prev.enableVAT ? subtotal * (prev.vatRate / 100) : 0;
+      const total = subtotal + tax;
+      return { ...prev, items: newItems, subtotal, tax, total };
+    });
   };
 
   const handleInvoiceChange = (field: string, value: any) => {
-    setInvoiceData(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    setInvoiceData(prev => {
+      const next = { ...prev, [field]: value };
+      if (field === 'enableVAT' || field === 'vatRate') {
+        next.tax = next.enableVAT ? next.subtotal * (next.vatRate / 100) : 0;
+        next.total = next.subtotal + next.tax;
+      }
+      return next;
+    });
   };
 
   const handleInvoiceSubmit = (e: React.FormEvent) => {
@@ -1155,114 +1134,32 @@ TrackFarmOps Team`;
     }
   };
 
-  // Calculate inventory impact for an invoice
-  const calculateInventoryImpact = (invoice: any) => {
-    const impact: any[] = [];
-    
-    console.log('🔍 DEBUG - Calculating inventory impact for invoice:', invoice);
-    
-    if (!invoice.items || !Array.isArray(invoice.items)) {
-      console.log('🔍 DEBUG - No items in invoice');
-      return impact;
-    }
-    
-    invoice.items.forEach((invoiceItem: any) => {
-      console.log('🔍 DEBUG - Processing invoice item:', invoiceItem);
-      
-      // Find matching inventory items by name or description
-      const matchingInventoryItems = inventoryItems.filter(invItem => 
-        invItem.name.toLowerCase().includes(invoiceItem.description?.toLowerCase() || '') ||
-        (invoiceItem.description?.toLowerCase() || '').includes(invItem.name.toLowerCase())
-      );
-      
-      console.log('🔍 DEBUG - Matching inventory items found:', matchingInventoryItems.length, matchingInventoryItems.map(item => ({ id: item.id, name: item.name, quantity: item.quantity })));
-      
-      matchingInventoryItems.forEach(invItem => {
-        const quantity = parseFloat(invoiceItem.quantity) || 0;
-        console.log('🔍 DEBUG - Invoice quantity:', quantity, 'for item:', invItem.name);
-        
-        if (quantity > 0) {
-          const impactEntry = {
-            inventoryItem: invItem,
-            invoiceQuantity: quantity,
-            currentStock: invItem.quantity || 0,
-            remainingStock: (invItem.quantity || 0) - quantity,
-            stockStatus: (invItem.quantity || 0) >= quantity ? 'sufficient' : 'insufficient',
-            unitPrice: invItem.pricePerUnit || 0,
-            totalValue: quantity * (invItem.pricePerUnit || 0)
-          };
-          
-          console.log('🔍 DEBUG - Impact entry created:', impactEntry);
-          impact.push(impactEntry);
-        }
-      });
-    });
-    
-    console.log('🔍 DEBUG - Final inventory impact:', impact);
-    return impact;
+  const handleMarkAsPaidWithConfirmation = (invoice: any) => {
+    setInvoiceToMarkAsPaid(invoice);
+    setShowPaidConfirmationModal(true);
   };
 
-  // Handle marking invoice as paid with inventory confirmation
-  const handleMarkAsPaidWithConfirmation = async (invoice: any) => {
-    try {
-      console.log('💰 Preparing to mark invoice as paid:', invoice.invoiceNumber);
-      
-      // Calculate inventory impact
-      const impact = calculateInventoryImpact(invoice);
-      setInventoryImpact(impact);
-      setInvoiceToMarkAsPaid(invoice);
-      setShowPaidConfirmationModal(true);
-    } catch (error) {
-      console.error('❌ Error preparing invoice payment:', error);
-      setError('Failed to prepare invoice payment');
-    }
-  };
-
-  // Confirm marking invoice as paid and update inventory
   const confirmMarkAsPaid = async () => {
     try {
       if (!invoiceToMarkAsPaid) return;
-      
-      // Check subscription limits for marking invoice as paid
+
       if (!restrictions.canMarkMoreInvoicesAsPaid(totalInvoices)) {
         setError(`You've reached your limit of ${restrictions.getInvoiceMarkAsPaidLimit()} invoices marked as paid. Upgrade your plan to mark more invoices as paid.`);
         return;
       }
-      
-      console.log('💰 Confirming invoice as paid:', invoiceToMarkAsPaid.invoiceNumber);
-      
-      // Update inventory quantities for impacted items
-      for (const impact of inventoryImpact) {
-        if (impact.stockStatus === 'sufficient' && impact.invoiceQuantity > 0) {
-          console.log(`📦 Updating inventory: ${impact.inventoryItem.name} -${impact.invoiceQuantity}`);
-          
-          await api.put(`/inventory/items/${impact.inventoryItem.id}/quantity`, {
-            quantityChange: -impact.invoiceQuantity,
-            reason: `Sold via invoice #${invoiceToMarkAsPaid.invoiceNumber}`,
-            usageType: 'SALES',
-            relatedEntity: 'INVOICE',
-            relatedEntityId: invoiceToMarkAsPaid.id
-          });
-        }
-      }
-      
-      // Mark invoice as paid (convert to income record)
+
+      // Backend records payment and creates income entry
       await api.patch(`/invoices/${invoiceToMarkAsPaid.id}/mark-paid`);
-      
-      // Refresh invoices list
+
       await fetchInvoices(invoiceCurrentPage);
-      
-      // Show success message
-      setSuccess(`Invoice #${invoiceToMarkAsPaid.invoiceNumber} marked as paid and inventory updated successfully!`);
-      
-      // Close modal
+
+      setSuccess(`Invoice #${invoiceToMarkAsPaid.invoiceNumber} marked as paid and income recorded successfully!`);
+
       setShowPaidConfirmationModal(false);
       setInvoiceToMarkAsPaid(null);
-      setInventoryImpact([]);
-      
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Error marking invoice as paid:', error);
-      setError('Failed to mark invoice as paid and update inventory');
+      setError(error.response?.data?.error || 'Failed to mark invoice as paid and record income');
     }
   };
 
@@ -1835,8 +1732,8 @@ Generated on: ${new Date().toLocaleString()}
   // Confirmation Modal for Marking Invoice as Paid
   if (showPaidConfirmationModal && invoiceToMarkAsPaid) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-3xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-5 w-full max-w-lg max-h-[80vh] overflow-y-auto">
           <div className="flex items-center mb-4">
             <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
               <span className="text-2xl">💰</span>
@@ -1852,7 +1749,7 @@ Generated on: ${new Date().toLocaleString()}
           </div>
 
           {/* Invoice Details */}
-          <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+          <div className="mb-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
             <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Invoice Details</h4>
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
@@ -1876,73 +1773,15 @@ Generated on: ${new Date().toLocaleString()}
             </div>
           </div>
 
-          {/* Inventory Impact */}
-          {inventoryImpact.length > 0 && (
-            <div className="mb-6">
-              <h4 className="font-semibold text-gray-900 dark:text-white mb-3">Inventory Impact</h4>
-              <div className="space-y-2">
-                {inventoryImpact.map((impact, index) => (
-                  <div key={index} className={`p-3 rounded-lg border ${
-                    impact.stockStatus === 'sufficient'
-                      ? 'bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-800'
-                      : 'bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800'
-                  }`}>
-                    <div className="flex justify-between items-start">
-                      <div className="flex-1">
-                        <div className="font-medium text-gray-900 dark:text-white">
-                          {impact.inventoryItem.name}
-                        </div>
-                        <div className="text-sm text-gray-600 dark:text-gray-400">
-                          Category: {impact.inventoryItem.category?.name || 'N/A'}
-                        </div>
-                        <div className="text-sm text-gray-600 dark:text-gray-400">
-                          Unit: {impact.inventoryItem.unit}
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className={`text-sm font-medium ${
-                          impact.stockStatus === 'sufficient'
-                            ? 'text-green-600 dark:text-green-400'
-                            : 'text-red-600 dark:text-red-400'
-                        }`}>
-                          {impact.stockStatus === 'sufficient' ? '✅ Sufficient Stock' : '⚠️ Insufficient Stock'}
-                        </div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">
-                          Current: {impact.currentStock}
-                        </div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">
-                          Requested: {impact.invoiceQuantity}
-                        </div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">
-                          Remaining: {impact.remainingStock}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+          {/* Payment confirmation note */}
+          <div className="mb-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+            <div className="text-sm text-green-800 dark:text-green-200">
+              Inventory was already supplied when this invoice was created. Confirming will record the payment and create the corresponding income entry.
             </div>
-          )}
-
-          {/* Warning for insufficient stock */}
-          {inventoryImpact.some(impact => impact.stockStatus === 'insufficient') && (
-            <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 dark:bg-yellow-900/20 dark:border-yellow-800 rounded-lg">
-              <div className="flex items-center">
-                <span className="text-yellow-600 dark:text-yellow-400 mr-2">⚠️</span>
-                <div>
-                  <div className="font-medium text-yellow-800 dark:text-yellow-200">
-                    Insufficient Stock Warning
-                  </div>
-                  <div className="text-sm text-yellow-700 dark:text-yellow-300">
-                    Some items have insufficient stock. This will result in negative inventory levels.
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+          </div>
 
           {/* User Information */}
-          <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+          <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
             <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Transaction Details</h4>
             <div className="text-sm text-gray-600 dark:text-gray-400">
               <div className="mb-1">
@@ -1966,7 +1805,6 @@ Generated on: ${new Date().toLocaleString()}
               onClick={() => {
                 setShowPaidConfirmationModal(false);
                 setInvoiceToMarkAsPaid(null);
-                setInventoryImpact([]);
               }}
               className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
             >
@@ -2009,7 +1847,6 @@ Generated on: ${new Date().toLocaleString()}
                 <Plus className="h-4 w-4" />
                 Record Income
               </button>
-              {/*
               <button
                 onClick={() => handleTabChange('invoice')}
                 className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 whitespace-nowrap ${
@@ -2032,7 +1869,6 @@ Generated on: ${new Date().toLocaleString()}
                 <Table className="h-4 w-4" />
                 Invoice Records
               </button>
-              */}
               <button
                 onClick={() => handleTabChange('records')}
                 className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 whitespace-nowrap ${
@@ -2529,121 +2365,53 @@ Generated on: ${new Date().toLocaleString()}
                               </label>
                               <select
                                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
-                                value={(() => {
-                                  const currentValue = item.inventoryItemId || '';
-                                  console.log('🔍 DEBUG - Dropdown render - item index:', index);
-                                  console.log('🔍 DEBUG - Dropdown render - current item:', item);
-                                  console.log('🔍 DEBUG - Dropdown render - calculated value:', currentValue);
-                                  console.log('🔍 DEBUG - Dropdown render - inventoryItems available:', inventoryItems.length);
-                                  return currentValue;
-                                })()}
-                                onMouseDown={() => {
-                                  console.log('🔍 DEBUG - Dropdown onMouseDown triggered for item index:', index);
-                                  console.log('🔍 DEBUG - Current inventoryRefreshed flag:', inventoryRefreshed);
-                                  // Only refresh if not already refreshed in this session
-                                  if (!inventoryRefreshed) {
-                                    console.log('🔄 Refreshing inventory data on dropdown open...');
-                                    fetchInventoryData();
-                                    setInventoryRefreshed(true);
-                                  } else {
-                                    console.log('🔍 DEBUG - Skipping refresh - already refreshed');
-                                  }
-                                }}
+                                value={item.inventoryItemId || ''}
+
                                 onChange={(e) => {
                                   const inventoryItemId = e.target.value;
-                                  console.log('🔍 DEBUG - Dropdown onChange triggered for item index:', index);
-                                  console.log('🔍 DEBUG - Dropdown onChange - selected value:', inventoryItemId);
-                                  console.log('🔍 DEBUG - Dropdown onChange - current item state:', item);
-                                  console.log('🔍 DEBUG - Dropdown onChange - inventoryItems available:', inventoryItems.length);
-                                  
                                   if (inventoryItemId) {
-                                    const selectedItem = inventoryItems.find(inv => 
+                                    const selectedItem = inventoryItems.find(inv =>
                                       inv.id.toString() === inventoryItemId.toString()
                                     );
-                                    console.log('🔍 DEBUG - Found selected item:', selectedItem);
-                                    
                                     if (selectedItem) {
-                                      console.log('🔍 DEBUG - Updating invoice item with:', {
+                                      updateInvoiceItem(index, {
                                         inventoryItemId: inventoryItemId.toString(),
                                         description: selectedItem.name,
                                         unitPrice: selectedItem.pricePerUnit || 0,
                                         categoryId: selectedItem.categoryId
                                       });
-                                      
-                                      // Batch all updates into a single call to prevent state conflicts
-                                      const newItems = [...invoiceData.items];
-                                      const updatedItem = {
-                                        ...newItems[index],
-                                        inventoryItemId: inventoryItemId.toString(),
-                                        description: selectedItem.name,
-                                        unitPrice: selectedItem.pricePerUnit || 0,
-                                        categoryId: selectedItem.categoryId
-                                      };
-                                      
-                                      // Calculate total if quantity exists
-                                      const qty = parseFloat(updatedItem.quantity) || 0;
-                                      const price = parseFloat(updatedItem.unitPrice) || 0;
-                                      updatedItem.total = qty * price;
-                                      
-                                      newItems[index] = updatedItem;
-                                      
-                                      console.log('🔍 DEBUG - Batched update - new item:', updatedItem);
-                                      console.log('🔍 DEBUG - Batched update - all items:', newItems);
-                                      
-                                      // Single state update
-                                      setInvoiceData(prev => {
-                                        console.log('🔍 DEBUG - Batched setInvoiceData - previous state:', prev);
-                                        
-                                        const subtotal = newItems.reduce((sum, item) => sum + item.total, 0);
-                                        const tax = subtotal * 0.075; // 7.5% tax
-                                        const total = subtotal + tax;
-                                        
-                                        const newState = {
-                                          ...prev,
-                                          items: newItems,
-                                          subtotal,
-                                          tax,
-                                          total
-                                        };
-                                        
-                                        console.log('🔍 DEBUG - Batched setInvoiceData - new state:', newState);
-                                        return newState;
-                                      });
-                                      
-                                      console.log('🔍 DEBUG - Invoice item updated successfully with batched updates');
-                                    } else {
-                                      console.log('⚠️ DEBUG - Selected item not found in inventoryItems');
-                                      console.log('🔍 DEBUG - Available inventory items:', inventoryItems.map(item => ({ id: item.id, name: item.name })));
                                     }
                                   } else {
-                                    console.log('🔍 DEBUG - Clearing inventory selection');
-                                    // Clear inventory selection but keep manual description
-                                    const newItems = [...invoiceData.items];
-                                    newItems[index] = {
-                                      ...newItems[index],
+                                    updateInvoiceItem(index, {
                                       inventoryItemId: '',
                                       categoryId: ''
-                                    };
-                                    
-                                    setInvoiceData(prev => ({
-                                      ...prev,
-                                      items: newItems
-                                    }));
+                                    });
                                   }
                                 }}
                               >
                                 <option value="">-- Select from Inventory --</option>
                                 {inventoryCategories.length === 0 && inventoryItems.length > 0 && (
                                   <optgroup label="📦 Uncategorized Items">
-                                    {inventoryItems.map(invItem => {
-                                      console.log('🔍 DEBUG - Rendering uncategorized item option:', {
-                                        id: invItem.id,
-                                        idToString: invItem.id.toString(),
-                                        name: invItem.name,
-                                        pricePerUnit: invItem.pricePerUnit
-                                      });
-                                      
-                                      return (
+                                    {inventoryItems.map(invItem => (
+                                      <option 
+                                        key={invItem.id} 
+                                        value={invItem.id.toString()}
+                                        disabled={(invItem.quantity || 0) <= 0}
+                                      >
+                                        {invItem.name} ({invItem.quantity || 0} {invItem.unit}) - ₦{formatNumberWithSeparator(invItem.pricePerUnit || 0)}/unit
+                                        {(invItem.quantity || 0) <= 0 && ' (OUT OF STOCK)'}
+                                      </option>
+                                    ))}
+                                  </optgroup>
+                                )}
+                                {inventoryCategories.length === 0 && (
+                                  <option value="" disabled>No categories available</option>
+                                )}
+                                {inventoryCategories.map(category => (
+                                  <optgroup key={category.id} label={`${category.icon || '📦'} ${category.name}`}>
+                                    {inventoryItems
+                                      .filter(item => item.categoryId === category.id)
+                                      .map(invItem => (
                                         <option 
                                           key={invItem.id} 
                                           value={invItem.id.toString()}
@@ -2652,45 +2420,9 @@ Generated on: ${new Date().toLocaleString()}
                                           {invItem.name} ({invItem.quantity || 0} {invItem.unit}) - ₦{formatNumberWithSeparator(invItem.pricePerUnit || 0)}/unit
                                           {(invItem.quantity || 0) <= 0 && ' (OUT OF STOCK)'}
                                         </option>
-                                      );
-                                    })}
+                                      ))}
                                   </optgroup>
-                                )}
-                                {inventoryCategories.length === 0 && (
-                                  <option value="" disabled>No categories available</option>
-                                )}
-                                {inventoryCategories.map(category => {
-                                  console.log('🔍 DEBUG - Rendering category:', category);
-                                  
-                                  return (
-                                    <optgroup key={category.id} label={`${category.icon || '📦'} ${category.name}`}>
-                                      {inventoryItems
-                                        .filter(item => item.categoryId === category.id)
-                                        .map(invItem => {
-                                          console.log('🔍 DEBUG - Rendering categorized item option:', {
-                                            categoryId: category.id,
-                                            categoryName: category.name,
-                                            itemId: invItem.id,
-                                            itemIdToString: invItem.id.toString(),
-                                            itemName: invItem.name,
-                                            itemCategoryId: invItem.categoryId,
-                                            pricePerUnit: invItem.pricePerUnit
-                                          });
-                                          
-                                          return (
-                                            <option 
-                                              key={invItem.id} 
-                                              value={invItem.id.toString()}
-                                              disabled={(invItem.quantity || 0) <= 0}
-                                            >
-                                              {invItem.name} ({invItem.quantity || 0} {invItem.unit}) - ₦{formatNumberWithSeparator(invItem.pricePerUnit || 0)}/unit
-                                              {(invItem.quantity || 0) <= 0 && ' (OUT OF STOCK)'}
-                                            </option>
-                                          );
-                                        })}
-                                    </optgroup>
-                                  );
-                                })}
+                                ))}
                                 {inventoryCategories.length > 0 && inventoryItems.length === 0 && (
                                   <option value="" disabled>No items available in inventory</option>
                                 )}
@@ -2846,15 +2578,29 @@ Generated on: ${new Date().toLocaleString()}
                     {/* Summary */}
                     <div className="p-6 rounded-lg">
                       <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Invoice Summary</h3>
+                      <div className="flex items-center mb-4">
+                        <input
+                          type="checkbox"
+                          id="invoice-enableVAT"
+                          checked={invoiceData.enableVAT}
+                          onChange={(e) => handleInvoiceChange('enableVAT', e.target.checked)}
+                          className="mr-2 h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                        />
+                        <label htmlFor="invoice-enableVAT" className="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
+                          Add VAT/Tax ({invoiceData.vatRate}%)
+                        </label>
+                      </div>
                       <div className="space-y-2">
                         <div className="flex justify-between">
                           <span className="text-gray-600 dark:text-gray-400">Subtotal:</span>
                           <span className="font-medium text-gray-900 dark:text-white">{formatCurrency(invoiceData.subtotal)}</span>
                         </div>
-                        <div className="flex justify-between">
-                          <span className="text-gray-600 dark:text-gray-400">Tax (7.5%):</span>
-                          <span className="font-medium text-gray-900 dark:text-white">{formatCurrency(invoiceData.tax)}</span>
-                        </div>
+                        {invoiceData.enableVAT && (
+                          <div className="flex justify-between">
+                            <span className="text-gray-600 dark:text-gray-400">Tax ({invoiceData.vatRate}%):</span>
+                            <span className="font-medium text-gray-900 dark:text-white">{formatCurrency(invoiceData.tax)}</span>
+                          </div>
+                        )}
                         <div className="flex justify-between text-lg font-bold">
                           <span className="text-gray-900 dark:text-white">Total:</span>
                           <span className="text-gray-900 dark:text-white">{formatCurrency(invoiceData.total)}</span>
@@ -3556,9 +3302,8 @@ Generated on: ${new Date().toLocaleString()}
 
           {/* Actions Modal */}
           {showActionsModal && selectedInvoice && (
-            <div className="fixed inset-0 bg-black/20 backdrop-blur-sm overflow-y-auto h-full w-full z-50">
-              <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-                <div className="mt-3">
+            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+              <div className="w-full max-w-xs max-h-[75vh] overflow-y-auto p-4 border shadow-lg rounded-lg bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-medium text-gray-900 dark:text-white">Invoice Actions</h3>
                     <button
@@ -3572,7 +3317,7 @@ Generated on: ${new Date().toLocaleString()}
                   <div className="mb-4">
                     <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                       <div className="flex items-center">
-                        <div className="h-2 w-2 bg-blue-100 dark:bg-blue-900 rounded-full mr-3"></div>
+                        <div className="h-2 w-2 bg-blue-500 rounded-full mr-3"></div>
                         <div>
                           <p className="font-medium text-gray-900 dark:text-white">Invoice #{selectedInvoice.invoiceNumber}</p>
                           <p className="text-sm text-gray-600 dark:text-gray-400">{selectedInvoice.clientName}</p>
@@ -3651,7 +3396,6 @@ Generated on: ${new Date().toLocaleString()}
                       Delete Invoice
                     </button>
                   </div>
-                </div>
               </div>
             </div>
           )}

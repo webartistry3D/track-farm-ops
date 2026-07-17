@@ -56,8 +56,28 @@ trackfarmops-landing-production/
 │   └── launch-checklist.md
 │
 └── prompts/
-    ├── devin/
-    ├── windsurf/
-    ├── figma/
-    ├── blender/
-    └── image-generation/
+├── devin/
+│   ├── system.md
+│   ├── project-context.md
+│   ├── workflow.md
+│   └── best-practices.md
+├── windsurf/
+│   ├── system.md
+│   ├── project-context.md
+│   ├── workflow.md
+│   └── best-practices.md
+├── figma/
+│   ├── system.md
+│   ├── project-context.md
+│   ├── workflow.md
+│   └── best-practices.md
+├── blender/
+│   ├── system.md
+│   ├── project-context.md
+│   ├── workflow.md
+│   └── best-practices.md
+└── image-generation/
+    ├── system.md
+    ├── project-context.md
+    ├── workflow.md
+    └── best-practices.md
