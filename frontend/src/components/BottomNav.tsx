@@ -102,7 +102,7 @@ const BottomNav = ({ onLogout }: BottomNavProps) => {
                     onClick={() => handleItemClick(child)}
                     className={`flex items-center space-x-3 px-4 py-3 transition-colors ${
                       isChildActive
-                        ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400'
+                        ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400'
                         : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                     }`}
                   >
@@ -139,7 +139,7 @@ const BottomNav = ({ onLogout }: BottomNavProps) => {
                     onClick={() => handleMenuToggle(item.id)}
                     className={`w-full h-full flex flex-col items-center justify-center space-y-0.5 transition-colors px-1 ${
                       isItemActive || isMenuOpen
-                        ? 'text-green-600 dark:text-green-400'
+                        ? 'text-emerald-600 dark:text-emerald-400'
                         : 'text-gray-500 dark:text-gray-400'
                     }`}
                   >
@@ -152,7 +152,7 @@ const BottomNav = ({ onLogout }: BottomNavProps) => {
                     onClick={() => handleItemClick(item)}
                     className={`w-full h-full flex flex-col items-center justify-center space-y-0.5 transition-colors px-1 ${
                       isItemActive
-                        ? 'text-green-600 dark:text-green-400'
+                        ? 'text-emerald-600 dark:text-emerald-400'
                         : 'text-gray-500 dark:text-gray-400'
                     }`}
                   >

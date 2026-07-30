@@ -91,7 +91,7 @@ h1, h2, h3, h4, h5, h6 {
   }
   
   .btn-primary {
-    @apply bg-green-600 text-white hover:bg-green-700 focus:ring-green-500;
+    @apply bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-emerald-500;
   }
   
   .btn-secondary {
@@ -146,7 +146,7 @@ h1, h2, h3, h4, h5, h6 {
   }
   
   .btn-primary {
-    @apply bg-green-600 text-white hover:bg-green-700 focus:ring-green-500;
+    @apply bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-emerald-500;
   }
   
   .btn-secondary {
@@ -168,5 +168,116 @@ h1, h2, h3, h4, h5, h6 {
   
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+}
+
+/* ============================================================
+   Landing page — premium animation & decoration utilities
+   ============================================================ */
+
+/* Slow floating blobs for ambient backgrounds */
+@keyframes blob-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -40px) scale(1.08); }
+  66% { transform: translate(-20px, 25px) scale(0.94); }
+}
+.animate-blob {
+  animation: blob-float 14s ease-in-out infinite;
+}
+
+/* Animated gradient text/background sweep */
+@keyframes gradient-pan {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.animate-gradient-pan {
+  background-size: 200% 200%;
+  animation: gradient-pan 6s ease infinite;
+}
+
+/* Continuous marquee for testimonial / logo strips */
+@keyframes marquee-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes marquee-right {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+.animate-marquee {
+  animation: marquee-left 40s linear infinite;
+}
+.animate-marquee-reverse {
+  animation: marquee-right 40s linear infinite;
+}
+.marquee-track:hover .animate-marquee,
+.marquee-track:hover .animate-marquee-reverse {
+  animation-play-state: paused;
+}
+
+/* Slow clockwise orbit for radial engine */
+@keyframes orbit-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.animate-orbit {
+  transform-origin: 50px 50px;
+  animation: orbit-rotate 60s linear infinite;
+}
+
+/* Pulsing data connections for radial engine */
+@keyframes pulse-line {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+.animate-pulse-line {
+  animation: pulse-line 1.8s ease-in-out infinite;
+}
+
+/* Shimmering sheen for buttons / badges */
+@keyframes shimmer {
+  0% { transform: translateX(-150%); }
+  100% { transform: translateX(150%); }
+}
+.animate-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 80%
+  );
+  transform: translateX(-150%);
+  animation: shimmer 3.5s ease-in-out infinite;
+}
+
+/* Subtle bob for scroll cue */
+@keyframes bob {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(8px); opacity: 0.5; }
+}
+.animate-bob {
+  animation: bob 1.8s ease-in-out infinite;
+}
+
+/* Decorative dotted grid background */
+.bg-grid {
+  background-image: radial-gradient(rgba(22, 163, 74, 0.12) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-blob,
+  .animate-gradient-pan,
+  .animate-marquee,
+  .animate-marquee-reverse,
+  .animate-orbit,
+  .animate-pulse-line,
+  .animate-shimmer::after,
+  .animate-bob {
+    animation: none !important;
   }
 }

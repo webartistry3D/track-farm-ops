@@ -478,7 +478,7 @@ const Analytics = () => {
     color: string;
   }) => {
     const getGradientColor = () => {
-      if (color === "bg-green-500") return "from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 dark:border-green-700";
+      if (color === "bg-emerald-500") return "from-emerald-50 to-emerald-50 dark:from-emerald-900/20 dark:to-emerald-900/20 dark:border-emerald-700";
       if (color === "bg-red-500") return "from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 dark:border-red-700";
       if (color === "bg-blue-500") return "from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 dark:border-blue-700";
       if (color === "bg-orange-500") return "from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 dark:border-orange-700";
@@ -488,7 +488,7 @@ const Analytics = () => {
     };
 
     const getIconGradientColor = () => {
-      if (color === "bg-green-500") return "from-green-500 to-green-600 dark:from-green-600 dark:to-green-700";
+      if (color === "bg-emerald-500") return "from-emerald-500 to-emerald-600 dark:from-emerald-600 dark:to-emerald-700";
       if (color === "bg-red-500") return "from-red-500 to-red-600 dark:from-red-600 dark:to-red-700";
       if (color === "bg-blue-500") return "from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700";
       if (color === "bg-orange-500") return "from-orange-500 to-orange-600 dark:from-orange-600 dark:to-orange-700";
@@ -498,7 +498,7 @@ const Analytics = () => {
     };
 
     const getTextColor = () => {
-      if (color === "bg-green-500") return "text-green-600 dark:text-green-400";
+      if (color === "bg-emerald-500") return "text-emerald-600 dark:text-emerald-400";
       if (color === "bg-red-500") return "text-red-600 dark:text-red-400";
       if (color === "bg-blue-500") return "text-blue-600 dark:text-blue-400";
       if (color === "bg-orange-500") return "text-orange-600 dark:text-orange-400";
@@ -614,7 +614,7 @@ const Analytics = () => {
                   title="Total Income"
                   value={formatCompactCurrency(Number(financialSummary?.totalIncome) || 0)}
                   icon={<TrendingUp className="h-4 w-4 text-white" />}
-                  color="bg-green-500"
+                  color="bg-emerald-500"
                 />
                 <StatCard
                   title="Total Expenses"
@@ -658,7 +658,7 @@ const Analytics = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-4">
             {/* Quick Stats */}
             <div className="space-y-4">
-              <div className="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 dark:border-green-800 rounded-xl p-4">
+              <div className="bg-gradient-to-r from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-800/20 dark:border-emerald-800 rounded-xl p-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">Avg Daily Revenue</p>
@@ -666,7 +666,7 @@ const Analytics = () => {
                       {formatCompactCurrency(Math.floor((Number(financialSummary?.totalIncome) || 0) / 30))}
                     </p>
                   </div>
-                  <div className="p-2 bg-green-500 rounded-lg">
+                  <div className="p-2 bg-emerald-500 rounded-lg">
                     <TrendingUp className="h-4 w-4 text-white" />
                   </div>
                 </div>
@@ -711,7 +711,7 @@ const Analytics = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             <div>
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-                <TrendingUp className="w-5 h-5 mr-2 text-green-500" />
+                <TrendingUp className="w-5 h-5 mr-2 text-emerald-500" />
                 Income by Category
               </h2>
             {financialLoading ? (
@@ -977,7 +977,7 @@ const Analytics = () => {
                   title="Produce"
                   value={inventorySummary?.produce?.toString() || '0'}
                   icon={<Apple className="w-6 h-6 text-white" />}
-                  color="bg-green-500"
+                  color="bg-emerald-500"
                 />
               </div>
               <div onClick={() => setShowConsumablesModal(true)} className="cursor-pointer">
@@ -1001,7 +1001,7 @@ const Analytics = () => {
                   onClick={() => setDateFilter('today')}
                   className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                     dateFilter === 'today'
-                      ? 'bg-green-600 text-white'
+                      ? 'bg-emerald-600 text-white'
                       : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                   }`}
                 >
@@ -1011,7 +1011,7 @@ const Analytics = () => {
                   onClick={() => setDateFilter('yesterday')}
                   className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                     dateFilter === 'yesterday'
-                      ? 'bg-green-600 text-white'
+                      ? 'bg-emerald-600 text-white'
                       : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                   }`}
                 >
@@ -1021,7 +1021,7 @@ const Analytics = () => {
                   onClick={() => setDateFilter('last7days')}
                   className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                     dateFilter === 'last7days'
-                      ? 'bg-green-600 text-white'
+                      ? 'bg-emerald-600 text-white'
                       : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                   }`}
                 >
@@ -1031,7 +1031,7 @@ const Analytics = () => {
                   onClick={() => setDateFilter('last30days')}
                   className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                     dateFilter === 'last30days'
-                      ? 'bg-green-600 text-white'
+                      ? 'bg-emerald-600 text-white'
                       : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                   }`}
                 >
@@ -1041,7 +1041,7 @@ const Analytics = () => {
                   onClick={() => setDateFilter('allTime')}
                   className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                     dateFilter === 'allTime'
-                      ? 'bg-green-600 text-white'
+                      ? 'bg-emerald-600 text-white'
                       : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                   }`}
                 >
@@ -1055,7 +1055,7 @@ const Analytics = () => {
                       setSelectedMonth(parseInt(e.target.value));
                       setDateFilter('custom');
                     }}
-                    className="px-2 py-1 text-xs sm:px-3 sm:py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg font-inter text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:text-white"
+                    className="px-2 py-1 text-xs sm:px-3 sm:py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg font-inter text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:text-white"
                   >
                     <option value="0">January</option>
                     <option value="1">February</option>
@@ -1079,7 +1079,7 @@ const Analytics = () => {
                       setSelectedYear(parseInt(e.target.value));
                       setDateFilter('custom');
                     }}
-                    className="px-2 py-1 text-xs sm:px-3 sm:py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg font-inter text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:text-white"
+                    className="px-2 py-1 text-xs sm:px-3 sm:py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg font-inter text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:text-white"
                   >
                     {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
                       <option key={year} value={year}>{year}</option>
@@ -1099,11 +1099,11 @@ const Analytics = () => {
             {/* Crop Management Widget */}
             <div 
               onClick={() => setShowCropModal(true)}
-              className="bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-900/20 dark:to-emerald-800/20 dark:border-green-800 rounded-xl p-6 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
+              className="bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-800/20 dark:border-emerald-800 rounded-xl p-6 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
-                  <Sprout className="h-5 w-5 mr-2 text-green-600" />
+                  <Sprout className="h-5 w-5 mr-2 text-emerald-600" />
                   Crop Management
                 </h3>
                 <span className="text-sm text-gray-500 font-medium">N/A</span>
@@ -1122,7 +1122,7 @@ const Analytics = () => {
                   <span className="text-sm text-gray-600 dark:text-gray-400">Next Harvest</span>
                   <span className="font-semibold text-gray-900 dark:text-white">N/A</span>
                 </div>
-                <div className="mt-4 pt-3 border-t border-green-200 dark:border-green-800">
+                <div className="mt-4 pt-3 border-t border-emerald-200 dark:border-emerald-800">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600 dark:text-gray-400">Yield Forecast</span>
                     <span className="text-gray-500 font-medium">N/A</span>
@@ -1321,8 +1321,8 @@ const Analytics = () => {
               className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
             >
               <div className="flex items-center justify-between mb-4">
-                <div className="p-2 bg-green-100 dark:bg-green-900/20 rounded-lg">
-                  <MapPin className="h-5 w-5 text-green-600 dark:text-green-400" />
+                <div className="p-2 bg-emerald-100 dark:bg-emerald-900/20 rounded-lg">
+                  <MapPin className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                 </div>
                 <span className="text-xs text-gray-500 dark:text-gray-400">Real-time</span>
               </div>
@@ -1357,7 +1357,7 @@ const Analytics = () => {
         {showCropModal && (
           <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
-              <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-6">
+              <div className="bg-gradient-to-r from-emerald-600 to-emerald-600 text-white p-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <Sprout className="h-8 w-8 mr-3" />
@@ -1376,7 +1376,7 @@ const Analytics = () => {
               
               <div className="p-6 overflow-y-auto">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                  <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-4">
+                  <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-xl p-4">
                     <h3 className="font-semibold text-gray-900 dark:text-white mb-3">Active Crops</h3>
                     <div className="space-y-2">
                       <div className="flex justify-between items-center">
@@ -1395,7 +1395,7 @@ const Analytics = () => {
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-600 dark:text-gray-400">Yield Prediction</span>
-                        <span className="text-sm font-medium text-green-600">N/A</span>
+                        <span className="text-sm font-medium text-emerald-600">N/A</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-600 dark:text-gray-400">Harvest Readiness</span>
@@ -1408,7 +1408,7 @@ const Analytics = () => {
                 {/* Crop Management Form */}
                 <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 mb-6">
                   <h3 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-                    <Sprout className="h-5 w-5 mr-2 text-green-600" />
+                    <Sprout className="h-5 w-5 mr-2 text-emerald-600" />
                     Add New Crop
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1419,7 +1419,7 @@ const Analytics = () => {
                         value={cropData.newCrop}
                         onChange={(e) => setCropData({...cropData, newCrop: e.target.value})}
                         placeholder="e.g., Tomatoes, Lettuce"
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                       />
                     </div>
                     <div>
@@ -1428,7 +1428,7 @@ const Analytics = () => {
                         type="date"
                         value={cropData.plantingDate}
                         onChange={(e) => setCropData({...cropData, plantingDate: e.target.value})}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                       />
                     </div>
                     <div>
@@ -1437,12 +1437,12 @@ const Analytics = () => {
                         type="date"
                         value={cropData.expectedHarvest}
                         onChange={(e) => setCropData({...cropData, expectedHarvest: e.target.value})}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Zone Assignment</label>
-                      <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white">
+                      <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white">
                         <option value="">Select Zone</option>
                         <option value="zone-a">Zone A</option>
                         <option value="zone-b">Zone B</option>
@@ -1457,7 +1457,7 @@ const Analytics = () => {
                       onChange={(e) => setCropData({...cropData, notes: e.target.value})}
                       placeholder="Add any special instructions or notes..."
                       rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                     />
                   </div>
                   <div className="mt-4 flex justify-end space-x-3">
@@ -1504,7 +1504,7 @@ const Analytics = () => {
                         console.log('✅ Crop added:', newCrop);
                         alert(`Crop "${cropData.newCrop}" has been successfully added to the system!`);
                       }}
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                      className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
                     >
                       Add Crop
                     </button>
@@ -1517,7 +1517,7 @@ const Analytics = () => {
                   <div className="space-y-2">
                     <div className="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-lg">
                       <div className="flex items-center">
-                        <input type="checkbox" className="mr-3 h-4 w-4 text-green-600 rounded" />
+                        <input type="checkbox" className="mr-3 h-4 w-4 text-emerald-600 rounded" />
                         <div>
                           <p className="text-sm font-medium text-gray-900 dark:text-white">Fertilizer Application - Zone A</p>
                           <p className="text-xs text-gray-600 dark:text-gray-400">Tomorrow, 8:00 AM</p>
@@ -1527,7 +1527,7 @@ const Analytics = () => {
                     </div>
                     <div className="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-lg">
                       <div className="flex items-center">
-                        <input type="checkbox" className="mr-3 h-4 w-4 text-green-600 rounded" />
+                        <input type="checkbox" className="mr-3 h-4 w-4 text-emerald-600 rounded" />
                         <div>
                           <p className="text-sm font-medium text-gray-900 dark:text-white">Pest Inspection - Tomatoes</p>
                           <p className="text-xs text-gray-600 dark:text-gray-400">Friday, 2:00 PM</p>
@@ -1568,17 +1568,17 @@ const Analytics = () => {
                   <div className="bg-amber-50 dark:bg-amber-900/20 rounded-xl p-4 text-center">
                     <h4 className="text-sm text-gray-600 dark:text-gray-400 mb-2">Moisture Level</h4>
                     <p className="text-2xl font-bold text-gray-900 dark:text-white">68%</p>
-                    <p className="text-xs text-green-600 mt-1">Optimal Range</p>
+                    <p className="text-xs text-emerald-600 mt-1">Optimal Range</p>
                   </div>
                   <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 text-center">
                     <h4 className="text-sm text-gray-600 dark:text-gray-400 mb-2">pH Level</h4>
                     <p className="text-2xl font-bold text-gray-900 dark:text-white">6.8</p>
-                    <p className="text-xs text-green-600 mt-1">Ideal Balance</p>
+                    <p className="text-xs text-emerald-600 mt-1">Ideal Balance</p>
                   </div>
-                  <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-4 text-center">
+                  <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-xl p-4 text-center">
                     <h4 className="text-sm text-gray-600 dark:text-gray-400 mb-2">Nutrients</h4>
                     <p className="text-2xl font-bold text-gray-900 dark:text-white">92%</p>
-                    <p className="text-xs text-green-600 mt-1">Well Balanced</p>
+                    <p className="text-xs text-emerald-600 mt-1">Well Balanced</p>
                   </div>
                 </div>
                 
@@ -1725,7 +1725,7 @@ const Analytics = () => {
                     {['Zone A', 'Zone B', 'Zone C'].map((zone, index) => (
                       <div key={zone} className="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-lg">
                         <div className="flex items-center">
-                          <div className="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
+                          <div className="w-3 h-3 bg-emerald-500 rounded-full mr-3"></div>
                           <span className="font-medium text-gray-900 dark:text-white">{zone}</span>
                         </div>
                         <div className="flex items-center space-x-4 text-sm">
@@ -1781,7 +1781,7 @@ const Analytics = () => {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-sm text-gray-600 dark:text-gray-400">Impact on Crops</span>
-                        <span className="text-green-600 font-medium">Positive</span>
+                        <span className="text-emerald-600 font-medium">Positive</span>
                       </div>
                     </div>
                   </div>
@@ -1808,7 +1808,7 @@ const Analytics = () => {
                   </div>
                 </div>
                 
-                <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-4">
+                <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-xl p-4">
                   <h3 className="font-semibold text-gray-900 dark:text-white mb-3">7-Day Forecast Impact</h3>
                   <div className="grid grid-cols-7 gap-2">
                     {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, index) => (
@@ -1946,7 +1946,7 @@ const Analytics = () => {
                         <div className="flex justify-between">
                           <span className="text-sm text-gray-600 dark:text-gray-400">Status</span>
                           <span className={`text-sm font-medium ${
-                            zone.status === 'Active' ? 'text-green-600' : 
+                            zone.status === 'Active' ? 'text-emerald-600' : 
                             zone.status === 'Running' ? 'text-blue-600' : 'text-gray-500'
                           }`}>{zone.status}</span>
                         </div>
@@ -1979,7 +1979,7 @@ const Analytics = () => {
                       <p className="text-sm text-gray-600 dark:text-gray-400">Today's Total</p>
                     </div>
                     <div className="text-center">
-                      <p className="text-2xl font-bold text-green-600">-12%</p>
+                      <p className="text-2xl font-bold text-emerald-600">-12%</p>
                       <p className="text-sm text-gray-600 dark:text-gray-400">vs Yesterday</p>
                     </div>
                     <div className="text-center">
@@ -2156,7 +2156,7 @@ const Analytics = () => {
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-600 dark:text-gray-400">Spider Mites</span>
-                        <span className="text-sm font-medium text-green-600">Low</span>
+                        <span className="text-sm font-medium text-emerald-600">Low</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-600 dark:text-gray-400">Whiteflies</span>
@@ -2165,7 +2165,7 @@ const Analytics = () => {
                     </div>
                   </div>
                   
-                  <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-4">
+                  <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-xl p-4">
                     <h3 className="font-semibold text-gray-900 dark:text-white mb-3">Treatment Status</h3>
                     <div className="space-y-2">
                       <div className="flex justify-between items-center">
@@ -2174,7 +2174,7 @@ const Analytics = () => {
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-600 dark:text-gray-400">Efficacy Rate</span>
-                        <span className="text-sm font-medium text-green-600">92%</span>
+                        <span className="text-sm font-medium text-emerald-600">92%</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-600 dark:text-gray-400">Next Application</span>
@@ -2189,7 +2189,7 @@ const Analytics = () => {
                   <div className="space-y-2">
                     <div className="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-lg">
                       <div className="flex items-center">
-                        <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                        <CheckCircle className="h-4 w-4 text-emerald-500 mr-2" />
                         <span className="text-sm text-gray-900 dark:text-white">Neem Oil - Zone A</span>
                       </div>
                       <div className="flex items-center space-x-2">
@@ -2237,15 +2237,15 @@ const Analytics = () => {
               
               <div className="p-6 overflow-y-auto">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                  <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-4">
+                  <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-xl p-4">
                     <h3 className="font-semibold text-gray-900 dark:text-white mb-3">Operational Equipment</h3>
                     <div className="space-y-2">
                       {['Tractor', 'Irrigation Pump', 'Harvester', 'Plow'].map((equipment) => (
                         <div key={equipment} className="flex items-center justify-between">
                           <span className="text-sm text-gray-900 dark:text-white">{equipment}</span>
                           <div className="flex items-center">
-                            <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-                            <span className="text-xs text-green-600 font-medium">Running</span>
+                            <div className="w-2 h-2 bg-emerald-500 rounded-full mr-2"></div>
+                            <span className="text-xs text-emerald-600 font-medium">Running</span>
                           </div>
                         </div>
                       ))}
@@ -2275,7 +2275,7 @@ const Analytics = () => {
                       <p className="text-sm text-gray-600 dark:text-gray-400">Utilization</p>
                     </div>
                     <div className="text-center">
-                      <p className="text-2xl font-bold text-green-600">94%</p>
+                      <p className="text-2xl font-bold text-emerald-600">94%</p>
                       <p className="text-sm text-gray-600 dark:text-gray-400">Efficiency</p>
                     </div>
                     <div className="text-center">
@@ -2297,7 +2297,7 @@ const Analytics = () => {
         {showFieldModal && (
           <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
-              <div className="bg-gradient-to-r from-green-600 to-teal-600 text-white p-6">
+              <div className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white p-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <MapPin className="h-8 w-8 mr-3" />
@@ -2319,17 +2319,17 @@ const Analytics = () => {
                   <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 text-center">
                     <h4 className="text-sm text-gray-600 dark:text-gray-400 mb-2">Active Workers</h4>
                     <p className="text-3xl font-bold text-blue-600">6</p>
-                    <p className="text-xs text-green-600 mt-1">On Schedule</p>
+                    <p className="text-xs text-emerald-600 mt-1">On Schedule</p>
                   </div>
-                  <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-4 text-center">
+                  <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-xl p-4 text-center">
                     <h4 className="text-sm text-gray-600 dark:text-gray-400 mb-2">Tasks Today</h4>
-                    <p className="text-3xl font-bold text-green-600">24/32</p>
+                    <p className="text-3xl font-bold text-emerald-600">24/32</p>
                     <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">75% Complete</p>
                   </div>
                   <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-4 text-center">
                     <h4 className="text-sm text-gray-600 dark:text-gray-400 mb-2">Productivity</h4>
                     <p className="text-3xl font-bold text-purple-600">+18%</p>
-                    <p className="text-xs text-green-600 mt-1">Above Average</p>
+                    <p className="text-xs text-emerald-600 mt-1">Above Average</p>
                   </div>
                 </div>
                 
@@ -2344,7 +2344,7 @@ const Analytics = () => {
                     ].map((activity, index) => (
                       <div key={index} className="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-lg">
                         <div className="flex items-center">
-                          <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                          <div className="w-2 h-2 bg-emerald-500 rounded-full mr-3"></div>
                           <div>
                             <p className="text-sm font-medium text-gray-900 dark:text-white">{activity.worker}</p>
                             <p className="text-xs text-gray-600 dark:text-gray-400">{activity.task}</p>
@@ -2354,7 +2354,7 @@ const Analytics = () => {
                           <div className="flex items-center">
                             <div className="w-16 bg-gray-200 dark:bg-gray-700 rounded-full h-2 mr-2">
                               <div 
-                                className="bg-green-500 h-2 rounded-full"
+                                className="bg-emerald-500 h-2 rounded-full"
                                 style={{ width: `${activity.progress}%` }}
                               ></div>
                             </div>
@@ -2431,7 +2431,7 @@ const Analytics = () => {
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span className="text-gray-600 dark:text-gray-400">Healthy</span>
-                        <span className="font-medium text-green-600">85%</span>
+                        <span className="font-medium text-emerald-600">85%</span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-gray-600 dark:text-gray-400">Needs Attention</span>
@@ -2443,10 +2443,10 @@ const Analytics = () => {
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                   {/* Produce Card */}
-                  <div className="bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-900/20 dark:to-emerald-800/20 border border-green-200 dark:border-green-800 rounded-xl p-6">
+                  <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-800/20 border border-emerald-200 dark:border-emerald-800 rounded-xl p-6">
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Produce</h3>
-                      <div className="p-3 bg-green-500 rounded-lg">
+                      <div className="p-3 bg-emerald-500 rounded-lg">
                         <Apple className="h-6 w-6 text-white" />
                       </div>
                     </div>
@@ -2456,7 +2456,7 @@ const Analytics = () => {
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span className="text-gray-600 dark:text-gray-400">Fresh Produce</span>
-                        <span className="font-medium text-green-600">78%</span>
+                        <span className="font-medium text-emerald-600">78%</span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-gray-600 dark:text-gray-400">Ready for Harvest</span>
@@ -2479,7 +2479,7 @@ const Analytics = () => {
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span className="text-gray-600 dark:text-gray-400">Well Stocked</span>
-                        <span className="font-medium text-green-600">92%</span>
+                        <span className="font-medium text-emerald-600">92%</span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-gray-600 dark:text-gray-400">Expiring Soon</span>
@@ -2494,7 +2494,7 @@ const Analytics = () => {
                   <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Inventory Trends</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-green-600">N/A</div>
+                      <div className="text-2xl font-bold text-emerald-600">N/A</div>
                       <div className="text-sm text-gray-600 dark:text-gray-400">Monthly Growth</div>
                     </div>
                     <div className="text-center">

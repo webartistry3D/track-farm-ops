@@ -398,7 +398,7 @@ const Assets = () => {
       case 'planned': return 'bg-purple-100 text-purple-800';
       case 'ordered': return 'bg-indigo-100 text-indigo-800';
       case 'received': return 'bg-teal-100 text-teal-800';
-      case 'active': return 'bg-green-100 text-green-800';
+      case 'active': return 'bg-emerald-100 text-emerald-800';
       case 'under_maintenance': return 'bg-yellow-100 text-yellow-800';
       case 'damaged': return 'bg-red-100 text-red-800';
       case 'stolen': return 'bg-red-200 text-red-900';
@@ -469,8 +469,8 @@ const Assets = () => {
             className="bg-white dark:bg-gray-800 p-4 lg:p-6 rounded-lg shadow cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center">
-              <div className="p-2 lg:p-3 bg-green-100 dark:bg-green-900 rounded-full">
-                <Wrench className="w-5 h-5 lg:w-6 lg:h-6 text-green-600 dark:text-green-400" />
+              <div className="p-2 lg:p-3 bg-emerald-100 dark:bg-emerald-900 rounded-full">
+                <Wrench className="w-5 h-5 lg:w-6 lg:h-6 text-emerald-600 dark:text-emerald-400" />
               </div>
               <div className="ml-3 lg:ml-4">
                 <p className="text-xs lg:text-sm text-gray-500 dark:text-gray-400">Active</p>
@@ -535,7 +535,7 @@ const Assets = () => {
                   placeholder="Search assets..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                 />
               </div>
             </div>
@@ -544,7 +544,7 @@ const Assets = () => {
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full sm:w-auto px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                className="w-full sm:w-auto px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
               >
                 <option value="all">All Categories</option>
                 <option value="machinery">Machinery & Equipment</option>
@@ -559,7 +559,7 @@ const Assets = () => {
               <select
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
-                className="w-full sm:w-auto px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                className="w-full sm:w-auto px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
               >
                 <option value="all">All Status</option>
                 <option value="planned">Planned</option>
@@ -588,7 +588,7 @@ const Assets = () => {
                   onClick={() => setActiveTab(tab as any)}
                   className={`py-4 px-4 sm:px-6 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap flex-shrink-0 ${
                     activeTab === tab
-                      ? 'border-green-500 text-green-600 dark:text-green-400'
+                      ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
                   }`}
                 >
@@ -598,7 +598,7 @@ const Assets = () => {
             </div>
             <button
               onClick={() => setShowAddModal(true)}
-              className="bg-green-600 text-white px-3 sm:px-4 py-1 rounded-lg flex items-center gap-2 hover:bg-green-700 transition-colors text-sm sm:text-base ml-4 flex-shrink-0 h-full mt-3"
+              className="bg-emerald-600 text-white px-3 sm:px-4 py-1 rounded-lg flex items-center gap-2 hover:bg-emerald-700 transition-colors text-sm sm:text-base ml-4 flex-shrink-0 h-full mt-3"
             >
               <Plus className="w-4 h-4" />
               <span>Asset</span>
@@ -689,7 +689,7 @@ const Assets = () => {
                                 setSelectedAsset(asset);
                                 setShowDetailsModal(true);
                               }}
-                              className="text-green-600 dark:text-green-400 hover:text-green-900 dark:hover:text-green-300 p-1"
+                              className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-900 dark:hover:text-emerald-300 p-1"
                             >
                               <FileText className="w-4 h-4" />
                             </button>
@@ -734,7 +734,7 @@ const Assets = () => {
                     <div key={asset.id} className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-4">
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2 space-y-2 sm:space-y-0">
                         <h4 className="font-medium text-gray-900 dark:text-white text-sm sm:text-base truncate">{asset.name}</h4>
-                        <span className="text-sm text-green-600 dark:text-green-400 font-medium whitespace-nowrap">Schedule</span>
+                        <span className="text-sm text-emerald-600 dark:text-emerald-400 font-medium whitespace-nowrap">Schedule</span>
                       </div>
                       <div className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
                         <div className="flex justify-between">
@@ -751,7 +751,7 @@ const Assets = () => {
                         </div>
                       </div>
                       <div className="mt-3">
-                        <button className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition-colors text-sm">
+                        <button className="w-full bg-emerald-600 text-white py-2 rounded hover:bg-emerald-700 transition-colors text-sm">
                           Schedule Maintenance
                         </button>
                       </div>
@@ -765,7 +765,7 @@ const Assets = () => {
             <div className="flex justify-end">
               <button 
                 onClick={() => setShowScheduleMaintenanceModal(true)}
-                className="bg-green-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-green-700 transition-colors"
+                className="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-emerald-700 transition-colors"
               >
                 <Plus className="w-4 h-4" />
                 Schedule Maintenance
@@ -805,7 +805,7 @@ const Assets = () => {
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">{record.serviceDate}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">{record.technician}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600 dark:text-green-400">{formatCurrency(record.cost)}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-emerald-600 dark:text-emerald-400">{formatCurrency(record.cost)}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">{record.nextDueDate}</td>
                           </tr>
                         );
@@ -1002,7 +1002,7 @@ const Assets = () => {
                                 incident.severity === 'critical' ? 'bg-red-100 text-red-800' :
                                 incident.severity === 'high' ? 'bg-red-100 text-red-800' :
                                 incident.severity === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                                'bg-green-100 text-green-800'
+                                'bg-emerald-100 text-emerald-800'
                               }`}>
                                 {incident.severity.charAt(0).toUpperCase() + incident.severity.slice(1)}
                               </span>
@@ -1043,8 +1043,8 @@ const Assets = () => {
               
               <div className="bg-white dark:bg-gray-800 p-4 lg:p-6 rounded-lg shadow">
                 <div className="flex items-center">
-                  <div className="p-2 lg:p-3 bg-green-100 dark:bg-green-900">
-                    <BarChart3 className="w-5 h-5 lg:w-6 lg:h-6 text-green-600 dark:text-green-400" />
+                  <div className="p-2 lg:p-3 bg-emerald-100 dark:bg-emerald-900">
+                    <BarChart3 className="w-5 h-5 lg:w-6 lg:h-6 text-emerald-600 dark:text-emerald-400" />
                   </div>
                   <div className="ml-3 lg:ml-4">
                     <p className="text-xs lg:text-sm font-medium text-gray-600 dark:text-gray-400">Cost Ops. / Hour</p>
@@ -1075,7 +1075,7 @@ const Assets = () => {
                   <div className="ml-3 lg:ml-4">
                     <p className="text-xs lg:text-sm font-medium text-gray-600 dark:text-gray-400">Maintenance</p>
                     <p className="hidden sm:block"><br></br></p>
-                    <p className="text-3xl font-jetbrains-mono font-bold text-green-600 dark:text-green-400">--</p>
+                    <p className="text-3xl font-jetbrains-mono font-bold text-emerald-600 dark:text-emerald-400">--</p>
                   </div>
                 </div>
               </div>
@@ -1140,7 +1140,7 @@ const Assets = () => {
                   <div className="mt-8 flex flex-wrap justify-center gap-4">
                     {[
                       { name: 'Machinery', color: 'bg-blue-500' },
-                      { name: 'Vehicles', color: 'bg-green-500' },
+                      { name: 'Vehicles', color: 'bg-emerald-500' },
                       { name: 'Infrastructure', color: 'bg-yellow-500' },
                       { name: 'Tools', color: 'bg-purple-500' },
                       { name: 'Irrigation', color: 'bg-indigo-500' },
@@ -1167,7 +1167,7 @@ const Assets = () => {
                         <div className="text-xs text-gray-600 dark:text-gray-400 mb-2">{month}</div>
                         <div className="flex-1 bg-gray-200 rounded relative">
                           <div 
-                            className="bg-green-500 rounded-t" 
+                            className="bg-emerald-500 rounded-t" 
                             style={{height: '0%'}}
                           ></div>
                         </div>
@@ -1198,7 +1198,7 @@ const Assets = () => {
                         <p className="text-lg font-bold text-gray-900 dark:text-white">{formatCompactCurrency(asset.cost)}</p>
                         <div className="w-24 bg-gray-200 rounded-full h-2 mt-1">
                           <div 
-                            className="bg-green-500 h-2 rounded-full" 
+                            className="bg-emerald-500 h-2 rounded-full" 
                             style={{width: '0%'}}
                           ></div>
                         </div>
@@ -1385,7 +1385,7 @@ const Assets = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 {isSubmitting ? (
                   <>
@@ -1407,7 +1407,7 @@ const Assets = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-5xl w-full mx-4 max-h-screen overflow-y-auto">
             {/* Header */}
-            <div className="bg-gradient-to-r from-green-600 to-green-700 dark:from-green-700 dark:to-green-800 px-6 py-4 rounded-t-xl">
+            <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 dark:from-emerald-700 dark:to-emerald-800 px-6 py-4 rounded-t-xl">
               <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-3">
                   <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
@@ -1415,7 +1415,7 @@ const Assets = () => {
                   </div>
                   <div>
                     <h2 className="text-2xl font-bold text-white">Asset Details</h2>
-                    <p className="text-green-100 text-sm">Complete asset information and management</p>
+                    <p className="text-emerald-100 text-sm">Complete asset information and management</p>
                   </div>
                 </div>
                 <button
@@ -1454,7 +1454,7 @@ const Assets = () => {
                   <div className="flex flex-col items-end space-y-2">
                     <div className="text-right">
                       <p className="text-sm text-gray-500 dark:text-gray-400">Asset Value</p>
-                      <p className="text-2xl font-bold text-green-600 dark:text-green-400">{formatCurrency(selectedAsset.cost.toString(), { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</p>
+                      <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{formatCurrency(selectedAsset.cost.toString(), { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</p>
                     </div>
                   </div>
                 </div>
@@ -1467,7 +1467,7 @@ const Assets = () => {
                   <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
                     <div className="bg-gray-50 dark:bg-gray-900 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                       <h4 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
-                        <FileText className="w-5 h-5 mr-2 text-green-600 dark:text-green-400" />
+                        <FileText className="w-5 h-5 mr-2 text-emerald-600 dark:text-emerald-400" />
                         Basic Information
                       </h4>
                     </div>
@@ -1477,7 +1477,7 @@ const Assets = () => {
                           <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Asset ID</label>
                           <div className="flex items-center justify-between">
                             <p className="text-sm font-mono text-gray-900 dark:text-white">{selectedAsset.id}</p>
-                            <QrCode className="w-4 h-4 text-gray-400 cursor-pointer hover:text-green-600 dark:text-gray-500 hover:text-green-400 transition-colors" />
+                            <QrCode className="w-4 h-4 text-gray-400 cursor-pointer hover:text-emerald-600 dark:text-gray-500 hover:text-emerald-400 transition-colors" />
                           </div>
                         </div>
                         
@@ -1551,15 +1551,15 @@ const Assets = () => {
                   <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
                     <div className="bg-gray-50 dark:bg-gray-900 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                       <h4 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
-                        <TrendingUp className="w-5 h-5 mr-2 text-green-600 dark:text-green-400" />
+                        <TrendingUp className="w-5 h-5 mr-2 text-emerald-600 dark:text-emerald-400" />
                         Financial Information
                       </h4>
                     </div>
                     <div className="p-4 space-y-4">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 border border-green-200 dark:border-green-800">
-                          <label className="block text-xs font-medium text-green-600 dark:text-green-400 mb-1">Purchase Cost</label>
-                          <p className="text-2xl font-bold text-green-700 dark:text-green-300">{formatCurrency(selectedAsset.cost.toString(), { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</p>
+                        <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-lg p-4 border border-emerald-200 dark:border-emerald-800">
+                          <label className="block text-xs font-medium text-emerald-600 dark:text-emerald-400 mb-1">Purchase Cost</label>
+                          <p className="text-2xl font-bold text-emerald-700 dark:text-emerald-300">{formatCurrency(selectedAsset.cost.toString(), { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</p>
                         </div>
                         
                         <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
@@ -1776,7 +1776,7 @@ const Assets = () => {
               </button>
               <button
                 onClick={() => setShowScheduleMaintenanceModal(false)}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 w-full sm:w-auto order-1 sm:order-2"
+                className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 w-full sm:w-auto order-1 sm:order-2"
               >
                 Schedule Maintenance
               </button>
@@ -1790,8 +1790,8 @@ const Assets = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
             <div className="flex flex-col items-center">
-              <div className="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mb-4">
-                <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
+              <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900 rounded-full flex items-center justify-center mb-4">
+                <CheckCircle className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{successMessage || 'Success!'}</h3>
               <p className="text-gray-600 dark:text-gray-400 text-center mb-6">
@@ -1802,7 +1802,7 @@ const Assets = () => {
               </p>
               <button
                 onClick={() => setShowSuccessModal(false)}
-                className="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+                className="w-full bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors"
               >
                 Got it
               </button>

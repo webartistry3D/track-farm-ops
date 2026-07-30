@@ -1735,7 +1735,7 @@ Generated on: ${new Date().toLocaleString()}
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
         <div className="bg-white dark:bg-gray-800 rounded-lg p-5 w-full max-w-lg max-h-[80vh] overflow-y-auto">
           <div className="flex items-center mb-4">
-            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+            <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mr-4">
               <span className="text-2xl">💰</span>
             </div>
             <div>
@@ -1774,8 +1774,8 @@ Generated on: ${new Date().toLocaleString()}
           </div>
 
           {/* Payment confirmation note */}
-          <div className="mb-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-            <div className="text-sm text-green-800 dark:text-green-200">
+          <div className="mb-4 p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-lg">
+            <div className="text-sm text-emerald-800 dark:text-emerald-200">
               Inventory was already supplied when this invoice was created. Confirming will record the payment and create the corresponding income entry.
             </div>
           </div>
@@ -1812,7 +1812,7 @@ Generated on: ${new Date().toLocaleString()}
             </button>
             <button
               onClick={confirmMarkAsPaid}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
+              className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors flex items-center gap-2"
             >
               <CheckCircle className="h-4 w-4" />
               Confirm Mark as Paid
@@ -1829,7 +1829,7 @@ Generated on: ${new Date().toLocaleString()}
         {/* ... (rest of the code remains the same) */}
         <div className="p-0">
           {/*<h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-            <TrendingUp className="h-6 w-6 text-green-600" />
+            <TrendingUp className="h-6 w-6 text-emerald-600" />
             Farm Income
           </h2>*/}
 
@@ -1840,7 +1840,7 @@ Generated on: ${new Date().toLocaleString()}
                 onClick={() => handleTabChange('record')}
                 className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 whitespace-nowrap ${
                   activeTab === 'record'
-                    ? 'border-green-500 text-green-600 dark:text-green-400'
+                    ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
                 }`}
               >
@@ -1851,7 +1851,7 @@ Generated on: ${new Date().toLocaleString()}
                 onClick={() => handleTabChange('invoice')}
                 className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 whitespace-nowrap ${
                   activeTab === 'invoice'
-                    ? 'border-green-500 text-green-600 dark:text-green-400'
+                    ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
                 }`}
               >
@@ -1862,7 +1862,7 @@ Generated on: ${new Date().toLocaleString()}
                 onClick={() => handleTabChange('invoices')}
                 className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 whitespace-nowrap ${
                   activeTab === 'invoices'
-                    ? 'border-green-500 text-green-600 dark:text-green-400'
+                    ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
                 }`}
               >
@@ -1873,7 +1873,7 @@ Generated on: ${new Date().toLocaleString()}
                 onClick={() => handleTabChange('records')}
                 className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 whitespace-nowrap ${
                   activeTab === 'records'
-                    ? 'border-green-500 text-green-600 dark:text-green-400'
+                    ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
                 }`}
               >
@@ -1886,7 +1886,7 @@ Generated on: ${new Date().toLocaleString()}
                     onClick={() => handleTabChange('vat' as any)}
                     className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 whitespace-nowrap ${
                       activeTab === 'vat'
-                        ? 'border-green-500 text-green-600 dark:text-green-400'
+                        ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400'
                         : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
                     }`}
                   >
@@ -1912,7 +1912,7 @@ Generated on: ${new Date().toLocaleString()}
                     <select
                       id="inventoryItemId"
                       name="inventoryItemId"
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                       value={formData.inventoryItemId}
                       onChange={(e) => {
                         const inventoryItemId = e.target.value;
@@ -2004,13 +2004,13 @@ Generated on: ${new Date().toLocaleString()}
                       id="description"
                       name="description"
                       required
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                       placeholder="Product or service description"
                       value={formData.description}
                       onChange={handleChange}
                     />
                     {formData.inventoryItemId && (
-                      <p className="text-xs text-green-600 dark:text-green-400 mt-1">
+                      <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-1">
                         ✅ Linked to inventory item
                       </p>
                     )}
@@ -2026,7 +2026,7 @@ Generated on: ${new Date().toLocaleString()}
                       id="quantity"
                       name="quantity"
                       min="1"
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                       value={formatNumberWithSeparator(formData.quantity)}
                       onChange={(e) => handleChange(e as React.ChangeEvent<HTMLInputElement>)}
                     />
@@ -2052,7 +2052,7 @@ Generated on: ${new Date().toLocaleString()}
                       required
                       min="0"
                       step="0.01"
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                       value={formatNumberWithSeparator(formData.unitPrice)}
                       onChange={(e) => handleChange(e as React.ChangeEvent<HTMLInputElement>)}
                       disabled={!!formData.inventoryItemId}
@@ -2085,7 +2085,7 @@ Generated on: ${new Date().toLocaleString()}
                         type="checkbox"
                         id="enableVAT"
                         name="enableVAT"
-                        className="mr-2 h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                        className="mr-2 h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded"
                         checked={formData.enableVAT}
                         onChange={handleChange}
                       />
@@ -2103,7 +2103,7 @@ Generated on: ${new Date().toLocaleString()}
                           min="0"
                           max="100"
                           step="0.1"
-                          className="w-16 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                          className="w-16 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                           value={formData.vatRate}
                           onChange={handleChange}
                         />
@@ -2153,7 +2153,7 @@ Generated on: ${new Date().toLocaleString()}
                         )}
                         <div className="flex justify-between items-center pt-2 border-t border-gray-200 dark:border-gray-600">
                           <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Total Amount:</span>
-                          <span className="text-lg font-bold text-green-600 dark:text-green-400">
+                          <span className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
                             {formatCurrency(totalAmount.toString())}
                           </span>
                         </div>
@@ -2172,7 +2172,7 @@ Generated on: ${new Date().toLocaleString()}
                       id="category"
                       name="category"
                       required
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                       value={formData.category}
                       onChange={handleChange}
                     >
@@ -2192,7 +2192,7 @@ Generated on: ${new Date().toLocaleString()}
                       id="paymentMethod"
                       name="paymentMethod"
                       required
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                       value={formData.paymentMethod}
                       onChange={handleChange}
                     >
@@ -2212,7 +2212,7 @@ Generated on: ${new Date().toLocaleString()}
                       id="date"
                       name="date"
                       required
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                       value={formData.date}
                       onChange={handleChange}
                     />
@@ -2227,7 +2227,7 @@ Generated on: ${new Date().toLocaleString()}
                 )}
 
                 {success && (
-                  <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-600 dark:text-green-400 px-4 py-3 rounded-md text-sm">
+                  <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 px-4 py-3 rounded-md text-sm">
                     {success}
                   </div>
                 )}
@@ -2237,7 +2237,7 @@ Generated on: ${new Date().toLocaleString()}
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+                    className="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
                   >
                     {isLoading ? 'Recording...' : 'Record Income'}
                   </button>
@@ -2259,7 +2259,7 @@ Generated on: ${new Date().toLocaleString()}
                         </label>
                         <input
                           type="text"
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                           placeholder="John Doe"
                           value={invoiceData.clientName}
                           onChange={(e) => handleInvoiceChange('clientName', e.target.value)}
@@ -2271,7 +2271,7 @@ Generated on: ${new Date().toLocaleString()}
                         </label>
                         <input
                           type="email"
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                           placeholder="john@example.com"
                           value={invoiceData.clientEmail}
                           onChange={(e) => handleInvoiceChange('clientEmail', e.target.value)}
@@ -2283,7 +2283,7 @@ Generated on: ${new Date().toLocaleString()}
                         </label>
                         <input
                           type="tel"
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                           placeholder="+234-XXX-XXX-XXXX"
                           value={invoiceData.clientPhone}
                           onChange={(e) => handleInvoiceChange('clientPhone', e.target.value)}
@@ -2295,7 +2295,7 @@ Generated on: ${new Date().toLocaleString()}
                         </label>
                         <input
                           type="text"
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                           placeholder="123 Farm Road, City, State"
                           value={invoiceData.clientAddress}
                           onChange={(e) => handleInvoiceChange('clientAddress', e.target.value)}
@@ -2316,7 +2316,7 @@ Generated on: ${new Date().toLocaleString()}
                         </label>
                         <input
                           type="text"
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                           placeholder={generateInvoiceNumber()}
                           value={invoiceData.invoiceNumber}
                           onChange={(e) => handleInvoiceChange('invoiceNumber', e.target.value)}
@@ -2328,7 +2328,7 @@ Generated on: ${new Date().toLocaleString()}
                         </label>
                         <input
                           type="date"
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                           value={invoiceData.invoiceDate}
                           onChange={(e) => handleInvoiceChange('invoiceDate', e.target.value)}
                         />
@@ -2339,7 +2339,7 @@ Generated on: ${new Date().toLocaleString()}
                         </label>
                         <input
                           type="date"
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                           value={invoiceData.dueDate}
                           onChange={(e) => handleInvoiceChange('dueDate', e.target.value)}
                         />
@@ -2364,7 +2364,7 @@ Generated on: ${new Date().toLocaleString()}
                                 Select from Inventory
                               </label>
                               <select
-                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                                 value={item.inventoryItemId || ''}
 
                                 onChange={(e) => {
@@ -2452,13 +2452,13 @@ Generated on: ${new Date().toLocaleString()}
                               </label>
                               <input
                                 type="text"
-                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                                 placeholder="Product or service description"
                                 value={item.description}
                                 onChange={(e) => updateInvoiceItem(index, 'description', e.target.value)}
                               />
                               {item.inventoryItemId && (
-                                <p className="text-xs text-green-600 dark:text-green-400 mt-1">
+                                <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-1">
                                   ✅ Linked to inventory item
                                 </p>
                               )}
@@ -2472,7 +2472,7 @@ Generated on: ${new Date().toLocaleString()}
                               <input
                                 type="text"
                                 min="1"
-                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                                 value={formatNumberWithSeparator(item.quantity)}
                                 onChange={(e) => updateInvoiceItem(index, 'quantity', parseInt(e.target.value.replace(/[^0-9]/g, '')) || 1)}
                               />
@@ -2495,7 +2495,7 @@ Generated on: ${new Date().toLocaleString()}
                                 type="text"
                                 min="0"
                                 step="0.01"
-                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                                 value={formatNumberWithSeparator(item.unitPrice)}
                                 onChange={(e) => updateInvoiceItem(index, 'unitPrice', parseFloat(e.target.value.replace(/[^0-9.]/g, '')) || 0)}
                                 disabled={!!item.inventoryItemId} // Disable if linked to inventory
@@ -2540,7 +2540,7 @@ Generated on: ${new Date().toLocaleString()}
                       <button
                         type="button"
                         onClick={addInvoiceItem}
-                        className="text-green-600 hover:text-green-800 text-sm font-medium flex items-center gap-1"
+                        className="text-emerald-600 hover:text-emerald-800 text-sm font-medium flex items-center gap-1"
                       >
                         <Plus className="h-4 w-4" />
                         Add Item
@@ -2556,7 +2556,7 @@ Generated on: ${new Date().toLocaleString()}
                       <select
                         value={invoiceData.paymentMethod}
                         onChange={(e) => handleInvoiceChange('paymentMethod', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                       >
                         <option value="CASH">Cash</option>
                         <option value="TRANSFER">Bank Transfer</option>
@@ -2568,7 +2568,7 @@ Generated on: ${new Date().toLocaleString()}
                       <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Notes</h3>
                       <textarea
                         rows={3}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                         placeholder="Additional notes or payment instructions..."
                         value={invoiceData.notes}
                         onChange={(e) => handleInvoiceChange('notes', e.target.value)}
@@ -2584,7 +2584,7 @@ Generated on: ${new Date().toLocaleString()}
                           id="invoice-enableVAT"
                           checked={invoiceData.enableVAT}
                           onChange={(e) => handleInvoiceChange('enableVAT', e.target.checked)}
-                          className="mr-2 h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                          className="mr-2 h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded"
                         />
                         <label htmlFor="invoice-enableVAT" className="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
                           Add VAT/Tax ({invoiceData.vatRate}%)
@@ -2614,7 +2614,7 @@ Generated on: ${new Date().toLocaleString()}
                     <button
                       type="submit"
                       disabled={!invoiceData.clientName || !invoiceData.clientEmail || invoiceData.items.some(item => !item.description || !item.unitPrice || parseFloat(item.unitPrice) <= 0)}
-                      className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+                      className="px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
                     >
                       <FileText className="h-4 w-4" />
                       {isGeneratingInvoice ? 'Generating...' : 'Generate Invoice'}
@@ -2623,16 +2623,16 @@ Generated on: ${new Date().toLocaleString()}
                 </form>
               ) : (
                 <div className="space-y-4">
-                  <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 p-4 sm:p-6 rounded-lg max-w-2xl">
-                    <h3 className="text-base sm:text-lg font-semibold text-green-800 dark:text-green-200 mb-2">
+                  <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 p-4 sm:p-6 rounded-lg max-w-2xl">
+                    <h3 className="text-base sm:text-lg font-semibold text-emerald-800 dark:text-emerald-200 mb-2">
                       Invoice Generated Successfully!
                     </h3>
-                    <p className="text-sm sm:text-base text-green-600 dark:text-green-400 mb-4">
+                    <p className="text-sm sm:text-base text-emerald-600 dark:text-emerald-400 mb-4">
                       Invoice #{generatedInvoice.invoiceNumber} has been created for {generatedInvoice.clientName}
                     </p>
                     
                     {/* Invoice Summary - Mobile Optimized */}
-                    <div className="bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-4 mb-4 border border-green-200 dark:border-green-700">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-4 mb-4 border border-emerald-200 dark:border-emerald-700">
                       <div className="grid grid-cols-2 gap-3 sm:gap-4 text-sm">
                         <div>
                           <span className="text-gray-500 dark:text-gray-400 block">Amount:</span>
@@ -2703,7 +2703,7 @@ Generated on: ${new Date().toLocaleString()}
                   </p>
                   <button
                     onClick={() => handleTabChange('invoice')}
-                    className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                    className="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
                   >
                     <Plus className="h-4 w-4 mr-2" />
                     Create First Invoice
@@ -2809,7 +2809,7 @@ Generated on: ${new Date().toLocaleString()}
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                             <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                               invoice.status === 'PAID' 
-                                ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100'
+                                ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-800 dark:text-emerald-100'
                                 : invoice.dueDate && new Date(invoice.dueDate) > new Date() 
                                 ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100'
                                 : invoice.dueDate ? 'bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100'
@@ -2886,7 +2886,7 @@ Generated on: ${new Date().toLocaleString()}
                             type="text"
                             value={editingInvoice.businessName || ''}
                             onChange={(e) => setEditingInvoice({...editingInvoice, businessName: e.target.value})}
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                           />
                         </div>
                         <div>
@@ -2897,7 +2897,7 @@ Generated on: ${new Date().toLocaleString()}
                             type="email"
                             value={editingInvoice.businessEmail || ''}
                             onChange={(e) => setEditingInvoice({...editingInvoice, businessEmail: e.target.value})}
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                           />
                         </div>
                         <div className="md:col-span-2">
@@ -2908,7 +2908,7 @@ Generated on: ${new Date().toLocaleString()}
                             type="text"
                             value={editingInvoice.businessAddress || ''}
                             onChange={(e) => setEditingInvoice({...editingInvoice, businessAddress: e.target.value})}
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                           />
                         </div>
                         <div>
@@ -2919,7 +2919,7 @@ Generated on: ${new Date().toLocaleString()}
                             type="tel"
                             value={editingInvoice.businessPhone || ''}
                             onChange={(e) => setEditingInvoice({...editingInvoice, businessPhone: e.target.value})}
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                           />
                         </div>
                         <div>
@@ -2930,7 +2930,7 @@ Generated on: ${new Date().toLocaleString()}
                             type="text"
                             value={editingInvoice.invoiceNumber || ''}
                             onChange={(e) => setEditingInvoice({...editingInvoice, invoiceNumber: e.target.value})}
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                           />
                         </div>
                       </div>
@@ -2948,7 +2948,7 @@ Generated on: ${new Date().toLocaleString()}
                             type="text"
                             value={editingInvoice.clientName || ''}
                             onChange={(e) => setEditingInvoice({...editingInvoice, clientName: e.target.value})}
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                           />
                         </div>
                         <div>
@@ -2959,7 +2959,7 @@ Generated on: ${new Date().toLocaleString()}
                             type="email"
                             value={editingInvoice.clientEmail || ''}
                             onChange={(e) => setEditingInvoice({...editingInvoice, clientEmail: e.target.value})}
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                           />
                         </div>
                         <div>
@@ -2970,7 +2970,7 @@ Generated on: ${new Date().toLocaleString()}
                             type="tel"
                             value={editingInvoice.clientPhone || ''}
                             onChange={(e) => setEditingInvoice({...editingInvoice, clientPhone: e.target.value})}
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                           />
                         </div>
                         <div>
@@ -2981,7 +2981,7 @@ Generated on: ${new Date().toLocaleString()}
                             type="text"
                             value={editingInvoice.clientAddress || ''}
                             onChange={(e) => setEditingInvoice({...editingInvoice, clientAddress: e.target.value})}
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                           />
                         </div>
                       </div>
@@ -2999,7 +2999,7 @@ Generated on: ${new Date().toLocaleString()}
                             type="date"
                             value={editingInvoice.invoiceDate || editingInvoice.date || ''}
                             onChange={(e) => setEditingInvoice({...editingInvoice, invoiceDate: e.target.value, date: e.target.value})}
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                           />
                         </div>
                         <div>
@@ -3010,7 +3010,7 @@ Generated on: ${new Date().toLocaleString()}
                             type="date"
                             value={editingInvoice.dueDate || ''}
                             onChange={(e) => setEditingInvoice({...editingInvoice, dueDate: e.target.value})}
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                           />
                         </div>
                       </div>
@@ -3031,7 +3031,7 @@ Generated on: ${new Date().toLocaleString()}
                             }];
                             setEditingInvoice({...editingInvoice, items: newItems});
                           }}
-                          className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors"
+                          className="px-3 py-1 bg-emerald-600 text-white text-sm rounded hover:bg-emerald-700 transition-colors"
                         >
                           + Add Item
                         </button>
@@ -3143,7 +3143,7 @@ Generated on: ${new Date().toLocaleString()}
                             <select
                               value={editingInvoice.category || 'Sales'}
                               onChange={(e) => setEditingInvoice({...editingInvoice, category: e.target.value})}
-                              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                             >
                               <option value="Sales">Sales</option>
                               {/*<option value="Services">Services</option>*/}
@@ -3160,7 +3160,7 @@ Generated on: ${new Date().toLocaleString()}
                             <select
                               value={editingInvoice.paymentMethod || 'TRANSFER'}
                               onChange={(e) => setEditingInvoice({...editingInvoice, paymentMethod: e.target.value})}
-                              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                             >
                               <option value="CASH">Cash</option>
                               <option value="TRANSFER">Transfer</option>
@@ -3175,7 +3175,7 @@ Generated on: ${new Date().toLocaleString()}
                             value={editingInvoice.notes || ''}
                             onChange={(e) => setEditingInvoice({...editingInvoice, notes: e.target.value})}
                             rows={3}
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
                             placeholder="Add any additional notes or terms..."
                           />
                         </div>
@@ -3200,7 +3200,7 @@ Generated on: ${new Date().toLocaleString()}
                         
                         handleUpdateInvoice(updatedInvoice);
                       }}
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex-1"
+                      className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors flex-1"
                     >
                       Update Invoice
                     </button>
@@ -3368,7 +3368,7 @@ Generated on: ${new Date().toLocaleString()}
                       }}
                       className="flex items-center gap-3 w-full px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors rounded-lg"
                     >
-                      <Edit2 className="h-4 w-4 text-green-600" />
+                      <Edit2 className="h-4 w-4 text-emerald-600" />
                       Edit Invoice
                     </button>
                     
@@ -3599,7 +3599,7 @@ Generated on: ${new Date().toLocaleString()}
                   </p>
                   <button
                     onClick={() => handleTabChange('record')}
-                    className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                    className="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
                   >
                     <Plus className="h-4 w-4 mr-2" />
                     Record First Income
@@ -3666,7 +3666,7 @@ Generated on: ${new Date().toLocaleString()}
                             })()}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
+                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-800 dark:text-emerald-100">
                               {income.category}
                             </span>
                           </td>
@@ -3710,7 +3710,7 @@ Generated on: ${new Date().toLocaleString()}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                             <div className="flex items-center">
-                              <div className="h-2 w-2 bg-green-400 rounded-full mr-2"></div>
+                              <div className="h-2 w-2 bg-emerald-400 rounded-full mr-2"></div>
                               {(() => {
                                 // Check if this income came from an invoice
                                 if (income.description?.includes('Payment for invoice #')) {
@@ -3784,7 +3784,7 @@ Generated on: ${new Date().toLocaleString()}
                     </div>
                   )}
                   {success && (
-                    <div className="bg-green-100 dark:bg-green-900/50 border border-green-300 dark:border-green-600 text-green-700 dark:text-green-200 px-4 py-2 rounded-lg">
+                    <div className="bg-emerald-100 dark:bg-emerald-900/50 border border-emerald-300 dark:border-emerald-600 text-emerald-700 dark:text-emerald-200 px-4 py-2 rounded-lg">
                       <p className="text-sm font-medium">{success}</p>
                     </div>
                   )}
@@ -3793,12 +3793,12 @@ Generated on: ${new Date().toLocaleString()}
 
               {/* Enhanced Summary Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div className="group bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-3 dark:border-green-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+                <div className="group bg-gradient-to-br from-emerald-50 to-emerald-50 dark:from-emerald-900/20 dark:to-emerald-900/20 rounded-xl p-3 dark:border-emerald-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex flex-col space-y-1">
                       <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Total VAT Collected</h3>
                       <div className="flex items-center space-x-2">
-                        <div className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                        <div className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400">
                           {vatPercentageChanges.totalVatChange > 0 ? '+' : ''}{vatPercentageChanges.totalVatChange.toFixed(1)}%
                         </div>
                         <div className="w-1 h-1 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
@@ -3808,7 +3808,7 @@ Generated on: ${new Date().toLocaleString()}
                       </div>
                     </div>
                     <div className="flex items-center space-x-2 mt-1">
-                      <div className="p-2 bg-gradient-to-br from-green-500 to-green-600 dark:from-green-600 dark:to-green-700 rounded-lg shadow-lg">
+                      <div className="p-2 bg-gradient-to-br from-emerald-500 to-emerald-600 dark:from-emerald-600 dark:to-emerald-700 rounded-lg shadow-lg">
                         <TrendingUp className="h-4 w-4 text-white" />
                       </div>
                     </div>
@@ -3817,7 +3817,7 @@ Generated on: ${new Date().toLocaleString()}
                     {vatFilterChanging ? (
                       <VATAmountSkeleton />
                     ) : (
-                      <p className="text-3xl font-bold text-green-600 dark:text-green-400">
+                      <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">
                         {formatCurrency(vatSummary.totalVat, { includeSymbol: true })}
                       </p>
                     )}
@@ -3895,7 +3895,7 @@ Generated on: ${new Date().toLocaleString()}
                       }}
                       className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                         vatDateFilter === 'today'
-                          ? 'bg-green-600 text-white'
+                          ? 'bg-emerald-600 text-white'
                           : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
                       }`}
                     >
@@ -3907,7 +3907,7 @@ Generated on: ${new Date().toLocaleString()}
                       }}
                       className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                         vatDateFilter === 'yesterday'
-                          ? 'bg-green-600 text-white'
+                          ? 'bg-emerald-600 text-white'
                           : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
                       }`}
                     >
@@ -3919,7 +3919,7 @@ Generated on: ${new Date().toLocaleString()}
                       }}
                       className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                         vatDateFilter === 'last7days'
-                          ? 'bg-green-600 text-white'
+                          ? 'bg-emerald-600 text-white'
                           : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
                       }`}
                     >
@@ -3931,7 +3931,7 @@ Generated on: ${new Date().toLocaleString()}
                       }}
                       className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                         vatDateFilter === 'last30days'
-                          ? 'bg-green-600 text-white'
+                          ? 'bg-emerald-600 text-white'
                           : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
                       }`}
                     >
@@ -3943,7 +3943,7 @@ Generated on: ${new Date().toLocaleString()}
                       }}
                       className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                         vatDateFilter === 'allTime'
-                          ? 'bg-green-600 text-white'
+                          ? 'bg-emerald-600 text-white'
                           : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
                       }`}
                     >
@@ -3957,7 +3957,7 @@ Generated on: ${new Date().toLocaleString()}
                           setVatSelectedMonth(parseInt(e.target.value));
                           setVatDateFilter('custom');
                         }}
-                        className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm"
+                        className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm"
                       >
                         <option value="0">January</option>
                         <option value="1">February</option>
@@ -3981,7 +3981,7 @@ Generated on: ${new Date().toLocaleString()}
                           setVatSelectedYear(parseInt(e.target.value));
                           setVatDateFilter('custom');
                         }}
-                        className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm"
+                        className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm"
                       >
                         {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
                           <option key={year} value={year}>{year}</option>
@@ -4004,7 +4004,7 @@ Generated on: ${new Date().toLocaleString()}
                       <span className="text-sm text-gray-500 dark:text-gray-400">
                         {vatRecords.length} records
                       </span>
-                      <span className="px-2 py-1 bg-green-100 dark:bg-green-600 text-green-800 dark:text-green-200 text-xs rounded-full">
+                      <span className="px-2 py-1 bg-emerald-100 dark:bg-emerald-600 text-emerald-800 dark:text-emerald-200 text-xs rounded-full">
                         {vatDateFilter.charAt(0).toUpperCase() + vatDateFilter.slice(1).replace(/([A-Z])/g, ' $1').trim()}
                       </span>
                     </div>
@@ -4086,7 +4086,7 @@ Generated on: ${new Date().toLocaleString()}
                             <td className="px-6 py-4 whitespace-nowrap text-sm">
                               <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium ${
                                 record.period === 'daily' ? 'bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100' :
-                                record.period === 'weekly' ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100' :
+                                record.period === 'weekly' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-800 dark:text-emerald-100' :
                                 record.period === 'monthly' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100' :
                                 record.period === 'yearly' ? 'bg-purple-100 text-purple-800 dark:bg-purple-800 dark:text-purple-100' :
                                 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100'
@@ -4106,7 +4106,7 @@ Generated on: ${new Date().toLocaleString()}
                                 {formatCurrency(record.amount?.toString() || '0', { includeSymbol: false })}
                               </div>
                             </td>*/}
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600 dark:text-green-400 font-mono font-semibold">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-emerald-600 dark:text-emerald-400 font-mono font-semibold">
                               {/* Use stored VAT amount directly since backend now has correct values */}
                               {formatCurrency(record.vatAmount?.toString() || '0', { includeSymbol: true })}
                             </td>
@@ -4118,7 +4118,7 @@ Generated on: ${new Date().toLocaleString()}
                             </td>*/}
                             <td className="px-6 py-4 whitespace-nowrap text-sm">
                               <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium ${
-                                record.status === 'remitted' ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100' :
+                                record.status === 'remitted' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-800 dark:text-emerald-100' :
                                 record.status === 'pending' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100' :
                                 'bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100'
                               }`}>
@@ -4235,7 +4235,7 @@ Generated on: ${new Date().toLocaleString()}
                     onClick={handleMarkAsRemitted}
                     className="flex items-center gap-3 w-full px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors rounded-lg"
                   >
-                    <CheckCircle className="h-4 w-4 text-green-600" />
+                    <CheckCircle className="h-4 w-4 text-emerald-600" />
                     Mark as Remitted
                   </button>
                 </div>
@@ -4280,7 +4280,7 @@ Generated on: ${new Date().toLocaleString()}
                         <div className="mt-1">
                           <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium ${
                             selectedVatRecord.period === 'daily' ? 'bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100' :
-                            selectedVatRecord.period === 'weekly' ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100' :
+                            selectedVatRecord.period === 'weekly' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-800 dark:text-emerald-100' :
                             selectedVatRecord.period === 'monthly' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100' :
                             selectedVatRecord.period === 'yearly' ? 'bg-purple-100 text-purple-800 dark:bg-purple-800 dark:text-purple-100' :
                             'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100'
@@ -4299,7 +4299,7 @@ Generated on: ${new Date().toLocaleString()}
                     <div className="space-y-4">
                       <div>
                         <label className="text-sm font-medium text-gray-500 dark:text-gray-400">VAT Amount</label>
-                        <p className="mt-1 text-lg font-bold text-green-600 dark:text-green-400">
+                        <p className="mt-1 text-lg font-bold text-emerald-600 dark:text-emerald-400">
                           {formatCurrency(selectedVatRecord.vatAmount?.toString() || '0', { includeSymbol: true })}
                         </p>
                       </div>
@@ -4313,7 +4313,7 @@ Generated on: ${new Date().toLocaleString()}
                         <label className="text-sm font-medium text-gray-500 dark:text-gray-400">Status</label>
                         <div className="mt-1">
                           <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium ${
-                            selectedVatRecord.status === 'remitted' ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100' :
+                            selectedVatRecord.status === 'remitted' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-800 dark:text-emerald-100' :
                             selectedVatRecord.status === 'pending' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100' :
                             'bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100'
                           }`}>
@@ -4341,7 +4341,7 @@ Generated on: ${new Date().toLocaleString()}
                       {selectedVatRecord.status !== 'remitted' && (
                         <button
                           onClick={handleMarkAsRemitted}
-                          className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
+                          className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors flex items-center gap-2"
                         >
                           <CheckCircle className="h-4 w-4" />
                           Mark as Remitted

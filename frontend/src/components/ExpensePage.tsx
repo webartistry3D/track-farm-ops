@@ -458,9 +458,9 @@ const ExpensePage = () => {
   /*
   if (isInventory) {
     return (
-      <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 rounded-lg p-6">
-        <h3 className="text-lg font-medium text-yellow-900 mb-2">Access Restricted</h3>
-        <p className="text-yellow-700">
+      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 rounded-lg p-6">
+        <h3 className="text-lg font-medium text-red-900 mb-2">Access Restricted</h3>
+        <p className="text-red-700">
           Expense management is not available for Inventory Managers. Please use the navigation menu to access your assigned features.
         </p>
       </div>
@@ -483,7 +483,7 @@ const ExpensePage = () => {
                 onClick={() => handleTabChange('record')}
                 className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${
                   activeTab === 'record'
-                    ? 'border-amber-500 text-amber-600 dark:text-amber-400'
+                    ? 'border-red-500 text-red-600 dark:text-red-400'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
                 }`}
               >
@@ -494,7 +494,7 @@ const ExpensePage = () => {
                 onClick={() => handleTabChange('records')}
                 className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${
                   activeTab === 'records'
-                    ? 'border-amber-500 text-amber-600 dark:text-amber-400'
+                    ? 'border-red-500 text-red-600 dark:text-red-400'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
                 }`}
               >
@@ -510,11 +510,11 @@ const ExpensePage = () => {
               {/* OCR Section */}
               {!ocrResult && (
                 <div className="mb-6 max-w-2xl">
-                  <div className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 rounded-xl dark:border-amber-700 shadow-sm">
+                  <div className="bg-gradient-to-r from-red-50 to-red-50 dark:from-red-900/20 dark:to-red-900/20 rounded-xl dark:border-red-700 shadow-sm">
                     <div className="p-4">
                       <div className="flex items-center justify-between mb-3">
                         {/*<div className="flex items-center space-x-3">
-                          <div className="p-2 bg-amber-600 dark:bg-amber-700 rounded-lg shadow-sm">
+                          <div className="p-2 bg-red-600 dark:bg-red-700 rounded-lg shadow-sm">
                             <Scan className="h-4 w-4 text-white" />
                           </div>
                           <div>
@@ -530,7 +530,7 @@ const ExpensePage = () => {
                         <button
                           onClick={handleCameraCapture}
                           disabled={isScanning}
-                          className="w-1/2 flex items-center justify-center gap-2 px-3 py-2.5 bg-amber-600 dark:bg-amber-700 text-white text-sm font-medium rounded-lg hover:bg-amber-700 dark:hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md"
+                          className="w-1/2 flex items-center justify-center gap-2 px-3 py-2.5 bg-red-600 dark:bg-red-700 text-white text-sm font-medium rounded-lg hover:bg-red-700 dark:hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md"
                         >
                           <Camera className="h-4 w-4" />
                           {isScanning ? 'Processing...' : 'Take Photo'}
@@ -538,7 +538,7 @@ const ExpensePage = () => {
                         <button
                           onClick={handleFileUpload}
                           disabled={isScanning}
-                          className="w-1/2 flex items-center justify-center gap-2 px-3 py-2.5 bg-white dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-sm font-medium rounded-lg dark:border-amber-700 hover:bg-amber-50 dark:hover:bg-amber-700/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md"
+                          className="w-1/2 flex items-center justify-center gap-2 px-3 py-2.5 bg-white dark:bg-red-900/30 text-red-600 dark:text-red-400 text-sm font-medium rounded-lg dark:border-red-700 hover:bg-red-50 dark:hover:bg-red-700/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md"
                         >
                           <Upload className="h-4 w-4" />
                           {isScanning ? 'Processing...' : 'Upload Image'}
@@ -567,17 +567,17 @@ const ExpensePage = () => {
 
               {/* OCR Results */}
               {showOCRResults && ocrResult && (
-                <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800 max-w-2xl">
+                <div className="mb-6 p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border border-emerald-200 dark:border-emerald-800 max-w-2xl">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2 max-w-[50%]">
                       <CheckCircle className="h-5 w-5" />
-                      <h3 className="text-lg font-semibold text-green-900 dark:text-green-100">
+                      <h3 className="text-lg font-semibold text-emerald-900 dark:text-emerald-100">
                         Receipt Scanned Successfully
                       </h3>
                     </div>
                     <button
                       onClick={() => setShowOCRResults(false)}
-                      className="text-green-600 hover:text-green-800 flex-shrink-0"
+                      className="text-emerald-600 hover:text-emerald-800 flex-shrink-0"
                     >
                       <X className="h-4 w-4" />
                     </button>
@@ -587,29 +587,29 @@ const ExpensePage = () => {
                     {/* Left Side - OCR Info */}
                     <div className="space-y-3">
                       <div>
-                        <span className="font-medium text-green-700 dark:text-green-300 block">Merchant:</span>
-                        <p className="text-green-900 dark:text-green-100">{ocrResult.merchant || 'Not detected'}</p>
+                        <span className="font-medium text-emerald-700 dark:text-emerald-300 block">Merchant:</span>
+                        <p className="text-emerald-900 dark:text-emerald-100">{ocrResult.merchant || 'Not detected'}</p>
                       </div>
                       <div>
-                        <span className="font-medium text-green-700 dark:text-green-300 block">Amount:</span>
-                        <p className="text-green-900 dark:text-green-100 font-mono">
+                        <span className="font-medium text-emerald-700 dark:text-emerald-300 block">Amount:</span>
+                        <p className="text-emerald-900 dark:text-emerald-100 font-mono">
                           {formatCurrency(ocrResult.amount || 0)}
                         </p>
                       </div>
                       <div>
-                        <span className="font-medium text-green-700 dark:text-green-300 block">Confidence:</span>
-                        <p className="text-green-900 dark:text-green-100">{ocrResult.confidence}%</p>
+                        <span className="font-medium text-emerald-700 dark:text-emerald-300 block">Confidence:</span>
+                        <p className="text-emerald-900 dark:text-emerald-100">{ocrResult.confidence}%</p>
                       </div>
                       <div>
-                        <span className="font-medium text-green-700 dark:text-green-300 block">Source:</span>
-                        <p className="text-green-900 dark:text-green-100 capitalize">{ocrResult.ocrSource}</p>
+                        <span className="font-medium text-emerald-700 dark:text-emerald-300 block">Source:</span>
+                        <p className="text-emerald-900 dark:text-emerald-100 capitalize">{ocrResult.ocrSource}</p>
                       </div>
                       
                       {/* Detected Items */}
                       {ocrResult.items && ocrResult.items.length > 0 && (
                         <div>
-                          <span className="font-medium text-green-700 dark:text-green-300 block mb-1">Detected Items:</span>
-                          <ul className="list-disc list-inside text-green-900 dark:text-green-100 text-sm">
+                          <span className="font-medium text-emerald-700 dark:text-emerald-300 block mb-1">Detected Items:</span>
+                          <ul className="list-disc list-inside text-emerald-900 dark:text-emerald-100 text-sm">
                             {ocrResult.items.map((item, i) => (
                               <li key={`${item}-${i}`}>{item}</li>
                             ))}
@@ -622,7 +622,7 @@ const ExpensePage = () => {
                     <div className="space-y-4">
                       {/* Scanned Receipt Image */}
                       <div className="bg-gray-100 dark:bg-gray-600 rounded-lg p-4">
-                        <span className="font-medium text-green-700 dark:text-green-300 block mb-2">Scanned Receipt:</span>
+                        <span className="font-medium text-emerald-700 dark:text-emerald-300 block mb-2">Scanned Receipt:</span>
                         {(() => {
                           console.log('🖼️ Rendering receipt image:', {
                             hasOcrResult: !!ocrResult,
@@ -634,7 +634,7 @@ const ExpensePage = () => {
                               <img 
                                 src={ocrResult.receiptImageUrl} 
                                 alt="Scanned Receipt" 
-                                className="max-w-full h-auto max-h-64 rounded-lg border border-green-200 dark:border-green-600 object-contain"
+                                className="max-w-full h-auto max-h-64 rounded-lg border border-emerald-200 dark:border-emerald-600 object-contain"
                                 onLoad={() => console.log('✅ Receipt image loaded successfully')}
                                 onError={(e) => {
                                   console.error('❌ Storage URL failed to load, trying fallback:', e);
@@ -680,8 +680,8 @@ const ExpensePage = () => {
                     </div>
                   </div>
                   
-                  <div className="mt-3 pt-3 border-t border-green-200 dark:border-green-700">
-                    <p className="text-xs text-green-600 dark:text-green-400">
+                  <div className="mt-3 pt-3 border-t border-emerald-200 dark:border-emerald-700">
+                    <p className="text-xs text-emerald-600 dark:text-emerald-400">
                       Please review and edit the extracted information below before saving
                     </p>
                   </div>
@@ -701,7 +701,7 @@ const ExpensePage = () => {
                       type="text"
                       id="merchant"
                       name="merchant"
-                      className="w-full px-3 py-2 h-10 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white"
+                      className="w-full px-3 py-2 h-10 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:text-white"
                       placeholder="e.g., Feed Store, Veterinary Clinic"
                       value={formData.merchant}
                       onChange={handleChange}
@@ -718,7 +718,7 @@ const ExpensePage = () => {
                       id="amount"
                       name="amount"
                       required
-                      className="w-full px-3 py-2 h-10 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white"
+                      className="w-full px-3 py-2 h-10 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:text-white"
                       placeholder="0.00 or 1,000.00"
                       value={displayAmount}
                       onChange={handleAmountChange}
@@ -734,7 +734,7 @@ const ExpensePage = () => {
                       id="category"
                       name="category"
                       required
-                      className="w-full px-3 py-2 h-10 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white"
+                      className="w-full px-3 py-2 h-10 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:text-white"
                       value={formData.category}
                       onChange={handleChange}
                     >
@@ -757,7 +757,7 @@ const ExpensePage = () => {
                       id="date"
                       name="date"
                       required
-                      className="w-full px-3 py-2 h-10 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white"
+                      className="w-full px-3 py-2 h-10 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:text-white"
                       value={formData.date}
                       onChange={handleChange}
                     />
@@ -789,7 +789,7 @@ const ExpensePage = () => {
 
                 {/* Success Messages */}
                 {success && (
-                  <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-600 dark:text-green-400 px-4 py-3 rounded-md text-sm">
+                  <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 px-4 py-3 rounded-md text-sm">
                     {success}
                   </div>
                 )}
@@ -808,7 +808,7 @@ const ExpensePage = () => {
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="px-6 py-2 bg-amber-700 text-white rounded-lg hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="px-6 py-2 bg-red-700 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     {isLoading ? 'Recording...' : 'Record Expense'}
                   </button>
@@ -831,7 +831,7 @@ const ExpensePage = () => {
                   </p>
                   <button
                     onClick={() => handleTabChange('record')}
-                    className="inline-flex items-center px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors"
+                    className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
                   >
                     <Plus className="h-4 w-4 mr-2" />
                     Record First Expense
@@ -875,7 +875,7 @@ const ExpensePage = () => {
                             {expense.merchant || 'Manual Entry'}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-amber-100 text-amber-800 dark:bg-amber-800 dark:text-amber-100">
+                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100">
                               {expense.category}
                             </span>
                           </td>
@@ -889,7 +889,7 @@ const ExpensePage = () => {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                             <div className="flex items-center">
-                              <div className="h-2 w-2 bg-amber-400 rounded-full mr-2"></div>
+                              <div className="h-2 w-2 bg-red-400 rounded-full mr-2"></div>
                               {expense.user?.name || 'Unknown'}
                             </div>
                           </td>
@@ -897,7 +897,7 @@ const ExpensePage = () => {
                             <div className="flex items-center space-x-4">
                               <button
                                 onClick={() => handleViewReceipt(expense)}
-                                className="text-amber-600 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-300 transition-colors"
+                                className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 transition-colors"
                                 title="View Receipt Details"
                               >
                                 <Eye className="h-4 w-4" />
@@ -1138,7 +1138,7 @@ const ExpensePage = () => {
                         }
                       }
                     }}
-                    className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors"
+                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
                   >
                     Download Receipt
                   </button>

@@ -314,7 +314,7 @@ const Settings = () => {
             onClick={() => setActiveTab('profile')}
             className={`py-2 px-3 sm:px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
               activeTab === 'profile'
-                ? 'border-green-500 text-green-600 dark:text-green-400'
+                ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
             }`}
           >
@@ -324,7 +324,7 @@ const Settings = () => {
             onClick={() => setActiveTab('notifications')}
             className={`py-2 px-3 sm:px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
               activeTab === 'notifications'
-                ? 'border-green-500 text-green-600 dark:text-green-400'
+                ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
             }`}
           >
@@ -335,7 +335,7 @@ const Settings = () => {
               onClick={() => setActiveTab('workers')}
               className={`py-2 px-3 sm:px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
                 activeTab === 'workers'
-                  ? 'border-green-500 text-green-600 dark:text-green-400'
+                  ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
               }`}
             >
@@ -347,7 +347,7 @@ const Settings = () => {
               onClick={() => setActiveTab('subscription')}
               className={`py-2 px-3 sm:px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
                 activeTab === 'subscription'
-                  ? 'border-green-500 text-green-600 dark:text-green-400'
+                  ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
               }`}
             >
@@ -358,7 +358,7 @@ const Settings = () => {
             onClick={() => setActiveTab('system')}
             className={`py-2 px-3 sm:px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
               activeTab === 'system'
-                ? 'border-green-500 text-green-600 dark:text-green-400'
+                ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
             }`}
           >
@@ -370,7 +370,7 @@ const Settings = () => {
       {/* Tab Content */}
       <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4 sm:p-6">
         {message && (
-          <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-600 dark:text-green-400 px-3 sm:px-4 py-2 sm:py-3 rounded-md mb-3 sm:mb-4 text-sm sm:text-base">
+          <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 px-3 sm:px-4 py-2 sm:py-3 rounded-md mb-3 sm:mb-4 text-sm sm:text-base">
             {message}
           </div>
         )}
@@ -397,7 +397,7 @@ const Settings = () => {
                     id="name"
                     value={formData.name}
                     onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white text-sm sm:text-base"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white text-sm sm:text-base"
                     required
                   />
                 </div>
@@ -412,7 +412,7 @@ const Settings = () => {
                     id="email"
                     value={formData.email}
                     onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white text-sm sm:text-base"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white text-sm sm:text-base"
                     required
                   />
                 </div>
@@ -433,7 +433,7 @@ const Settings = () => {
                     id="currentPassword"
                     value={formData.currentPassword}
                     onChange={(e) => setFormData(prev => ({ ...prev, currentPassword: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white text-sm sm:text-base"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white text-sm sm:text-base"
                   />
                 </div>
 
@@ -447,7 +447,7 @@ const Settings = () => {
                     id="newPassword"
                     value={formData.newPassword}
                     onChange={(e) => setFormData(prev => ({ ...prev, newPassword: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white text-sm sm:text-base"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white text-sm sm:text-base"
                   />
                 </div>
 
@@ -461,7 +461,7 @@ const Settings = () => {
                     id="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:text-white text-sm sm:text-base"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white text-sm sm:text-base"
                   />
                 </div>
               </div>
@@ -471,7 +471,7 @@ const Settings = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
+                className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
               >
                 {loading ? 'Saving...' : 'Save Changes'}
               </button>
@@ -485,7 +485,7 @@ const Settings = () => {
 
             {preferencesLoading ? (
               <div className="flex items-center justify-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
               </div>
             ) : (
             <>
@@ -499,7 +499,7 @@ const Settings = () => {
                   type="button"
                   onClick={() => handleNotificationChange('emailNotifications')}
                   className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                    notifications.emailNotifications ? 'bg-green-600' : 'bg-gray-200 dark:bg-gray-600'
+                    notifications.emailNotifications ? 'bg-emerald-600' : 'bg-gray-200 dark:bg-gray-600'
                   }`}
                 >
                   <span
@@ -519,7 +519,7 @@ const Settings = () => {
                   type="button"
                   onClick={() => handleNotificationChange('lowStockAlerts')}
                   className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                    notifications.lowStockAlerts ? 'bg-green-600' : 'bg-gray-200 dark:bg-gray-600'
+                    notifications.lowStockAlerts ? 'bg-emerald-600' : 'bg-gray-200 dark:bg-gray-600'
                   }`}
                 >
                   <span
@@ -539,7 +539,7 @@ const Settings = () => {
                   type="button"
                   onClick={() => handleNotificationChange('dailyReports')}
                   className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                    notifications.dailyReports ? 'bg-green-600' : 'bg-gray-200 dark:bg-gray-600'
+                    notifications.dailyReports ? 'bg-emerald-600' : 'bg-gray-200 dark:bg-gray-600'
                   }`}
                 >
                   <span
@@ -559,7 +559,7 @@ const Settings = () => {
                   type="button"
                   onClick={() => handleNotificationChange('weeklyReports')}
                   className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                    notifications.weeklyReports ? 'bg-green-600' : 'bg-gray-200 dark:bg-gray-600'
+                    notifications.weeklyReports ? 'bg-emerald-600' : 'bg-gray-200 dark:bg-gray-600'
                   }`}
                 >
                   <span
@@ -579,7 +579,7 @@ const Settings = () => {
                   type="button"
                   onClick={togglePush}
                   className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                    pushEnabled ? 'bg-green-600' : 'bg-gray-200 dark:bg-gray-600'
+                    pushEnabled ? 'bg-emerald-600' : 'bg-gray-200 dark:bg-gray-600'
                   }`}
                 >
                   <span
@@ -598,7 +598,7 @@ const Settings = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
+                className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
               >
                 {loading ? 'Saving...' : 'Save Preferences'}
               </button>
@@ -653,11 +653,11 @@ const Settings = () => {
 
             {/* Current Subscription Status */}
             {subscriptionData && (
-              <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-lg p-4 sm:p-6 border border-green-200 dark:border-green-800">
+              <div className="bg-gradient-to-r from-emerald-50 to-blue-50 dark:from-emerald-900/20 dark:to-blue-900/20 rounded-lg p-4 sm:p-6 border border-emerald-200 dark:border-emerald-800">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3 sm:mb-4 gap-3">
                   <div>
                     <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-1">
-                      Current Plan: <span className="text-green-600 dark:text-green-400 capitalize">{subscriptionData.plan}</span>
+                      Current Plan: <span className="text-emerald-600 dark:text-emerald-400 capitalize">{subscriptionData.plan}</span>
                     </h4>
                     <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                       Status: <span className="font-medium capitalize">{subscriptionData.status}</span>
@@ -705,7 +705,7 @@ const Settings = () => {
                   }`}
                 >
                   Annual
-                  <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
+                  <span className="absolute -top-2 -right-2 bg-emerald-500 text-white text-xs px-2 py-1 rounded-full">
                     Save 20%
                   </span>
                 </button>
@@ -724,7 +724,7 @@ const Settings = () => {
                     key={plan.id}
                     className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6 border-2 ${
                       isCurrentPlan
-                        ? 'border-green-500 dark:border-green-400'
+                        ? 'border-emerald-500 dark:border-emerald-400'
                         : 'border-gray-200 dark:border-gray-700'
                     }`}
                   >
@@ -737,7 +737,7 @@ const Settings = () => {
                     <ul className="space-y-1 sm:space-y-2 mb-3 sm:mb-4 text-xs sm:text-sm">
                       {plan.features.map((feature, index) => (
                         <li key={index} className="flex items-start">
-                          <svg className="w-3 sm:w-4 h-3 sm:h-4 text-green-500 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <svg className="w-3 sm:w-4 h-3 sm:h-4 text-emerald-500 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                           </svg>
                           <span className="text-gray-700 dark:text-gray-300">{feature}</span>
@@ -755,7 +755,7 @@ const Settings = () => {
                         </span>
                       </div>
                       {savings > 0 && (
-                        <div className="text-xs sm:text-sm text-green-600 dark:text-green-400 font-medium">
+                        <div className="text-xs sm:text-sm text-emerald-600 dark:text-emerald-400 font-medium">
                           Save {formatCurrency(savings.toString())}
                         </div>
                       )}
@@ -768,7 +768,7 @@ const Settings = () => {
                         className={`w-full py-2 px-3 sm:px-4 rounded-lg font-medium transition-all duration-200 text-xs sm:text-sm ${
                           isCurrentPlan
                             ? 'bg-gray-300 dark:bg-gray-600 text-gray-600 dark:text-gray-400 cursor-not-allowed'
-                            : 'bg-green-600 text-white hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed'
+                            : 'bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed'
                         }`}
                       >
                         {isCurrentPlan ? 'Current Plan' : loading ? 'Processing...' : currentPaymentRequest ? 'Payment Pending' : `Pay via Bank Transfer`}

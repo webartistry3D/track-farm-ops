@@ -329,7 +329,7 @@ const Reports: React.FC = () => {
                   onClick={() => setReportTab('allTransactions')}
                   className={`flex-shrink-0 px-3 py-2 font-inter text-xs sm:text-sm font-medium transition-colors duration-200 border-b-2 ${
                     reportTab === 'allTransactions'
-                      ? 'text-green-600 border-green-600 bg-green-50 dark:bg-green-900/20 dark:text-green-400'
+                      ? 'text-emerald-600 border-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 dark:text-emerald-400'
                       : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
                   }`}
                 >
@@ -339,7 +339,7 @@ const Reports: React.FC = () => {
                   onClick={() => setReportTab('incomeByCategory')}
                   className={`flex-shrink-0 px-3 py-2 font-inter text-xs sm:text-sm font-medium transition-colors duration-200 border-b-2 ${
                     reportTab === 'incomeByCategory'
-                      ? 'text-green-600 border-green-600 bg-green-50 dark:bg-green-900/20 dark:text-green-400'
+                      ? 'text-emerald-600 border-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 dark:text-emerald-400'
                       : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
                   }`}
                 >
@@ -349,7 +349,7 @@ const Reports: React.FC = () => {
                   onClick={() => setReportTab('expenseByCategory')}
                   className={`flex-shrink-0 px-3 py-2 font-inter text-xs sm:text-sm font-medium transition-colors duration-200 border-b-2 ${
                     reportTab === 'expenseByCategory'
-                      ? 'text-green-600 border-green-600 bg-green-50 dark:bg-green-900/20 dark:text-green-400'
+                      ? 'text-emerald-600 border-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 dark:text-emerald-400'
                       : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
                   }`}
                 >
@@ -359,7 +359,7 @@ const Reports: React.FC = () => {
               <div className="flex flex-row sm:flex-row sm:gap-2 gap-2 pb-2">
                 <button
                   onClick={() => exportToCSV(filteredTransactions, 'all-transactions', 'all')}
-                  className="flex items-center gap-2 px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors duration-200"
+                  className="flex items-center gap-2 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg transition-colors duration-200"
                 >
                   <Download className="w-4 h-4" />
                   CSV
@@ -417,7 +417,7 @@ const Reports: React.FC = () => {
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                               transaction.type === 'Income' 
-                                ? 'bg-green-100 text-green-800' 
+                                ? 'bg-emerald-100 text-emerald-800' 
                                 : 'bg-red-100 text-red-800'
                             }`}>
                               {transaction.type}
@@ -443,7 +443,7 @@ const Reports: React.FC = () => {
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <button
                               onClick={() => handleTransactionClick(transaction)}
-                              className="text-green-600 hover:text-green-900"
+                              className="text-emerald-600 hover:text-emerald-900"
                             >
                               View Details
                             </button>
@@ -512,7 +512,7 @@ const Reports: React.FC = () => {
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                               transaction.type === 'Income' 
-                                ? 'bg-green-100 text-green-800' 
+                                ? 'bg-emerald-100 text-emerald-800' 
                                 : 'bg-red-100 text-red-800'
                             }`}>
                               {transaction.type}
@@ -538,7 +538,7 @@ const Reports: React.FC = () => {
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <button
                               onClick={() => handleTransactionClick(transaction)}
-                              className="text-green-600 hover:text-green-900"
+                              className="text-emerald-600 hover:text-emerald-900"
                             >
                               View Details
                             </button>
@@ -629,7 +629,7 @@ const Reports: React.FC = () => {
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <button
                               onClick={() => handleTransactionClick(transaction)}
-                              className="text-green-600 hover:text-green-900"
+                              className="text-emerald-600 hover:text-emerald-900"
                             >
                               View Details
                             </button>
@@ -667,7 +667,7 @@ const Reports: React.FC = () => {
                   onClick={() => setDateFilter('today')}
                   className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                     dateFilter === 'today'
-                      ? 'bg-green-600 text-white'
+                      ? 'bg-emerald-600 text-white'
                       : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                   }`}
                 >
@@ -677,7 +677,7 @@ const Reports: React.FC = () => {
                   onClick={() => setDateFilter('yesterday')}
                   className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                     dateFilter === 'yesterday'
-                      ? 'bg-green-600 text-white'
+                      ? 'bg-emerald-600 text-white'
                       : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                   }`}
                 >
@@ -687,7 +687,7 @@ const Reports: React.FC = () => {
                   onClick={() => setDateFilter('last7days')}
                   className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                     dateFilter === 'last7days'
-                      ? 'bg-green-600 text-white'
+                      ? 'bg-emerald-600 text-white'
                       : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                   }`}
                 >
@@ -697,7 +697,7 @@ const Reports: React.FC = () => {
                   onClick={() => setDateFilter('last30days')}
                   className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                     dateFilter === 'last30days'
-                      ? 'bg-green-600 text-white'
+                      ? 'bg-emerald-600 text-white'
                       : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                   }`}
                 >
@@ -707,7 +707,7 @@ const Reports: React.FC = () => {
                   onClick={() => setDateFilter('allTime')}
                   className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                     dateFilter === 'allTime'
-                      ? 'bg-green-600 text-white'
+                      ? 'bg-emerald-600 text-white'
                       : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                   }`}
                 >
@@ -721,7 +721,7 @@ const Reports: React.FC = () => {
                       setSelectedMonth(parseInt(e.target.value));
                       setDateFilter('custom');
                     }}
-                    className="px-2 py-1 text-xs sm:px-3 sm:py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg font-inter text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:text-white"
+                    className="px-2 py-1 text-xs sm:px-3 sm:py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg font-inter text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:text-white"
                   >
                     <option value="0">January</option>
                     <option value="1">February</option>
@@ -745,7 +745,7 @@ const Reports: React.FC = () => {
                       setSelectedYear(parseInt(e.target.value));
                       setDateFilter('custom');
                     }}
-                    className="px-2 py-1 text-xs sm:px-3 sm:py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg font-inter text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:text-white"
+                    className="px-2 py-1 text-xs sm:px-3 sm:py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg font-inter text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:text-white"
                   >
                     {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
                       <option key={year} value={year}>{year}</option>
@@ -764,7 +764,7 @@ const Reports: React.FC = () => {
               {/* Header with gradient background */}
               <div className={`relative sticky top-0 ${
                 selectedTransaction.type === 'Income' 
-                  ? 'bg-gradient-to-r from-green-500 to-green-600' 
+                  ? 'bg-gradient-to-r from-emerald-500 to-emerald-600' 
                   : 'bg-gradient-to-r from-red-500 to-red-600'
               } p-6 rounded-t-2xl`}>
                 <div className="flex items-center justify-between">
@@ -795,7 +795,7 @@ const Reports: React.FC = () => {
                 {/* Amount Card */}
                 <div className={`p-6 rounded-xl ${
                   selectedTransaction.type === 'Income'
-                    ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800'
+                    ? 'bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800'
                     : 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800'
                 }`}>
                   <div className="flex items-center justify-between">
@@ -803,7 +803,7 @@ const Reports: React.FC = () => {
                       <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Amount</p>
                       <p className={`text-3xl font-bold font-jetbrains-mono ${
                         selectedTransaction.type === 'Income'
-                          ? 'text-green-600 dark:text-green-400'
+                          ? 'text-emerald-600 dark:text-emerald-400'
                           : 'text-red-600 dark:text-red-400'
                       }`}>
                         {formatCurrency(selectedTransaction.amount.toString())}
@@ -811,7 +811,7 @@ const Reports: React.FC = () => {
                     </div>
                     <div className={`p-3 rounded-lg ${
                       selectedTransaction.type === 'Income'
-                        ? 'bg-green-100 dark:bg-green-900'
+                        ? 'bg-emerald-100 dark:bg-emerald-900'
                         : 'bg-red-100 dark:bg-red-900'
                     }`}>
                       <span className="text-2xl">

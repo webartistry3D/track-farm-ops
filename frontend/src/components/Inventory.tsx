@@ -193,7 +193,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
     } else {
       return { 
         label: 'In Stock', 
-        color: 'bg-green-100 text-green-700 border-green-200', 
+        color: 'bg-emerald-100 text-emerald-700 border-emerald-200', 
         icon: <Check className="w-4 h-4" /> 
       };
     }
@@ -878,7 +878,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
           <p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
           <button
             onClick={handleRefresh}
-            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
           >
             Try Again
           </button>
@@ -993,8 +993,8 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                   {formatCompactCurrency(totals.totalValue)}
                 </p>
               </div>
-              <div className="p-3 bg-green-100 dark:bg-green-900 rounded-lg">
-                <span className="text-2xl font-bold text-green-600 dark:text-green-400">₦</span>
+              <div className="p-3 bg-emerald-100 dark:bg-emerald-900 rounded-lg">
+                <span className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">₦</span>
               </div>
             </div>
           </div>
@@ -1038,7 +1038,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                   {totals.produceItems}
                 </p>
               </div>
-              <div className="p-1 bg-green-100 dark:bg-green-900 rounded-lg">
+              <div className="p-1 bg-emerald-100 dark:bg-emerald-900 rounded-lg">
                 <span className="text-2xl">🌾</span>
               </div>
             </div>
@@ -1097,7 +1097,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                 placeholder="Search items..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
               />
             </div>
             
@@ -1126,7 +1126,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
               <div className="flex gap-2 sm:gap-3 flex-1">
                 <button
                   onClick={() => setShowAddItemModal(true)}
-                  className="bg-green-600 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-green-700 transition-colors font-medium whitespace-nowrap flex-1 sm:flex-initial"
+                  className="bg-emerald-600 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-emerald-700 transition-colors font-medium whitespace-nowrap flex-1 sm:flex-initial"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Add Item</span>
@@ -1149,7 +1149,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+              className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
             >
               <option value="all">All Categories</option>
               {categories.map(category => (
@@ -1163,7 +1163,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
             <select
               value={stockStatusFilter}
               onChange={(e) => setStockStatusFilter(e.target.value)}
-              className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+              className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
             >
               <option value="all">All Stock</option>
               <option value="in_stock">In Stock</option>
@@ -1175,7 +1175,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+              className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
             >
               <option value="name">Sort by Name</option>
               <option value="quantity">Sort by Quantity</option>
@@ -1209,7 +1209,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                 onClick={() => setViewMode('grid')}
                 className={`p-2 rounded-lg transition-colors ${
                   viewMode === 'grid'
-                    ? 'bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400'
+                    ? 'bg-emerald-100 dark:bg-emerald-900 text-emerald-600 dark:text-emerald-400'
                     : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
                 }`}
                 title="Grid View"
@@ -1220,7 +1220,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                 onClick={() => setViewMode('list')}
                 className={`p-2 rounded-lg transition-colors ${
                   viewMode === 'list'
-                    ? 'bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400'
+                    ? 'bg-emerald-100 dark:bg-emerald-900 text-emerald-600 dark:text-emerald-400'
                     : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
                 }`}
                 title="List View"
@@ -1242,7 +1242,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                     onClick={() => handleTabChange(tab as any)}
                     className={`py-4 px-4 sm:px-6 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap flex-shrink-0 ${
                       activeTab === tab
-                        ? 'border-green-500 text-green-600 dark:text-green-400'
+                        ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400'
                         : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
                     }`}
                   >
@@ -1320,7 +1320,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                                 setItemToAddStock(item);
                                 setShowAddStockModal(true);
                               }}
-                              className="p-1 text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-colors"
+                              className="p-1 text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
                               title="Add to Inventory"
                             >
                               <PlusCircle className="w-4 h-4" />
@@ -1461,7 +1461,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                               </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-sm font-medium text-green-600 dark:text-green-400">
+                              <div className="text-sm font-medium text-emerald-600 dark:text-emerald-400">
                                 {formatCurrency(item.pricePerUnit || 0)}
                               </div>
                             </td>
@@ -1547,7 +1547,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                                     setItemToAddStock(item);
                                     setShowAddStockModal(true);
                                   }}
-                                  className="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300"
+                                  className="text-emerald-600 hover:text-emerald-900 dark:text-emerald-400 dark:hover:text-emerald-300"
                                   title="Add to Inventory"
                                 >
                                   <PlusCircle className="w-4 h-4" />
@@ -1626,7 +1626,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                     </p>
                     <button
                       onClick={() => setShowAddItemModal(true)}
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                      className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
                     >
                       <Plus className="w-4 h-4 mr-2 inline" />
                       Add First Item
@@ -1649,7 +1649,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                 </p>
                 <button
                   onClick={() => console.log('Add item modal not implemented')}
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                  className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
                 >
                   <Plus className="w-4 h-4 mr-2 inline" />
                   Add First Item
@@ -1700,7 +1700,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                               <span className="text-xs text-gray-600 dark:text-gray-400">Items:</span>
                               <span className={`px-2 py-1 text-xs font-medium rounded-full border ${
                                 itemCount > 0 
-                                  ? 'bg-green-100 text-green-700 border-green-200'
+                                  ? 'bg-emerald-100 text-emerald-700 border-emerald-200'
                                   : 'bg-gray-100 text-gray-700 border-gray-200'
                               }`}>
                                 {itemCount}
@@ -1719,8 +1719,8 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                           <div className="flex items-center space-x-2">
                             {itemCount > 0 ? (
                               <div className="flex items-center space-x-1">
-                                <Check className="w-4 h-4 text-green-600" />
-                                <span className="text-xs text-green-600 font-medium">Active</span>
+                                <Check className="w-4 h-4 text-emerald-600" />
+                                <span className="text-xs text-emerald-600 font-medium">Active</span>
                               </div>
                             ) : (
                               <div className="flex items-center space-x-1">
@@ -1805,7 +1805,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                         const status = {
                           label: itemCount > 0 ? 'Active' : 'Empty',
                           color: itemCount > 0 
-                            ? 'bg-green-100 text-green-700 border-green-200'
+                            ? 'bg-emerald-100 text-emerald-700 border-emerald-200'
                             : 'bg-gray-100 text-gray-700 border-gray-200'
                         };
                         
@@ -1921,7 +1921,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                 </p>
                 <button
                   onClick={() => setShowAddCategoryModal(true)}
-                  className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+                  className="px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium"
                 >
                   <Plus className="w-5 h-5 inline mr-2" />
                   Add First Category
@@ -1971,7 +1971,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center mb-4">
-              <Package className="w-5 h-5 text-green-600 mr-2" />
+              <Package className="w-5 h-5 text-emerald-600 mr-2" />
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Add New Item</h2>
             </div>
             
@@ -1984,7 +1984,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                   type="text"
                   value={newItem.name}
                   onChange={(e) => setNewItem(prev => ({ ...prev, name: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                   placeholder="Enter item name"
                 />
               </div>
@@ -1996,7 +1996,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                 <select
                   value={newItem.categoryId}
                   onChange={(e) => setNewItem(prev => ({ ...prev, categoryId: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                 >
                   <option value="">Select a category</option>
                   {categories.map(category => (
@@ -2021,7 +2021,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                       const cleanValue = value.replace(/[^0-9]/g, '');
                       setNewItem(prev => ({ ...prev, quantity: cleanValue }));
                     }}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                     placeholder="0"
                   />
                 </div>
@@ -2033,7 +2033,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                   <select
                     value={newItem.unit}
                     onChange={(e) => setNewItem(prev => ({ ...prev, unit: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                   >
                     <option value="pieces">Pieces</option>
                     <option value="kg">Kilograms</option>
@@ -2064,7 +2064,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                       // Update stored value (without formatting)
                       setNewItem(prev => ({ ...prev, pricePerUnit: formattedValue }));
                     }}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                     placeholder="0.00"
                   />
                 </div>
@@ -2082,7 +2082,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                       const cleanValue = value.replace(/[^0-9]/g, '');
                       setNewItem(prev => ({ ...prev, minimumStock: cleanValue }));
                     }}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                     placeholder="0"
                   />
                 </div>
@@ -2095,7 +2095,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                 <textarea
                   value={newItem.notes}
                   onChange={(e) => setNewItem(prev => ({ ...prev, notes: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                   placeholder="Add any additional notes..."
                   rows={1}
                 />
@@ -2123,7 +2123,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
               <button
                 onClick={handleAddItem}
                 disabled={!newItem.name || !newItem.categoryId || !newItem.quantity}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Add Item
               </button>
@@ -2381,7 +2381,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center mb-4">
-              <PlusCircle className="w-5 h-5 text-green-600 mr-2" />
+              <PlusCircle className="w-5 h-5 text-emerald-600 mr-2" />
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                 Add to Inventory - {itemToAddStock.name}
               </h2>
@@ -2396,7 +2396,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                   type="number"
                   value={addStockData.quantityChange}
                   onChange={(e) => setAddStockData(prev => ({ ...prev, quantityChange: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                   placeholder="10"
                   min="1"
                 />
@@ -2412,7 +2412,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                 <textarea
                   value={addStockData.reason}
                   onChange={(e) => setAddStockData(prev => ({ ...prev, reason: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                   placeholder="e.g., Restock from supplier, New purchase, etc."
                   rows={3}
                 />
@@ -2482,7 +2482,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                   }
                 }}
                 disabled={!addStockData.quantityChange || !addStockData.reason}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Add to Inventory
               </button>
@@ -2495,7 +2495,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
       {notification && (
         <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg ${
           notification.type === 'success'
-            ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 border border-green-200 dark:border-green-700'
+            ? 'bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-700'
             : 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 border border-red-200 dark:border-red-700'
         }`}>
           <div className="flex items-center">
@@ -2570,16 +2570,16 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
 
               {/* Stats Grid */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4">
+                <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-green-600 dark:text-green-400">Unit Price</p>
-                      <p className="text-xl font-bold text-green-900 dark:text-green-100">
+                      <p className="text-sm font-medium text-emerald-600 dark:text-emerald-400">Unit Price</p>
+                      <p className="text-xl font-bold text-emerald-900 dark:text-emerald-100">
                         {formatCompactCurrency(itemToView.pricePerUnit || 0)}
                       </p>
                     </div>
-                    <div className="w-10 h-10 bg-green-100 dark:bg-green-800/30 rounded-lg flex items-center justify-center">
-                      <span className="text-green-600 dark:text-green-400">₦</span>
+                    <div className="w-10 h-10 bg-emerald-100 dark:bg-emerald-800/30 rounded-lg flex items-center justify-center">
+                      <span className="text-emerald-600 dark:text-emerald-400">₦</span>
                     </div>
                   </div>
                 </div>
@@ -2700,13 +2700,13 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                             <div key={transaction.id} className="flex items-start space-x-3">
                               <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
                                 isAddition 
-                                  ? 'bg-green-100 dark:bg-green-800/30' 
+                                  ? 'bg-emerald-100 dark:bg-emerald-800/30' 
                                   : isUsage 
                                     ? 'bg-orange-100 dark:bg-orange-800/30' 
                                     : 'bg-blue-100 dark:bg-blue-800/30'
                               }`}>
                                 {isAddition ? (
-                                  <PlusCircle className="w-4 h-4 text-green-600 dark:text-green-400" />
+                                  <PlusCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                                 ) : isUsage ? (
                                   <MinusCircle className="w-4 h-4 text-orange-600 dark:text-orange-400" />
                                 ) : (
@@ -2758,8 +2758,8 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                     
                     {/* Creation */}
                     <div className="flex items-start space-x-3">
-                      <div className="w-8 h-8 bg-green-100 dark:bg-green-800/30 rounded-full flex items-center justify-center flex-shrink-0">
-                        <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-400" />
+                      <div className="w-8 h-8 bg-emerald-100 dark:bg-emerald-800/30 rounded-full flex items-center justify-center flex-shrink-0">
+                        <CheckCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                       </div>
                       <div className="flex-1">
                         <p className="text-sm font-medium text-gray-900 dark:text-white">Created</p>
@@ -3126,7 +3126,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                     {[
                       'bg-gray-100 text-gray-700 border-gray-200',
                       'bg-blue-100 text-blue-700 border-blue-200',
-                      'bg-green-100 text-green-700 border-green-200',
+                      'bg-emerald-100 text-emerald-700 border-emerald-200',
                       'bg-red-100 text-red-700 border-red-200',
                       'bg-yellow-100 text-yellow-700 border-yellow-200',
                       'bg-purple-100 text-purple-700 border-purple-200',
@@ -3232,17 +3232,17 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                   </div>
                 </div>
 
-                <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4">
+                <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl p-4">
                   <div className="text-center">
-                    <span className="text-green-600 dark:text-green-400 text-xl font-bold block mb-2">
+                    <span className="text-emerald-600 dark:text-emerald-400 text-xl font-bold block mb-2">
                       {formatCurrency(
                         items
                           .filter(item => item.categoryId === categoryToView.id)
                           .reduce((sum, item) => sum + calculateItemValue(item), 0)
                       )}
                     </span>
-                    <p className="text-sm font-medium text-green-900 dark:text-green-100">Total Value</p>
-                    <p className="text-xs text-green-700 dark:text-green-300">Combined item value</p>
+                    <p className="text-sm font-medium text-emerald-900 dark:text-emerald-100">Total Value</p>
+                    <p className="text-xs text-emerald-700 dark:text-emerald-300">Combined item value</p>
                   </div>
                 </div>
 

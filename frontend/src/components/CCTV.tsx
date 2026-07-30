@@ -227,7 +227,7 @@ const CCTV = () => {
 
   const getStatusColor = (status: Camera['status']) => {
     switch (status) {
-      case 'online': return 'text-green-600 bg-green-100 dark:bg-green-900/20 dark:text-green-400';
+      case 'online': return 'text-emerald-600 bg-emerald-100 dark:bg-emerald-900/20 dark:text-emerald-400';
       case 'offline': return 'text-red-600 bg-red-100 dark:bg-red-900/20 dark:text-red-400';
       case 'recording': return 'text-blue-600 bg-blue-100 dark:bg-blue-900/20 dark:text-blue-400';
       case 'motion': return 'text-orange-600 bg-orange-100 dark:bg-orange-900/20 dark:text-orange-400';
@@ -237,7 +237,7 @@ const CCTV = () => {
 
   const getSignalIcon = (strength: string) => {
     switch (strength) {
-      case 'strong': return <Wifi className="h-4 w-4 text-green-500" />;
+      case 'strong': return <Wifi className="h-4 w-4 text-emerald-500" />;
       case 'medium': return <Wifi className="h-4 w-4 text-yellow-500" />;
       case 'weak': return <WifiOff className="h-4 w-4 text-red-500" />;
       default: return <WifiOff className="h-4 w-4 text-gray-500" />;
@@ -245,7 +245,7 @@ const CCTV = () => {
   };
 
   const getBatteryColor = (level: number) => {
-    if (level > 60) return 'text-green-600';
+    if (level > 60) return 'text-emerald-600';
     if (level > 30) return 'text-yellow-600';
     return 'text-red-600';
   };
@@ -374,7 +374,7 @@ const CCTV = () => {
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => setShowAddCamera(true)}
-                className="px-4 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center"
+                className="px-4 py-1 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors flex items-center"
               >
                 <Camera className="h-4 w-4 mr-2" />
                 Add Camera
@@ -433,7 +433,7 @@ const CCTV = () => {
                         <p className="text-gray-500 text-sm">Configure IP Address</p>
                         <button
                           onClick={() => openSettings(camera)}
-                          className="mt-2 px-3 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700"
+                          className="mt-2 px-3 py-1 bg-emerald-600 text-white text-xs rounded hover:bg-emerald-700"
                         >
                           Settings
                         </button>
@@ -477,7 +477,7 @@ const CCTV = () => {
                       )}
                       <button
                         onClick={() => openSettings(camera)}
-                        className="text-green-600 hover:text-green-800"
+                        className="text-emerald-600 hover:text-emerald-800"
                       >
                         <Settings className="h-4 w-4" />
                       </button>
@@ -558,7 +558,7 @@ const CCTV = () => {
             </p>
             <button
               onClick={fetchCameras}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
             >
               {error ? 'Retry' : 'Refresh'}
             </button>
@@ -607,7 +607,7 @@ const CCTV = () => {
                             <p className="text-gray-500">Configure IP Address</p>
                             <button
                               onClick={() => openSettings(camera)}
-                              className="mt-3 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                              className="mt-3 px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700"
                             >
                               Configure Settings
                             </button>
@@ -728,7 +728,7 @@ const CCTV = () => {
                         <div className="flex items-center justify-between">
                           <span className="text-sm text-gray-600 dark:text-gray-400">Audio</span>
                           <div className="flex items-center">
-                            {camera.audioEnabled ? <Volume2 className="h-4 w-4 text-green-500" /> : <VolumeX className="h-4 w-4 text-gray-400" />}
+                            {camera.audioEnabled ? <Volume2 className="h-4 w-4 text-emerald-500" /> : <VolumeX className="h-4 w-4 text-gray-400" />}
                             <span className="ml-2 text-sm text-gray-900 dark:text-white">{camera.audioEnabled ? 'Enabled' : 'Disabled'}</span>
                           </div>
                         </div>
@@ -760,8 +760,8 @@ const CCTV = () => {
           {/* First Row: Total Cameras and Online */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
             <div className="flex items-center">
-              <div className="p-2 bg-green-100 dark:bg-green-900/20 rounded-lg">
-                <Camera className="h-5 w-5 text-green-600 dark:text-green-400" />
+              <div className="p-2 bg-emerald-100 dark:bg-emerald-900/20 rounded-lg">
+                <Camera className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
               </div>
               <div className="ml-3">
                 <p className="text-sm text-gray-600 dark:text-gray-400">Total</p>
@@ -771,8 +771,8 @@ const CCTV = () => {
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
             <div className="flex items-center">
-              <div className="p-2 bg-green-100 dark:bg-green-900/20 rounded-lg">
-                <Eye className="h-5 w-5 text-green-600 dark:text-green-400" />
+              <div className="p-2 bg-emerald-100 dark:bg-emerald-900/20 rounded-lg">
+                <Eye className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
               </div>
               <div className="ml-3">
                 <p className="text-sm text-gray-600 dark:text-gray-400">Online</p>
@@ -861,7 +861,7 @@ const CCTV = () => {
                             setSelectedCamera(prev => prev ? { ...prev, ipAddress: newIp } : null);
                           }
                         }}
-                        className="text-green-600 hover:text-green-800 text-sm"
+                        className="text-emerald-600 hover:text-emerald-800 text-sm"
                       >
                         Edit
                       </button>
@@ -879,7 +879,7 @@ const CCTV = () => {
                             toggleCameraFeature(selectedCamera.id, 'nightVision');
                           }}
                           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                            selectedCamera.nightVision ? 'bg-green-600' : 'bg-gray-200 dark:bg-gray-700'
+                            selectedCamera.nightVision ? 'bg-emerald-600' : 'bg-gray-200 dark:bg-gray-700'
                           }`}
                         >
                           <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
@@ -895,7 +895,7 @@ const CCTV = () => {
                             toggleCameraFeature(selectedCamera.id, 'audioEnabled');
                           }}
                           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                            selectedCamera.audioEnabled ? 'bg-green-600' : 'bg-gray-200 dark:bg-gray-700'
+                            selectedCamera.audioEnabled ? 'bg-emerald-600' : 'bg-gray-200 dark:bg-gray-700'
                           }`}
                         >
                           <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
@@ -911,7 +911,7 @@ const CCTV = () => {
                             toggleCameraFeature(selectedCamera.id, 'motionDetection');
                           }}
                           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                            selectedCamera.motionDetection ? 'bg-green-600' : 'bg-gray-200 dark:bg-gray-700'
+                            selectedCamera.motionDetection ? 'bg-emerald-600' : 'bg-gray-200 dark:bg-gray-700'
                           }`}
                         >
                           <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
@@ -927,7 +927,7 @@ const CCTV = () => {
                             toggleCameraFeature(selectedCamera.id, 'recordingEnabled');
                           }}
                           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                            selectedCamera.recordingEnabled ? 'bg-green-600' : 'bg-gray-200 dark:bg-gray-700'
+                            selectedCamera.recordingEnabled ? 'bg-emerald-600' : 'bg-gray-200 dark:bg-gray-700'
                           }`}
                         >
                           <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
@@ -942,7 +942,7 @@ const CCTV = () => {
                 <div className="mt-6 flex justify-end">
                   <button
                     onClick={closeSettings}
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                    className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
                   >
                     Done
                   </button>
@@ -1053,7 +1053,7 @@ const CCTV = () => {
                         setShowAddCamera(false);
                       }
                     }}
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                    className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
                   >
                     Add Camera
                   </button>

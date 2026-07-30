@@ -274,7 +274,7 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
           <div 
             onClick={() => navigate('/income')}
-            className="group bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-3 dark:border-green-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
+            className="group bg-gradient-to-br from-emerald-50 to-emerald-50 dark:from-emerald-900/20 dark:to-emerald-900/20 rounded-xl p-3 dark:border-emerald-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
           >
             <div className="flex items-start justify-between mb-3">
               <div className="flex flex-col space-y-1">
@@ -297,13 +297,13 @@ const Dashboard = () => {
                 </div>
               </div>
               <div className="flex items-center space-x-2 mt-1">
-                <div className="p-2 bg-gradient-to-br from-green-500 to-green-600 dark:from-green-600 dark:to-green-700 rounded-lg shadow-lg">
+                <div className="p-2 bg-gradient-to-br from-emerald-500 to-emerald-600 dark:from-emerald-600 dark:to-emerald-700 rounded-lg shadow-lg">
                   <TrendingUp className="h-4 w-4 text-white" />
                 </div>
               </div>
             </div>
             <div className="flex items-center">
-              <p className="text-3xl font-bold font-jetbrains-mono text-green-600 dark:text-green-400">
+              <p className="text-3xl font-bold font-jetbrains-mono text-emerald-600 dark:text-emerald-400">
                 {/*{formatCompactCurrency(todayIncome.toString(), { includeSymbol: true })}*/}
                 {formatCompactCurrency(todayIncome)}
               </p>
@@ -350,7 +350,7 @@ const Dashboard = () => {
           
           <div 
             onClick={() => navigate('/income?tab=vat')}
-            className="group bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-3 dark:border-purple-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
+            className="group bg-gradient-to-br from-emerald-50 to-emerald-50 dark:from-emerald-900/20 dark:to-emerald-900/20 rounded-xl p-3 dark:border-emerald-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
           >
             <div className="flex items-start justify-between mb-3">
               <div className="flex flex-col space-y-1">
@@ -373,13 +373,13 @@ const Dashboard = () => {
                 </div>
               </div>
               <div className="flex items-center space-x-2 mt-1">
-                <div className="p-2 bg-gradient-to-br from-purple-500 to-purple-600 dark:from-purple-600 dark:to-purple-700 rounded-lg shadow-lg">
+                <div className="p-2 bg-gradient-to-br from-emerald-500 to-emerald-600 dark:from-emerald-600 dark:to-emerald-700 rounded-lg shadow-lg">
                   <Calculator className="h-4 w-4 text-white" />
                 </div>
               </div>
             </div>
             <div className="flex items-center">
-              <p className="text-3xl font-bold font-jetbrains-mono text-purple-600 dark:text-purple-400">
+              <p className="text-3xl font-bold font-jetbrains-mono text-emerald-600 dark:text-emerald-400">
                 {/*{formatCompactCurrency(todayVAT.toString(), { includeSymbol: true })}*/}
                 {formatCompactCurrency(todayVAT)}
               </p>
@@ -390,8 +390,8 @@ const Dashboard = () => {
             onClick={() => dateFilter === 'allTime' ? navigate('/analytics') : navigate('/income?filter=' + dateFilter)}
             className={`group bg-gradient-to-br ${
               dateFilter === 'allTime' ? 
-                'from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 dark:border-blue-700' :
-                netProfit >= 0 ? 'from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 dark:border-green-700' : 
+                'from-emerald-50 to-emerald-50 dark:from-emerald-900/20 dark:to-emerald-900/20 dark:border-emerald-700' :
+                netProfit >= 0 ? 'from-emerald-50 to-emerald-50 dark:from-emerald-900/20 dark:to-emerald-900/20 dark:border-emerald-700' : 
                 'from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 dark:border-red-700'
             } rounded-xl p-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer`}
           >
@@ -426,8 +426,8 @@ const Dashboard = () => {
               <div className="flex items-center space-x-2 mt-1">
                 <div className={`p-2 bg-gradient-to-br ${
                   dateFilter === 'allTime' ? 
-                    'from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700' :
-                    netProfit >= 0 ? 'from-green-500 to-green-600 dark:from-green-600 dark:to-green-700' : 
+                    'from-emerald-500 to-emerald-600 dark:from-emerald-600 dark:to-emerald-700' :
+                    netProfit >= 0 ? 'from-emerald-500 to-emerald-600 dark:from-emerald-600 dark:to-emerald-700' : 
                     'from-red-500 to-red-600 dark:from-red-600 dark:to-red-700'
                 } rounded-lg shadow-lg`}>
                   {netProfit >= 0 ? <TrendingUp className="h-4 w-4 text-white" /> : <TrendingDown className="h-4 w-4 text-white" />}
@@ -437,8 +437,8 @@ const Dashboard = () => {
             <div className="flex items-center">
               <p className={`text-3xl font-bold font-jetbrains-mono ${
                 dateFilter === 'allTime' ? 
-                  'text-blue-600 dark:text-blue-400' :
-                  netProfit >= 0 ? 'text-green-600 dark:text-green-400' : 
+                  'text-emerald-600 dark:text-emerald-400' :
+                  netProfit >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 
                   'text-red-600 dark:text-red-400'
               }`}>
                 {/*{formatCompactCurrency(netProfit.toString(), { includeSymbol: true })}*/}
@@ -451,7 +451,7 @@ const Dashboard = () => {
 
       {/* Financial Overview */}
       {/* Date Filter */}
-      <div className="bg-white dark:bg-gray-800 shadow rounded-lg px-2 py-2 mb-6">
+      <div className="bg-white dark:bg-gray-700 shadow rounded-lg px-2 py-2 mb-6">
         <div className="flex flex-col gap-4">
           {/*<h3 className="text-lg font-jetbrains-mono font-medium text-gray-900 dark:text-white">
             Financial Overview
@@ -462,7 +462,7 @@ const Dashboard = () => {
                 onClick={() => setDateFilter('today')}
                 className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                   dateFilter === 'today'
-                  ? 'bg-green-600 text-white'
+                  ? 'bg-emerald-400 text-emerald-950'
                   : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                 }`}
               >
@@ -472,7 +472,7 @@ const Dashboard = () => {
                 onClick={() => setDateFilter('yesterday')}
                 className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                   dateFilter === 'yesterday'
-                  ? 'bg-green-600 text-white'
+                  ? 'bg-emerald-400 text-emerald-950'
                   : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                 }`}
               >
@@ -482,7 +482,7 @@ const Dashboard = () => {
                 onClick={() => setDateFilter('week')}
                 className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                   dateFilter === 'week'
-                  ? 'bg-green-600 text-white'
+                  ? 'bg-emerald-400 text-emerald-950'
                   : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                 }`}
               >
@@ -492,7 +492,7 @@ const Dashboard = () => {
                 onClick={() => setDateFilter('month')}
                 className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                   dateFilter === 'month'
-                  ? 'bg-green-600 text-white'
+                  ? 'bg-emerald-400 text-emerald-950'
                   : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                 }`}
               >
@@ -502,7 +502,7 @@ const Dashboard = () => {
                 onClick={() => setDateFilter('allTime')}
                 className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                   dateFilter === 'allTime'
-                  ? 'bg-green-600 text-white'
+                  ? 'bg-emerald-400 text-emerald-950'
                   : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                 }`}
               >
@@ -516,7 +516,7 @@ const Dashboard = () => {
                     setSelectedMonth(parseInt(e.target.value));
                     setDateFilter('customMonth');
                   }}
-                  className="px-2 py-1 text-xs sm:px-3 sm:py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg font-inter text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:text-white"
+                  className="px-2 py-1 text-xs sm:px-3 sm:py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg font-inter text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:text-white"
                 >
                   <option value={0}>January</option>
                   <option value={1}>February</option>
@@ -540,7 +540,7 @@ const Dashboard = () => {
                     setSelectedYear(parseInt(e.target.value));
                     setDateFilter('customYear');
                   }}
-                  className="px-2 py-1 text-xs sm:px-3 sm:py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg font-inter text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:text-white"
+                  className="px-2 py-1 text-xs sm:px-3 sm:py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg font-inter text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:text-white"
                 >
                   {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
                     <option key={year} value={year}>{year}</option>
@@ -581,7 +581,7 @@ const Dashboard = () => {
             <div className="grid grid-cols-2 gap-3">
               <div 
                 onClick={() => handleCardClick('income')}
-                className="bg-white dark:bg-gray-800 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
+                className="bg-white dark:bg-gray-700 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
               >
                 <div className="text-xl mb-1">📊</div>
                 <div className="text-xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
@@ -591,7 +591,7 @@ const Dashboard = () => {
               </div>
               <div 
                 onClick={() => handleCardClick('expenses')}
-                className="bg-white dark:bg-gray-800 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
+                className="bg-white dark:bg-gray-700 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
               >
                 <div className="text-xl mb-1">💸</div>
                 <div className="text-xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
@@ -601,7 +601,7 @@ const Dashboard = () => {
               </div>
               <div 
                 onClick={() => handleCardClick('inventory')}
-                className="bg-white dark:bg-gray-800 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
+                className="bg-white dark:bg-gray-700 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
               >
                 <div className="text-xl mb-1">📦</div>
                 <div className="text-xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
@@ -611,7 +611,7 @@ const Dashboard = () => {
               </div>
               <div 
                 onClick={() => handleCardClick('assets')}
-                className="bg-white dark:bg-gray-800 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
+                className="bg-white dark:bg-gray-700 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
               >
                 <div className="text-xl mb-1">🏗️</div>
                 <div className="text-xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
@@ -625,7 +625,7 @@ const Dashboard = () => {
 
         <div>
           <h2 className="text-xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white mb-4">Recent Activity</h2>
-          <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-0">
+          <div className="bg-white dark:bg-gray-700 shadow rounded-lg p-0">
             {incomeEntries.length > 0 || expenseEntries.length > 0 ? (
               <div className="space-y-3 max-h-96 overflow-y-auto">
                 {/* Combine income and expense entries, sort by newest first, and limit to 10 entries */}
@@ -641,12 +641,12 @@ const Dashboard = () => {
                     >
                       <div className="flex items-center space-x-3">
                         <div className={`w-2 h-2 rounded-full ${
-                          entry.type === 'Income' ? 'bg-green-500' : 'bg-red-500'
+                          entry.type === 'Income' ? 'bg-emerald-500' : 'bg-red-500'
                         }`}></div>
                         <div>
                           <div className="flex items-center space-x-2">
                             <span className={`font-inter font-medium text-sm ${
-                              entry.type === 'Income' ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'
+                              entry.type === 'Income' ? 'text-emerald-700 dark:text-emerald-400' : 'text-red-700 dark:text-red-400'
                             }`}>
                               {entry.type === 'Income' ? 'Income' : 'Expense'}
                             </span>
@@ -683,7 +683,7 @@ const Dashboard = () => {
                   <div className="text-center pt-2">
                     <button 
                       onClick={() => handleCardClick('assets')}
-                      className="font-inter text-sm text-green-600 hover:text-green-700 font-medium"
+                      className="font-inter text-sm text-emerald-600 hover:text-emerald-700 font-medium"
                     >
                       View all {assets.length} assets
                     </button>
@@ -714,7 +714,7 @@ const Dashboard = () => {
       {/* Detail Modal */}
       {modalOpen && (
         <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-4xl w-full max-h-[80vh] overflow-y-auto m-4">
+          <div className="bg-white dark:bg-gray-700 rounded-lg p-6 max-w-4xl w-full max-h-[80vh] overflow-y-auto m-4">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
                 {modalType === 'income' && 'Income Entries'}
@@ -732,7 +732,7 @@ const Dashboard = () => {
             
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead className="bg-gray-50 dark:bg-gray-800">
+                <thead className="bg-gray-50 dark:bg-gray-700">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       Date
@@ -751,7 +751,7 @@ const Dashboard = () => {
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                   {modalData
                     .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
                     .map((item, index) => (
@@ -770,7 +770,7 @@ const Dashboard = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          item.type === 'Income' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 
+                          item.type === 'Income' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200' : 
                           item.type === 'Expense' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : 
                           item.type === 'Asset' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' :
                           'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
@@ -815,7 +815,7 @@ const Dashboard = () => {
                     onClick={() => setCurrentPage(page)}
                     className={`px-3 py-1 text-sm rounded-md ${
                       currentPage === page
-                        ? 'bg-green-600 text-white'
+                        ? 'bg-emerald-400 text-emerald-950'
                         : 'bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300'
                     }`}
                   >
