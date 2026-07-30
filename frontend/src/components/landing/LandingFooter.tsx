@@ -20,7 +20,7 @@ const LandingFooter = () => (
     <footer className="bg-slate-950 border-t border-white/10 py-10 text-slate-400">
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-4 sm:px-6 md:flex-row lg:px-8">
         <Link to="/" className="font-jetbrains-mono text-lg font-bold text-white">Track<span className="text-emerald-400">Farm</span>Ops</Link>
-        <p className="text-center text-sm">© 2026 TrackFarmOps. Built by WebArtistry Creations.</p>
+        <p className="text-center text-sm">© 2026 TrackFarmOps. Powered by WebArtistry Creations®.</p>
         <nav className="flex gap-5 text-sm"><Link to="/about" className="transition-colors hover:text-emerald-300">About</Link><Link to="/privacy" className="transition-colors hover:text-emerald-300">Privacy</Link><Link to="/terms" className="transition-colors hover:text-emerald-300">Terms</Link><Link to="/contact" className="transition-colors hover:text-emerald-300">Contact</Link></nav>
       </div>
       <div className="mt-6 flex justify-center">

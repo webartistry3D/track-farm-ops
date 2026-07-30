@@ -47,7 +47,7 @@ const HowItWorksSection = () => {
             <path
               d={wavePath}
               fill="none"
-              stroke="rgba(16,185,129,0.45)"
+              stroke="rgba(255,255,255,0.75)"
               strokeWidth="2.2"
               strokeDasharray="6 8"
               strokeLinecap="round"

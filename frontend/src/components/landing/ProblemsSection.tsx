@@ -12,7 +12,7 @@ const ProblemsSection = () => (
       <SectionHeading
         eyebrow="The reality on the ground"
         title="Farming is hard enough without flying blind."
-        description="When records live in notebooks, spreadsheets, and group chats, the small operational gaps quickly become expensive losses."
+        description="When records are scattered across notebooks, spreadsheets, and group chats, the small operational gaps quickly become expensive losses."
       />
       <Reveal direction="left" className="marquee-track mt-4 overflow-hidden">
         <div className="animate-marquee-reverse flex w-max gap-5 px-2">
@@ -23,9 +23,9 @@ const ProblemsSection = () => (
           ))}
         </div>
       </Reveal>
-      <Reveal delay={0.2} className="mx-auto mt-12 flex max-w-3xl items-start gap-4 rounded-2xl border border-rose-200 bg-white/80 p-5 shadow-sm backdrop-blur-sm">
+      <Reveal delay={0.2} className="mx-auto mt-12 flex max-w-lg items-start gap-4 rounded-2xl border border-rose-200 bg-white/80 p-5 shadow-sm backdrop-blur-sm">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-100 text-rose-600"><AlertTriangle className="h-5 w-5" /></span>
-        <p className="pt-1 text-sm leading-6 text-slate-600"><strong className="text-slate-900">The cost of disconnected operations compounds daily.</strong> TrackFarmOps gives every part of your farm one shared source of truth.</p>
+        <p className="pt-1 text-sm leading-6 text-slate-600"><strong className="text-slate-900">The cost of disconnected operations compounds daily.</strong></p>
       </Reveal>
     </div>
   </section>
