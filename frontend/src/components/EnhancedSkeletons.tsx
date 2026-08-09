@@ -9,107 +9,103 @@ import {
 export const DashboardSkeleton: React.FC = () => (
   <PageSkeleton>
     <div className="space-y-6">
-      {/* Welcome Section - Simple text without background card */}
+      {/* Welcome Section */}
       <div className="rounded-lg p-0">
         <SkeletonElement className="h-7 w-32 mb-1" />
         <SkeletonElement className="h-4 w-48" />
       </div>
 
-      {/* Stats Cards Grid - 2x2 grid only for owners */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Income Card */}
-        <CardSkeleton className="group bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-3 dark:border-green-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer">
-          <div className="flex items-start justify-between mb-3">
-            <div className="flex flex-col space-y-1 flex-1">
-              <SkeletonElement className="h-4 w-16 mb-1" />
-              <div className="flex items-center space-x-2">
-                <SkeletonElement className="w-1 h-1 rounded-full" />
-                <SkeletonElement className="h-3 w-24" />
+      {/* Stats Cards - 1 column on mobile, 4 columns on desktop */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
+        {[...Array(4)].map((_, i) => (
+          <CardSkeleton key={i} className="p-3 rounded-xl">
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex flex-col space-y-1 flex-1">
+                <SkeletonElement className="h-4 w-24 mb-1" />
+                <div className="flex items-center space-x-2">
+                  <SkeletonElement className="w-1 h-1 rounded-full" />
+                  <SkeletonElement className="h-3 w-28" />
+                </div>
+              </div>
+              <div className="flex items-center space-x-2 mt-1">
+                <SkeletonElement className="w-8 h-8 rounded-lg" />
               </div>
             </div>
-            <div className="flex items-center space-x-2 mt-1">
-              <SkeletonElement className="w-8 h-8 rounded-lg" />
+            <div className="flex items-center">
+              <SkeletonElement className="h-8 w-32" />
             </div>
-          </div>
-          <div className="flex items-center">
-            <SkeletonElement className="h-8 w-32" />
-          </div>
-        </CardSkeleton>
-        
-        {/* Expenses Card */}
-        <CardSkeleton className="group bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 rounded-xl p-3 dark:border-red-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer">
-          <div className="flex items-start justify-between mb-3">
-            <div className="flex flex-col space-y-1 flex-1">
-              <SkeletonElement className="h-4 w-20 mb-1" />
-              <div className="flex items-center space-x-2">
-                <SkeletonElement className="w-1 h-1 rounded-full" />
-                <SkeletonElement className="h-3 w-28" />
-              </div>
-            </div>
-            <div className="flex items-center space-x-2 mt-1">
-              <SkeletonElement className="w-8 h-8 rounded-lg" />
-            </div>
-          </div>
-          <div className="flex items-center">
-            <SkeletonElement className="h-8 w-32" />
-          </div>
-        </CardSkeleton>
-        
-        {/* VAT Card */}
-        <CardSkeleton className="group bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-3 dark:border-purple-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer">
-          <div className="flex items-start justify-between mb-3">
-            <div className="flex flex-col space-y-1 flex-1">
-              <SkeletonElement className="h-4 w-8 mb-1" />
-              <div className="flex items-center space-x-2">
-                <SkeletonElement className="w-1 h-1 rounded-full" />
-                <SkeletonElement className="h-3 w-32" />
-              </div>
-            </div>
-            <div className="flex items-center space-x-2 mt-1">
-              <SkeletonElement className="w-8 h-8 rounded-lg" />
-            </div>
-          </div>
-          <div className="flex items-center">
-            <SkeletonElement className="h-8 w-28" />
-          </div>
-        </CardSkeleton>
-        
-        {/* Net Profit Card */}
-        <CardSkeleton className="group bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-3 dark:border-blue-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer">
-          <div className="flex items-start justify-between mb-3">
-            <div className="flex flex-col space-y-1 flex-1">
-              <SkeletonElement className="h-4 w-20 mb-1" />
-              <div className="flex items-center space-x-2">
-                <SkeletonElement className="w-1 h-1 rounded-full" />
-                <SkeletonElement className="h-3 w-36" />
-              </div>
-            </div>
-            <div className="flex items-center space-x-2 mt-1">
-              <SkeletonElement className="w-8 h-8 rounded-lg" />
-            </div>
-          </div>
-          <div className="flex items-center">
-            <SkeletonElement className="h-8 w-32" />
-          </div>
-        </CardSkeleton>
+          </CardSkeleton>
+        ))}
       </div>
 
-      {/* Financial Overview Section */}
-      <CardSkeleton className="shadow rounded-lg p-4 mb-6">
-        <div className="flex flex-col gap-4">
-          {/* Section Title */}
-          <SkeletonElement className="h-6 w-32" />
-          
-          {/* Date Filter Buttons */}
-          <div className="overflow-x-auto pb-2">
-            <div className="flex items-center gap-2 min-w-max">
-              {[...Array(8)].map((_, i) => (
-                <SkeletonElement key={i} className="flex-shrink-0 h-8 w-16 rounded-lg" />
-              ))}
-            </div>
+      {/* Financial Overview / Date Filter */}
+      <CardSkeleton className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 shadow rounded-lg px-2 py-2 mb-6">
+        <div className="overflow-x-auto pb-2">
+          <div className="flex items-center gap-2 min-w-max">
+            {[...Array(5)].map((_, i) => (
+              <SkeletonElement key={i} className="flex-shrink-0 h-8 w-16 rounded-lg" />
+            ))}
+            <SkeletonElement className="h-4 w-12" />
+            <SkeletonElement className="flex-shrink-0 h-8 w-28 rounded-lg" />
+            <SkeletonElement className="h-4 w-10" />
+            <SkeletonElement className="flex-shrink-0 h-8 w-24 rounded-lg" />
           </div>
         </div>
       </CardSkeleton>
+
+      {/* Quick Actions and Recent Activity */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Left Column - Quick Actions + Quick Stats */}
+        <div>
+          <SkeletonElement className="h-6 w-32 mb-4" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {[...Array(4)].map((_, i) => (
+              <SkeletonElement key={i} className="h-10 w-full rounded-lg" />
+            ))}
+          </div>
+
+          <SkeletonElement className="h-5 w-28 mt-6 mb-4" />
+          <div className="grid grid-cols-2 gap-3">
+            {[...Array(4)].map((_, i) => (
+              <CardSkeleton key={i} className="p-9 text-center rounded-lg">
+                <div className="flex flex-col items-center space-y-2">
+                  <SkeletonElement className="h-6 w-6 rounded-full" />
+                  <SkeletonElement className="h-6 w-12" />
+                  <SkeletonElement className="h-4 w-24" />
+                </div>
+              </CardSkeleton>
+            ))}
+          </div>
+        </div>
+
+        {/* Right Column - Recent Activity */}
+        <div>
+          <SkeletonElement className="h-6 w-36 mb-4" />
+          <CardSkeleton className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 shadow rounded-lg p-0">
+            <div className="space-y-3 p-3 max-h-96 overflow-y-auto">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="flex items-center justify-between p-3 bg-white/30 dark:bg-gray-700/40 rounded-lg">
+                  <div className="flex items-center space-x-3 flex-1">
+                    <SkeletonElement className="w-2 h-2 rounded-full" />
+                    <div className="flex-1 space-y-2">
+                      <div className="flex items-center space-x-2">
+                        <SkeletonElement className="h-4 w-16" />
+                        <SkeletonElement className="h-4 w-20" />
+                      </div>
+                      <SkeletonElement className="h-3 w-32" />
+                      <SkeletonElement className="h-3 w-40" />
+                    </div>
+                  </div>
+                  <div className="space-y-1 text-right">
+                    <SkeletonElement className="h-3 w-16" />
+                    <SkeletonElement className="h-3 w-12" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardSkeleton>
+        </div>
+      </div>
     </div>
   </PageSkeleton>
 );
@@ -638,13 +634,10 @@ export const CCTVSkeleton: React.FC = () => (
   <PageSkeleton>
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex-1">
-          <SkeletonElement className="h-8 w-48 mb-2" />
-        </div>
+      <div className="flex items-center justify-end mb-2">
         <div className="flex items-center space-x-4">
-          <SkeletonElement className="h-10 w-32 rounded-lg" />
-          <SkeletonElement className="h-10 w-10 rounded-lg" />
+          <SkeletonElement className="h-8 w-32 rounded-lg" />
+          <SkeletonElement className="h-8 w-8 rounded-lg" />
         </div>
       </div>
 
@@ -686,6 +679,7 @@ export const CCTVSkeleton: React.FC = () => (
                   <SkeletonElement className="w-8 h-8 rounded-lg" />
                 </div>
                 <div className="flex items-center space-x-2">
+                  <SkeletonElement className="w-8 h-8 rounded-lg" />
                   <SkeletonElement className="w-8 h-8 rounded-lg" />
                   <SkeletonElement className="w-8 h-8 rounded-lg" />
                   <SkeletonElement className="w-8 h-8 rounded-lg" />

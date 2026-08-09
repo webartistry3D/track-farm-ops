@@ -361,7 +361,7 @@ const CCTV = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen">
       <div className="max-w-7xl mx-auto px-0 sm:px-0 lg:px-0 py-0">
         {/* Header */}
         <div className="mb-2">
@@ -397,7 +397,7 @@ const CCTV = () => {
             {cameras.map((camera) => (
               <div
                 key={camera.id}
-                className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-lg transition-shadow"
+                className="bg-white/50 dark:bg-gray-800/40 backdrop-blur-md rounded-xl border border-white/40 dark:border-gray-600/30 overflow-hidden hover:shadow-lg transition-shadow"
               >
                 {/* Camera Feed */}
                 <div id={`camera-feed-${camera.id}`} className="relative aspect-video bg-gray-900 dark:bg-black">
@@ -569,7 +569,7 @@ const CCTV = () => {
             {cameras.map((camera) => (
               <div
                 key={camera.id}
-                className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
+                className="bg-white/50 dark:bg-gray-800/40 backdrop-blur-md rounded-xl border border-white/40 dark:border-gray-600/30 p-6"
               >
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   {/* Large Camera Feed */}
@@ -758,7 +758,7 @@ const CCTV = () => {
         {/* Status Overview */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 py-8">
           {/* First Row: Total Cameras and Online */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+          <div className="bg-white/50 dark:bg-gray-800/40 backdrop-blur-md rounded-xl border border-white/40 dark:border-gray-600/30 p-4">
             <div className="flex items-center">
               <div className="p-2 bg-emerald-100 dark:bg-emerald-900/20 rounded-lg">
                 <Camera className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
@@ -769,7 +769,7 @@ const CCTV = () => {
               </div>
             </div>
           </div>
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+          <div className="bg-white/50 dark:bg-gray-800/40 backdrop-blur-md rounded-xl border border-white/40 dark:border-gray-600/30 p-4">
             <div className="flex items-center">
               <div className="p-2 bg-emerald-100 dark:bg-emerald-900/20 rounded-lg">
                 <Eye className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
@@ -784,7 +784,7 @@ const CCTV = () => {
           </div>
           
           {/* Second Row: Offline and Motion Alerts */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+          <div className="bg-white/50 dark:bg-gray-800/40 backdrop-blur-md rounded-xl border border-white/40 dark:border-gray-600/30 p-4">
             <div className="flex items-center">
               <div className="p-2 bg-red-100 dark:bg-red-900/20 rounded-lg">
                 <EyeOff className="h-5 w-5 text-red-600 dark:text-red-400" />
@@ -797,7 +797,7 @@ const CCTV = () => {
               </div>
             </div>
           </div>
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+          <div className="bg-white/50 dark:bg-gray-800/40 backdrop-blur-md rounded-xl border border-white/40 dark:border-gray-600/30 p-4">
             <div className="flex items-center">
               <div className="p-2 bg-orange-100 dark:bg-orange-900/20 rounded-lg">
                 <AlertTriangle className="h-5 w-5 text-orange-600 dark:text-orange-400" />

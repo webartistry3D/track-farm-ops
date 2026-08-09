@@ -470,21 +470,21 @@ const ExpensePage = () => {
 
   return (
     <div className="max-w-7xl mx-auto p-0">
-      <div className="dark:bg-gray-900 rounded-lg p-0">
+      <div className="rounded-lg p-0">
         <div className="p-0">
           {/*<h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
             Farm Expenses
           </h2>*/}
 
           {/* Tab Navigation */}
-          <div className="border-b border-gray-200 dark:border-gray-700 mb-6">
-            <nav className="-mb-px flex space-x-4">
+          <div className="bg-white/50 dark:bg-gray-800/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg p-2 mb-6">
+            <nav className="flex space-x-2">
               <button
                 onClick={() => handleTabChange('record')}
-                className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${
+                className={`py-2 px-3 rounded-lg font-medium text-sm flex items-center gap-2 whitespace-nowrap transition-all duration-200 ${
                   activeTab === 'record'
-                    ? 'border-red-500 text-red-600 dark:text-red-400'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                    ? 'bg-red-500/80 text-white backdrop-blur-sm shadow-sm'
+                    : 'bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-600 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/50 dark:hover:bg-gray-600/40'
                 }`}
               >
                 <Plus className="h-4 w-4" />
@@ -492,10 +492,10 @@ const ExpensePage = () => {
               </button>
               <button
                 onClick={() => handleTabChange('records')}
-                className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${
+                className={`py-2 px-3 rounded-lg font-medium text-sm flex items-center gap-2 whitespace-nowrap transition-all duration-200 ${
                   activeTab === 'records'
-                    ? 'border-red-500 text-red-600 dark:text-red-400'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                    ? 'bg-red-500/80 text-white backdrop-blur-sm shadow-sm'
+                    : 'bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-600 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/50 dark:hover:bg-gray-600/40'
                 }`}
               >
                 <Table className="h-4 w-4" />
@@ -506,7 +506,7 @@ const ExpensePage = () => {
 
           {/* Record Expense Tab */}
           {activeTab === 'record' && (
-            <div>
+            <div className="bg-white/50 dark:bg-gray-800/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg p-4 sm:p-6">
               {/* OCR Section */}
               {!ocrResult && (
                 <div className="mb-6 max-w-2xl">
@@ -819,7 +819,7 @@ const ExpensePage = () => {
 
           {/* Table Records Tab */}
           {activeTab === 'records' && (
-            <div>
+            <div className="bg-white/50 dark:bg-gray-800/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg p-4 sm:p-6">
               {expensesLoading ? (
                 <TableSkeleton rows={8} columns={5} />
               ) : expenses.length === 0 ? (

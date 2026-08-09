@@ -262,10 +262,10 @@ const Dashboard = () => {
     <div className="space-y-6">
       {/* Welcome Section */}
       <div className="rounded-lg p-0">
-        <h1 className="text-xl font-inter font-regular text-gray-900 dark:text-white mb-0">
+        <h1 className="text-xl font-inter font-regular text-white mb-0">
           {getGreeting()} {user.name?.split(' ')[0]}! 
         </h1>
-        <p className="font-inter text-gray-600 text-sm mt-0">
+        <p className="font-inter text-white text-sm mt-0">
           Here's your business update..
         </p>
       </div>
@@ -274,7 +274,7 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
           <div 
             onClick={() => navigate('/income')}
-            className="group bg-gradient-to-br from-emerald-50 to-emerald-50 dark:from-emerald-900/20 dark:to-emerald-900/20 rounded-xl p-3 dark:border-emerald-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
+            className="group bg-emerald-50/60 dark:bg-emerald-900/30 backdrop-blur-md border border-emerald-200/60 dark:border-emerald-700/50 rounded-xl p-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
           >
             <div className="flex items-start justify-between mb-3">
               <div className="flex flex-col space-y-1">
@@ -312,7 +312,7 @@ const Dashboard = () => {
           
           <div 
             onClick={() => navigate('/expenses')}
-            className="group bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 rounded-xl p-3 dark:border-red-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
+            className="group bg-red-50/60 dark:bg-red-900/30 backdrop-blur-md border border-red-200/60 dark:border-red-700/50 rounded-xl p-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
           >
             <div className="flex items-start justify-between mb-3">
               <div className="flex flex-col space-y-1">
@@ -350,7 +350,7 @@ const Dashboard = () => {
           
           <div 
             onClick={() => navigate('/income?tab=vat')}
-            className="group bg-gradient-to-br from-emerald-50 to-emerald-50 dark:from-emerald-900/20 dark:to-emerald-900/20 rounded-xl p-3 dark:border-emerald-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
+            className="group bg-emerald-50/60 dark:bg-emerald-900/30 backdrop-blur-md border border-emerald-200/60 dark:border-emerald-700/50 rounded-xl p-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
           >
             <div className="flex items-start justify-between mb-3">
               <div className="flex flex-col space-y-1">
@@ -388,11 +388,11 @@ const Dashboard = () => {
           
           <div 
             onClick={() => dateFilter === 'allTime' ? navigate('/analytics') : navigate('/income?filter=' + dateFilter)}
-            className={`group bg-gradient-to-br ${
+            className={`group backdrop-blur-md border ${
               dateFilter === 'allTime' ? 
-                'from-emerald-50 to-emerald-50 dark:from-emerald-900/20 dark:to-emerald-900/20 dark:border-emerald-700' :
-                netProfit >= 0 ? 'from-emerald-50 to-emerald-50 dark:from-emerald-900/20 dark:to-emerald-900/20 dark:border-emerald-700' : 
-                'from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 dark:border-red-700'
+                'bg-emerald-50/60 dark:bg-emerald-900/30 border-emerald-200/60 dark:border-emerald-700/50' :
+                netProfit >= 0 ? 'bg-emerald-50/60 dark:bg-emerald-900/30 border-emerald-200/60 dark:border-emerald-700/50' : 
+                'bg-red-50/60 dark:bg-red-900/30 border-red-200/60 dark:border-red-700/50'
             } rounded-xl p-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer`}
           >
             <div className="flex items-start justify-between mb-3">
@@ -451,7 +451,7 @@ const Dashboard = () => {
 
       {/* Financial Overview */}
       {/* Date Filter */}
-      <div className="bg-white dark:bg-gray-700 shadow rounded-lg px-2 py-2 mb-6">
+      <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 shadow rounded-lg px-2 py-2 mb-6">
         <div className="flex flex-col gap-4">
           {/*<h3 className="text-lg font-jetbrains-mono font-medium text-gray-900 dark:text-white">
             Financial Overview
@@ -462,8 +462,8 @@ const Dashboard = () => {
                 onClick={() => setDateFilter('today')}
                 className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                   dateFilter === 'today'
-                  ? 'bg-emerald-400 text-emerald-950'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  ? 'bg-emerald-400/80 text-emerald-950 backdrop-blur-sm'
+                  : 'bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-700 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/40 dark:hover:bg-gray-600/40'
                 }`}
               >
                 Today
@@ -472,8 +472,8 @@ const Dashboard = () => {
                 onClick={() => setDateFilter('yesterday')}
                 className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                   dateFilter === 'yesterday'
-                  ? 'bg-emerald-400 text-emerald-950'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  ? 'bg-emerald-400/80 text-emerald-950 backdrop-blur-sm'
+                  : 'bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-700 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/40 dark:hover:bg-gray-600/40'
                 }`}
               >
                 Yesterday
@@ -482,8 +482,8 @@ const Dashboard = () => {
                 onClick={() => setDateFilter('week')}
                 className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                   dateFilter === 'week'
-                  ? 'bg-emerald-400 text-emerald-950'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  ? 'bg-emerald-400/80 text-emerald-950 backdrop-blur-sm'
+                  : 'bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-700 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/40 dark:hover:bg-gray-600/40'
                 }`}
               >
                 Last 7 Days
@@ -492,8 +492,8 @@ const Dashboard = () => {
                 onClick={() => setDateFilter('month')}
                 className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                   dateFilter === 'month'
-                  ? 'bg-emerald-400 text-emerald-950'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  ? 'bg-emerald-400/80 text-emerald-950 backdrop-blur-sm'
+                  : 'bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-700 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/40 dark:hover:bg-gray-600/40'
                 }`}
               >
                 Last 30 Days
@@ -502,8 +502,8 @@ const Dashboard = () => {
                 onClick={() => setDateFilter('allTime')}
                 className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                   dateFilter === 'allTime'
-                  ? 'bg-emerald-400 text-emerald-950'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  ? 'bg-emerald-400/80 text-emerald-950 backdrop-blur-sm'
+                  : 'bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-700 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/40 dark:hover:bg-gray-600/40'
                 }`}
               >
                 All Time
@@ -557,18 +557,18 @@ const Dashboard = () => {
         <div>
           <h2 className="text-xl font-jetbrains-mono font-semibold mb-4 dark:text-white">Quick Actions</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <Link to="/income" className="font-inter btn btn-primary text-center">
+            <Link to="/income" className="font-inter btn text-center bg-emerald-600/80 text-white hover:bg-emerald-700/90 backdrop-blur-sm border border-emerald-500/40 focus:ring-emerald-500">
               Record Income
             </Link>
-            <Link to="/expenses" className="font-inter btn btn-secondary text-center">
+            <Link to="/expenses" className="font-inter btn text-center bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-900 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/40 dark:hover:bg-gray-600/40">
               Record Expense
             </Link>
             {isOwner && (
               <>
-                <Link to="/reports" className="font-inter btn btn-secondary text-center">
+                <Link to="/reports" className="font-inter btn text-center bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-900 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/40 dark:hover:bg-gray-600/40">
                   View Reports
                 </Link>
-                <Link to="/inventory" className="font-inter btn btn-secondary text-center">
+                <Link to="/inventory" className="font-inter btn text-center bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-900 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/40 dark:hover:bg-gray-600/40">
                   Manage Inventory
                 </Link>
               </>
@@ -581,7 +581,7 @@ const Dashboard = () => {
             <div className="grid grid-cols-2 gap-3">
               <div 
                 onClick={() => handleCardClick('income')}
-                className="bg-white dark:bg-gray-700 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
+                className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
               >
                 <div className="text-xl mb-1">📊</div>
                 <div className="text-xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
@@ -591,7 +591,7 @@ const Dashboard = () => {
               </div>
               <div 
                 onClick={() => handleCardClick('expenses')}
-                className="bg-white dark:bg-gray-700 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
+                className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
               >
                 <div className="text-xl mb-1">💸</div>
                 <div className="text-xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
@@ -601,7 +601,7 @@ const Dashboard = () => {
               </div>
               <div 
                 onClick={() => handleCardClick('inventory')}
-                className="bg-white dark:bg-gray-700 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
+                className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
               >
                 <div className="text-xl mb-1">📦</div>
                 <div className="text-xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
@@ -611,7 +611,7 @@ const Dashboard = () => {
               </div>
               <div 
                 onClick={() => handleCardClick('assets')}
-                className="bg-white dark:bg-gray-700 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
+                className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
               >
                 <div className="text-xl mb-1">🏗️</div>
                 <div className="text-xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
@@ -625,7 +625,7 @@ const Dashboard = () => {
 
         <div>
           <h2 className="text-xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white mb-4">Recent Activity</h2>
-          <div className="bg-white dark:bg-gray-700 shadow rounded-lg p-0">
+          <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 shadow rounded-lg p-0">
             {incomeEntries.length > 0 || expenseEntries.length > 0 ? (
               <div className="space-y-3 max-h-96 overflow-y-auto">
                 {/* Combine income and expense entries, sort by newest first, and limit to 10 entries */}
@@ -637,7 +637,7 @@ const Dashboard = () => {
                     <Link 
                       key={index} 
                       to={`/reports?transactionId=${entry.id}&type=${entry.type.toLowerCase()}`}
-                      className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200 block"
+                      className="flex items-center justify-between p-3 bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm border border-white/30 dark:border-gray-600/20 rounded-lg hover:bg-white/40 dark:hover:bg-gray-600/40 transition-colors duration-200 block"
                     >
                       <div className="flex items-center space-x-3">
                         <div className={`w-2 h-2 rounded-full ${

@@ -82,7 +82,7 @@ const BottomNav = ({ onLogout }: BottomNavProps) => {
           <div
             key={`tray-${item.id}`}
             style={{ left: centerX ?? '50%' }}
-            className={`fixed bottom-16 -translate-x-1/2 min-w-[160px] max-w-[90vw] bg-white dark:bg-gray-800 rounded-t-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden transform transition-transform duration-300 ease-out z-40 ${
+            className={`fixed bottom-16 -translate-x-1/2 min-w-[160px] max-w-[90vw] bg-white/60 dark:bg-gray-900/70 backdrop-blur-2xl rounded-t-xl shadow-lg border border-white/40 dark:border-gray-700/50 overflow-hidden transform transition-transform duration-300 ease-out z-40 ${
               isMenuOpen
                 ? 'translate-y-0 pointer-events-auto'
                 : 'translate-y-full pointer-events-none'
@@ -102,8 +102,8 @@ const BottomNav = ({ onLogout }: BottomNavProps) => {
                     onClick={() => handleItemClick(child)}
                     className={`flex items-center space-x-3 px-4 py-3 transition-colors ${
                       isChildActive
-                        ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                        ? 'bg-emerald-50/50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400'
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-white/30 dark:hover:bg-gray-700/50'
                     }`}
                   >
                     <child.icon size={18} />
@@ -117,7 +117,7 @@ const BottomNav = ({ onLogout }: BottomNavProps) => {
       })}
 
       {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-50">
+      <div className="fixed bottom-0 left-0 right-0 bg-white/60 dark:bg-gray-900/70 backdrop-blur-2xl border-t border-white/40 dark:border-gray-700/50 shadow-[0_-4px_20px_rgba(0,0,0,0.1)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.3)] z-50">
         <div className="flex items-center justify-around h-16 px-2 sm:px-4">
           {navigationItems.map((item) => {
             const hasChildren = item.children && item.children.length > 0;
