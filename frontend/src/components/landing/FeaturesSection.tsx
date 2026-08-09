@@ -7,7 +7,7 @@ const FeaturesSection = () => (
   <section className="relative overflow-hidden bg-slate-50 py-24 sm:py-32">
     <div className="absolute inset-0 bg-grid opacity-50" />
     <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <SectionHeading eyebrow="Purpose-built toolkit" title="Know more. Miss less. Grow smarter." description="The critical workflows of a modern farm, designed to feel simple enough for every member of your team." />
+      <SectionHeading eyebrow="Purpose-built toolkit" title="Know more. Miss less." />
       <Reveal direction="left" className="marquee-track mt-4 overflow-hidden">
         <div className="animate-marquee-reverse flex w-max gap-5 px-2">
           {[...features, ...features].map((feature, index) => (

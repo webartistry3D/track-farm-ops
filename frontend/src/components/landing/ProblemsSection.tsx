@@ -11,7 +11,7 @@ const ProblemsSection = () => (
     <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <SectionHeading
         eyebrow="The reality on the ground"
-        title="Farming is hard enough without flying blind."
+        //title="Farming is hard enough without flying blind."
         description="When records are scattered across notebooks, spreadsheets, and group chats, the small operational gaps quickly become expensive losses."
       />
       <Reveal direction="left" className="marquee-track mt-4 overflow-hidden">
