@@ -38,6 +38,7 @@ const SolutionsSection = () => {
           light
           eyebrow="One calm command center"
           title="Everything your farm needs. Finally in one place."
+          titleDelay={0.3}
           //description="A single, secure operating system that connects the financial, physical, and people sides of your farm."
         />
 

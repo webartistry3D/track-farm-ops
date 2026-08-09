@@ -1,5 +1,4 @@
 import { Star } from 'lucide-react';
-import Reveal from '../animations/Reveal';
 import SectionHeading from './SectionHeading';
 import { testimonials } from './content';
 
@@ -27,11 +26,11 @@ const TestimonialsSection = () => {
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading eyebrow="Loved in the field" title="The numbers matter. So do the people behind them." /*description="Farm owners are replacing uncertainty with clear, confident action every day."*/ />
       </div>
-      <Reveal direction="left" className="marquee-track relative z-10 mt-4 overflow-hidden">
+      <div className="marquee-track relative z-10 mt-4 overflow-hidden">
         <div className="animate-marquee flex w-max gap-5 px-2">
           {doubledTestimonials.map((testimonial, index) => <TestimonialCard key={`${testimonial.name}-${index}`} testimonial={testimonial} />)}
         </div>
-      </Reveal>
+      </div>
     </section>
   );
 };

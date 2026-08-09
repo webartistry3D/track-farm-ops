@@ -555,7 +555,7 @@ const Dashboard = () => {
       {/* Quick Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div>
-          <h2 className="text-xl font-jetbrains-mono font-semibold mb-4 dark:text-white">Quick Actions</h2>
+          <h2 className="text-xl font-jetbrains-mono font-semibold mb-4 text-white">Quick Actions</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <Link to="/income" className="font-inter btn text-center bg-emerald-600/80 text-white hover:bg-emerald-700/90 backdrop-blur-sm border border-emerald-500/40 focus:ring-emerald-500">
               Record Income
@@ -577,47 +577,47 @@ const Dashboard = () => {
           
           {/* Quick Stats */}
           <div className="mt-6">
-            <h3 className="text-lg font-jetbrains-mono font-semibold mb-4 dark:text-white">Quick Stats</h3>
+            <h3 className="text-lg font-jetbrains-mono font-semibold mb-4 text-white">Quick Stats</h3>
             <div className="grid grid-cols-2 gap-3">
               <div 
                 onClick={() => handleCardClick('income')}
                 className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
               >
                 <div className="text-xl mb-1">📊</div>
-                <div className="text-xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
+                <div className="text-xl font-jetbrains-mono font-semibold text-white">
                   {incomeEntries.length}
                 </div>
-                <div className="text-sm font-inter text-gray-500 dark:text-gray-400">Income Entries</div>
+                <div className="text-sm font-inter text-white">Income Entries</div>
               </div>
               <div 
                 onClick={() => handleCardClick('expenses')}
                 className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
               >
                 <div className="text-xl mb-1">💸</div>
-                <div className="text-xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
+                <div className="text-xl font-jetbrains-mono font-semibold text-white">
                   {expenseEntries.length}
                 </div>
-                <div className="text-sm font-inter text-gray-500 dark:text-gray-400">Expense Entries</div>
+                <div className="text-sm font-inter text-white">Expense Entries</div>
               </div>
               <div 
                 onClick={() => handleCardClick('inventory')}
                 className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
               >
                 <div className="text-xl mb-1">📦</div>
-                <div className="text-xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
+                <div className="text-xl font-jetbrains-mono font-semibold text-white">
                   {inventoryItems.length}
                 </div>
-                <div className="text-sm font-inter text-gray-500 dark:text-gray-400">Inventory Items</div>
+                <div className="text-sm font-inter text-white">Inventory Items</div>
               </div>
               <div 
                 onClick={() => handleCardClick('assets')}
                 className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
               >
                 <div className="text-xl mb-1">🏗️</div>
-                <div className="text-xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
+                <div className="text-xl font-jetbrains-mono font-semibold text-white">
                   {assets.length}
                 </div>
-                <div className="text-sm font-inter text-gray-500 dark:text-gray-400">Assets</div>
+                <div className="text-sm font-inter text-white">Assets</div>
               </div>
             </div>
           </div>

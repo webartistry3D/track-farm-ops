@@ -44,13 +44,27 @@ const HowItWorksSection = () => {
             preserveAspectRatio="none"
             aria-hidden="true"
           >
+            <defs>
+              <marker
+                id="arrowhead"
+                markerWidth="8"
+                markerHeight="8"
+                refX="7"
+                refY="4"
+                orient="auto"
+                viewBox="0 0 10 8"
+              >
+                <path d="M 0 0 L 10 4 L 0 8 z" fill="rgba(255,255,255,0.9)" />
+              </marker>
+            </defs>
             <path
               d={wavePath}
               fill="none"
               stroke="rgba(255,255,255,0.75)"
-              strokeWidth="2.2"
+              strokeWidth="4"
               strokeDasharray="6 8"
               strokeLinecap="round"
+              markerEnd="url(#arrowhead)"
             />
 
             {nodes.map((node, i) => (

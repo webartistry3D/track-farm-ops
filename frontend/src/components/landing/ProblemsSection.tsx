@@ -14,8 +14,9 @@ const ProblemsSection = () => (
         title=" "
         // title="Farming is hard enough without flying blind."
         description="When records are scattered across notebooks, spreadsheets, and group chats, the small operational gaps quickly become expensive losses."
+        descriptionDelay={0.3}
       />
-      <Reveal direction="left" className="marquee-track mt-4 overflow-hidden">
+      <div className="marquee-track mt-4 overflow-hidden">
         <div className="animate-marquee-reverse flex w-max gap-5 px-2">
           {[...problems, ...problems].map((problem, index) => (
             <div key={`${problem.title}-${index}`} className="h-72 w-[320px] shrink-0 sm:w-[360px]">
@@ -23,7 +24,7 @@ const ProblemsSection = () => (
             </div>
           ))}
         </div>
-      </Reveal>
+      </div>
       <Reveal delay={0.2} className="mx-auto mt-12 flex max-w-lg items-start gap-4 rounded-2xl border border-rose-200 bg-white/80 p-5 shadow-sm backdrop-blur-sm">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-100 text-rose-600"><AlertTriangle className="h-5 w-5" /></span>
         <p className="pt-1 text-sm leading-6 text-slate-600"><strong className="text-slate-900">The cost of disconnected operations compounds daily.</strong></p>

@@ -3,16 +3,20 @@ import Reveal from '../animations/Reveal';
 interface SectionHeadingProps {
   eyebrow?: string;
   title: string;
+  titleDelay?: number;
   description?: string;
   descriptionClassName?: string;
+  descriptionDelay?: number;
   light?: boolean;
 }
 
 const SectionHeading = ({
   eyebrow,
   title,
+  titleDelay = 0,
   description,
   descriptionClassName,
+  descriptionDelay = 0,
   light = false,
 }: SectionHeadingProps) => (
   <Reveal className="mx-auto mb-12 max-w-3xl text-center md:mb-16">
@@ -27,17 +31,21 @@ const SectionHeading = ({
         {eyebrow}
       </span>
     )}
-    <h2
-      className={`font-jetbrains-mono text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl ${
-        light ? 'text-white' : 'text-slate-900'
-      }`}
-    >
-      {title}
-    </h2>
+    <Reveal delay={titleDelay}>
+      <h2
+        className={`font-jetbrains-mono text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl ${
+          light ? 'text-white' : 'text-slate-900'
+        }`}
+      >
+        {title}
+      </h2>
+    </Reveal>
     {description && (
-      <p className={`mx-auto mt-5 max-w-2xl text-base leading-7 sm:text-lg ${descriptionClassName ? descriptionClassName : light ? 'text-slate-300' : 'text-slate-600'}`}>
-        {description}
-      </p>
+      <Reveal delay={descriptionDelay}>
+        <p className={`mx-auto mt-5 max-w-2xl text-base leading-7 sm:text-lg ${descriptionClassName ? descriptionClassName : light ? 'text-slate-300' : 'text-slate-600'}`}>
+          {description}
+        </p>
+      </Reveal>
     )}
   </Reveal>
 );
