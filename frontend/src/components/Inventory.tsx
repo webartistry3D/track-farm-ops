@@ -950,7 +950,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Items</p>
-                <p className="text-3xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
+                <p className="text-4xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
                   {totals.totalItems.toLocaleString()}
                 </p>
               </div>
@@ -970,7 +970,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Categories</p>
-                <p className="text-3xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
+                <p className="text-4xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
                   {categories.length}
                 </p>
               </div>
@@ -989,7 +989,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Value</p>
-                <p className="text-3xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
+                <p className="text-4xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
                   {formatCompactCurrency(totals.totalValue)}
                 </p>
               </div>
@@ -1014,7 +1014,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Livestock</p>
-                <p className="text-3xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
+                <p className="text-4xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
                   {totals.livestockItems}
                 </p>
               </div>
@@ -1034,7 +1034,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Produce</p>
-                <p className="text-3xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
+                <p className="text-4xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
                   {totals.produceItems}
                 </p>
               </div>
@@ -1054,7 +1054,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Edibles</p>
-                <p className="text-3xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
+                <p className="text-4xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
                   {totals.consumablesItems}
                 </p>
               </div>
@@ -1074,7 +1074,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Low Stock</p>
-                <p className="text-3xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
+                <p className="text-4xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
                   {totals.lowStockItems}
                 </p>
               </div>
