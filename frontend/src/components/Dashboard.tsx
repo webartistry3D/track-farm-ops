@@ -262,10 +262,10 @@ const Dashboard = () => {
     <div className="space-y-6">
       {/* Welcome Section */}
       <div className="rounded-lg p-0">
-        <h1 className="text-xl font-inter font-regular text-white mb-0">
+        <h1 className="text-xl font-inter font-regular text-gray-900 dark:text-white mb-0">
           {getGreeting()} {user.name?.split(' ')[0]}! 
         </h1>
-        <p className="font-inter text-white text-sm mt-0">
+        <p className="font-inter text-gray-600 dark:text-gray-400 text-sm mt-0">
           Here's your business update..
         </p>
       </div>
@@ -555,7 +555,7 @@ const Dashboard = () => {
       {/* Quick Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div>
-          <h2 className="text-xl font-jetbrains-mono font-semibold mb-4 text-white">Quick Actions</h2>
+          <h2 className="text-xl font-jetbrains-mono font-semibold mb-4 text-gray-900 dark:text-white">Quick Actions</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <Link to="/income" className="font-inter btn text-center bg-emerald-600 text-white hover:bg-emerald-700 border border-emerald-500 focus:ring-emerald-500">
               Record Income
@@ -577,54 +577,54 @@ const Dashboard = () => {
           
           {/* Quick Stats */}
           <div className="mt-6">
-            <h3 className="text-lg font-jetbrains-mono font-semibold mb-4 text-white">Quick Stats</h3>
+            <h3 className="text-xl font-jetbrains-mono font-semibold mb-4 text-gray-900 dark:text-white">Quick Stats</h3>
             <div className="grid grid-cols-2 gap-3">
               <div 
                 onClick={() => handleCardClick('income')}
                 className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
               >
                 <div className="text-xl mb-1">📊</div>
-                <div className="text-3xl font-jetbrains-mono font-semibold text-white">
+                <div className="text-3xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
                   {incomeEntries.length}
                 </div>
-                <div className="text-sm font-inter text-white">Income Entries</div>
+                <div className="text-sm font-inter text-gray-600 dark:text-gray-400">Income Entries</div>
               </div>
               <div 
                 onClick={() => handleCardClick('expenses')}
                 className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
               >
                 <div className="text-xl mb-1">💸</div>
-                <div className="text-3xl font-jetbrains-mono font-semibold text-white">
+                <div className="text-3xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
                   {expenseEntries.length}
                 </div>
-                <div className="text-sm font-inter text-white">Expense Entries</div>
+                <div className="text-sm font-inter text-gray-600 dark:text-gray-400">Expense Entries</div>
               </div>
               <div 
                 onClick={() => handleCardClick('inventory')}
                 className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
               >
                 <div className="text-xl mb-1">📦</div>
-                <div className="text-3xl font-jetbrains-mono font-semibold text-white">
+                <div className="text-3xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
                   {inventoryItems.length}
                 </div>
-                <div className="text-sm font-inter text-white">Inventory Items</div>
+                <div className="text-sm font-inter text-gray-600 dark:text-gray-400">Inventory Items</div>
               </div>
               <div 
                 onClick={() => handleCardClick('assets')}
                 className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
               >
                 <div className="text-xl mb-1">🏗️</div>
-                <div className="text-3xl font-jetbrains-mono font-semibold text-white">
+                <div className="text-3xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
                   {assets.length}
                 </div>
-                <div className="text-sm font-inter text-white">Assets</div>
+                <div className="text-sm font-inter text-gray-600 dark:text-gray-400">Assets</div>
               </div>
             </div>
           </div>
         </div>
 
         <div>
-          <h2 className="text-xl font-jetbrains-mono font-semibold text-white mb-4">Recent Activity</h2>
+          <h2 className="text-xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white mb-4">Recent Activity</h2>
           <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow rounded-lg p-0">
             {incomeEntries.length > 0 || expenseEntries.length > 0 ? (
               <div className="space-y-3 max-h-96 overflow-y-auto">
