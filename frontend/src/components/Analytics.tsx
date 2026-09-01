@@ -478,13 +478,13 @@ const Analytics = () => {
     color: string;
   }) => {
     const getGradientColor = () => {
-      if (color === "bg-emerald-500") return "bg-emerald-50/60 dark:bg-emerald-900/30 border border-emerald-200/60 dark:border-emerald-700/50";
-      if (color === "bg-red-500") return "bg-red-50/60 dark:bg-red-900/30 border border-red-200/60 dark:border-red-700/50";
-      if (color === "bg-blue-500") return "bg-blue-50/60 dark:bg-blue-900/30 border border-blue-200/60 dark:border-blue-700/50";
-      if (color === "bg-orange-500") return "bg-orange-50/60 dark:bg-orange-900/30 border border-orange-200/60 dark:border-orange-700/50";
-      if (color === "bg-indigo-500") return "bg-indigo-50/60 dark:bg-indigo-900/30 border border-indigo-200/60 dark:border-indigo-700/50";
-      if (color === "bg-purple-500") return "bg-purple-50/60 dark:bg-purple-900/30 border border-purple-200/60 dark:border-purple-700/50";
-      return "bg-gray-50/60 dark:bg-gray-900/30 border border-gray-200/60 dark:border-gray-700/50";
+      if (color === "bg-emerald-500") return "bg-emerald-50 dark:bg-gray-800 border border-emerald-200 dark:border-emerald-700";
+      if (color === "bg-red-500") return "bg-red-50 dark:bg-gray-800 border border-red-200 dark:border-red-700";
+      if (color === "bg-blue-500") return "bg-blue-50 dark:bg-gray-800 border border-blue-200 dark:border-blue-700";
+      if (color === "bg-orange-500") return "bg-orange-50 dark:bg-gray-800 border border-orange-200 dark:border-orange-700";
+      if (color === "bg-indigo-500") return "bg-indigo-50 dark:bg-gray-800 border border-indigo-200 dark:border-indigo-700";
+      if (color === "bg-purple-500") return "bg-purple-50 dark:bg-gray-800 border border-purple-200 dark:border-purple-700";
+      return "bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700";
     };
 
     const getIconGradientColor = () => {
@@ -518,7 +518,7 @@ const Analytics = () => {
           // Handle card click - could navigate to detailed view or filter
           console.log('Analytics card clicked:', title);
         }}
-        className={`group backdrop-blur-md ${getGradientColor()} rounded-xl p-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer`}
+        className={`group ${getGradientColor()} rounded-xl p-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer`}
       >
         <div className="flex items-start justify-between mb-3">
           <div className="flex flex-col space-y-1">
@@ -547,7 +547,7 @@ const Analytics = () => {
 
   return (
     <div className="min-h-screen">
-      <div className="bg-white/50 dark:bg-gray-800/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30">
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-0 sm:px-0 lg:px-0 py-0">
           {/*<div className="flex items-center justify-between">
             <div>
@@ -601,7 +601,7 @@ const Analytics = () => {
             {financialLoading ? (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {[...Array(3)].map((_, i) => (
-                  <div key={i} className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-xl shadow-sm p-6">
+                  <div key={i} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-6">
                     <div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
                     <div className="h-8 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
                     <div className="h-3 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
@@ -658,7 +658,7 @@ const Analytics = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-4">
             {/* Quick Stats */}
             <div className="space-y-4">
-              <div className="bg-emerald-50/60 dark:bg-emerald-900/30 backdrop-blur-md border border-emerald-200/60 dark:border-emerald-700/50 rounded-xl p-4">
+              <div className="bg-emerald-50 dark:bg-gray-800 border border-emerald-200 dark:border-emerald-700 rounded-xl p-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">Avg Daily Revenue</p>
@@ -672,7 +672,7 @@ const Analytics = () => {
                 </div>
               </div>
 
-              <div className="bg-blue-50/60 dark:bg-blue-900/30 backdrop-blur-md border border-blue-200/60 dark:border-blue-700/50 rounded-xl p-4">
+              <div className="bg-blue-50 dark:bg-gray-800 border border-blue-200 dark:border-blue-700 rounded-xl p-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">Profit Margin</p>
@@ -689,7 +689,7 @@ const Analytics = () => {
                 </div>
               </div>
 
-              <div className="bg-purple-50/60 dark:bg-purple-900/30 backdrop-blur-md border border-purple-200/60 dark:border-purple-700/50 rounded-xl p-4">
+              <div className="bg-purple-50 dark:bg-gray-800 border border-purple-200 dark:border-purple-700 rounded-xl p-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">Growth Rate</p>
@@ -715,7 +715,7 @@ const Analytics = () => {
                 Income by Category
               </h2>
             {financialLoading ? (
-              <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-xl shadow-sm p-6">
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-6">
                 <div className="h-6 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-4"></div>
                 <div className="space-y-3">
                   {[...Array(4)].map((_, i) => (
@@ -735,7 +735,7 @@ const Analytics = () => {
                 </div>
               </div>
             ) : (
-              <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-xl shadow-sm p-6">
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-6">
                 {!financialSummary?.incomeByCategory || financialSummary.incomeByCategory.length === 0 ? (
                   <div className="text-center py-8">
                     <PieChart className="w-12 h-12 text-gray-400 mx-auto mb-2" />
@@ -766,7 +766,7 @@ const Analytics = () => {
                                 }).join(', ')})`
                               }}
                             >
-                              <div className="absolute inset-4 bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-full flex items-center justify-center">
+                              <div className="absolute inset-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full flex items-center justify-center">
                                 <div className="text-center">
                                   <p className="text-lg font-bold text-gray-900 dark:text-white">
                                     {formatCompactCurrency(totalIncome)}
@@ -829,7 +829,7 @@ const Analytics = () => {
               Expense by Category
             </h2>
             {financialLoading ? (
-              <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-xl shadow-sm p-6">
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-6">
                 <div className="h-6 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-4"></div>
                 <div className="space-y-3">
                   {[...Array(4)].map((_, i) => (
@@ -849,7 +849,7 @@ const Analytics = () => {
                 </div>
               </div>
             ) : (
-              <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-xl shadow-sm p-6">
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-6">
                 {!financialSummary?.expensesByCategory || financialSummary.expensesByCategory.length === 0 ? (
                   <div className="text-center py-8">
                     <PieChart className="w-12 h-12 text-gray-400 mx-auto mb-2" />
@@ -880,7 +880,7 @@ const Analytics = () => {
                                 }).join(', ')})`
                               }}
                             >
-                              <div className="absolute inset-4 bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-full flex items-center justify-center">
+                              <div className="absolute inset-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full flex items-center justify-center">
                                 <div className="text-center">
                                   <p className="text-lg font-bold text-gray-900 dark:text-white">
                                     {formatCompactCurrency(totalExpenses)}
@@ -947,7 +947,7 @@ const Analytics = () => {
           {inventoryLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               {[...Array(4)].map((_, i) => (
-                <div key={i} className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-xl shadow-sm p-6">
+                <div key={i} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-6">
                   <div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
                   <div className="h-8 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
                   <div className="h-3 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
@@ -992,7 +992,7 @@ const Analytics = () => {
           )}
         </div>
 
-        <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 shadow rounded-lg p-4 mb-4">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow rounded-lg p-4 mb-4">
           <div className="flex flex-col gap-4">
             <div className="overflow-x-auto pb-2">
               <div className="flex items-center gap-2 min-w-max">
@@ -1001,8 +1001,8 @@ const Analytics = () => {
                   onClick={() => setDateFilter('today')}
                   className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                     dateFilter === 'today'
-                      ? 'bg-emerald-400/80 text-emerald-950 backdrop-blur-sm'
-                      : 'bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-700 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/40 dark:hover:bg-gray-600/40'
+                      ? 'bg-emerald-400 text-emerald-950 '
+                      : 'bg-white dark:bg-gray-800  text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
                   }`}
                 >
                   Today
@@ -1011,8 +1011,8 @@ const Analytics = () => {
                   onClick={() => setDateFilter('yesterday')}
                   className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                     dateFilter === 'yesterday'
-                      ? 'bg-emerald-400/80 text-emerald-950 backdrop-blur-sm'
-                      : 'bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-700 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/40 dark:hover:bg-gray-600/40'
+                      ? 'bg-emerald-400 text-emerald-950 '
+                      : 'bg-white dark:bg-gray-800  text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
                   }`}
                 >
                   Yesterday
@@ -1021,8 +1021,8 @@ const Analytics = () => {
                   onClick={() => setDateFilter('last7days')}
                   className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                     dateFilter === 'last7days'
-                      ? 'bg-emerald-400/80 text-emerald-950 backdrop-blur-sm'
-                      : 'bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-700 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/40 dark:hover:bg-gray-600/40'
+                      ? 'bg-emerald-400 text-emerald-950 '
+                      : 'bg-white dark:bg-gray-800  text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
                   }`}
                 >
                   Last 7 Days
@@ -1031,8 +1031,8 @@ const Analytics = () => {
                   onClick={() => setDateFilter('last30days')}
                   className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                     dateFilter === 'last30days'
-                      ? 'bg-emerald-400/80 text-emerald-950 backdrop-blur-sm'
-                      : 'bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-700 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/40 dark:hover:bg-gray-600/40'
+                      ? 'bg-emerald-400 text-emerald-950 '
+                      : 'bg-white dark:bg-gray-800  text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
                   }`}
                 >
                   Last 30 Days
@@ -1041,8 +1041,8 @@ const Analytics = () => {
                   onClick={() => setDateFilter('allTime')}
                   className={`flex-shrink-0 px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors duration-200 ${
                     dateFilter === 'allTime'
-                      ? 'bg-emerald-400/80 text-emerald-950 backdrop-blur-sm'
-                      : 'bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-700 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/40 dark:hover:bg-gray-600/40'
+                      ? 'bg-emerald-400 text-emerald-950 '
+                      : 'bg-white dark:bg-gray-800  text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
                   }`}
                 >
                   All Time
@@ -1099,7 +1099,7 @@ const Analytics = () => {
             {/* Crop Management Widget */}
             <div 
               onClick={() => setShowCropModal(true)}
-              className="bg-emerald-50/60 dark:bg-emerald-900/30 backdrop-blur-md border border-emerald-200/60 dark:border-emerald-700/50 rounded-xl p-6 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
+              className="bg-emerald-50 dark:bg-gray-800 border border-emerald-200 dark:border-emerald-700 rounded-xl p-6 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
@@ -1134,7 +1134,7 @@ const Analytics = () => {
             {/* Soil Management Widget */}
             <div 
               onClick={() => setShowSoilModal(true)}
-              className="bg-amber-50/60 dark:bg-amber-900/30 backdrop-blur-md border border-amber-200/60 dark:border-amber-700/50 rounded-xl p-6 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
+              className="bg-amber-50 dark:bg-gray-800 border border-amber-200 dark:border-amber-700 rounded-xl p-6 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
@@ -1169,7 +1169,7 @@ const Analytics = () => {
             {/* Weather Impact Widget */}
             <div 
               onClick={() => setShowWeatherModal(true)}
-              className="bg-blue-50/60 dark:bg-blue-900/30 backdrop-blur-md border border-blue-200/60 dark:border-blue-700/50 rounded-xl p-6 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
+              className="bg-blue-50 dark:bg-gray-800 border border-blue-200 dark:border-blue-700 rounded-xl p-6 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
@@ -1216,7 +1216,7 @@ const Analytics = () => {
             {/* Irrigation Status */}
             <div 
               onClick={() => setShowIrrigationModal(true)}
-              className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-xl shadow-sm p-6 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
+              className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-6 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
             >
               <div className="flex items-center justify-between mb-4">
                 <div className="p-2 bg-blue-100 dark:bg-blue-900/20 rounded-lg">
@@ -1250,7 +1250,7 @@ const Analytics = () => {
             {/* Pest Control */}
             <div 
               onClick={() => setShowPestModal(true)}
-              className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-xl shadow-sm p-6 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
+              className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-6 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
             >
               <div className="flex items-center justify-between mb-4">
                 <div className="p-2 bg-red-100 dark:bg-red-900/20 rounded-lg">
@@ -1284,7 +1284,7 @@ const Analytics = () => {
             {/* Equipment Status */}
             <div 
               onClick={() => setShowEquipmentModal(true)}
-              className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-xl shadow-sm p-6 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
+              className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-6 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
             >
               <div className="flex items-center justify-between mb-4">
                 <div className="p-2 bg-purple-100 dark:bg-purple-900/20 rounded-lg">
@@ -1318,7 +1318,7 @@ const Analytics = () => {
             {/* Field Activity */}
             <div 
               onClick={() => setShowFieldModal(true)}
-              className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-xl shadow-sm p-6 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
+              className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-6 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
             >
               <div className="flex items-center justify-between mb-4">
                 <div className="p-2 bg-emerald-100 dark:bg-emerald-900/20 rounded-lg">
@@ -1355,7 +1355,7 @@ const Analytics = () => {
         
         {/* Crop Management Modal */}
         {showCropModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 bg-black bg-opacity-60  flex items-center justify-center z-50 p-4">
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
               <div className="bg-gradient-to-r from-emerald-600 to-emerald-600 text-white p-6">
                 <div className="flex items-center justify-between">
@@ -1544,7 +1544,7 @@ const Analytics = () => {
 
         {/* Soil Management Modal */}
         {showSoilModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 bg-black bg-opacity-60  flex items-center justify-center z-50 p-4">
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
               <div className="bg-gradient-to-r from-amber-600 to-orange-600 text-white p-6">
                 <div className="flex items-center justify-between">
@@ -1744,7 +1744,7 @@ const Analytics = () => {
 
         {/* Weather Impact Modal */}
         {showWeatherModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 bg-black bg-opacity-60  flex items-center justify-center z-50 p-4">
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
               <div className="bg-gradient-to-r from-blue-600 to-sky-600 text-white p-6">
                 <div className="flex items-center justify-between">
@@ -1827,7 +1827,7 @@ const Analytics = () => {
 
         {/* Irrigation Status Modal */}
         {showIrrigationModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 bg-black bg-opacity-60  flex items-center justify-center z-50 p-4">
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
               <div className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-6">
                 <div className="flex items-center justify-between">
@@ -2014,7 +2014,7 @@ const Analytics = () => {
 
         {/* Pest Control Modal */}
         {showPestModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 bg-black bg-opacity-60  flex items-center justify-center z-50 p-4">
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
               <div className="bg-gradient-to-r from-red-600 to-orange-600 text-white p-6">
                 <div className="flex items-center justify-between">
@@ -2216,7 +2216,7 @@ const Analytics = () => {
 
         {/* Equipment Status Modal */}
         {showEquipmentModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 bg-black bg-opacity-60  flex items-center justify-center z-50 p-4">
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
               <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-6">
                 <div className="flex items-center justify-between">
@@ -2295,7 +2295,7 @@ const Analytics = () => {
 
         {/* Field Activity Modal */}
         {showFieldModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 bg-black bg-opacity-60  flex items-center justify-center z-50 p-4">
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
               <div className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white p-6">
                 <div className="flex items-center justify-between">
@@ -2373,7 +2373,7 @@ const Analytics = () => {
 
         {/* Inventory Modal */}
         {showInventoryModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 bg-black bg-opacity-60  flex items-center justify-center z-50 p-4">
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-6xl max-h-[90vh] overflow-hidden flex flex-col">
               <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6">
                 <div className="flex items-center justify-between">

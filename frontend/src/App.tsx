@@ -25,6 +25,7 @@ import Contact from './components/Contact';
 import Privacy from './components/Privacy';
 import Terms from './components/Terms';
 import Pricing from './components/Pricing';
+import Campaign from './components/Campaign';
 import SuperUserRoutes from './components/SuperUserRoutes';
 import SuperUserSignup from './components/SuperUserSignup';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -135,6 +136,7 @@ const AppRoutes = () => {
       <Route path="/privacy" element={<Privacy />} />
       <Route path="/terms" element={<Terms />} />
       <Route path="/pricing" element={<Pricing />} />
+      <Route path="/support" element={<Campaign />} />
       <Route path="/super-user-signup" element={<SuperUserSignup />} />
       
       {/* Superuser Routes - Separate from regular user routes */}

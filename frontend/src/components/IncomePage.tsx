@@ -1834,14 +1834,14 @@ Generated on: ${new Date().toLocaleString()}
           </h2>*/}
 
           {/* Tab Navigation */}
-          <div className="bg-white/50 dark:bg-gray-800/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg p-2 mb-6">
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-2 mb-6">
             <nav className="flex space-x-2 overflow-x-auto scrollbar-hide">
               <button
                 onClick={() => handleTabChange('record')}
                 className={`py-2 px-3 rounded-lg font-medium text-sm flex items-center gap-2 whitespace-nowrap transition-all duration-200 ${
                   activeTab === 'record'
-                    ? 'bg-emerald-500/80 text-white backdrop-blur-sm shadow-sm'
-                    : 'bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-600 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/50 dark:hover:bg-gray-600/40'
+                    ? 'bg-emerald-500 text-white  shadow-sm'
+                    : 'bg-white dark:bg-gray-800  text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'
                 }`}
               >
                 <Plus className="h-4 w-4" />
@@ -1851,8 +1851,8 @@ Generated on: ${new Date().toLocaleString()}
                 onClick={() => handleTabChange('invoice')}
                 className={`py-2 px-3 rounded-lg font-medium text-sm flex items-center gap-2 whitespace-nowrap transition-all duration-200 ${
                   activeTab === 'invoice'
-                    ? 'bg-emerald-500/80 text-white backdrop-blur-sm shadow-sm'
-                    : 'bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-600 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/50 dark:hover:bg-gray-600/40'
+                    ? 'bg-emerald-500 text-white  shadow-sm'
+                    : 'bg-white dark:bg-gray-800  text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'
                 }`}
               >
                 <FileText className="h-4 w-4" />
@@ -1862,8 +1862,8 @@ Generated on: ${new Date().toLocaleString()}
                 onClick={() => handleTabChange('invoices')}
                 className={`py-2 px-3 rounded-lg font-medium text-sm flex items-center gap-2 whitespace-nowrap transition-all duration-200 ${
                   activeTab === 'invoices'
-                    ? 'bg-emerald-500/80 text-white backdrop-blur-sm shadow-sm'
-                    : 'bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-600 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/50 dark:hover:bg-gray-600/40'
+                    ? 'bg-emerald-500 text-white  shadow-sm'
+                    : 'bg-white dark:bg-gray-800  text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'
                 }`}
               >
                 <Table className="h-4 w-4" />
@@ -1873,8 +1873,8 @@ Generated on: ${new Date().toLocaleString()}
                 onClick={() => handleTabChange('records')}
                 className={`py-2 px-3 rounded-lg font-medium text-sm flex items-center gap-2 whitespace-nowrap transition-all duration-200 ${
                   activeTab === 'records'
-                    ? 'bg-emerald-500/80 text-white backdrop-blur-sm shadow-sm'
-                    : 'bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-600 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/50 dark:hover:bg-gray-600/40'
+                    ? 'bg-emerald-500 text-white  shadow-sm'
+                    : 'bg-white dark:bg-gray-800  text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'
                 }`}
               >
                 <span className="h-4 w-4 flex items-center justify-center text-sm font-bold">₦</span>
@@ -1886,8 +1886,8 @@ Generated on: ${new Date().toLocaleString()}
                     onClick={() => handleTabChange('vat' as any)}
                     className={`py-2 px-3 rounded-lg font-medium text-sm flex items-center gap-2 whitespace-nowrap transition-all duration-200 ${
                       activeTab === 'vat'
-                        ? 'bg-emerald-500/80 text-white backdrop-blur-sm shadow-sm'
-                        : 'bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-600 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/50 dark:hover:bg-gray-600/40'
+                        ? 'bg-emerald-500 text-white  shadow-sm'
+                        : 'bg-white dark:bg-gray-800  text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'
                     }`}
                   >
                     <Receipt className="h-4 w-4" />
@@ -1900,7 +1900,7 @@ Generated on: ${new Date().toLocaleString()}
 
           {/* Record Income Tab */}
           {activeTab === 'record' && (
-            <div className="bg-white/50 dark:bg-gray-800/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg p-4 sm:p-6">
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6">
               <form onSubmit={handleSubmit} className="space-y-4">
                 {/* First Row: Select from Inventory, Description, Quantity, Unit Price */}
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
@@ -2248,7 +2248,7 @@ Generated on: ${new Date().toLocaleString()}
 
           {/* Create Invoice Tab */}
           {activeTab === 'invoice' && (
-            <div className="bg-white/50 dark:bg-gray-800/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg p-4 sm:p-6">
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6">
               {!generatedInvoice ? (
                 <form onSubmit={handleInvoiceSubmit} className="space-y-4">
                   {/* Client Information */}
@@ -2686,7 +2686,7 @@ Generated on: ${new Date().toLocaleString()}
 
           {/* Invoice Records Tab */}
           {activeTab === 'invoices' && (
-            <div className="bg-white/50 dark:bg-gray-800/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg p-4 sm:p-6">
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6">
               {invoicesLoading ? (
                 <div className="text-center py-8">
                   <div className="inline-flex items-center space-x-2 text-gray-600">
@@ -3302,7 +3302,7 @@ Generated on: ${new Date().toLocaleString()}
 
           {/* Actions Modal */}
           {showActionsModal && selectedInvoice && (
-            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div className="fixed inset-0 bg-black/50  flex items-center justify-center p-4 z-50">
               <div className="w-full max-w-xs max-h-[75vh] overflow-y-auto p-4 border shadow-lg rounded-lg bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-medium text-gray-900 dark:text-white">Invoice Actions</h3>
@@ -3582,7 +3582,7 @@ Generated on: ${new Date().toLocaleString()}
 
           {/* Income Records Tab */}
           {activeTab === 'records' && (
-            <div className="bg-white/50 dark:bg-gray-800/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg p-4 sm:p-6">
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6">
               {incomesLoading ? (
                 <div className="text-center py-8">
                   <div className="inline-flex items-center space-x-2 text-gray-600">
@@ -3765,7 +3765,7 @@ Generated on: ${new Date().toLocaleString()}
 
           {/* VAT Records Tab */}
           {activeTab === 'vat' && (
-            <div className="bg-white/50 dark:bg-gray-800/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg p-4 sm:p-6 space-y-6">
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6 space-y-6">
               {/* Enhanced Header Section */}
               {/*<div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-xl p-6 border border-purple-200 dark:border-purple-700">
                 <div className="flex items-center justify-between">

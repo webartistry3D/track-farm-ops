@@ -288,7 +288,7 @@ const SuperUserSignup = () => {
         {renderStepIndicator()}
 
         {/* Form */}
-        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20">
+        <div className="bg-white/10  rounded-2xl p-8 shadow-2xl border border-white/20">
           {success ? (
             <div className="text-center py-8">
               <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">

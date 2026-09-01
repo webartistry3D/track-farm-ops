@@ -557,7 +557,7 @@ const SuperUserDashboard = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
         <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-shadow duration-300">
           <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-white/20 rounded-lg backdrop-blur-sm">
+            <div className="p-3 bg-white/20 rounded-lg ">
               <Users className="w-6 h-6" />
             </div>
             <div className="text-right">
@@ -578,7 +578,7 @@ const SuperUserDashboard = () => {
 
         <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-shadow duration-300">
           <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-white/20 rounded-lg backdrop-blur-sm">
+            <div className="p-3 bg-white/20 rounded-lg ">
               <UserCheck className="w-6 h-6" />
             </div>
             <div className="text-right">
@@ -598,7 +598,7 @@ const SuperUserDashboard = () => {
 
         <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-shadow duration-300">
           <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-white/20 rounded-lg backdrop-blur-sm">
+            <div className="p-3 bg-white/20 rounded-lg ">
               <Building className="w-6 h-6" />
             </div>
             <div className="text-right">
@@ -618,7 +618,7 @@ const SuperUserDashboard = () => {
 
         <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-shadow duration-300">
           <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-white/20 rounded-lg backdrop-blur-sm">
+            <div className="p-3 bg-white/20 rounded-lg ">
               <Activity className="w-6 h-6" />
             </div>
             <div className="text-right">

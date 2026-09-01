@@ -39,7 +39,7 @@ export const DashboardSkeleton: React.FC = () => (
       </div>
 
       {/* Financial Overview / Date Filter */}
-      <CardSkeleton className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 shadow rounded-lg px-2 py-2 mb-6">
+      <CardSkeleton className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow rounded-lg px-2 py-2 mb-6">
         <div className="overflow-x-auto pb-2">
           <div className="flex items-center gap-2 min-w-max">
             {[...Array(5)].map((_, i) => (
@@ -81,10 +81,10 @@ export const DashboardSkeleton: React.FC = () => (
         {/* Right Column - Recent Activity */}
         <div>
           <SkeletonElement className="h-6 w-36 mb-4" />
-          <CardSkeleton className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 shadow rounded-lg p-0">
+          <CardSkeleton className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow rounded-lg p-0">
             <div className="space-y-3 p-3 max-h-96 overflow-y-auto">
               {[...Array(6)].map((_, i) => (
-                <div key={i} className="flex items-center justify-between p-3 bg-white/30 dark:bg-gray-700/40 rounded-lg">
+                <div key={i} className="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-lg">
                   <div className="flex items-center space-x-3 flex-1">
                     <SkeletonElement className="w-2 h-2 rounded-full" />
                     <div className="flex-1 space-y-2">

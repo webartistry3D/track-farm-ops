@@ -89,7 +89,7 @@ const Assets = () => {
 
   if (!isOwner) {
     return (
-      <div className="bg-yellow-50/60 dark:bg-yellow-900/30 border border-yellow-200/60 dark:border-yellow-700/50 rounded-lg p-6 backdrop-blur-md">
+      <div className="bg-yellow-50 dark:bg-gray-800 border border-yellow-200 dark:border-yellow-700 rounded-lg p-6">
         <h3 className="text-lg font-medium text-yellow-900 mb-2">Access Restricted</h3>
         <p className="text-yellow-700">
           Asset management is only available to farm owners, managers, accountants, and inventory managers.
@@ -402,7 +402,7 @@ const Assets = () => {
       case 'under_maintenance': return 'bg-yellow-100 text-yellow-800';
       case 'damaged': return 'bg-red-100 text-red-800';
       case 'stolen': return 'bg-red-200 text-red-900';
-      case 'retired': return 'bg-gray-100/60 dark:bg-gray-700/40 backdrop-blur-sm border border-gray-200/60 dark:border-gray-600/30 text-gray-800';
+      case 'retired': return 'bg-gray-100 dark:bg-gray-700  border border-gray-200/60 dark:border-gray-600/30 text-gray-800';
       case 'sold': return 'bg-orange-100 text-orange-800';
       default: return 'bg-blue-100 text-blue-800';
     }
@@ -448,10 +448,10 @@ const Assets = () => {
               // Navigate to all assets view
               console.log('Total Assets clicked');
             }}
-            className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 p-4 lg:p-6 rounded-lg shadow cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center">
-              <div className="p-2 lg:p-3 bg-blue-100/60 dark:bg-blue-900/30 backdrop-blur-sm rounded-full">
+              <div className="p-2 lg:p-3 bg-blue-100 dark:bg-blue-900/20  rounded-full">
                 <TrendingUp className="w-5 h-5 lg:w-6 lg:h-6 text-blue-600 dark:text-blue-400" />
               </div>
               <div className="ml-3 lg:ml-4">
@@ -466,10 +466,10 @@ const Assets = () => {
               // Navigate to active assets
               console.log('Active Assets clicked');
             }}
-            className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 p-4 lg:p-6 rounded-lg shadow cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center">
-              <div className="p-2 lg:p-3 bg-emerald-100/60 dark:bg-emerald-900/30 backdrop-blur-sm rounded-full">
+              <div className="p-2 lg:p-3 bg-emerald-100 dark:bg-emerald-900/20  rounded-full">
                 <Wrench className="w-5 h-5 lg:w-6 lg:h-6 text-emerald-600 dark:text-emerald-400" />
               </div>
               <div className="ml-3 lg:ml-4">
@@ -486,10 +486,10 @@ const Assets = () => {
               // Navigate to maintenance assets
               console.log('Maintenance Assets clicked');
             }}
-            className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 p-4 lg:p-6 rounded-lg shadow cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center">
-              <div className="p-2 lg:p-3 bg-yellow-100/60 dark:bg-yellow-900/30 backdrop-blur-sm rounded-full">
+              <div className="p-2 lg:p-3 bg-yellow-100 dark:bg-yellow-900/20  rounded-full">
                 <Clock className="w-5 h-5 lg:w-6 lg:h-6 text-yellow-600 dark:text-yellow-400" />
               </div>
               <div className="ml-3 lg:ml-4">
@@ -506,10 +506,10 @@ const Assets = () => {
               // Navigate to assets with issues
               console.log('Asset Issues clicked');
             }}
-            className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 p-4 lg:p-6 rounded-lg shadow cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center">
-              <div className="p-2 lg:p-3 bg-red-100/60 dark:bg-red-900/30 backdrop-blur-sm rounded-full">
+              <div className="p-2 lg:p-3 bg-red-100 dark:bg-red-900/20  rounded-full">
                 <AlertTriangle className="w-5 h-5 lg:w-6 lg:h-6 text-red-600 dark:text-red-400" />
               </div>
               <div className="ml-3 lg:ml-4">
@@ -524,7 +524,7 @@ const Assets = () => {
       </div>
 
       {/* Filters and Search */}
-      <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-xl">
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:flex-wrap sm:gap-4 sm:items-center">
             <div className="w-full sm:flex-1 sm:min-w-64">
@@ -578,7 +578,7 @@ const Assets = () => {
       </div>
 
       {/* Tabs */}
-      <div className="bg-white/50 dark:bg-gray-800/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg p-2 mb-6">
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-2 mb-6">
         <div className="max-w-7xl mx-auto">
           <div className="flex overflow-x-auto justify-between">
             <div className="flex overflow-x-auto space-x-2">
@@ -588,8 +588,8 @@ const Assets = () => {
                   onClick={() => setActiveTab(tab as any)}
                   className={`py-2 px-4 rounded-lg font-medium text-xs sm:text-sm whitespace-nowrap flex-shrink-0 transition-all duration-200 ${
                     activeTab === tab
-                      ? 'bg-emerald-500/80 text-white backdrop-blur-sm shadow-sm'
-                      : 'bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-600 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/50 dark:hover:bg-gray-600/40'
+                      ? 'bg-emerald-500 text-white  shadow-sm'
+                      : 'bg-white dark:bg-gray-800  text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'
                   }`}
                 >
                   {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -610,12 +610,12 @@ const Assets = () => {
       {/* Content */}
       <div className="max-w-7xl mx-auto px-0 sm:px-0 lg:px-0 py-6">
         {activeTab === 'overview' && (
-          <div className="bg-white/50 dark:bg-gray-800/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg p-4 sm:p-6">
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6">
             {/* Assets Grid */}
-            <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg shadow overflow-hidden">
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="min-w-[700px] w-full divide-y divide-gray-200 dark:divide-gray-700">
-                  <thead className="bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm">
+                  <thead className="bg-white dark:bg-gray-800 ">
                     <tr>
                       <th className="px-2 sm:px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Asset</th>
                       <th className="px-2 sm:px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Category</th>
@@ -636,7 +636,7 @@ const Assets = () => {
                           // Handle asset click - could open details modal or navigate to asset details
                           console.log('Asset clicked:', asset.name);
                         }}
-                        className="hover:bg-white/40 dark:hover:bg-gray-600/40 transition-colors cursor-pointer"
+                        className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
                       >
                         <td className="px-2 sm:px-3 py-3 sm:py-4 whitespace-nowrap">
                           <div className="flex items-center">
@@ -717,11 +717,11 @@ const Assets = () => {
         )}
 
         {activeTab === 'downtime' && (
-          <div className="bg-white/50 dark:bg-gray-800/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg p-4 sm:p-6 space-y-6">
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6 space-y-6">
             
 
             {/* Maintenance Schedule */}
-            <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg shadow p-6 mb-6">
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow p-6 mb-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Maintenance Schedule</h3>
               {assets.filter(a => a.status === 'active').length === 0 ? (
                 <div className="text-center py-8">
@@ -731,7 +731,7 @@ const Assets = () => {
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {assets.filter(a => a.status === 'active').map((asset) => (
-                    <div key={asset.id} className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg p-3 sm:p-4">
+                    <div key={asset.id} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 sm:p-4">
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2 space-y-2 sm:space-y-0">
                         <h4 className="font-medium text-gray-900 dark:text-white text-sm sm:text-base truncate">{asset.name}</h4>
                         <span className="text-sm text-emerald-600 dark:text-emerald-400 font-medium whitespace-nowrap">Schedule</span>
@@ -773,7 +773,7 @@ const Assets = () => {
             </div>
 
             {/* Recent Maintenance Records */}
-            <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg shadow p-6">
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recent Maintenance Records</h3>
               {maintenanceRecords.length === 0 ? (
                 <div className="text-center py-8">
@@ -783,7 +783,7 @@ const Assets = () => {
               ) : (
                 <div className="overflow-x-auto">
                   <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                    <thead className="bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm">
+                    <thead className="bg-white dark:bg-gray-800 ">
                       <tr>
                         <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Asset</th>
                         <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
@@ -819,9 +819,9 @@ const Assets = () => {
         )}
 
         {activeTab === 'incidents' && (
-          <div className="bg-white/50 dark:bg-gray-800/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg p-4 sm:p-6 space-y-6">
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6 space-y-6">
             {/* Incident Reporting Form */}
-            <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg shadow p-6 mb-6">
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow p-6 mb-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">Report New Incident</h3>
               <div className="space-y-6">
                 {/* Row 1: Asset, Severity, Date, Time */}
@@ -962,7 +962,7 @@ const Assets = () => {
             </div>
 
             {/* Recent Incidents */}
-            <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg shadow p-6">
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recent Incidents</h3>
               {incidentReports.length === 0 ? (
                 <div className="text-center py-8">
@@ -972,7 +972,7 @@ const Assets = () => {
               ) : (
                 <div className="overflow-x-auto">
                   <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                    <thead className="bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm">
+                    <thead className="bg-white dark:bg-gray-800 ">
                       <tr>
                         <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Asset</th>
                         <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Operator</th>
@@ -1025,10 +1025,10 @@ const Assets = () => {
         )}
 
         {activeTab === 'analytics' && (
-          <div className="bg-white/50 dark:bg-gray-800/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg p-4 sm:p-6 space-y-6">
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6 space-y-6">
             {/* Key Performance Indicators */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6">
-              <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 p-4 lg:p-6 rounded-lg shadow">
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow">
                 <div className="flex items-center">
                   <div className="p-2 lg:p-3 bg-blue-100 dark:bg-blue-900">
                     <TrendingUp className="w-5 h-5 lg:w-6 lg:h-6 text-blue-600 dark:text-blue-400" />
@@ -1041,7 +1041,7 @@ const Assets = () => {
                 </div>
               </div>
               
-              <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 p-4 lg:p-6 rounded-lg shadow">
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow">
                 <div className="flex items-center">
                   <div className="p-2 lg:p-3 bg-emerald-100 dark:bg-emerald-900">
                     <BarChart3 className="w-5 h-5 lg:w-6 lg:h-6 text-emerald-600 dark:text-emerald-400" />
@@ -1054,7 +1054,7 @@ const Assets = () => {
                 </div>
               </div>
 
-              <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 p-4 lg:p-6 rounded-lg shadow">
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow">
                 <div className="flex items-center">
                   <div className="p-2 lg:p-3 bg-yellow-100 dark:bg-yellow-900">
                     <Clock className="w-5 h-5 lg:w-6 lg:h-6 text-yellow-600 dark:text-yellow-400" />
@@ -1067,7 +1067,7 @@ const Assets = () => {
                 </div>
               </div>
 
-              <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 p-4 lg:p-6 rounded-lg shadow">
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow">
                 <div className="flex items-center">
                   <div className="p-2 lg:p-3 bg-red-100 dark:bg-red-900">
                     <AlertTriangle className="w-5 h-5 lg:w-6 lg:h-6 text-red-600 dark:text-red-400" />
@@ -1082,7 +1082,7 @@ const Assets = () => {
             </div>
 
             {/* Asset Utilization Chart */}
-            <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg shadow p-6 mb-6">
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow p-6 mb-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Asset Utilization by Category</h3>
               {assets.length === 0 ? (
                 <div className="text-center py-8">
@@ -1157,7 +1157,7 @@ const Assets = () => {
             </div>
 
             {/* Maintenance Cost Trends */}
-            <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg shadow p-6 mb-6">
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow p-6 mb-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Maintenance Cost Trends (Last 12 Months)</h3>
               {(
                 <div className="h-64">
@@ -1179,7 +1179,7 @@ const Assets = () => {
             </div>
 
             {/* Top Assets by Cost */}
-            <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg shadow p-6 mb-6">
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow p-6 mb-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Top Assets by Maintenance Cost</h3>
               {assets.length === 0 ? (
                 <div className="text-center py-8">
@@ -1189,7 +1189,7 @@ const Assets = () => {
               ) : (
                 <div className="space-y-3">
                   {assets.slice(0, 4).map((asset, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm border border-white/30 dark:border-gray-600/30 rounded-lg">
+                    <div key={index} className="flex items-center justify-between p-3 bg-white dark:bg-gray-800  border border-gray-200 dark:border-gray-700 rounded-lg">
                       <div className="flex items-center">
                         <span className="text-lg font-medium text-gray-900 dark:text-white">{index + 1}. {asset.name}</span>
                         <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">({asset.category})</span>
@@ -1210,7 +1210,7 @@ const Assets = () => {
             </div>
 
             {/* Asset ROI Analysis */}
-            <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg shadow p-6">
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Asset ROI Analysis</h3>
               {assets.length === 0 ? (
                 <div className="text-center py-8">
@@ -1220,7 +1220,7 @@ const Assets = () => {
               ) : (
                 <div className="overflow-x-auto">
                   <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                    <thead className="bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm">
+                    <thead className="bg-white dark:bg-gray-800 ">
                       <tr>
                         <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Asset</th>
                         <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Acquisition Cost</th>
@@ -1237,7 +1237,7 @@ const Assets = () => {
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">--</td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">--</td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-white/50 dark:bg-gray-700/40 backdrop-blur-sm border border-white/40 dark:border-gray-600/30 text-gray-800">
+                            <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-white dark:bg-gray-800  border border-gray-200 dark:border-gray-700 text-gray-800">
                               Calculating...
                             </span>
                           </td>
@@ -1255,7 +1255,7 @@ const Assets = () => {
       {/* Add Asset Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg p-6 max-w-2xl w-full mx-4 max-h-screen overflow-y-auto">
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 max-w-2xl w-full mx-4 max-h-screen overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white">Add New Asset</h2>
               <button
@@ -1405,12 +1405,12 @@ const Assets = () => {
       {/* Asset Details Modal */}
       {showDetailsModal && selectedAsset && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-xl shadow-2xl max-w-5xl w-full mx-4 max-h-screen overflow-y-auto">
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-2xl max-w-5xl w-full mx-4 max-h-screen overflow-y-auto">
             {/* Header */}
-            <div className="bg-emerald-500/80 dark:bg-emerald-600/80 backdrop-blur-md px-6 py-4 rounded-t-xl">
+            <div className="bg-emerald-500/80 dark:bg-emerald-600/80 px-6 py-4 rounded-t-xl">
               <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                  <div className="w-12 h-12 bg-white/20  rounded-full flex items-center justify-center">
                     <span className="text-2xl">{getCategoryIcon(selectedAsset.category)}</span>
                   </div>
                   <div>
@@ -1464,8 +1464,8 @@ const Assets = () => {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Basic Information Card */}
                 <div className="space-y-4">
-                  <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-xl overflow-hidden">
-                    <div className="bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm px-4 py-3 border-b border-white/30 dark:border-gray-600/30">
+                  <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+                    <div className="bg-white dark:bg-gray-800  px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                       <h4 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
                         <FileText className="w-5 h-5 mr-2 text-emerald-600 dark:text-emerald-400" />
                         Basic Information
@@ -1507,8 +1507,8 @@ const Assets = () => {
                   
                   {/* Technical Details Card */}
                   {(selectedAsset.model || selectedAsset.serialNumber || selectedAsset.powerRating || selectedAsset.capacity) && (
-                    <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-xl overflow-hidden">
-                      <div className="bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm px-4 py-3 border-b border-white/30 dark:border-gray-600/30">
+                    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+                      <div className="bg-white dark:bg-gray-800  px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                         <h4 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
                           <Wrench className="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" />
                           Technical Details
@@ -1548,8 +1548,8 @@ const Assets = () => {
                 
                 {/* Financial Information Card */}
                 <div className="space-y-4">
-                  <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-xl overflow-hidden">
-                    <div className="bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm px-4 py-3 border-b border-white/30 dark:border-gray-600/30">
+                  <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+                    <div className="bg-white dark:bg-gray-800  px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                       <h4 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
                         <TrendingUp className="w-5 h-5 mr-2 text-emerald-600 dark:text-emerald-400" />
                         Financial Information
@@ -1624,7 +1624,7 @@ const Assets = () => {
       {/* Schedule Maintenance Modal */}
       {showScheduleMaintenanceModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg p-4 sm:p-6 max-w-6xl w-full max-h-screen overflow-y-auto">
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6 max-w-6xl w-full max-h-screen overflow-y-auto">
             <div className="flex justify-between items-center mb-4 sm:mb-6">
               <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">Schedule Maintenance</h2>
               <button
@@ -1788,9 +1788,9 @@ const Assets = () => {
       {/* Success Modal */}
       {showSuccessModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg p-6 max-w-md w-full mx-4">
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 max-w-md w-full mx-4">
             <div className="flex flex-col items-center">
-              <div className="w-16 h-16 bg-emerald-100/60 dark:bg-emerald-900/30 backdrop-blur-sm rounded-full flex items-center justify-center mb-4">
+              <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/20  rounded-full flex items-center justify-center mb-4">
                 <CheckCircle className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{successMessage || 'Success!'}</h3>
@@ -1814,9 +1814,9 @@ const Assets = () => {
       {/* Delete Confirmation Modal */}
       {showDeleteModal && selectedAsset && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-xl shadow-2xl max-w-md w-full mx-4">
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-2xl max-w-md w-full mx-4">
             <div className="p-6">
-              <div className="flex items-center justify-center w-12 h-12 bg-red-100/60 dark:bg-red-900/30 backdrop-blur-sm rounded-full mx-auto mb-4">
+              <div className="flex items-center justify-center w-12 h-12 bg-red-100 dark:bg-red-900/20  rounded-full mx-auto mb-4">
                 <Trash2 className="w-6 h-6 text-red-600 dark:text-red-400" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white text-center mb-2">Delete Asset</h3>
@@ -1826,7 +1826,7 @@ const Assets = () => {
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   onClick={() => setShowDeleteModal(false)}
-                  className="flex-1 px-4 py-2 bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm border border-white/40 dark:border-gray-600/30 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-white/50 dark:hover:bg-gray-600/40 transition-colors"
+                  className="flex-1 px-4 py-2 bg-white dark:bg-gray-800  border border-gray-200 dark:border-gray-700 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 >
                   Cancel
                 </button>
@@ -1845,11 +1845,11 @@ const Assets = () => {
       {/* Edit Asset Modal */}
       {showEditModal && selectedAsset && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-xl shadow-2xl max-w-2xl w-full mx-4 max-h-screen overflow-y-auto">
-            <div className="bg-blue-500/80 dark:bg-blue-600/80 backdrop-blur-md px-6 py-4 rounded-t-xl">
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-2xl max-w-2xl w-full mx-4 max-h-screen overflow-y-auto">
+            <div className="bg-blue-500/80 dark:bg-blue-600/80 px-6 py-4 rounded-t-xl">
               <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                  <div className="w-10 h-10 bg-white/20  rounded-full flex items-center justify-center">
                     <Edit2 className="w-5 h-5 text-white" />
                   </div>
                   <div>

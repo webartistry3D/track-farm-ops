@@ -308,14 +308,14 @@ const Settings = () => {
       </div>*/}
 
       {/* Tabs */}
-      <div className="bg-white/50 dark:bg-gray-800/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg p-2 mb-6">
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-2 mb-6">
         <nav className="flex space-x-2 overflow-x-auto scrollbar-hide">
           <button
             onClick={() => setActiveTab('profile')}
             className={`py-2 px-3 rounded-lg font-medium text-sm whitespace-nowrap ${
               activeTab === 'profile'
-                ? 'bg-emerald-500/80 text-white backdrop-blur-sm shadow-sm'
-                : 'bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-600 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/50 dark:hover:bg-gray-600/40'
+                ? 'bg-emerald-500 text-white  shadow-sm'
+                : 'bg-white dark:bg-gray-800  text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'
             }`}
           >
             Profile
@@ -324,8 +324,8 @@ const Settings = () => {
             onClick={() => setActiveTab('notifications')}
             className={`py-2 px-3 rounded-lg font-medium text-sm whitespace-nowrap ${
               activeTab === 'notifications'
-                ? 'bg-emerald-500/80 text-white backdrop-blur-sm shadow-sm'
-                : 'bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-600 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/50 dark:hover:bg-gray-600/40'
+                ? 'bg-emerald-500 text-white  shadow-sm'
+                : 'bg-white dark:bg-gray-800  text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'
             }`}
           >
             Notifications
@@ -335,8 +335,8 @@ const Settings = () => {
               onClick={() => setActiveTab('workers')}
               className={`py-2 px-3 rounded-lg font-medium text-sm whitespace-nowrap ${
                 activeTab === 'workers'
-                  ? 'bg-emerald-500/80 text-white backdrop-blur-sm shadow-sm'
-                  : 'bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-600 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/50 dark:hover:bg-gray-600/40'
+                  ? 'bg-emerald-500 text-white  shadow-sm'
+                  : 'bg-white dark:bg-gray-800  text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
               Manage Worker
@@ -347,8 +347,8 @@ const Settings = () => {
               onClick={() => setActiveTab('subscription')}
               className={`py-2 px-3 rounded-lg font-medium text-sm whitespace-nowrap ${
                 activeTab === 'subscription'
-                  ? 'bg-emerald-500/80 text-white backdrop-blur-sm shadow-sm'
-                  : 'bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-600 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/50 dark:hover:bg-gray-600/40'
+                  ? 'bg-emerald-500 text-white  shadow-sm'
+                  : 'bg-white dark:bg-gray-800  text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
               Subscription
@@ -358,8 +358,8 @@ const Settings = () => {
             onClick={() => setActiveTab('system')}
             className={`py-2 px-3 rounded-lg font-medium text-sm whitespace-nowrap ${
               activeTab === 'system'
-                ? 'bg-emerald-500/80 text-white backdrop-blur-sm shadow-sm'
-                : 'bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-600 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/50 dark:hover:bg-gray-600/40'
+                ? 'bg-emerald-500 text-white  shadow-sm'
+                : 'bg-white dark:bg-gray-800  text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'
             }`}
           >
             System
@@ -368,15 +368,15 @@ const Settings = () => {
       </div>
 
       {/* Tab Content */}
-      <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 shadow rounded-lg p-4 sm:p-6">
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow rounded-lg p-4 sm:p-6">
         {message && (
-          <div className="bg-emerald-50/60 dark:bg-emerald-900/30 border border-emerald-200/60 dark:border-emerald-700/50 text-emerald-600 dark:text-emerald-400 px-3 sm:px-4 py-2 sm:py-3 rounded-md mb-3 sm:mb-4 text-sm sm:text-base backdrop-blur-sm">
+          <div className="bg-emerald-50 dark:bg-gray-800 border border-emerald-200 dark:border-emerald-700 text-emerald-600 dark:text-emerald-400 px-3 sm:px-4 py-2 sm:py-3 rounded-md mb-3 sm:mb-4 text-sm sm:text-base ">
             {message}
           </div>
         )}
 
         {error && (
-          <div className="bg-red-50/60 dark:bg-red-900/30 border border-red-200/60 dark:border-red-700/50 text-red-600 dark:text-red-400 px-3 sm:px-4 py-2 sm:py-3 rounded-md mb-3 sm:mb-4 text-sm sm:text-base backdrop-blur-sm">
+          <div className="bg-red-50 dark:bg-gray-800 border border-red-200 dark:border-red-700 text-red-600 dark:text-red-400 px-3 sm:px-4 py-2 sm:py-3 rounded-md mb-3 sm:mb-4 text-sm sm:text-base ">
             {error}
           </div>
         )}
@@ -471,7 +471,7 @@ const Settings = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="px-4 py-2 bg-emerald-600/80 text-white rounded-lg hover:bg-emerald-700/90 backdrop-blur-sm border border-emerald-500/40 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
+                className="px-4 py-2 bg-emerald-600/80 text-white rounded-lg hover:bg-emerald-700/90  border border-emerald-500/40 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
               >
                 {loading ? 'Saving...' : 'Save Changes'}
               </button>
@@ -499,7 +499,7 @@ const Settings = () => {
                   type="button"
                   onClick={() => handleNotificationChange('emailNotifications')}
                   className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                    notifications.emailNotifications ? 'bg-emerald-500/80 backdrop-blur-sm' : 'bg-gray-300/60 dark:bg-gray-700/60 backdrop-blur-sm'
+                    notifications.emailNotifications ? 'bg-emerald-500/80 ' : 'bg-gray-300/60 dark:bg-gray-700/60 '
                   }`}
                 >
                   <span
@@ -519,7 +519,7 @@ const Settings = () => {
                   type="button"
                   onClick={() => handleNotificationChange('lowStockAlerts')}
                   className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                    notifications.lowStockAlerts ? 'bg-emerald-500/80 backdrop-blur-sm' : 'bg-gray-300/60 dark:bg-gray-700/60 backdrop-blur-sm'
+                    notifications.lowStockAlerts ? 'bg-emerald-500/80 ' : 'bg-gray-300/60 dark:bg-gray-700/60 '
                   }`}
                 >
                   <span
@@ -539,7 +539,7 @@ const Settings = () => {
                   type="button"
                   onClick={() => handleNotificationChange('dailyReports')}
                   className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                    notifications.dailyReports ? 'bg-emerald-500/80 backdrop-blur-sm' : 'bg-gray-300/60 dark:bg-gray-700/60 backdrop-blur-sm'
+                    notifications.dailyReports ? 'bg-emerald-500/80 ' : 'bg-gray-300/60 dark:bg-gray-700/60 '
                   }`}
                 >
                   <span
@@ -559,7 +559,7 @@ const Settings = () => {
                   type="button"
                   onClick={() => handleNotificationChange('weeklyReports')}
                   className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                    notifications.weeklyReports ? 'bg-emerald-500/80 backdrop-blur-sm' : 'bg-gray-300/60 dark:bg-gray-700/60 backdrop-blur-sm'
+                    notifications.weeklyReports ? 'bg-emerald-500/80 ' : 'bg-gray-300/60 dark:bg-gray-700/60 '
                   }`}
                 >
                   <span
@@ -579,7 +579,7 @@ const Settings = () => {
                   type="button"
                   onClick={togglePush}
                   className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                    pushEnabled ? 'bg-emerald-500/80 backdrop-blur-sm' : 'bg-gray-300/60 dark:bg-gray-700/60 backdrop-blur-sm'
+                    pushEnabled ? 'bg-emerald-500/80 ' : 'bg-gray-300/60 dark:bg-gray-700/60 '
                   }`}
                 >
                   <span
@@ -598,7 +598,7 @@ const Settings = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="px-4 py-2 bg-emerald-600/80 text-white rounded-lg hover:bg-emerald-700/90 backdrop-blur-sm border border-emerald-500/40 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
+                className="px-4 py-2 bg-emerald-600/80 text-white rounded-lg hover:bg-emerald-700/90  border border-emerald-500/40 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
               >
                 {loading ? 'Saving...' : 'Save Preferences'}
               </button>
@@ -620,7 +620,7 @@ const Settings = () => {
             <div className="flex justify-end mb-3 sm:mb-4">
               <button
                 onClick={handleRefreshSubscription}
-                className="px-3 sm:px-4 py-2 bg-blue-600/80 text-white rounded-lg hover:bg-blue-700/90 backdrop-blur-sm border border-blue-500/40 transition-colors duration-200 text-xs sm:text-sm font-medium"
+                className="px-3 sm:px-4 py-2 bg-blue-600/80 text-white rounded-lg hover:bg-blue-700/90  border border-blue-500/40 transition-colors duration-200 text-xs sm:text-sm font-medium"
               >
                 🔄 Refresh Status
               </button>
@@ -628,7 +628,7 @@ const Settings = () => {
             
             {/* Pending Payment Alert */}
             {currentPaymentRequest && (
-              <div className="bg-yellow-50/60 dark:bg-yellow-900/30 border border-yellow-200/60 dark:border-yellow-700/50 rounded-lg p-4 sm:p-6 backdrop-blur-md mb-4">
+              <div className="bg-yellow-50 dark:bg-gray-800 border border-yellow-200 dark:border-yellow-700 rounded-lg p-4 sm:p-6 mb-4">
                 <div className="flex items-start gap-3">
                   <div className="text-2xl">⏳</div>
                   <div className="flex-1">
@@ -653,7 +653,7 @@ const Settings = () => {
 
             {/* Current Subscription Status */}
             {subscriptionData && (
-              <div className="bg-emerald-50/60 dark:bg-emerald-900/30 backdrop-blur-md border border-emerald-200/60 dark:border-emerald-700/50 rounded-lg p-4 sm:p-6">
+              <div className="bg-emerald-50 dark:bg-gray-800 border border-emerald-200 dark:border-emerald-700 rounded-lg p-4 sm:p-6">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3 sm:mb-4 gap-3">
                   <div>
                     <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-1">
@@ -675,7 +675,7 @@ const Settings = () => {
                   <button
                     onClick={handleCancelSubscription}
                     disabled={loading}
-                    className="w-full sm:w-auto px-4 py-2 bg-red-600/80 text-white rounded-lg hover:bg-red-700/90 backdrop-blur-sm border border-red-500/40 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
+                    className="w-full sm:w-auto px-4 py-2 bg-red-600/80 text-white rounded-lg hover:bg-red-700/90  border border-red-500/40 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
                   >
                     {loading ? 'Processing...' : 'Cancel Subscription'}
                   </button>
@@ -685,13 +685,13 @@ const Settings = () => {
 
             {/* Billing Cycle Toggle */}
             <div className="flex justify-center">
-              <div className="inline-flex items-center bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-full p-1">
+              <div className="inline-flex items-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full p-1">
                 <button
                   onClick={() => setBillingCycle('monthly')}
                   className={`px-4 sm:px-6 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 ${
                     billingCycle === 'monthly'
-                      ? 'bg-emerald-500/80 text-white backdrop-blur-sm shadow-sm'
-                      : 'bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-600 dark:text-gray-300 hover:bg-white/50 dark:hover:bg-gray-600/40'
+                      ? 'bg-emerald-500 text-white  shadow-sm'
+                      : 'bg-white dark:bg-gray-800  text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                   }`}
                 >
                   Monthly
@@ -700,12 +700,12 @@ const Settings = () => {
                   onClick={() => setBillingCycle('annual')}
                   className={`px-4 sm:px-6 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 relative ${
                     billingCycle === 'annual'
-                      ? 'bg-emerald-500/80 text-white backdrop-blur-sm shadow-sm'
-                      : 'bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-600 dark:text-gray-300 hover:bg-white/50 dark:hover:bg-gray-600/40'
+                      ? 'bg-emerald-500 text-white  shadow-sm'
+                      : 'bg-white dark:bg-gray-800  text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                   }`}
                 >
                   Annual
-                  <span className="absolute -top-2 -right-2 bg-emerald-500/80 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm border border-emerald-400/40">
+                  <span className="absolute -top-2 -right-2 bg-emerald-500 text-white text-xs px-2 py-1 rounded-full  border border-emerald-400/40">
                     Save 20%
                   </span>
                 </button>
@@ -722,7 +722,7 @@ const Settings = () => {
                 return (
                   <div
                     key={plan.id}
-                    className={`bg-white/50 dark:bg-gray-700/40 backdrop-blur-md rounded-lg shadow-lg p-4 sm:p-6 border-2 ${
+                    className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6 border-2 ${
                       isCurrentPlan
                         ? 'border-emerald-500 dark:border-emerald-400'
                         : 'border-gray-200 dark:border-gray-700'
@@ -767,8 +767,8 @@ const Settings = () => {
                         disabled={isCurrentPlan || loading || currentPaymentRequest !== null}
                         className={`w-full py-2 px-3 sm:px-4 rounded-lg font-medium transition-all duration-200 text-xs sm:text-sm ${
                           isCurrentPlan
-                            ? 'bg-gray-300/60 dark:bg-gray-600/60 text-gray-600 dark:text-gray-400 cursor-not-allowed backdrop-blur-sm'
-                            : 'bg-emerald-600/80 text-white hover:bg-emerald-700/90 backdrop-blur-sm border border-emerald-500/40 disabled:opacity-50 disabled:cursor-not-allowed'
+                            ? 'bg-gray-300/60 dark:bg-gray-600/60 text-gray-600 dark:text-gray-400 cursor-not-allowed '
+                            : 'bg-emerald-600/80 text-white hover:bg-emerald-700/90  border border-emerald-500/40 disabled:opacity-50 disabled:cursor-not-allowed'
                         }`}
                       >
                         {isCurrentPlan ? 'Current Plan' : loading ? 'Processing...' : currentPaymentRequest ? 'Payment Pending' : `Pay via Bank Transfer`}
@@ -792,7 +792,7 @@ const Settings = () => {
             </div>
 
             {/* Payment Info */}
-            <div className="bg-blue-50/60 dark:bg-blue-900/30 border border-blue-200/60 dark:border-blue-700/50 rounded-lg p-4 backdrop-blur-md">
+            <div className="bg-blue-50 dark:bg-gray-800 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
               <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">💳 Payment Information</h4>
               <p className="text-sm text-blue-800 dark:text-blue-200 mb-2">
                 • Recommended: Pay via Bank Transfer (manual verification within 24 hours)
@@ -815,24 +815,24 @@ const Settings = () => {
             <h3 className="text-base sm:text-lg font-medium text-gray-900 dark:text-white mb-3 sm:mb-4">System Information</h3>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-              <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg p-3 sm:p-4">
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 sm:p-4">
                 <div className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">Application Version</div>
                 <div className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">TrackFarmOps v1.0.0</div>
               </div>
               
-              <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg p-3 sm:p-4">
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 sm:p-4">
                 <div className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">User Role</div>
                 <div className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">{user.role}</div>
               </div>
               
-              <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg p-3 sm:p-4">
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 sm:p-4">
                 <div className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">Account Created</div>
                 <div className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">
                   {new Date(user.createdAt).toLocaleDateString()}
                 </div>
               </div>
               
-              <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg p-3 sm:p-4">
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 sm:p-4">
                 <div className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">Last Login</div>
                 <div className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Today</div>
               </div>

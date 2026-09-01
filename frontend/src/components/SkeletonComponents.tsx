@@ -19,7 +19,7 @@ export const CardSkeleton: React.FC<{
   className?: string;
   children?: React.ReactNode;
 }> = ({ className = '', children }) => (
-  <div className={`bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-xl shadow-lg p-6 ${className}`}>
+  <div className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg p-6 ${className}`}>
     {children}
   </div>
 );
@@ -46,9 +46,9 @@ export const TableSkeleton: React.FC<{
   columns?: number;
   className?: string;
 }> = ({ rows = 5, columns = 4, className = '' }) => (
-  <div className={`bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg shadow overflow-hidden ${className}`}>
+  <div className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow overflow-hidden ${className}`}>
     {/* Table Header */}
-    <div className="border-b border-white/40 dark:border-gray-600/30">
+    <div className="border-b border-gray-200 dark:border-gray-700">
       <div className="grid gap-4 p-4" style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}>
         {[...Array(columns)].map((_, i) => (
           <SkeletonElement key={i} className="h-4" />
@@ -131,7 +131,7 @@ export const ListSkeleton: React.FC<{
 }> = ({ items = 5, className = '', children }) => (
   <div className={`space-y-4 ${className}`}>
     {[...Array(items)].map((_, i) => (
-      <div key={i} className={`bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg shadow p-4 ${className}`}>
+      <div key={i} className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow p-4 ${className}`}>
         {children || (
           <div className="flex items-center space-x-4">
             <SkeletonElement className="w-12 h-12 rounded-lg" />
@@ -152,7 +152,7 @@ export const TabSkeleton: React.FC<{
   tabs?: number;
   className?: string;
 }> = ({ tabs = 3, className = '' }) => (
-  <div className={`bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg p-2 mb-6 ${className}`}>
+  <div className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-2 mb-6 ${className}`}>
     <div className="max-w-7xl mx-auto px-0 sm:px-0 lg:px-0">
       <div className="flex overflow-x-auto justify-between">
         <div className="flex overflow-x-auto">
@@ -174,7 +174,7 @@ export const FilterSkeleton: React.FC<{
   inputs?: number;
   className?: string;
 }> = ({ inputs = 3, className = '' }) => (
-  <div className={`bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 shadow-lg rounded-xl ${className}`}>
+  <div className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl ${className}`}>
     <div className="max-w-7xl mx-auto px-0 sm:px-0 lg:px-0 py-4">
       <div className="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:flex-wrap sm:gap-4 sm:items-center">
         <div className="w-full sm:flex-1 sm:min-w-64">
@@ -208,7 +208,7 @@ export const FormSkeleton: React.FC<{
   fields?: number;
   className?: string;
 }> = ({ fields = 4, className = '' }) => (
-  <div className={`bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg shadow p-6 ${className}`}>
+  <div className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow p-6 ${className}`}>
     <div className="space-y-4">
       {[...Array(fields)].map((_, i) => (
         <div key={i}>

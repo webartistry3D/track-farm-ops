@@ -483,7 +483,7 @@ const LivestockHealth = () => {
 
       {/* Health Statistics Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-        <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg shadow-sm p-4">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">Total</p>
@@ -492,7 +492,7 @@ const LivestockHealth = () => {
             <PawPrint className="h-8 w-8 text-gray-500" />
           </div>
         </div>
-        <div className="bg-green-50/60 dark:bg-green-900/30 backdrop-blur-md border border-green-200/60 dark:border-green-700/50 rounded-lg shadow-sm p-4">
+        <div className="bg-green-50/60 dark:bg-green-900/30 border border-green-200/60 dark:border-green-700/50 rounded-lg shadow-sm p-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-green-600 dark:text-green-400">Healthy</p>
@@ -501,7 +501,7 @@ const LivestockHealth = () => {
             <Activity className="h-8 w-8 text-green-500" />
           </div>
         </div>
-        <div className="bg-red-50/60 dark:bg-red-900/30 backdrop-blur-md border border-red-200/60 dark:border-red-700/50 rounded-lg shadow-sm p-4">
+        <div className="bg-red-50 dark:bg-gray-800 border border-red-200 dark:border-red-700 rounded-lg shadow-sm p-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-red-600 dark:text-red-400">Sick</p>
@@ -510,7 +510,7 @@ const LivestockHealth = () => {
             <AlertTriangle className="h-8 w-8 text-red-500" />
           </div>
         </div>
-        <div className="bg-yellow-50/60 dark:bg-yellow-900/30 backdrop-blur-md border border-yellow-200/60 dark:border-yellow-700/50 rounded-lg shadow-sm p-4">
+        <div className="bg-yellow-50 dark:bg-gray-800 border border-yellow-200 dark:border-yellow-700 rounded-lg shadow-sm p-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-yellow-600 dark:text-yellow-400">Quarantine</p>
@@ -519,7 +519,7 @@ const LivestockHealth = () => {
             <Shield className="h-8 w-8 text-yellow-500" />
           </div>
         </div>
-        <div className="bg-blue-50/60 dark:bg-blue-900/30 backdrop-blur-md border border-blue-200/60 dark:border-blue-700/50 rounded-lg shadow-sm p-4">
+        <div className="bg-blue-50 dark:bg-gray-800 border border-blue-200 dark:border-blue-700 rounded-lg shadow-sm p-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-blue-600 dark:text-blue-400">Recovery</p>
@@ -528,7 +528,7 @@ const LivestockHealth = () => {
             <TrendingUp className="h-8 w-8 text-blue-500" />
           </div>
         </div>
-        <div className="bg-purple-50/60 dark:bg-purple-900/30 backdrop-blur-md border border-purple-200/60 dark:border-purple-700/50 rounded-lg shadow-sm p-4">
+        <div className="bg-purple-50 dark:bg-gray-800 border border-purple-200 dark:border-purple-700 rounded-lg shadow-sm p-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-purple-600 dark:text-purple-400">Critical</p>
@@ -540,14 +540,14 @@ const LivestockHealth = () => {
       </div>
 
       {/* Tab Navigation */}
-      <div className="bg-white/50 dark:bg-gray-800/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg p-2 mb-6">
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-2 mb-6">
         <nav className="flex space-x-2 overflow-x-auto scrollbar-hide">
           <button
             onClick={() => setActiveTab('livestock')}
             className={`py-2 px-3 rounded-lg font-medium text-sm flex items-center gap-2 whitespace-nowrap transition-all duration-200 ${
               activeTab === 'livestock'
-                ? 'bg-red-500/80 text-white backdrop-blur-sm shadow-sm'
-                : 'bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-600 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/50 dark:hover:bg-gray-600/40'
+                ? 'bg-red-500/80 text-white  shadow-sm'
+                : 'bg-white dark:bg-gray-800  text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'
             }`}
           >
             <PawPrint className="h-4 w-4" />
@@ -557,8 +557,8 @@ const LivestockHealth = () => {
             onClick={() => setActiveTab('healthRecords')}
             className={`py-2 px-3 rounded-lg font-medium text-sm flex items-center gap-2 whitespace-nowrap transition-all duration-200 ${
               activeTab === 'healthRecords'
-                ? 'bg-red-500/80 text-white backdrop-blur-sm shadow-sm'
-                : 'bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-600 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/50 dark:hover:bg-gray-600/40'
+                ? 'bg-red-500/80 text-white  shadow-sm'
+                : 'bg-white dark:bg-gray-800  text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'
             }`}
           >
             <ClipboardList className="h-4 w-4" />
@@ -568,8 +568,8 @@ const LivestockHealth = () => {
             onClick={() => setActiveTab('vaccinations')}
             className={`py-2 px-3 rounded-lg font-medium text-sm flex items-center gap-2 whitespace-nowrap transition-all duration-200 ${
               activeTab === 'vaccinations'
-                ? 'bg-red-500/80 text-white backdrop-blur-sm shadow-sm'
-                : 'bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-600 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/50 dark:hover:bg-gray-600/40'
+                ? 'bg-red-500/80 text-white  shadow-sm'
+                : 'bg-white dark:bg-gray-800  text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'
             }`}
           >
             <Syringe className="h-4 w-4" />
@@ -579,8 +579,8 @@ const LivestockHealth = () => {
             onClick={() => setActiveTab('healthReport')}
             className={`py-2 px-3 rounded-lg font-medium text-sm flex items-center gap-2 whitespace-nowrap transition-all duration-200 ${
               activeTab === 'healthReport'
-                ? 'bg-red-500/80 text-white backdrop-blur-sm shadow-sm'
-                : 'bg-white/30 dark:bg-gray-700/40 backdrop-blur-sm text-gray-600 dark:text-gray-300 border border-white/30 dark:border-gray-600/30 hover:bg-white/50 dark:hover:bg-gray-600/40'
+                ? 'bg-red-500/80 text-white  shadow-sm'
+                : 'bg-white dark:bg-gray-800  text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'
             }`}
           >
             <FileText className="h-4 w-4" />
@@ -644,7 +644,7 @@ const LivestockHealth = () => {
           {/* Livestock Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredLivestock.map((animal) => (
-              <div key={animal.id} className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow">
+              <div key={animal.id} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-red-100 dark:bg-red-900 rounded-lg">
@@ -762,7 +762,7 @@ const LivestockHealth = () => {
             )}
           </div>
 
-          <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg shadow-sm overflow-x-auto">
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-x-auto">
             <table className="w-full min-w-[600px]">
               <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
@@ -846,7 +846,7 @@ const LivestockHealth = () => {
             )}
           </div>
 
-          <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg shadow-sm overflow-x-auto">
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-x-auto">
             <table className="w-full min-w-[600px]">
               <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
@@ -895,7 +895,7 @@ const LivestockHealth = () => {
             </button>
           </div>
 
-          <div ref={reportRef} className="bg-white/50 dark:bg-gray-800/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg p-4">
+          <div ref={reportRef} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
           {/* Date Range Controls */}
           <div className="mb-6 flex flex-col lg:flex-row gap-4 items-end">
             <div className="flex-1">
@@ -952,17 +952,17 @@ const LivestockHealth = () => {
           {/* Summary Cards */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
             {[
-              { label: 'Total Livestock', value: reportStats.totalLivestock, color: 'bg-blue-50/60 dark:bg-blue-900/30 backdrop-blur-md border border-blue-200/60 dark:border-blue-700/50 text-blue-800 dark:text-blue-200' },
-              { label: 'Healthy', value: reportStats.healthy, color: 'bg-green-50/60 dark:bg-green-900/30 backdrop-blur-md border border-green-200/60 dark:border-green-700/50 text-green-800 dark:text-green-200' },
-              { label: 'Sick', value: reportStats.sick, color: 'bg-red-50/60 dark:bg-red-900/30 backdrop-blur-md border border-red-200/60 dark:border-red-700/50 text-red-800 dark:text-red-200' },
-              { label: 'Quarantine', value: reportStats.quarantine, color: 'bg-yellow-50/60 dark:bg-yellow-900/30 backdrop-blur-md border border-yellow-200/60 dark:border-yellow-700/50 text-yellow-800 dark:text-yellow-200' },
-              { label: 'Critical', value: reportStats.critical, color: 'bg-purple-50/60 dark:bg-purple-900/30 backdrop-blur-md border border-purple-200/60 dark:border-purple-700/50 text-purple-800 dark:text-purple-200' },
-              { label: 'Recovery', value: reportStats.recovery, color: 'bg-indigo-50/60 dark:bg-indigo-900/30 backdrop-blur-md border border-indigo-200/60 dark:border-indigo-700/50 text-indigo-800 dark:text-indigo-200' },
-              { label: 'Checkups', value: reportStats.checkups, color: 'bg-gray-50/60 dark:bg-gray-700/40 backdrop-blur-md border border-gray-200/60 dark:border-gray-600/30 text-gray-800 dark:text-gray-200' },
-              { label: 'Treatments', value: reportStats.treatments, color: 'bg-orange-50/60 dark:bg-orange-900/30 backdrop-blur-md border border-orange-200/60 dark:border-orange-700/50 text-orange-800 dark:text-orange-200' },
-              { label: 'Surgeries', value: reportStats.surgeries, color: 'bg-pink-50/60 dark:bg-pink-900/30 backdrop-blur-md border border-pink-200/60 dark:border-pink-700/50 text-pink-800 dark:text-pink-200' },
-              { label: 'Vaccinations', value: reportStats.vaccinations, color: 'bg-teal-50/60 dark:bg-teal-900/30 backdrop-blur-md border border-teal-200/60 dark:border-teal-700/50 text-teal-800 dark:text-teal-200' },
-              { label: 'Deaths', value: reportStats.deaths, color: 'bg-gray-100/60 dark:bg-gray-800/40 backdrop-blur-md border border-gray-200/60 dark:border-gray-600/30 text-gray-900 dark:text-gray-100' }
+              { label: 'Total Livestock', value: reportStats.totalLivestock, color: 'bg-blue-50 dark:bg-gray-800 border border-blue-200 dark:border-blue-700 text-blue-800 dark:text-blue-200' },
+              { label: 'Healthy', value: reportStats.healthy, color: 'bg-green-50/60 dark:bg-green-900/30 border border-green-200/60 dark:border-green-700/50 text-green-800 dark:text-green-200' },
+              { label: 'Sick', value: reportStats.sick, color: 'bg-red-50 dark:bg-gray-800 border border-red-200 dark:border-red-700 text-red-800 dark:text-red-200' },
+              { label: 'Quarantine', value: reportStats.quarantine, color: 'bg-yellow-50 dark:bg-gray-800 border border-yellow-200 dark:border-yellow-700 text-yellow-800 dark:text-yellow-200' },
+              { label: 'Critical', value: reportStats.critical, color: 'bg-purple-50 dark:bg-gray-800 border border-purple-200 dark:border-purple-700 text-purple-800 dark:text-purple-200' },
+              { label: 'Recovery', value: reportStats.recovery, color: 'bg-indigo-50 dark:bg-gray-800 border border-indigo-200 dark:border-indigo-700 text-indigo-800 dark:text-indigo-200' },
+              { label: 'Checkups', value: reportStats.checkups, color: 'bg-gray-50/60 dark:bg-gray-700/40 border border-gray-200/60 dark:border-gray-600/30 text-gray-800 dark:text-gray-200' },
+              { label: 'Treatments', value: reportStats.treatments, color: 'bg-orange-50 dark:bg-gray-800 border border-orange-200 dark:border-orange-700 text-orange-800 dark:text-orange-200' },
+              { label: 'Surgeries', value: reportStats.surgeries, color: 'bg-pink-50/60 dark:bg-pink-900/30 border border-pink-200/60 dark:border-pink-700/50 text-pink-800 dark:text-pink-200' },
+              { label: 'Vaccinations', value: reportStats.vaccinations, color: 'bg-teal-50/60 dark:bg-teal-900/30 border border-teal-200/60 dark:border-teal-700/50 text-teal-800 dark:text-teal-200' },
+              { label: 'Deaths', value: reportStats.deaths, color: 'bg-gray-100/60 dark:bg-gray-800/40 border border-gray-200/60 dark:border-gray-600/30 text-gray-900 dark:text-gray-100' }
             ].map((stat, i) => (
               <div key={i} className={`rounded-lg p-4 ${stat.color}`}>
                 <div className="text-2xl font-bold">{stat.value}</div>
@@ -972,7 +972,7 @@ const LivestockHealth = () => {
           </div>
 
           {/* General Summary */}
-          <div className="mb-6 p-4 bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg shadow-sm">
+          <div className="mb-6 p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
               <Activity className="h-5 w-5 text-red-500" />
               General Summary
@@ -983,7 +983,7 @@ const LivestockHealth = () => {
           </div>
 
           {/* Veterinarian Notes */}
-          <div className="mb-6 p-4 bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg shadow-sm">
+          <div className="mb-6 p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
               <ClipboardList className="h-5 w-5 text-red-500" />
               Veterinarian Notes
@@ -1022,7 +1022,7 @@ const LivestockHealth = () => {
           </div>
 
           {/* Health Records in Period */}
-          <div className="mb-6 bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg shadow-sm overflow-x-auto">
+          <div className="mb-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-x-auto">
             <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
               <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
                 <Stethoscope className="h-4 w-4 text-red-500" />
@@ -1064,7 +1064,7 @@ const LivestockHealth = () => {
           </div>
 
           {/* Vaccinations in Period */}
-          <div className="bg-white/50 dark:bg-gray-700/40 backdrop-blur-md border border-white/40 dark:border-gray-600/30 rounded-lg shadow-sm overflow-x-auto">
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-x-auto">
             <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
               <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
                 <Syringe className="h-4 w-4 text-red-500" />

@@ -328,14 +328,11 @@ const Layout = ({ children }: LayoutProps) => {
   }
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden relative bg-cover bg-center bg-no-repeat bg-fixed" style={{ backgroundImage: "url('/trackfarmops-bg.png')" }}>
-      {/* Dark overlay covering entire background */}
-      <div className="absolute inset-0 bg-black/50 dark:bg-black/70 pointer-events-none z-0" />
-
+    <div className="h-screen flex flex-col overflow-hidden relative bg-gray-50 dark:bg-gray-900">
       {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden relative z-10">
         {/* Top navigation */}
-        <header className="bg-white/70 dark:bg-gray-800/80 backdrop-blur-xl shadow-sm border-b border-white/30 dark:border-gray-700/50 relative z-50">
+        <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 relative z-50">
           <div className="px-3 sm:px-4 md:px-6 lg:px-8">
             <div className="flex items-center justify-between h-14 sm:h-16">
               {/* Page title */}
