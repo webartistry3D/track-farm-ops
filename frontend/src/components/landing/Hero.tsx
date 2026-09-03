@@ -37,9 +37,7 @@ const Hero = () => {
 
   return (
     <section id="hero" ref={root} className="relative isolate min-h-[760px] overflow-hidden bg-slate-950 pb-12 pt-28 text-white sm:pt-36 lg:min-h-screen lg:pt-44">
-      <video autoPlay muted loop playsInline className="absolute inset-0 -z-30 h-full w-full object-cover opacity-45">
-        <source src="/track-farm-ops-bg.mp4" type="video/mp4" />
-      </video>
+      <img src="/trackfarmops-bg.png" alt="" className="absolute inset-0 -z-30 h-full w-full object-cover opacity-45" />
       {/* <div className="absolute inset-0 -z-20 bg-[linear-gradient(105deg,rgba(2,44,34,0.96)_0%,rgba(4,78,54,0.79)_47%,rgba(15,23,42,0.86)_100%)]" />*/}
       <div className="absolute inset-0 -z-10 bg-grid opacity-20 [mask-image:linear-gradient(to_bottom,black,transparent)]" />
       <div data-hero="orb-one" className="absolute -right-32 top-24 -z-10 h-80 w-80 rounded-full bg-emerald-400/20 blur-3xl" />

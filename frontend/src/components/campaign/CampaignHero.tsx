@@ -15,31 +15,31 @@ const CampaignHero = () => {
             {/* Campaign badge */}
             <div className="inline-flex items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-400/10 px-4 py-2 text-sm font-bold uppercase tracking-[0.16em] text-emerald-200 mb-8">
               <Sprout className="h-4 w-4" />
-              1 → 100 Farms Campaign
+              2 → 200 Farms Campaign
             </div>
 
             {/* Main headline */}
             <h1 className="font-jetbrains-mono text-5xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl mb-6">
-              From 1 Farm to 100.
+              From 2 Farm to 200.
             </h1>
 
             {/* Supporting copy */}
             <p className="text-xl sm:text-2xl text-emerald-100 mb-8 max-w-2xl leading-relaxed">
-              TrackFarmOps is already built and helping Nigerian agribusinesses manage their operations. 
-              Now we're raising support to put better digital tools in the hands of 100 Nigerian farms.
+              TrackFarmOps was built to help Nigerian agribusinesses manage their operations. 
+              Now we are raising support to put better digital tools in the hands of 100 Nigerian farms.
             </p>
 
             {/* Progress visualization */}
             <div className="bg-white/10 border border-white/20 rounded-2xl p-6 sm:p-8 mb-10 max-w-lg">
               <div className="flex items-center justify-between mb-4">
                 <span className="text-emerald-200 text-sm font-medium">Campaign Progress</span>
-                <span className="text-white font-jetbrains-mono font-bold text-lg">1 / 100 Farms</span>
+                <span className="text-white font-jetbrains-mono font-bold text-lg">2 / 200 Farms</span>
               </div>
               <div className="w-full bg-white/10 rounded-full h-3 mb-3">
                 <div className="bg-emerald-400 h-3 rounded-full" style={{ width: '1%' }} />
               </div>
               <p className="text-emerald-200 text-sm">
-                Our first farm is already on TrackFarmOps. Help us reach 100.
+                2 farms are already on TrackFarmOps. Help us reach 200.
               </p>
             </div>
 

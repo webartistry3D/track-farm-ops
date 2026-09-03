@@ -15,16 +15,27 @@ const BottomNav = ({ onLogout }: BottomNavProps) => {
   const { canAccessFeature } = useSubscriptionRestrictions();
   const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const [trayPositions, setTrayPositions] = useState<Record<string, number>>({});
+  const navContainerRef = useRef<HTMLDivElement | null>(null);
 
   if (!user) return null;
 
   const userRole = user.role as UserRole;
   const navigationItems = getNavigationForRole(userRole);
 
+  // Compute the actually-visible items after subscription filtering.
+  // This is what determines the rendered layout and thus the tray positions.
+  // The full `navigationItems` array never changes (static config), but the
+  // visible subset does — e.g. when subscription data loads asynchronously
+  // and a previously-restricted item becomes visible.
+  const visibleNavItems = navigationItems.filter(
+    item => !item.feature || canAccessFeature(item.feature)
+  );
+  const visibleNavKey = visibleNavItems.map(i => i.id).join(',');
+
   useEffect(() => {
     const updatePositions = () => {
       const positions: Record<string, number> = {};
-      navigationItems.forEach(item => {
+      visibleNavItems.forEach(item => {
         const el = itemRefs.current[item.id];
         if (el) {
           const rect = el.getBoundingClientRect();
@@ -34,10 +45,29 @@ const BottomNav = ({ onLogout }: BottomNavProps) => {
       setTrayPositions(positions);
     };
 
-    updatePositions();
+    // Defer initial measurement so layout is settled (fonts, flexbox, async content)
+    const deferredTimer = setTimeout(updatePositions, 0);
+
     window.addEventListener('resize', updatePositions);
-    return () => window.removeEventListener('resize', updatePositions);
-  }, [navigationItems]);
+
+    // Observe the nav container for layout shifts (content loading, font swaps)
+    const resizeObserver = new ResizeObserver(() => updatePositions());
+    if (navContainerRef.current) {
+      resizeObserver.observe(navContainerRef.current);
+    }
+
+    // Re-measure when fonts finish loading (causes layout shift without resize event)
+    if (document.fonts) {
+      document.fonts.ready.then(() => updatePositions());
+    }
+
+    return () => {
+      clearTimeout(deferredTimer);
+      window.removeEventListener('resize', updatePositions);
+      resizeObserver.disconnect();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visibleNavKey]);
 
   const handleMenuToggle = (menuId: string) => {
     setActiveMenu(activeMenu === menuId ? null : menuId);
@@ -117,7 +147,7 @@ const BottomNav = ({ onLogout }: BottomNavProps) => {
       })}
 
       {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 shadow-[0_-4px_20px_rgba(0,0,0,0.1)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.3)] z-50">
+      <div ref={navContainerRef} className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 shadow-[0_-4px_20px_rgba(0,0,0,0.1)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.3)] z-50">
         <div className="flex items-center justify-around h-16 px-2 sm:px-4">
           {navigationItems.map((item) => {
             const hasChildren = item.children && item.children.length > 0;

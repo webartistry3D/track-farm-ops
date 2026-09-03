@@ -945,7 +945,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
               // Navigate to items view or show all items
               console.log('Total Items clicked');
             }}
-            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -965,7 +965,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
               // Navigate to categories view
               console.log('Total Categories clicked');
             }}
-            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -984,7 +984,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
               // Show high-value items or filter by value
               console.log('Total Value clicked');
             }}
-            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -1009,7 +1009,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
               // Navigate to livestock items
               console.log('Livestock clicked');
             }}
-            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -1029,7 +1029,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
               // Navigate to produce items
               console.log('Produce clicked');
             }}
-            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -1049,7 +1049,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
               // Navigate to consumables items
               console.log('Consumables clicked');
             }}
-            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -1069,7 +1069,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
               // Navigate to low stock items
               console.log('Low Stock Items clicked');
             }}
-            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -1086,7 +1086,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
         </div>
 
         {/* Filters and Controls */}
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow rounded-xl p-4 sm:p-6 mb-0">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl p-4 sm:p-6 mb-0">
           {/* Search and Primary Actions - Mobile First */}
           <div className="flex flex-col gap-4 mb-4">
             {/* Search Bar */}
@@ -1271,7 +1271,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                       setShowViewItemModal(true);
                     }}
                     className={viewMode === 'grid' 
-                      ? "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow rounded-xl hover:shadow-xl transition-all duration-200 cursor-pointer"
+                      ? "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl hover:shadow-xl transition-all duration-200 cursor-pointer"
                       : "hidden" // Hide individual cards in table view
                     }
                   >
@@ -1377,7 +1377,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
 
             {/* Table View - Only show when in list mode */}
             {viewMode === 'list' && (
-              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow rounded-xl overflow-hidden">
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead className="bg-gray-50 dark:bg-gray-700  border-b border-gray-200 dark:border-gray-700">
@@ -1677,7 +1677,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                         // Filter items by this category
                         setItems(items.filter(item => item.categoryId === category.id));
                       }}
-                      className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow rounded-xl hover:shadow-xl transition-all duration-200 cursor-pointer"
+                      className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl hover:shadow-xl transition-all duration-200 cursor-pointer"
                     >
                       <div className="p-4">
                         <div className="flex flex-col items-center text-center mb-4">
@@ -1761,7 +1761,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
               </div>
             ) : (
               // List View - Table Layout
-              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow rounded-xl overflow-hidden">
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead className="bg-gray-50 dark:bg-gray-700  border-b border-gray-200 dark:border-gray-700">
@@ -2240,7 +2240,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
       {/* Usage Modal */}
       {showUsageModal && itemToUse && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl p-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl p-6 max-w-md w-full mx-4 max-h-[67vh] overflow-y-auto">
             <div className="flex items-center mb-4">
               <MinusCircle className="w-5 h-5 text-orange-600 mr-2" />
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -2512,7 +2512,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
       {/* View Item Modal */}
       {showViewItemModal && itemToView && (
         <div className="fixed inset-0 bg-black bg-opacity-60  flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-2xl w-full max-w-3xl max-h-[67vh] overflow-hidden flex flex-col">
             {/* Header */}
             <div className="bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 px-8 py-6">
               <div className="flex items-center justify-between">
@@ -2845,7 +2845,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
       {/* Edit Item Modal */}
       {showEditItemModal && itemToEdit && (
         <div className="fixed inset-0 bg-black bg-opacity-60  flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[67vh] overflow-hidden flex flex-col">
             {/* Header */}
             <div className="bg-gray-50 dark:bg-gray-700  border-b border-gray-200 dark:border-gray-700 px-6 py-4">
               <div className="flex items-center justify-between">

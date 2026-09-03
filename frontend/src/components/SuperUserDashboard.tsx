@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
 import SuperUserPaymentReview from './SuperUserPaymentReview';
+import Pagination from './Pagination';
 import {
   Users, Building, Activity, Database, Settings, Globe, TrendingUp,
   Eye, Lock, Unlock, Search, RefreshCw, BarChart3,
@@ -199,6 +200,26 @@ const SuperUserDashboard = () => {
     // Subscription modal states
     const [selectedSub, setSelectedSub] = useState<Subscription | null>(null);
     const [showSubModal, setShowSubModal] = useState(false);
+    
+    // Subscription pagination states
+    const [subCurrentPage, setSubCurrentPage] = useState(1);
+    const [subEntriesPerPage] = useState(10);
+
+    // Users pagination states
+    const [userCurrentPage, setUserCurrentPage] = useState(1);
+    const [userEntriesPerPage] = useState(10);
+
+    // Organizations pagination states
+    const [orgCurrentPage, setOrgCurrentPage] = useState(1);
+    const [orgEntriesPerPage] = useState(10);
+
+    // Activity pagination states
+    const [activityCurrentPage, setActivityCurrentPage] = useState(1);
+    const [activityEntriesPerPage] = useState(10);
+
+    // Logs pagination states
+    const [logCurrentPage, setLogCurrentPage] = useState(1);
+    const [logEntriesPerPage] = useState(10);
     
     // Settings operation states
     const [maintenanceLoading, setMaintenanceLoading] = useState(false);
@@ -544,12 +565,52 @@ const SuperUserDashboard = () => {
       return matchesSearch && matchesFilter;
     });
 
+    // Users pagination calculations
+    const userTotalEntries = filteredUsers.length;
+    const userTotalPages = Math.max(1, Math.ceil(userTotalEntries / userEntriesPerPage));
+    const userStartIndex = (userCurrentPage - 1) * userEntriesPerPage;
+    const userEndIndex = userStartIndex + userEntriesPerPage;
+    const paginatedUsers = filteredUsers.slice(userStartIndex, userEndIndex);
+    if (userCurrentPage > userTotalPages && userTotalPages > 0) {
+      setUserCurrentPage(1);
+    }
+
     const filteredOrgs = organizations.filter(org => {
       const matchesSearch = org.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            org.admin.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesFilter = filterStatus === 'all' || org.status === filterStatus;
       return matchesSearch && matchesFilter;
     });
+
+    // Organizations pagination calculations
+    const orgTotalEntries = filteredOrgs.length;
+    const orgTotalPages = Math.max(1, Math.ceil(orgTotalEntries / orgEntriesPerPage));
+    const orgStartIndex = (orgCurrentPage - 1) * orgEntriesPerPage;
+    const orgEndIndex = orgStartIndex + orgEntriesPerPage;
+    const paginatedOrgs = filteredOrgs.slice(orgStartIndex, orgEndIndex);
+    if (orgCurrentPage > orgTotalPages && orgTotalPages > 0) {
+      setOrgCurrentPage(1);
+    }
+
+    // Activity pagination calculations
+    const activityTotalEntries = activities.length;
+    const activityTotalPages = Math.max(1, Math.ceil(activityTotalEntries / activityEntriesPerPage));
+    const activityStartIndex = (activityCurrentPage - 1) * activityEntriesPerPage;
+    const activityEndIndex = activityStartIndex + activityEntriesPerPage;
+    const paginatedActivities = activities.slice(activityStartIndex, activityEndIndex);
+    if (activityCurrentPage > activityTotalPages && activityTotalPages > 0) {
+      setActivityCurrentPage(1);
+    }
+
+    // Logs pagination calculations
+    const logTotalEntries = systemLogs.length;
+    const logTotalPages = Math.max(1, Math.ceil(logTotalEntries / logEntriesPerPage));
+    const logStartIndex = (logCurrentPage - 1) * logEntriesPerPage;
+    const logEndIndex = logStartIndex + logEntriesPerPage;
+    const paginatedLogs = systemLogs.slice(logStartIndex, logEndIndex);
+    if (logCurrentPage > logTotalPages && logTotalPages > 0) {
+      setLogCurrentPage(1);
+    }
 
     const renderOverview = () => (
     <div className="space-y-6">
@@ -787,7 +848,7 @@ const SuperUserDashboard = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200 dark:divide-slate-600">
-              {filteredUsers.map(user => (
+              {paginatedUsers.map(user => (
                 <tr key={user.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors">
                   <td className="px-4 py-3 whitespace-nowrap">
                     <div className="flex items-center">
@@ -862,6 +923,13 @@ const SuperUserDashboard = () => {
             </tbody>
           </table>
         </div>
+        <Pagination
+          currentPage={userCurrentPage}
+          totalPages={userTotalPages}
+          onPageChange={setUserCurrentPage}
+          entriesPerPage={userEntriesPerPage}
+          totalEntries={userTotalEntries}
+        />
       </div>
     </div>
   );
@@ -903,7 +971,7 @@ const SuperUserDashboard = () => {
 
       {/* Organizations Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredOrgs.map(org => (
+        {paginatedOrgs.map(org => (
           <div key={org.id} className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
             <div className="flex items-start justify-between mb-4">
               <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center text-white">
@@ -989,6 +1057,13 @@ const SuperUserDashboard = () => {
           </div>
         ))}
       </div>
+      <Pagination
+        currentPage={orgCurrentPage}
+        totalPages={orgTotalPages}
+        onPageChange={setOrgCurrentPage}
+        entriesPerPage={orgEntriesPerPage}
+        totalEntries={orgTotalEntries}
+      />
     </div>
   );
 
@@ -1036,6 +1111,18 @@ const SuperUserDashboard = () => {
 
     if (filterStatus !== 'all') {
       filteredSubs.filter(sub => sub.status === filterStatus);
+    }
+
+    // Pagination calculations
+    const subTotalEntries = filteredSubs.length;
+    const subTotalPages = Math.max(1, Math.ceil(subTotalEntries / subEntriesPerPage));
+    const subStartIndex = (subCurrentPage - 1) * subEntriesPerPage;
+    const subEndIndex = subStartIndex + subEntriesPerPage;
+    const paginatedSubs = filteredSubs.slice(subStartIndex, subEndIndex);
+
+    // Reset to page 1 if current page exceeds total pages (e.g. after search filter)
+    if (subCurrentPage > subTotalPages && subTotalPages > 0) {
+      setSubCurrentPage(1);
     }
 
     return (
@@ -1178,7 +1265,7 @@ const SuperUserDashboard = () => {
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                {filteredSubs.map(sub => (
+                {paginatedSubs.map(sub => (
                   <tr key={sub.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                     <td className="px-4 py-3 whitespace-nowrap">
                       <div>
@@ -1243,6 +1330,13 @@ const SuperUserDashboard = () => {
               </tbody>
             </table>
           </div>
+          <Pagination
+            currentPage={subCurrentPage}
+            totalPages={subTotalPages}
+            onPageChange={setSubCurrentPage}
+            entriesPerPage={subEntriesPerPage}
+            totalEntries={subTotalEntries}
+          />
         </div>
       </div>
     );
@@ -1257,7 +1351,7 @@ const SuperUserDashboard = () => {
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Real-time Activity Monitor</h3>
         <div className="space-y-3">
-          {activities.map(activity => (
+          {paginatedActivities.map(activity => (
             <div key={activity.id} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
               <div className="flex items-center space-x-4">
                 <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
@@ -1281,6 +1375,13 @@ const SuperUserDashboard = () => {
             </div>
           ))}
         </div>
+        <Pagination
+          currentPage={activityCurrentPage}
+          totalPages={activityTotalPages}
+          onPageChange={setActivityCurrentPage}
+          entriesPerPage={activityEntriesPerPage}
+          totalEntries={activityTotalEntries}
+        />
       </div>
     </div>
   );
@@ -1378,7 +1479,7 @@ const SuperUserDashboard = () => {
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">System Logs</h3>
         <div className="space-y-2">
-          {systemLogs.map(log => (
+          {paginatedLogs.map(log => (
             <div key={log.id} className="flex items-start space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
               <div className={`w-2 h-2 rounded-full mt-2 ${
                 log.severity === 'critical' ? 'bg-red-500' :
@@ -1409,6 +1510,13 @@ const SuperUserDashboard = () => {
             </div>
           ))}
         </div>
+        <Pagination
+          currentPage={logCurrentPage}
+          totalPages={logTotalPages}
+          onPageChange={setLogCurrentPage}
+          entriesPerPage={logEntriesPerPage}
+          totalEntries={logTotalEntries}
+        />
       </div>
     </div>
   );
@@ -1667,7 +1775,7 @@ const SuperUserDashboard = () => {
     }
 
     return (
-      <div className="w-full">
+      <div className="w-full pb-20">
         {/* Page Content */}
         {renderContent()}
 

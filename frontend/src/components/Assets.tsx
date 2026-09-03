@@ -448,7 +448,7 @@ const Assets = () => {
               // Navigate to all assets view
               console.log('Total Assets clicked');
             }}
-            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center">
               <div className="p-2 lg:p-3 bg-blue-100 dark:bg-blue-900/20  rounded-full">
@@ -466,7 +466,7 @@ const Assets = () => {
               // Navigate to active assets
               console.log('Active Assets clicked');
             }}
-            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center">
               <div className="p-2 lg:p-3 bg-emerald-100 dark:bg-emerald-900/20  rounded-full">
@@ -486,7 +486,7 @@ const Assets = () => {
               // Navigate to maintenance assets
               console.log('Maintenance Assets clicked');
             }}
-            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center">
               <div className="p-2 lg:p-3 bg-yellow-100 dark:bg-yellow-900/20  rounded-full">
@@ -506,7 +506,7 @@ const Assets = () => {
               // Navigate to assets with issues
               console.log('Asset Issues clicked');
             }}
-            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center">
               <div className="p-2 lg:p-3 bg-red-100 dark:bg-red-900/20  rounded-full">
@@ -1028,7 +1028,7 @@ const Assets = () => {
           <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6 space-y-6">
             {/* Key Performance Indicators */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6">
-              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow">
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow-lg">
                 <div className="flex items-center">
                   <div className="p-2 lg:p-3 bg-blue-100 dark:bg-blue-900">
                     <TrendingUp className="w-5 h-5 lg:w-6 lg:h-6 text-blue-600 dark:text-blue-400" />
@@ -1041,7 +1041,7 @@ const Assets = () => {
                 </div>
               </div>
               
-              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow">
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow-lg">
                 <div className="flex items-center">
                   <div className="p-2 lg:p-3 bg-emerald-100 dark:bg-emerald-900">
                     <BarChart3 className="w-5 h-5 lg:w-6 lg:h-6 text-emerald-600 dark:text-emerald-400" />
@@ -1054,7 +1054,7 @@ const Assets = () => {
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow">
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow-lg">
                 <div className="flex items-center">
                   <div className="p-2 lg:p-3 bg-yellow-100 dark:bg-yellow-900">
                     <Clock className="w-5 h-5 lg:w-6 lg:h-6 text-yellow-600 dark:text-yellow-400" />
@@ -1067,7 +1067,7 @@ const Assets = () => {
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow">
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow-lg">
                 <div className="flex items-center">
                   <div className="p-2 lg:p-3 bg-red-100 dark:bg-red-900">
                     <AlertTriangle className="w-5 h-5 lg:w-6 lg:h-6 text-red-600 dark:text-red-400" />

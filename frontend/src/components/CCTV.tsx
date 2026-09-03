@@ -397,7 +397,7 @@ const CCTV = () => {
             {cameras.map((camera) => (
               <div
                 key={camera.id}
-                className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-lg transition-shadow"
+                className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
               >
                 {/* Camera Feed */}
                 <div id={`camera-feed-${camera.id}`} className="relative aspect-video bg-gray-900 dark:bg-black">
@@ -569,7 +569,7 @@ const CCTV = () => {
             {cameras.map((camera) => (
               <div
                 key={camera.id}
-                className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6"
+                className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 shadow-lg"
               >
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   {/* Large Camera Feed */}

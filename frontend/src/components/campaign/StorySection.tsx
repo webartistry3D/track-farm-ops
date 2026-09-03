@@ -8,7 +8,7 @@ const StorySection = () => {
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="The Story"
-          title="Built. Deployed. Now We Need to Reach More Farmers."
+          title="Built and Deployed. Now We Need to Reach More Farmers."
           titleDelay={0.2}
         />
         

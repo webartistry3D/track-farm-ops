@@ -274,7 +274,7 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
           <div 
             onClick={() => navigate('/income')}
-            className="group bg-emerald-50 dark:bg-gray-800 border border-emerald-200 dark:border-emerald-700 rounded-xl p-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
+            className="group bg-emerald-50 dark:bg-gray-800 rounded-xl p-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
           >
             <div className="flex items-start justify-between mb-3">
               <div className="flex flex-col space-y-1">
@@ -312,7 +312,7 @@ const Dashboard = () => {
           
           <div 
             onClick={() => navigate('/expenses')}
-            className="group bg-red-50 dark:bg-gray-800 border border-red-200 dark:border-red-700 rounded-xl p-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
+            className="group bg-red-50 dark:bg-gray-800 rounded-xl p-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
           >
             <div className="flex items-start justify-between mb-3">
               <div className="flex flex-col space-y-1">
@@ -350,7 +350,7 @@ const Dashboard = () => {
           
           <div 
             onClick={() => navigate('/income?tab=vat')}
-            className="group bg-emerald-50 dark:bg-gray-800 border border-emerald-200 dark:border-emerald-700 rounded-xl p-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
+            className="group bg-emerald-50 dark:bg-gray-800 rounded-xl p-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
           >
             <div className="flex items-start justify-between mb-3">
               <div className="flex flex-col space-y-1">
@@ -388,11 +388,11 @@ const Dashboard = () => {
           
           <div 
             onClick={() => dateFilter === 'allTime' ? navigate('/analytics') : navigate('/income?filter=' + dateFilter)}
-            className={`group border ${
+            className={`group ${
               dateFilter === 'allTime' ? 
-                'bg-emerald-50 dark:bg-gray-800 border-emerald-200 dark:border-emerald-700' :
-                netProfit >= 0 ? 'bg-emerald-50 dark:bg-gray-800 border-emerald-200 dark:border-emerald-700' : 
-                'bg-red-50 dark:bg-gray-800 border-red-200 dark:border-red-700'
+                'bg-emerald-50 dark:bg-gray-800' :
+                netProfit >= 0 ? 'bg-emerald-50 dark:bg-gray-800' : 
+                'bg-red-50 dark:bg-gray-800'
             } rounded-xl p-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer`}
           >
             <div className="flex items-start justify-between mb-3">
@@ -451,7 +451,7 @@ const Dashboard = () => {
 
       {/* Financial Overview */}
       {/* Date Filter */}
-      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow rounded-lg px-2 py-2 mb-6">
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-lg px-2 py-2 mb-6">
         <div className="flex flex-col gap-4">
           {/*<h3 className="text-lg font-jetbrains-mono font-medium text-gray-900 dark:text-white">
             Financial Overview
@@ -557,18 +557,18 @@ const Dashboard = () => {
         <div>
           <h2 className="text-xl font-jetbrains-mono font-semibold mb-4 text-gray-900 dark:text-white">Quick Actions</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <Link to="/income" className="font-inter btn text-center bg-emerald-600 text-white hover:bg-emerald-700 border border-emerald-500 focus:ring-emerald-500">
+            <Link to="/income" className="font-inter btn text-center bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-emerald-500">
               Record Income
             </Link>
-            <Link to="/expenses" className="font-inter btn text-center bg-white dark:bg-gray-800  text-gray-900 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
+            <Link to="/expenses" className="font-inter btn text-center bg-red-50 dark:bg-gray-800 text-red-700 dark:text-red-300 hover:bg-red-100 dark:hover:bg-gray-700">
               Record Expense
             </Link>
             {isOwner && (
               <>
-                <Link to="/reports" className="font-inter btn text-center bg-white dark:bg-gray-800  text-gray-900 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
+                <Link to="/reports" className="font-inter btn text-center bg-green-50 dark:bg-gray-800 text-green-700 dark:text-green-300 hover:bg-green-100 dark:hover:bg-gray-700">
                   View Reports
                 </Link>
-                <Link to="/inventory" className="font-inter btn text-center bg-white dark:bg-gray-800  text-gray-900 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
+                <Link to="/inventory" className="font-inter btn text-center bg-teal-50 dark:bg-gray-800 text-teal-700 dark:text-teal-300 hover:bg-teal-100 dark:hover:bg-gray-700">
                   Manage Inventory
                 </Link>
               </>
@@ -581,40 +581,40 @@ const Dashboard = () => {
             <div className="grid grid-cols-2 gap-3">
               <div 
                 onClick={() => handleCardClick('income')}
-                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
+                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-lg p-9 text-center cursor-pointer hover:shadow-xl transition-shadow duration-200 hover:scale-105 transform"
               >
                 <div className="text-xl mb-1">📊</div>
-                <div className="text-3xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
+                <div className="text-5xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
                   {incomeEntries.length}
                 </div>
-                <div className="text-sm font-inter text-gray-600 dark:text-gray-400">Income Entries</div>
+                <div className="text-sm font-inter text-gray-600 dark:text-gray-400">Income</div>
               </div>
               <div 
                 onClick={() => handleCardClick('expenses')}
-                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
+                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-lg p-9 text-center cursor-pointer hover:shadow-xl transition-shadow duration-200 hover:scale-105 transform"
               >
                 <div className="text-xl mb-1">💸</div>
-                <div className="text-3xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
+                <div className="text-5xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
                   {expenseEntries.length}
                 </div>
-                <div className="text-sm font-inter text-gray-600 dark:text-gray-400">Expense Entries</div>
+                <div className="text-sm font-inter text-gray-600 dark:text-gray-400">Expense</div>
               </div>
               <div 
                 onClick={() => handleCardClick('inventory')}
-                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
+                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-lg p-9 text-center cursor-pointer hover:shadow-xl transition-shadow duration-200 hover:scale-105 transform"
               >
                 <div className="text-xl mb-1">📦</div>
-                <div className="text-3xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
+                <div className="text-5xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
                   {inventoryItems.length}
                 </div>
-                <div className="text-sm font-inter text-gray-600 dark:text-gray-400">Inventory Items</div>
+                <div className="text-sm font-inter text-gray-600 dark:text-gray-400">Inventory</div>
               </div>
               <div 
                 onClick={() => handleCardClick('assets')}
-                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow rounded-lg p-9 text-center cursor-pointer hover:shadow-lg transition-shadow duration-200 hover:scale-105 transform"
+                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-lg p-9 text-center cursor-pointer hover:shadow-xl transition-shadow duration-200 hover:scale-105 transform"
               >
                 <div className="text-xl mb-1">🏗️</div>
-                <div className="text-3xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
+                <div className="text-5xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
                   {assets.length}
                 </div>
                 <div className="text-sm font-inter text-gray-600 dark:text-gray-400">Assets</div>
@@ -625,7 +625,7 @@ const Dashboard = () => {
 
         <div>
           <h2 className="text-xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white mb-4">Recent Activity</h2>
-          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow rounded-lg p-0">
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-lg p-0">
             {incomeEntries.length > 0 || expenseEntries.length > 0 ? (
               <div className="space-y-3 max-h-96 overflow-y-auto">
                 {/* Combine income and expense entries, sort by newest first, and limit to 10 entries */}
