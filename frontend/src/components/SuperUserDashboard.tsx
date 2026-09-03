@@ -111,6 +111,11 @@ interface SystemLog {
   ip: string;
   action: string;
   userId?: number;
+  userName?: string;
+  userRole?: string;
+  resource?: string;
+  resourceId?: string;
+  metadata?: any;
 }
 
 interface Activity {

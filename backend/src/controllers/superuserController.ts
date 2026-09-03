@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { prisma } from '../lib/prisma';
 import { AuthRequest } from '../middleware/auth';
+import { logSystemEvent } from '../utils/auditLogger';
 import * as os from 'os';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -467,6 +468,20 @@ export const toggleUserStatus = async (req: AuthRequest, res: Response) => {
     // In a real implementation, you'd add a 'status' field to the User model
     console.log(`🔄 User status toggle requested for user ${userId} to ${status}`);
 
+    await logSystemEvent({
+      type: 'user',
+      message: `Superuser ${currentUser.name} toggled user ${userId} status to ${status}`,
+      severity: 'warning',
+      action: 'toggle_user_status',
+      ip: req.ip || req.connection?.remoteAddress || 'unknown',
+      userId: currentUser.id,
+      userName: currentUser.name,
+      userRole: currentUser.role,
+      resource: 'User',
+      resourceId: String(userId),
+      metadata: { targetUserId: userId, newStatus: status },
+    });
+
     res.json({
       message: `User status updated to ${status}`,
       userId,
@@ -507,6 +522,20 @@ export const deleteUserAccount = async (req: AuthRequest, res: Response) => {
     });
 
     console.log(`🗑️ Superuser ${currentUser.name} deleted user ${userToDelete.name} (${userToDelete.email})`);
+
+    await logSystemEvent({
+      type: 'user',
+      message: `Superuser ${currentUser.name} deleted user ${userToDelete.name} (${userToDelete.email})`,
+      severity: 'error',
+      action: 'delete_user',
+      ip: req.ip || req.connection?.remoteAddress || 'unknown',
+      userId: currentUser.id,
+      userName: currentUser.name,
+      userRole: currentUser.role,
+      resource: 'User',
+      resourceId: String(userToDelete.id),
+      metadata: { deletedUserName: userToDelete.name, deletedUserEmail: userToDelete.email, deletedUserRole: userToDelete.role },
+    });
 
     res.json({
       message: 'User deleted successfully',
@@ -552,8 +581,35 @@ export const getAllSubscriptions = async (req: AuthRequest, res: Response) => {
       }
     });
 
+    // Plan features lookup (mirrors Pricing.tsx definitions)
+    const planFeatures: Record<string, string[]> = {
+      freemium: [
+        '1 Farm, 1 Owner, 1 Manager, 1 Worker',
+        'Limited Tracking & Reporting',
+        'Email support'
+      ],
+      starter: [
+        'Full Income & Expense Tracking',
+        'Full Assets, Inventory & Livestock Health Management',
+        'Financial Reporting',
+        'Priority email support'
+      ],
+      growth: [
+        '1 Farm location',
+        'Up to 18 Farm managers & workers',
+        'Priority support'
+      ],
+      pro: [
+        '3 Farm locations',
+        'Up to 75 Farm managers & workers',
+        'Priority support'
+      ]
+    };
+
     // Transform the data to match the frontend interface
-    const transformedSubscriptions = subscriptions.map(sub => ({
+    const transformedSubscriptions = subscriptions.map(sub => {
+      const planKey = (sub.plan || '').toLowerCase();
+      return {
       id: sub.id.toString(),
       userId: sub.userId.toString(),
       userName: sub.user.name,
@@ -566,12 +622,13 @@ export const getAllSubscriptions = async (req: AuthRequest, res: Response) => {
       startDate: sub.activatedAt?.toISOString() || new Date().toISOString(),
       endDate: sub.expiresAt?.toISOString() || new Date().toISOString(),
       nextBillingDate: sub.expiresAt?.toISOString() || new Date().toISOString(),
-      autoRenew: true, // Default to true since field doesn't exist
-      paymentMethod: 'card', // Default since field doesn't exist
+      autoRenew: true,
+      paymentMethod: 'card',
       lastPaymentDate: sub.activatedAt?.toISOString() || new Date().toISOString(),
       organization: sub.user.organization?.name || 'Unknown',
-      features: [] // Default empty array since field doesn't exist
-    }));
+      features: planFeatures[planKey] || []
+      };
+    });
 
     console.log(`📊 Superuser ${currentUser.name} fetched ${subscriptions.length} subscriptions`);
     res.json(transformedSubscriptions);
@@ -624,6 +681,20 @@ export const toggleOrganizationStatus = async (req: AuthRequest, res: Response) 
 
     console.log(`🔒 Superuser ${currentUser.name} attempted to ${actionMessage} organization "${organization.name}" (${organization._count.users} users affected)`);
 
+    await logSystemEvent({
+      type: 'organization',
+      message: `Superuser ${currentUser.name} ${actionMessage} organization "${organization.name}" (${organization._count.users} users affected)`,
+      severity: action === 'suspend' ? 'warning' : 'info',
+      action: 'toggle_organization_status',
+      ip: req.ip || req.connection?.remoteAddress || 'unknown',
+      userId: currentUser.id,
+      userName: currentUser.name,
+      userRole: currentUser.role,
+      resource: 'Organization',
+      resourceId: String(organization.id),
+      metadata: { orgName: organization.name, action, usersAffected: organization._count.users },
+    });
+
     res.json({
       message: `Organization ${actionMessage} successfully (status field not implemented yet)`,
       organization: {
@@ -671,6 +742,20 @@ export const deleteOrganization = async (req: AuthRequest, res: Response) => {
     });
 
     console.log(`🗑️ Superuser ${currentUser.name} deleted organization "${organization.name}" (${organization._count.users} users, ${organization._count.subscriptions} subscriptions removed)`);
+
+    await logSystemEvent({
+      type: 'organization',
+      message: `Superuser ${currentUser.name} deleted organization "${organization.name}" (${organization._count.users} users, ${organization._count.subscriptions} subscriptions)`,
+      severity: 'error',
+      action: 'delete_organization',
+      ip: req.ip || req.connection?.remoteAddress || 'unknown',
+      userId: currentUser.id,
+      userName: currentUser.name,
+      userRole: currentUser.role,
+      resource: 'Organization',
+      resourceId: String(organization.id),
+      metadata: { orgName: organization.name, usersDeleted: organization._count.users, subscriptionsDeleted: organization._count.subscriptions },
+    });
 
     res.json({
       message: 'Organization deleted successfully',
@@ -735,6 +820,20 @@ export const toggleSubscriptionStatus = async (req: AuthRequest, res: Response) 
     });
 
     console.log(`🔄 Superuser ${currentUser.name} ${action}d subscription for ${subscription.user.name} (${subscription.user.email})`);
+
+    await logSystemEvent({
+      type: 'subscription',
+      message: `Superuser ${currentUser.name} ${action}d subscription for ${subscription.user.name} (${subscription.user.email})`,
+      severity: action === 'cancel' ? 'warning' : 'info',
+      action: 'toggle_subscription_status',
+      ip: req.ip || req.connection?.remoteAddress || 'unknown',
+      userId: currentUser.id,
+      userName: currentUser.name,
+      userRole: currentUser.role,
+      resource: 'Subscription',
+      resourceId: String(subscription.id),
+      metadata: { targetUser: subscription.user.name, targetEmail: subscription.user.email, action, newStatus },
+    });
 
     res.json({
       message: `Subscription ${action}d successfully`,

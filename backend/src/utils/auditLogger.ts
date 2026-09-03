@@ -1,5 +1,6 @@
 import { AuthRequest } from '../middleware/auth';
 import { getSecurityContext, SecurityContext } from '../middleware/rowLevelSecurity';
+import { prisma } from '../lib/prisma';
 
 /**
  * Comprehensive Audit Logging System
@@ -416,3 +417,41 @@ export const logAuth = (action: 'LOGIN' | 'LOGOUT', userId: number, organization
 export const logPasswordChange = (userId: number, organizationId: number, userRole: string, organizationName: string, success: boolean, passwordStrength?: string, errorMessage?: string, req?: AuthRequest) => {
   auditLogger.logPasswordChange(userId, organizationId, userRole, organizationName, success, passwordStrength, errorMessage, req);
 };
+
+/**
+ * Persist a system log entry to the database (system_logs table).
+ * This is the primary function for recording durable, queryable system events.
+ */
+export async function logSystemEvent(params: {
+  type: string;
+  message: string;
+  severity?: string;
+  action: string;
+  ip?: string;
+  userId?: number;
+  userName?: string;
+  userRole?: string;
+  resource?: string;
+  resourceId?: string;
+  metadata?: any;
+}): Promise<void> {
+  try {
+    await prisma.systemLog.create({
+      data: {
+        type: params.type,
+        message: params.message,
+        severity: params.severity || 'info',
+        action: params.action,
+        ip: params.ip || null,
+        userId: params.userId || null,
+        userName: params.userName || null,
+        userRole: params.userRole || null,
+        resource: params.resource || null,
+        resourceId: params.resourceId || null,
+        metadata: params.metadata || undefined,
+      },
+    });
+  } catch (error) {
+    console.error('Failed to persist system log:', error);
+  }
+}

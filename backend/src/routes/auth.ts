@@ -3,6 +3,7 @@ import { signup, createUser, getUsers, getProfile, createTestUsers, deleteUser }
 import { authenticate, AuthRequest } from '../middleware/auth';
 import { passwordChangeRateLimiter, authRateLimiter } from '../middleware/rateLimiter';
 import { logPasswordChange } from '../utils/auditLogger';
+import { logSystemEvent } from '../utils/auditLogger';
 import { uploadProfileImage, uploadProfileImageMiddleware } from './profileImage';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
@@ -33,16 +34,48 @@ router.post('/login', authRateLimiter.middleware, async (req, res) => {
     });
 
     if (!user) {
+      await logSystemEvent({
+        type: 'security',
+        message: `Failed login attempt for email: ${email}`,
+        severity: 'warning',
+        action: 'failed_login',
+        ip: req.ip || req.connection?.remoteAddress || 'unknown',
+        metadata: { email },
+      });
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
+      await logSystemEvent({
+        type: 'security',
+        message: `Failed login attempt for user: ${user.name} (${user.email})`,
+        severity: 'warning',
+        action: 'failed_login',
+        ip: req.ip || req.connection?.remoteAddress || 'unknown',
+        userId: user.id,
+        userName: user.name,
+        userRole: user.role,
+        metadata: { email },
+      });
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
     // Generate JWT token using shared utility (ensures consistent secret)
     const token = generateToken(user);
+
+    await logSystemEvent({
+      type: 'auth',
+      message: `User ${user.name} (${user.email}) logged in successfully`,
+      severity: 'info',
+      action: 'login',
+      ip: req.ip || req.connection?.remoteAddress || 'unknown',
+      userId: user.id,
+      userName: user.name,
+      userRole: user.role,
+      resource: 'Authentication',
+      metadata: { organizationId: user.organizationId },
+    });
 
     res.json({
       user: {
@@ -112,6 +145,18 @@ router.post('/superuser-signup', async (req, res) => {
     });
 
     console.log(`✅ Superuser created: ${superuser.name} (${superuser.email})`);
+
+    await logSystemEvent({
+      type: 'security',
+      message: `New superuser account created: ${superuser.name} (${superuser.email})`,
+      severity: 'critical',
+      action: 'superuser_signup',
+      ip: req.ip || req.connection?.remoteAddress || 'unknown',
+      userId: superuser.id,
+      userName: superuser.name,
+      userRole: superuser.role,
+      resource: 'Authentication',
+    });
 
     // Generate JWT token using shared utility (ensures consistent secret)
     const token = generateToken(superuser);

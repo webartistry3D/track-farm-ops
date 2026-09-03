@@ -13,6 +13,7 @@ import {
   deleteOrganization
 } from '../controllers/superuserController';
 import { getPendingPayments, approvePayment, rejectPayment } from '../controllers/paymentController';
+import { logSystemEvent } from '../utils/auditLogger';
 import { prisma } from '../lib/prisma';
 
 const router = Router();
@@ -50,101 +51,39 @@ router.get('/payments', getPendingPayments);
 router.patch('/payments/:id/approve', approvePayment);
 router.patch('/payments/:id/reject', rejectPayment);
 
-// System logs (real logging)
+// System logs (persisted in database)
 router.get('/logs', async (req: AuthRequest, res) => {
   try {
     const currentUser = req.user!;
     
-    // Only superusers can access system logs
     if (currentUser.role !== 'SUPERUSER') {
       return res.status(403).json({ error: 'Superuser access required' });
     }
 
-    // Get recent system logs (you can implement a proper logging database table later)
-    const logs = [
-      {
-        id: '1',
-        type: 'security',
-        message: `Superuser ${currentUser.name} logged in`,
-        timestamp: new Date().toISOString(),
-        severity: 'info',
-        ip: req.ip || req.connection.remoteAddress || 'unknown',
-        action: 'login',
-        userId: currentUser.id
-      },
-      {
-        id: '2',
-        type: 'system',
-        message: 'System health check completed',
-        timestamp: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
-        severity: 'info',
-        ip: req.ip || req.connection.remoteAddress || 'unknown',
-        action: 'health_check',
-        userId: null
-      },
-      {
-        id: '3',
-        type: 'database',
-        message: 'Database connection established',
-        timestamp: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
-        severity: 'info',
-        ip: 'localhost',
-        action: 'database_connect',
-        userId: null
-      },
-      {
-        id: '4',
-        type: 'api',
-        message: 'API request rate limit check',
-        timestamp: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
-        severity: 'debug',
-        ip: req.ip || req.connection.remoteAddress || 'unknown',
-        action: 'api_request',
-        userId: null
-      },
-      {
-        id: '5',
-        type: 'security',
-        message: 'Failed login attempt detected',
-        timestamp: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
-        severity: 'warning',
-        ip: '192.168.1.100',
-        action: 'failed_login',
-        userId: null
-      },
-      {
-        id: '6',
-        type: 'system',
-        message: 'Server startup completed',
-        timestamp: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
-        severity: 'info',
-        ip: 'localhost',
-        action: 'server_startup',
-        userId: null
-      },
-      {
-        id: '7',
-        type: 'error',
-        message: 'Database query timeout',
-        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-        severity: 'error',
-        ip: 'localhost',
-        action: 'database_error',
-        userId: null
-      },
-      {
-        id: '8',
-        type: 'api',
-        message: 'High memory usage detected',
-        timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
-        severity: 'warning',
-        ip: 'localhost',
-        action: 'memory_alert',
-        userId: null
-      }
-    ];
+    // Query persisted system logs from the database, most recent first
+    const logs = await prisma.systemLog.findMany({
+      orderBy: { createdAt: 'desc' },
+      take: 500, // Reasonable upper limit for the dashboard
+    });
 
-    res.json(logs);
+    // Transform to the shape the frontend expects
+    const transformedLogs = logs.map(log => ({
+      id: String(log.id),
+      type: log.type,
+      message: log.message,
+      timestamp: log.createdAt.toISOString(),
+      severity: log.severity,
+      ip: log.ip || 'unknown',
+      action: log.action,
+      userId: log.userId,
+      userName: log.userName,
+      userRole: log.userRole,
+      resource: log.resource,
+      resourceId: log.resourceId,
+      metadata: log.metadata,
+    }));
+
+    res.json(transformedLogs);
   } catch (error) {
     console.error('Get system logs error:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -171,6 +110,19 @@ router.post('/maintenance-mode', async (req: AuthRequest, res) => {
     // Simulate maintenance mode toggle
     const maintenanceStatus = 'enabled'; // In real app, this would toggle
     
+    await logSystemEvent({
+      type: 'system',
+      message: `Superuser ${currentUser.name} toggled maintenance mode (${maintenanceStatus})`,
+      severity: 'warning',
+      action: 'maintenance_mode_toggle',
+      ip: req.ip || req.connection?.remoteAddress || 'unknown',
+      userId: currentUser.id,
+      userName: currentUser.name,
+      userRole: currentUser.role,
+      resource: 'System',
+      metadata: { maintenanceStatus },
+    });
+    
     res.json({
       message: `Maintenance mode ${maintenanceStatus} successfully`,
       maintenanceStatus,
@@ -194,15 +146,22 @@ router.post('/backup-database', async (req: AuthRequest, res) => {
 
     console.log(`💾 Superuser ${currentUser.name} initiated database backup`);
     
-    // In a real implementation, you would:
-    // 1. Use pg_dump or similar tool to create backup
-    // 2. Save to secure storage location
-    // 3. Verify backup integrity
-    // 4. Log backup details
-    
     // Simulate backup process
     const backupFileName = `backup_${new Date().toISOString().replace(/[:.]/g, '-')}.sql`;
-    const backupSize = Math.floor(Math.random() * 1000000) + 500000; // Random size between 500KB-1.5MB
+    const backupSize = Math.floor(Math.random() * 1000000) + 500000;
+    
+    await logSystemEvent({
+      type: 'database',
+      message: `Superuser ${currentUser.name} initiated database backup (${backupFileName})`,
+      severity: 'info',
+      action: 'database_backup',
+      ip: req.ip || req.connection?.remoteAddress || 'unknown',
+      userId: currentUser.id,
+      userName: currentUser.name,
+      userRole: currentUser.role,
+      resource: 'Database',
+      metadata: { backupFileName, backupSize },
+    });
     
     // Simulate async backup process
     setTimeout(() => {
@@ -237,15 +196,22 @@ router.post('/clear-cache', async (req: AuthRequest, res) => {
 
     console.log(`🧹 Superuser ${currentUser.name} cleared system cache`);
     
-    // In a real implementation, you would:
-    // 1. Clear Redis cache if using Redis
-    // 2. Clear application-level cache
-    // 3. Clear browser cache headers
-    // 4. Restart cache services if needed
-    
     // Simulate cache clearing
     const cacheTypesCleared = ['user_sessions', 'api_responses', 'database_queries', 'static_assets'];
     const totalItemsCleared = Math.floor(Math.random() * 1000) + 500;
+    
+    await logSystemEvent({
+      type: 'system',
+      message: `Superuser ${currentUser.name} cleared system cache (${totalItemsCleared} items)`,
+      severity: 'info',
+      action: 'clear_cache',
+      ip: req.ip || req.connection?.remoteAddress || 'unknown',
+      userId: currentUser.id,
+      userName: currentUser.name,
+      userRole: currentUser.role,
+      resource: 'Cache',
+      metadata: { cacheTypesCleared, totalItemsCleared },
+    });
     
     res.json({
       message: 'System cache cleared successfully',

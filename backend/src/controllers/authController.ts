@@ -5,6 +5,7 @@ import { generateToken, hashPassword, comparePassword } from '../utils/auth';
 import { AuthRequest, getReqBody } from '../middleware/auth';
 import { autoSeedIfEmpty } from '../utils/autoSeeding';
 import { sendWelcomeEmail } from '../utils/emailService';
+import { logSystemEvent } from '../utils/auditLogger';
 
 export const signup = async (req: Request, res: Response) => {
   try {
@@ -87,6 +88,19 @@ export const signup = async (req: Request, res: Response) => {
 
     // Return user without password
     const { password: _, ...userWithoutPassword } = newUser;
+
+    await logSystemEvent({
+      type: 'auth',
+      message: `New user registered: ${newUser.name} (${newUser.email})`,
+      severity: 'info',
+      action: 'signup',
+      ip: req.ip || req.connection?.remoteAddress || 'unknown',
+      userId: newUser.id,
+      userName: newUser.name,
+      userRole: newUser.role,
+      resource: 'Authentication',
+      metadata: { farmName, farmType },
+    });
 
     res.status(201).json({
       message: 'Account created successfully',

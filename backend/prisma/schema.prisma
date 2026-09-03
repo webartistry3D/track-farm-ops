@@ -758,6 +758,27 @@ enum HealthRecordStatus {
   CANCELLED
 }
 
+model SystemLog {
+  id          Int      @id @default(autoincrement())
+  type        String   // security, system, database, api, error, auth, user, organization, subscription, payment
+  message     String
+  severity    String   @default("info") // info, warning, error, critical, debug
+  action      String   // login, logout, create, update, delete, toggle_status, etc.
+  ip          String?  @map("ip_address")
+  userId      Int?     @map("user_id")
+  userName    String?  @map("user_name")
+  userRole    String?  @map("user_role")
+  resource    String?  // affected resource name
+  resourceId  String?  @map("resource_id")
+  metadata    Json?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([createdAt])
+  @@index([type])
+  @@index([severity])
+  @@map("system_logs")
+}
+
 // Vaccinations
 model Vaccination {
   id                  Int          @id @default(autoincrement())
