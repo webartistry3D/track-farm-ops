@@ -1,5 +1,7 @@
 # Debug artifacts and database dumps
 shared/
+backup.sql
+backup_*.sql
 
 # Logs
 logs

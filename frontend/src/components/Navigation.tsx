@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 
 const navLinks = [
   { to: '/about', label: 'About' },
-  { to: '/support', label: 'Support' },
+  //{ to: '/support', label: 'Support' },
   { to: '/privacy', label: 'Privacy' },
   { to: '/terms', label: 'Terms' },
   { to: '/contact', label: 'Contact' },
@@ -22,7 +22,7 @@ const Navigation = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-500 ${
         scrolled ? 'bg-transparent' : 'bg-transparent'
       }`}
     >

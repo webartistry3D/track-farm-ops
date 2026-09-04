@@ -33,7 +33,7 @@ const SectionHeading = ({
     )}
     <Reveal delay={titleDelay}>
       <h2
-        className={`font-jetbrains-mono text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl ${
+        className={`font-jetbrains-mono text-xl font-bold tracking-tight sm:text-2xl lg:text-3xl ${
           light ? 'text-white' : 'text-slate-900'
         }`}
       >

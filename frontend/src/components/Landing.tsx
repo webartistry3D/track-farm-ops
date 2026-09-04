@@ -1,11 +1,11 @@
 ﻿import Navigation from './Navigation';
 import Pricing from './Pricing';
 import BenefitsSection from './landing/BenefitsSection';
-import FeaturesSection from './landing/FeaturesSection';
+//import FeaturesSection from './landing/FeaturesSection';
 import Hero from './landing/Hero';
 import HowItWorksSection from './landing/HowItWorksSection';
 import LandingFooter from './landing/LandingFooter';
-import ProblemsSection from './landing/ProblemsSection';
+//import ProblemsSection from './landing/ProblemsSection';
 import SolutionsSection from './landing/SolutionsSection';
 import TestimonialsSection from './landing/TestimonialsSection';
 
@@ -14,10 +14,10 @@ const Landing = () => (
     <Navigation />
     <main>
       <Hero />
-      <ProblemsSection />
+      {/*<ProblemsSection />*/}
       <SolutionsSection />
       <HowItWorksSection />
-      <FeaturesSection />
+      {/*<FeaturesSection />*/}
       <BenefitsSection />
       <TestimonialsSection />
       <Pricing />

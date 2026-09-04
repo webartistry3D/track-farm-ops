@@ -7,6 +7,7 @@ import {
   UserX,
   Network,
   Wallet,
+  Banknote,
   Tractor,
   Boxes,
   Stethoscope,
@@ -55,13 +56,13 @@ export interface Testimonial {
 
 export const heroChips = [
   { text: 'Complete farm management system', accent: 'from-emerald-500/80 to-green-600/80' },
-  { text: 'Income, expenses, inventory & assets', accent: 'from-sky-500/80 to-blue-600/80' },
+  // { text: 'Income, expenses, inventory & assets', accent: 'from-sky-500/80 to-blue-600/80' },
   { text: 'Monitor operations from anywhere', accent: 'from-amber-500/80 to-orange-600/80' },
 ];
 
 export const heroStats: Stat[] = [
   { value: 30, suffix: '%', label: 'Avg. profit uplift' },
-  { value: 6, label: 'Modules in one app' },
+  { value: 6, label: 'Modules' },
   { value: 4.7, decimals: 1, suffix: '/5', label: 'Farmer rating' },
   { value: 24, suffix: '/7', label: 'Remote monitoring' },
 ];
@@ -107,33 +108,33 @@ export const problems: IconCard[] = [
 
 export const solutions: IconCard[] = [
   {
-    icon: Wallet,
-    title: 'Income & Expenses',
+    icon: Banknote,
+    title: 'Income',
     description: 'Track produce sales, livestock sales, expenses, with revenue dashboard, trends, and profit reports.',
     accent: 'from-emerald-500 to-green-600',
   },
   {
-    icon: Tractor,
-    title: 'Asset Manager',
-    description: 'Track tractors, generators, vehicles with asset register, maintenance scheduling, and utilization tracking.',
+    icon: Wallet,
+    title: 'Expenses',
+    description: 'Track produce sales, livestock sales, expenses, with revenue dashboard, trends, and profit reports.',
     accent: 'from-emerald-500 to-green-600',
   },
   {
     icon: Boxes,
-    title: 'Inventory Manager',
+    title: 'Inventory',
     description: 'Track seeds, feed, fertilizers, agrochemicals with stock levels, low-stock alerts, and waste tracking.',
+    accent: 'from-emerald-500 to-green-600',
+  },
+  {
+    icon: Tractor,
+    title: 'Assets',
+    description: 'Track tractors, generators, vehicles with asset register, maintenance scheduling, and utilization tracking.',
     accent: 'from-emerald-500 to-green-600',
   },
   {
     icon: Stethoscope,
     title: 'Livestock Health',
     description: 'Track health status, vaccinations, checkups, and treatments with veterinarian role access.',
-    accent: 'from-emerald-500 to-green-600',
-  },
-  {
-    icon: Users,
-    title: 'Workforce Manager',
-    description: 'Track employees, attendance, payroll, task assignments with worker profiles and performance records.',
     accent: 'from-emerald-500 to-green-600',
   },
   {

@@ -1,15 +1,15 @@
 import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { formatCompactCurrency } from '../utils/currency';
 
 const Pricing = () => {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly');
-  
+  const root = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     // Check if we need to scroll to pricing section from landing page
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('scroll') === 'pricing') {
-      // Scroll to top of pricing page
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, []);
@@ -41,8 +41,7 @@ const Pricing = () => {
       features: [
         'Full Income & Expense Tracking',
         //'Full Inventory transactions',
-        'Full Assets, Inventory & Livestock Health Management',
-        'Financial Reporting',
+        'Full Tracking & Reporting',
         //'Data export (CSV / Excel)',
         'Priority email support'
       ],
@@ -127,10 +126,10 @@ const Pricing = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-emerald-50">
+    <div ref={root} className="min-h-screen bg-gradient-to-br from-gray-50 to-emerald-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         {/* Header Section */}
-        <div className="text-center mb-20">
+        <div data-pricing="header" className="text-center mb-20">
           <h1 className="text-2xl md:text-3xl lg:text-4xl font-jetbrains-mono font-bold text-gray-900 mb-6">
             Pricing
           </h1>
@@ -141,7 +140,7 @@ const Pricing = () => {
         </div>
 
         {/* Billing Toggle */}
-        <div className="flex justify-center mb-12">
+        <div data-pricing="toggle" className="flex justify-center mb-12">
           <div className="inline-flex items-center bg-gray-100 rounded-full p-1">
             <button
               onClick={() => setBillingCycle('monthly')}
@@ -170,10 +169,11 @@ const Pricing = () => {
         </div>
 
         {/* Pricing Plans */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-20 max-w-7xl mx-auto items-start">
+        <div data-pricing="plans" className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-20 max-w-4xl mx-auto items-start">
           {plans.map((plan) => (
             <div
               key={plan.id}
+              data-pricing="plan"
               className={`relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden ${
                 plan.highlighted
                   ? 'ring-2 ring-emerald-500 ring-offset-4 transform scale-105'
@@ -186,7 +186,7 @@ const Pricing = () => {
                 </div>
               )}
               
-              <div className="p-8">
+              <div className="flex flex-col p-8">
                 {/* Plan Header */}
                 <div className="text-center mb-8">
                   <div className="text-5xl mb-4">{plan.emoji}</div>
@@ -199,7 +199,7 @@ const Pricing = () => {
                 </div>
 
                 {/* Features */}
-                <ul className="space-y-4 mb-8">
+                <ul className="mb-8 space-y-4">
                   {plan.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-start">
                       <div className="flex-shrink-0 w-5 h-5 bg-emerald-100 rounded-full flex items-center justify-center mr-3 mt-0.5">
@@ -254,7 +254,7 @@ const Pricing = () => {
         </div>
 
         {/* Add-Ons Section */}
-        <div className="mb-20">
+        <div data-pricing="addons" className="mb-20">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-jetbrains-mono font-bold text-gray-900 mb-4">
               Optional Add‑Ons
@@ -264,10 +264,11 @@ const Pricing = () => {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div data-pricing="addons-grid" className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {addOns.map((addOn) => (
               <div
                 key={addOn.id}
+                data-pricing="addon"
                 className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-8 border border-gray-200 text-center"
               >
                 <div className="text-4xl mb-4">{addOn.emoji}</div>
@@ -341,7 +342,7 @@ const Pricing = () => {
         </div> */}
 
         {/* Why Choose FarmOps */}
-        <div className="mb-2">
+        <div data-pricing="benefits" className="mb-2">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-jetbrains-mono font-bold text-gray-900 mb-4">
               Why Choose TrackFarmOps?
@@ -352,6 +353,7 @@ const Pricing = () => {
             {benefits.map((benefit, index) => (
               <div
                 key={index}
+                data-pricing="benefit"
                 className="text-center group"
               >
                 <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">
