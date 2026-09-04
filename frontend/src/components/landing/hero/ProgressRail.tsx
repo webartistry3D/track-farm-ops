@@ -5,7 +5,7 @@ interface ProgressRailProps {
   onJump: (sceneIndex: number) => void;
 }
 
-const ProgressRail = ({ activeScene, onJump }: ProgressRailProps) => {
+const ProgressRail = ({ activeScene: _activeScene, onJump }: ProgressRailProps) => {
   return (
     <div className="fixed left-6 top-1/2 z-[50] hidden -translate-y-1/2 flex-col gap-3 lg:flex">
       {scenes.map((scene, i) => (
