@@ -758,56 +758,48 @@ const CCTV = () => {
         {/* Status Overview */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 py-8">
           {/* First Row: Total Cameras and Online */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
-            <div className="flex items-center">
-              <div className="p-2 bg-emerald-100 dark:bg-emerald-900/20 rounded-lg">
-                <Camera className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-              </div>
-              <div className="ml-3">
+          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 shadow-lg">
+            <div className="flex items-center justify-between">
+              <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Total</p>
                 <p className="text-xl font-bold text-gray-900 dark:text-white">{cameras.length}</p>
               </div>
+              <Camera className="h-9 w-9 text-emerald-500" />
             </div>
           </div>
-          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
-            <div className="flex items-center">
-              <div className="p-2 bg-emerald-100 dark:bg-emerald-900/20 rounded-lg">
-                <Eye className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-              </div>
-              <div className="ml-3">
+          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 shadow-lg">
+            <div className="flex items-center justify-between">
+              <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Online</p>
                 <p className="text-xl font-bold text-gray-900 dark:text-white">
                   {cameras.filter(c => c.status === 'online' || c.status === 'recording').length}
                 </p>
               </div>
+              <Eye className="h-9 w-9 text-emerald-500" />
             </div>
           </div>
           
           {/* Second Row: Offline and Motion Alerts */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
-            <div className="flex items-center">
-              <div className="p-2 bg-red-100 dark:bg-red-900/20 rounded-lg">
-                <EyeOff className="h-5 w-5 text-red-600 dark:text-red-400" />
-              </div>
-              <div className="ml-3">
+          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 shadow-lg">
+            <div className="flex items-center justify-between">
+              <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Offline</p>
                 <p className="text-xl font-bold text-gray-900 dark:text-white">
                   {cameras.filter(c => c.status === 'offline').length}
                 </p>
               </div>
+              <EyeOff className="h-9 w-9 text-red-500" />
             </div>
           </div>
-          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
-            <div className="flex items-center">
-              <div className="p-2 bg-orange-100 dark:bg-orange-900/20 rounded-lg">
-                <AlertTriangle className="h-5 w-5 text-orange-600 dark:text-orange-400" />
-              </div>
-              <div className="ml-3">
+          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 shadow-lg">
+            <div className="flex items-center justify-between">
+              <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Motion</p>
                 <p className="text-xl font-bold text-gray-900 dark:text-white">
                   {cameras.filter(c => c.status === 'motion').length}
                 </p>
               </div>
+              <AlertTriangle className="h-9 w-9 text-orange-500" />
             </div>
           </div>
         </div>

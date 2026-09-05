@@ -280,14 +280,22 @@ const getWeatherData = async (req: Request, res: Response) => {
       });
     }
 
-    // Weather data model not yet implemented in schema — return placeholder
+    const latestWeather = await prisma.weatherData.findFirst({
+      where: {
+        organizationId: organizationId
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+
     const weatherData = {
-      temperature: 0,
-      humidity: 0,
-      windSpeed: 0,
-      rainfall: 0,
-      forecast: 'Weather integration not available',
-      lastUpdated: new Date().toISOString()
+      temperature: latestWeather?.temperature || 0,
+      humidity: latestWeather?.humidity || 0,
+      windSpeed: latestWeather?.windSpeed || 0,
+      rainfall: latestWeather?.rainfall || 0,
+      forecast: latestWeather?.forecast || 'No data',
+      lastUpdated: latestWeather?.createdAt?.toISOString() || new Date().toISOString()
     };
 
     res.json({
@@ -347,6 +355,219 @@ const getIrrigationStatusData = async (req: Request, res: Response) => {
   }
 };
 
+// ============ POST CONTROLLERS ============
+
+const createCrop = async (req: Request, res: Response) => {
+  try {
+    const organizationId = (req as any).user?.organizationId;
+
+    if (!organizationId) {
+      return res.status(400).json({ success: false, error: 'Organization ID is required' });
+    }
+
+    const { name, variety, plantingDate, expectedHarvest, zoneAssignment, notes } = req.body;
+
+    if (!name || !plantingDate || !expectedHarvest || !zoneAssignment) {
+      return res.status(400).json({ success: false, error: 'Missing required fields: name, plantingDate, expectedHarvest, zoneAssignment' });
+    }
+
+    const crop = await prisma.crop.create({
+      data: {
+        name,
+        variety: variety || null,
+        plantingDate: new Date(plantingDate),
+        expectedHarvest: new Date(expectedHarvest),
+        zone: zoneAssignment,
+        notes: notes || null,
+        organizationId
+      }
+    });
+
+    res.status(201).json({ success: true, data: crop });
+  } catch (error) {
+    console.error('Error creating crop:', error);
+    res.status(500).json({ success: false, error: 'Failed to create crop' });
+  }
+};
+
+const createSoilAnalysis = async (req: Request, res: Response) => {
+  try {
+    const organizationId = (req as any).user?.organizationId;
+
+    if (!organizationId) {
+      return res.status(400).json({ success: false, error: 'Organization ID is required' });
+    }
+
+    const { moistureLevel, phLevel, nitrogenLevel, phosphorusLevel, potassiumLevel, zone, treatmentType, treatmentDate } = req.body;
+
+    if (moistureLevel === undefined || phLevel === undefined || nitrogenLevel === undefined || phosphorusLevel === undefined || potassiumLevel === undefined || !zone) {
+      return res.status(400).json({ success: false, error: 'Missing required fields: moistureLevel, phLevel, nitrogenLevel, phosphorusLevel, potassiumLevel, zone' });
+    }
+
+    const soilAnalysis = await prisma.soilAnalysis.create({
+      data: {
+        zone,
+        sampleDate: new Date(),
+        moistureLevel: parseFloat(moistureLevel),
+        phLevel: parseFloat(phLevel),
+        nitrogenLevel: parseFloat(nitrogenLevel),
+        phosphorusLevel: parseFloat(phosphorusLevel),
+        potassiumLevel: parseFloat(potassiumLevel),
+        organicMatter: 0,
+        treatmentType: treatmentType || null,
+        treatmentDate: treatmentDate ? new Date(treatmentDate) : null,
+        organizationId
+      }
+    });
+
+    res.status(201).json({ success: true, data: soilAnalysis });
+  } catch (error) {
+    console.error('Error creating soil analysis:', error);
+    res.status(500).json({ success: false, error: 'Failed to create soil analysis' });
+  }
+};
+
+const createIrrigationSchedule = async (req: Request, res: Response) => {
+  try {
+    const organizationId = (req as any).user?.organizationId;
+
+    if (!organizationId) {
+      return res.status(400).json({ success: false, error: 'Organization ID is required' });
+    }
+
+    const { zone, duration, startTime, waterAmount, frequency } = req.body;
+
+    if (!zone || duration === undefined || !startTime || waterAmount === undefined || !frequency) {
+      return res.status(400).json({ success: false, error: 'Missing required fields: zone, duration, startTime, waterAmount, frequency' });
+    }
+
+    const start = new Date(startTime);
+    const end = new Date(start.getTime() + parseFloat(duration) * 60000);
+
+    const irrigationSchedule = await prisma.irrigationSchedule.create({
+      data: {
+        zone,
+        startTime: start,
+        endTime: end,
+        duration: parseFloat(duration),
+        waterAmount: parseFloat(waterAmount),
+        frequency,
+        nextRun: start,
+        organizationId
+      }
+    });
+
+    res.status(201).json({ success: true, data: irrigationSchedule });
+  } catch (error) {
+    console.error('Error creating irrigation schedule:', error);
+    res.status(500).json({ success: false, error: 'Failed to create irrigation schedule' });
+  }
+};
+
+const createPestControl = async (req: Request, res: Response) => {
+  try {
+    const organizationId = (req as any).user?.organizationId;
+
+    if (!organizationId) {
+      return res.status(400).json({ success: false, error: 'Organization ID is required' });
+    }
+
+    const { pestType, severity, treatmentMethod, applicationDate, followUpDate, notes } = req.body;
+
+    if (!pestType || !severity || !treatmentMethod || !applicationDate || !followUpDate) {
+      return res.status(400).json({ success: false, error: 'Missing required fields: pestType, severity, treatmentMethod, applicationDate, followUpDate' });
+    }
+
+    const pestControl = await prisma.pestControl.create({
+      data: {
+        pestType,
+        severity,
+        treatmentMethod,
+        applicationDate: new Date(applicationDate),
+        followUpDate: new Date(followUpDate),
+        nextSpray: new Date(followUpDate),
+        notes: notes || null,
+        organizationId
+      }
+    });
+
+    res.status(201).json({ success: true, data: pestControl });
+  } catch (error) {
+    console.error('Error creating pest control record:', error);
+    res.status(500).json({ success: false, error: 'Failed to create pest control record' });
+  }
+};
+
+const createEquipmentStatus = async (req: Request, res: Response) => {
+  try {
+    const organizationId = (req as any).user?.organizationId;
+
+    if (!organizationId) {
+      return res.status(400).json({ success: false, error: 'Organization ID is required' });
+    }
+
+    const { equipmentName, maintenanceType, scheduledDate, estimatedCost, technician, notes } = req.body;
+
+    if (!equipmentName || !maintenanceType || !scheduledDate) {
+      return res.status(400).json({ success: false, error: 'Missing required fields: equipmentName, maintenanceType, scheduledDate' });
+    }
+
+    const equipmentStatus = await prisma.equipmentStatus.create({
+      data: {
+        equipmentId: 0,
+        name: equipmentName,
+        type: maintenanceType,
+        status: 'MAINTENANCE' as const,
+        nextMaintenance: new Date(scheduledDate),
+        assignedWorker: technician || null,
+        condition: notes || 'scheduled maintenance',
+        organizationId
+      }
+    });
+
+    res.status(201).json({ success: true, data: equipmentStatus });
+  } catch (error) {
+    console.error('Error creating equipment status record:', error);
+    res.status(500).json({ success: false, error: 'Failed to create equipment status record' });
+  }
+};
+
+const createFieldActivity = async (req: Request, res: Response) => {
+  try {
+    const organizationId = (req as any).user?.organizationId;
+
+    if (!organizationId) {
+      return res.status(400).json({ success: false, error: 'Organization ID is required' });
+    }
+
+    const { workerName, assignedTask, startTime, estimatedDuration, priority, notes } = req.body;
+
+    if (!workerName || !assignedTask || !startTime) {
+      return res.status(400).json({ success: false, error: 'Missing required fields: workerName, assignedTask, startTime' });
+    }
+
+    const validPriorities = ['LOW', 'MEDIUM', 'HIGH', 'URGENT'];
+    const priorityValue = validPriorities.includes(priority) ? priority : 'MEDIUM';
+
+    const fieldActivity = await prisma.fieldActivity.create({
+      data: {
+        workerName,
+        task: assignedTask,
+        startTime: new Date(startTime),
+        duration: estimatedDuration ? parseFloat(estimatedDuration) : null,
+        priority: priorityValue as any,
+        notes: notes || null,
+        organizationId
+      }
+    });
+
+    res.status(201).json({ success: true, data: fieldActivity });
+  } catch (error) {
+    console.error('Error creating field activity record:', error);
+    res.status(500).json({ success: false, error: 'Failed to create field activity record' });
+  }
+};
+
 export {
   getPestControlData,
   getEquipmentStatusData,
@@ -354,5 +575,11 @@ export {
   getCropsData,
   getSoilMetricsData,
   getWeatherData,
-  getIrrigationStatusData
+  getIrrigationStatusData,
+  createCrop,
+  createSoilAnalysis,
+  createIrrigationSchedule,
+  createPestControl,
+  createEquipmentStatus,
+  createFieldActivity
 };

@@ -10,7 +10,7 @@ import { InventorySkeleton } from './EnhancedSkeletons';
 import { 
   Search, Plus, Edit2, Trash2, AlertTriangle, TrendingUp, Clock, MapPin, User, FileText, CheckCircle, Calendar, 
   Package, Activity, RefreshCw, Grid3X3, List, Check,
-  Download, Eye, MinusCircle, PlusCircle
+  Download, Eye, MinusCircle, PlusCircle, PawPrint, Sprout, Box, Building2, Layers
 } from 'lucide-react';
 
 // Utility functions for number formatting
@@ -954,9 +954,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                   {totals.totalItems.toLocaleString()}
                 </p>
               </div>
-              <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-lg">
-                <Package className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-              </div>
+              <Package className="h-9 w-9 text-blue-500" />
             </div>
           </div>
           
@@ -974,9 +972,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                   {categories.length}
                 </p>
               </div>
-              <div className="p-3 bg-purple-100 dark:bg-purple-900 rounded-lg">
-                <Package className="w-6 h-6 text-purple-600 dark:text-purple-400" />
-              </div>
+              <Layers className="h-9 w-9 text-purple-500" />
             </div>
           </div>
           <div
@@ -993,9 +989,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                   {formatCompactCurrency(totals.totalValue)}
                 </p>
               </div>
-              <div className="p-3 bg-emerald-100 dark:bg-emerald-900 rounded-lg">
-                <span className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">₦</span>
-              </div>
+              <Building2 className="h-9 w-9 text-emerald-500" />
             </div>
           </div>
         </div>
@@ -1018,9 +1012,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                   {totals.livestockItems}
                 </p>
               </div>
-              <div className="p-0.5 bg-orange-100 dark:bg-orange-900 rounded-lg">
-                <span className="text-2xl">🐄</span>
-              </div>
+              <PawPrint className="h-9 w-9 text-orange-500" />
             </div>
           </div>
           
@@ -1038,9 +1030,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                   {totals.produceItems}
                 </p>
               </div>
-              <div className="p-1 bg-emerald-100 dark:bg-emerald-900 rounded-lg">
-                <span className="text-2xl">🌾</span>
-              </div>
+              <Sprout className="h-9 w-9 text-emerald-500" />
             </div>
           </div>
           
@@ -1058,9 +1048,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                   {totals.consumablesItems}
                 </p>
               </div>
-              <div className="p-1 bg-indigo-100 dark:bg-indigo-900 rounded-lg">
-                <span className="text-2xl">📦</span>
-              </div>
+              <Box className="h-9 w-9 text-indigo-500" />
             </div>
           </div>
           
@@ -1078,9 +1066,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
                   {totals.lowStockItems}
                 </p>
               </div>
-              <div className="p-1 bg-yellow-100 dark:bg-yellow-900 rounded-lg">
-                <AlertTriangle className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
-              </div>
+              <AlertTriangle className="h-9 w-9 text-yellow-500" />
             </div>
           </div>
         </div>

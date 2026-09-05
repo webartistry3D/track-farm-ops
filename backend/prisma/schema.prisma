@@ -70,6 +70,7 @@ model Organization {
   soilAnalyses       SoilAnalysis[]
   irrigationSchedules IrrigationSchedule[]
   pestControl         PestControl[]
+  weatherData         WeatherData[]
   livestock          Livestock[]
 
   @@map("organizations")
@@ -611,6 +612,21 @@ model PestControl {
   organization      Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@map("pest_control")
+}
+
+// Weather Data
+model WeatherData {
+  id              Int      @id @default(autoincrement())
+  temperature     Float
+  humidity        Float
+  windSpeed       Float    @map("wind_speed")
+  rainfall        Float
+  forecast        String?
+  organizationId  Int      @map("organization_id")
+  createdAt       DateTime @default(now()) @map("created_at")
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("weather_data")
 }
 
 // Notification System

@@ -450,14 +450,12 @@ const Assets = () => {
             }}
             className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300"
           >
-            <div className="flex items-center">
-              <div className="p-2 lg:p-3 bg-blue-100 dark:bg-blue-900/20  rounded-full">
-                <TrendingUp className="w-5 h-5 lg:w-6 lg:h-6 text-blue-600 dark:text-blue-400" />
-              </div>
-              <div className="ml-3 lg:ml-4">
+            <div className="flex items-center justify-between">
+              <div>
                 <p className="text-xs lg:text-sm text-gray-500 dark:text-gray-400">Total Assets</p>
                 <p className="text-3xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">{assets.length}</p>
               </div>
+              <TrendingUp className="h-9 w-9 text-blue-500" />
             </div>
           </div>
           
@@ -468,16 +466,14 @@ const Assets = () => {
             }}
             className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300"
           >
-            <div className="flex items-center">
-              <div className="p-2 lg:p-3 bg-emerald-100 dark:bg-emerald-900/20  rounded-full">
-                <Wrench className="w-5 h-5 lg:w-6 lg:h-6 text-emerald-600 dark:text-emerald-400" />
-              </div>
-              <div className="ml-3 lg:ml-4">
+            <div className="flex items-center justify-between">
+              <div>
                 <p className="text-xs lg:text-sm text-gray-500 dark:text-gray-400">Active</p>
                 <p className="text-3xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
                   {assets.filter(a => a.status === 'active').length}
                 </p>
               </div>
+              <Wrench className="h-9 w-9 text-emerald-500" />
             </div>
           </div>
 
@@ -488,16 +484,14 @@ const Assets = () => {
             }}
             className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300"
           >
-            <div className="flex items-center">
-              <div className="p-2 lg:p-3 bg-yellow-100 dark:bg-yellow-900/20  rounded-full">
-                <Clock className="w-5 h-5 lg:w-6 lg:h-6 text-yellow-600 dark:text-yellow-400" />
-              </div>
-              <div className="ml-3 lg:ml-4">
+            <div className="flex items-center justify-between">
+              <div>
                 <p className="text-xs lg:text-sm text-gray-500 dark:text-gray-400">Maintenance</p>
                 <p className="text-3xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
                   {assets.filter(a => a.status === 'under_maintenance').length}
                 </p>
               </div>
+              <Clock className="h-9 w-9 text-yellow-500" />
             </div>
           </div>
 
@@ -508,16 +502,14 @@ const Assets = () => {
             }}
             className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300"
           >
-            <div className="flex items-center">
-              <div className="p-2 lg:p-3 bg-red-100 dark:bg-red-900/20  rounded-full">
-                <AlertTriangle className="w-5 h-5 lg:w-6 lg:h-6 text-red-600 dark:text-red-400" />
-              </div>
-              <div className="ml-3 lg:ml-4">
+            <div className="flex items-center justify-between">
+              <div>
                 <p className="text-xs lg:text-sm text-gray-500 dark:text-gray-400">Issues</p>
                 <p className="text-3xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
                   {assets.filter(a => a.status === 'damaged').length}
                 </p>
               </div>
+              <AlertTriangle className="h-9 w-9 text-red-500" />
             </div>
           </div>
         </div>
@@ -1029,54 +1021,46 @@ const Assets = () => {
             {/* Key Performance Indicators */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6">
               <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow-lg">
-                <div className="flex items-center">
-                  <div className="p-2 lg:p-3 bg-blue-100 dark:bg-blue-900">
-                    <TrendingUp className="w-5 h-5 lg:w-6 lg:h-6 text-blue-600 dark:text-blue-400" />
-                  </div>
-                  <div className="ml-3 lg:ml-4">
+                <div className="flex items-center justify-between">
+                  <div>
                     <p className="text-xs lg:text-sm font-medium text-gray-600 dark:text-gray-400">Asset Utilization</p>
                     <p className="hidden sm:block"><br></br></p>
                     <p className="text-3xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">--</p>
                   </div>
+                  <TrendingUp className="h-9 w-9 text-blue-500" />
                 </div>
               </div>
               
               <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow-lg">
-                <div className="flex items-center">
-                  <div className="p-2 lg:p-3 bg-emerald-100 dark:bg-emerald-900">
-                    <BarChart3 className="w-5 h-5 lg:w-6 lg:h-6 text-emerald-600 dark:text-emerald-400" />
-                  </div>
-                  <div className="ml-3 lg:ml-4">
+                <div className="flex items-center justify-between">
+                  <div>
                     <p className="text-xs lg:text-sm font-medium text-gray-600 dark:text-gray-400">Cost Ops. / Hour</p>
                     <p className="hidden sm:block"><br></br></p>
                     <p className="text-3xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">--</p>
                   </div>
+                  <BarChart3 className="h-9 w-9 text-emerald-500" />
                 </div>
               </div>
 
               <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow-lg">
-                <div className="flex items-center">
-                  <div className="p-2 lg:p-3 bg-yellow-100 dark:bg-yellow-900">
-                    <Clock className="w-5 h-5 lg:w-6 lg:h-6 text-yellow-600 dark:text-yellow-400" />
-                  </div>
-                  <div className="ml-3 lg:ml-4">
+                <div className="flex items-center justify-between">
+                  <div>
                     <p className="text-xs lg:text-sm font-medium text-gray-600 dark:text-gray-400">Downtime</p>
                     <p className="hidden sm:block"><br></br></p>
                     <p className="text-3xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">--</p>
                   </div>
+                  <Clock className="h-9 w-9 text-yellow-500" />
                 </div>
               </div>
 
               <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow-lg">
-                <div className="flex items-center">
-                  <div className="p-2 lg:p-3 bg-red-100 dark:bg-red-900">
-                    <AlertTriangle className="w-5 h-5 lg:w-6 lg:h-6 text-red-600 dark:text-red-400" />
-                  </div>
-                  <div className="ml-3 lg:ml-4">
+                <div className="flex items-center justify-between">
+                  <div>
                     <p className="text-xs lg:text-sm font-medium text-gray-600 dark:text-gray-400">Maintenance</p>
                     <p className="hidden sm:block"><br></br></p>
                     <p className="text-3xl font-jetbrains-mono font-bold text-emerald-600 dark:text-emerald-400">--</p>
                   </div>
+                  <AlertTriangle className="h-9 w-9 text-red-500" />
                 </div>
               </div>
             </div>

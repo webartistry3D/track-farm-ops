@@ -489,7 +489,7 @@ const LivestockHealth = () => {
               <p className="text-sm text-gray-600 dark:text-gray-400">Total</p>
               <p className="text-5xl font-bold font-jetbrains-mono text-gray-900 dark:text-white">{healthStats.total}</p>
             </div>
-            <PawPrint className="h-8 w-8 text-gray-500" />
+            <PawPrint className="h-9 w-9 text-gray-500" />
           </div>
         </div>
         <div className="bg-green-50/60 dark:bg-green-900/30 border border-green-200/60 dark:border-green-700/50 rounded-lg shadow-lg p-4">
@@ -498,7 +498,7 @@ const LivestockHealth = () => {
               <p className="text-sm text-green-600 dark:text-green-400">Healthy</p>
               <p className="text-5xl font-bold font-jetbrains-mono text-green-900 dark:text-green-100">{healthStats.healthy}</p>
             </div>
-            <Activity className="h-8 w-8 text-green-500" />
+            <Activity className="h-9 w-9 text-green-500" />
           </div>
         </div>
         <div className="bg-red-50 dark:bg-gray-800 border border-red-200 dark:border-red-700 rounded-lg shadow-lg p-4">
@@ -507,7 +507,7 @@ const LivestockHealth = () => {
               <p className="text-sm text-red-600 dark:text-red-400">Sick</p>
               <p className="text-5xl font-bold font-jetbrains-mono text-red-900 dark:text-red-100">{healthStats.sick}</p>
             </div>
-            <AlertTriangle className="h-8 w-8 text-red-500" />
+            <AlertTriangle className="h-9 w-9 text-red-500" />
           </div>
         </div>
         <div className="bg-yellow-50 dark:bg-gray-800 border border-yellow-200 dark:border-yellow-700 rounded-lg shadow-lg p-4">
@@ -516,7 +516,7 @@ const LivestockHealth = () => {
               <p className="text-sm text-yellow-600 dark:text-yellow-400">Quarantine</p>
               <p className="text-5xl font-bold font-jetbrains-mono text-yellow-900 dark:text-yellow-100">{healthStats.quarantine}</p>
             </div>
-            <Shield className="h-8 w-8 text-yellow-500" />
+            <Shield className="h-9 w-9 text-yellow-500" />
           </div>
         </div>
         <div className="bg-blue-50 dark:bg-gray-800 border border-blue-200 dark:border-blue-700 rounded-lg shadow-lg p-4">
@@ -525,7 +525,7 @@ const LivestockHealth = () => {
               <p className="text-sm text-blue-600 dark:text-blue-400">Recovery</p>
               <p className="text-5xl font-bold font-jetbrains-mono text-blue-900 dark:text-blue-100">{healthStats.recovery}</p>
             </div>
-            <TrendingUp className="h-8 w-8 text-blue-500" />
+            <TrendingUp className="h-9 w-9 text-blue-500" />
           </div>
         </div>
         <div className="bg-purple-50 dark:bg-gray-800 border border-purple-200 dark:border-purple-700 rounded-lg shadow-lg p-4">
@@ -534,7 +534,7 @@ const LivestockHealth = () => {
               <p className="text-sm text-purple-600 dark:text-purple-400">Critical</p>
               <p className="text-5xl font-bold font-jetbrains-mono text-purple-900 dark:text-purple-100">{healthStats.critical}</p>
             </div>
-            <AlertCircle className="h-8 w-8 text-purple-500" />
+            <AlertCircle className="h-9 w-9 text-purple-500" />
           </div>
         </div>
       </div>

@@ -99,7 +99,24 @@ const Analytics = () => {
   const [, setShowConsumablesModal] = useState(false);
 
   // Farm Operations Data
-  const [crops, setCrops] = useState<any[]>([]);
+  const [farmOpsData, setFarmOpsData] = useState<{
+    crops: any[];
+    soilMetrics: any;
+    weather: any;
+    irrigation: any;
+    pestControl: any;
+    equipmentStatus: any;
+    fieldActivity: any;
+  }>({
+    crops: [],
+    soilMetrics: null,
+    weather: null,
+    irrigation: null,
+    pestControl: null,
+    equipmentStatus: null,
+    fieldActivity: null,
+  });
+  const [farmOpsLoading, setFarmOpsLoading] = useState(false);
 
   const [cropData, setCropData] = useState({
     newCrop: '',
@@ -137,7 +154,7 @@ const Analytics = () => {
     notes: ''
   });
   
-  const [] = useState({
+  const [equipmentData, setEquipmentData] = useState({
     equipmentName: '',
     maintenanceType: '',
     scheduledDate: '',
@@ -146,7 +163,7 @@ const Analytics = () => {
     notes: ''
   });
   
-  const [] = useState({
+  const [fieldActivityData, setFieldActivityData] = useState({
     workerName: '',
     assignedTask: '',
     startTime: '',
@@ -417,46 +434,183 @@ const Analytics = () => {
     }
   };
 
-  const handleUpdateSoilAnalysis = () => {
-    // Validate form data
+  const fetchFarmOperations = async () => {
+    setFarmOpsLoading(true);
+    try {
+      const [cropsRes, soilRes, weatherRes, irrigationRes, pestRes, equipmentRes, fieldRes] = await Promise.allSettled([
+        api.get('/farm-operations/crops'),
+        api.get('/farm-operations/soil-metrics'),
+        api.get('/farm-operations/weather-data'),
+        api.get('/farm-operations/irrigation-status'),
+        api.get('/farm-operations/pest-control'),
+        api.get('/farm-operations/equipment-status'),
+        api.get('/farm-operations/field-activity'),
+      ]);
+
+      const extract = (res: PromiseSettledResult<any>, key: string) =>
+        res.status === 'fulfilled' ? res.value.data[key] : null;
+
+      setFarmOpsData({
+        crops: extract(cropsRes, 'crops') || [],
+        soilMetrics: extract(soilRes, 'soilData'),
+        weather: extract(weatherRes, 'weatherData'),
+        irrigation: extract(irrigationRes, 'irrigationData'),
+        pestControl: extract(pestRes, 'pestControlData'),
+        equipmentStatus: extract(equipmentRes, 'equipmentStatusData'),
+        fieldActivity: extract(fieldRes, 'fieldActivityData'),
+      });
+    } catch (error) {
+      console.error('Farm operations fetch error:', error);
+    } finally {
+      setFarmOpsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchFarmOperations();
+  }, []);
+
+  const handleAddCrop = async () => {
+    if (!cropData.newCrop.trim() || !cropData.plantingDate || !cropData.expectedHarvest || !cropData.zoneAssignment) {
+      alert('Please fill in all required fields: Crop Type, Planting Date, Expected Harvest, and Zone Assignment');
+      return;
+    }
+    try {
+      await api.post('/farm-operations/crops', {
+        name: cropData.newCrop,
+        plantingDate: cropData.plantingDate,
+        expectedHarvest: cropData.expectedHarvest,
+        zoneAssignment: cropData.zoneAssignment,
+        notes: cropData.notes
+      });
+      setShowCropModal(false);
+      setCropData({ newCrop: '', plantingDate: '', expectedHarvest: '', zoneAssignment: '', notes: '' });
+      fetchFarmOperations();
+      alert(`Crop "${cropData.newCrop}" has been successfully added!`);
+    } catch (error) {
+      console.error('Failed to add crop:', error);
+      alert('Failed to add crop. Please try again.');
+    }
+  };
+
+  const handleUpdateSoilAnalysis = async () => {
     if (!soilData.moistureLevel || !soilData.phLevel || !soilData.nitrogenLevel || !soilData.phosphorusLevel || !soilData.potassiumLevel) {
       alert('Please fill in all required fields: Moisture Level, pH Level, and Nutrient levels');
       return;
     }
-
-    // Update soil analysis logic here
-    console.log('Updating soil analysis:', soilData);
-    setShowSoilModal(false);
-    
-    alert(`Soil analysis for Zone ${soilData.zone || 'Selected'} has been successfully updated!`);
+    try {
+      await api.post('/farm-operations/soil-metrics', {
+        moistureLevel: soilData.moistureLevel,
+        phLevel: soilData.phLevel,
+        nitrogenLevel: soilData.nitrogenLevel,
+        phosphorusLevel: soilData.phosphorusLevel,
+        potassiumLevel: soilData.potassiumLevel,
+        zone: soilData.zone || 'A',
+        treatmentType: soilData.treatmentType,
+        treatmentDate: soilData.treatmentDate || undefined
+      });
+      setShowSoilModal(false);
+      fetchFarmOperations();
+      alert(`Soil analysis for Zone ${soilData.zone || 'Selected'} has been successfully updated!`);
+    } catch (error) {
+      console.error('Failed to update soil analysis:', error);
+      alert('Failed to update soil analysis. Please try again.');
+    }
   };
 
-  const handleScheduleIrrigation = () => {
-    // Validate form data
+  const handleScheduleIrrigation = async () => {
     if (!irrigationData.zone || !irrigationData.duration || !irrigationData.startTime || !irrigationData.waterAmount || !irrigationData.frequency) {
       alert('Please fill in all required fields: Zone, Duration, Start Time, Water Amount, and Frequency');
       return;
     }
-
-    // Schedule irrigation logic here
-    console.log('Scheduling irrigation:', irrigationData);
-    setShowIrrigationModal(false);
-    
-    alert(`Irrigation has been successfully scheduled for ${irrigationData.zone || 'selected zone'}!`);
+    try {
+      await api.post('/farm-operations/irrigation-status', {
+        zone: irrigationData.zone,
+        duration: irrigationData.duration,
+        startTime: irrigationData.startTime,
+        waterAmount: irrigationData.waterAmount,
+        frequency: irrigationData.frequency
+      });
+      setShowIrrigationModal(false);
+      setIrrigationData({ zone: '', duration: '', startTime: '', waterAmount: '', frequency: '' });
+      fetchFarmOperations();
+      alert(`Irrigation has been successfully scheduled for ${irrigationData.zone}!`);
+    } catch (error) {
+      console.error('Failed to schedule irrigation:', error);
+      alert('Failed to schedule irrigation. Please try again.');
+    }
   };
 
-  const handleCreateTreatmentPlan = () => {
-    // Validate form data
+  const handleCreateTreatmentPlan = async () => {
     if (!pestData.pestType || !pestData.severity || !pestData.treatmentMethod || !pestData.applicationDate || !pestData.followUpDate) {
       alert('Please fill in all required fields: Pest Type, Severity, Treatment Method, Application Date, and Follow-up Date');
       return;
     }
+    try {
+      await api.post('/farm-operations/pest-control', {
+        pestType: pestData.pestType,
+        severity: pestData.severity,
+        treatmentMethod: pestData.treatmentMethod,
+        applicationDate: pestData.applicationDate,
+        followUpDate: pestData.followUpDate,
+        notes: pestData.notes
+      });
+      setShowPestModal(false);
+      setPestData({ pestType: '', severity: '', treatmentMethod: '', applicationDate: '', followUpDate: '', notes: '' });
+      fetchFarmOperations();
+      alert(`Pest treatment plan has been successfully created!`);
+    } catch (error) {
+      console.error('Failed to create pest treatment plan:', error);
+      alert('Failed to create pest treatment plan. Please try again.');
+    }
+  };
 
-    // Create treatment plan logic here
-    console.log('Creating pest treatment plan:', pestData);
-    setShowPestModal(false);
-    
-    alert(`Pest treatment plan has been successfully created for ${pestData.applicationDate || 'selected date'}!`);
+  const handleScheduleMaintenance = async () => {
+    if (!equipmentData.equipmentName || !equipmentData.maintenanceType || !equipmentData.scheduledDate) {
+      alert('Please fill in all required fields: Equipment Name, Maintenance Type, and Scheduled Date');
+      return;
+    }
+    try {
+      await api.post('/farm-operations/equipment-status', {
+        equipmentName: equipmentData.equipmentName,
+        maintenanceType: equipmentData.maintenanceType,
+        scheduledDate: equipmentData.scheduledDate,
+        estimatedCost: equipmentData.estimatedCost,
+        technician: equipmentData.technician,
+        notes: equipmentData.notes
+      });
+      setShowEquipmentModal(false);
+      setEquipmentData({ equipmentName: '', maintenanceType: '', scheduledDate: '', estimatedCost: '', technician: '', notes: '' });
+      fetchFarmOperations();
+      alert(`Maintenance has been successfully scheduled for ${equipmentData.equipmentName}!`);
+    } catch (error) {
+      console.error('Failed to schedule maintenance:', error);
+      alert('Failed to schedule maintenance. Please try again.');
+    }
+  };
+
+  const handleAssignFieldTask = async () => {
+    if (!fieldActivityData.workerName || !fieldActivityData.assignedTask || !fieldActivityData.startTime) {
+      alert('Please fill in all required fields: Worker Name, Assigned Task, and Start Time');
+      return;
+    }
+    try {
+      await api.post('/farm-operations/field-activity', {
+        workerName: fieldActivityData.workerName,
+        assignedTask: fieldActivityData.assignedTask,
+        startTime: fieldActivityData.startTime,
+        estimatedDuration: fieldActivityData.estimatedDuration,
+        priority: fieldActivityData.priority,
+        notes: fieldActivityData.notes
+      });
+      setShowFieldModal(false);
+      setFieldActivityData({ workerName: '', assignedTask: '', startTime: '', estimatedDuration: '', priority: '', notes: '' });
+      fetchFarmOperations();
+      alert(`Field task has been successfully assigned to ${fieldActivityData.workerName}!`);
+    } catch (error) {
+      console.error('Failed to assign field task:', error);
+      alert('Failed to assign field task. Please try again.');
+    }
   };
 
   const getDateFilterLabel = () => {
@@ -487,14 +641,14 @@ const Analytics = () => {
       return "bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700";
     };
 
-    const getIconGradientColor = () => {
-      if (color === "bg-emerald-500") return "from-emerald-500 to-emerald-600 dark:from-emerald-600 dark:to-emerald-700";
-      if (color === "bg-red-500") return "from-red-500 to-red-600 dark:from-red-600 dark:to-red-700";
-      if (color === "bg-blue-500") return "from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700";
-      if (color === "bg-orange-500") return "from-orange-500 to-orange-600 dark:from-orange-600 dark:to-orange-700";
-      if (color === "bg-indigo-500") return "from-indigo-500 to-indigo-600 dark:from-indigo-600 dark:to-indigo-700";
-      if (color === "bg-purple-500") return "from-purple-500 to-purple-600 dark:from-purple-600 dark:to-purple-700";
-      return "from-gray-500 to-gray-600 dark:from-gray-600 dark:to-gray-700";
+    const getIconColor = () => {
+      if (color === "bg-emerald-500") return "text-emerald-500";
+      if (color === "bg-red-500") return "text-red-500";
+      if (color === "bg-blue-500") return "text-blue-500";
+      if (color === "bg-orange-500") return "text-orange-500";
+      if (color === "bg-indigo-500") return "text-indigo-500";
+      if (color === "bg-purple-500") return "text-purple-500";
+      return "text-gray-500";
     };
 
     const getTextColor = () => {
@@ -530,10 +684,8 @@ const Analytics = () => {
               </span>
             </div>
           </div>
-          <div className="flex items-center space-x-2 mt-1">
-            <div className={`p-2 bg-gradient-to-br ${getIconGradientColor()} rounded-lg shadow-lg`}>
+          <div className={`flex items-center mt-1 ${getIconColor()}`}>
               {icon}
-            </div>
           </div>
         </div>
         <div className="flex items-center">
@@ -613,20 +765,20 @@ const Analytics = () => {
                 <StatCard
                   title="Total Income"
                   value={formatCompactCurrency(Number(financialSummary?.totalIncome) || 0)}
-                  icon={<TrendingUp className="h-4 w-4 text-white" />}
+                  icon={<TrendingUp className="h-9 w-9" />}
                   color="bg-emerald-500"
                 />
                 <StatCard
                   title="Total Expenses"
                   value={formatCompactCurrency(Number(financialSummary?.totalExpenses) || 0)}
-                  icon={<ShoppingCart className="h-4 w-4 text-white" />}
+                  icon={<ShoppingCart className="h-9 w-9" />}
                   color="bg-red-500"
                 />
                 <StatCard
                   title="Net Profit"
                   value={formatCompactCurrency(Number(financialSummary?.netProfit) || 0)}
-                  icon={<TrendingUp className="h-4 w-4 text-white" />}
-                  color={(Number(financialSummary?.netProfit) || 0) >= 0 ? "bg-blue-500" : "bg-orange-500"}
+                  icon={<TrendingUp className="h-9 w-9" />}
+                  color={(Number(financialSummary?.netProfit) || 0) >= 0 ? "bg-emerald-500" : "bg-red-500"}
                 />
               </div>
             )}
@@ -666,13 +818,11 @@ const Analytics = () => {
                       {formatCompactCurrency(Math.floor((Number(financialSummary?.totalIncome) || 0) / 30))}
                     </p>
                   </div>
-                  <div className="p-2 bg-emerald-500 rounded-lg">
-                    <TrendingUp className="h-4 w-4 text-white" />
-                  </div>
+                  <TrendingUp className="h-9 w-9 text-emerald-500" />
                 </div>
               </div>
 
-              <div className="bg-blue-50 dark:bg-gray-800 border border-blue-200 dark:border-blue-700 rounded-xl p-4">
+              <div className={`${(financialSummary?.totalIncome && financialSummary?.totalExpenses && financialSummary.totalIncome - financialSummary.totalExpenses >= 0) ? 'bg-emerald-50 dark:bg-gray-800 border border-emerald-200 dark:border-emerald-700' : 'bg-red-50 dark:bg-gray-800 border border-red-200 dark:border-red-700'} rounded-xl p-4`}>
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">Profit Margin</p>
@@ -683,13 +833,11 @@ const Analytics = () => {
                       }
                     </p>
                   </div>
-                  <div className="p-2 bg-blue-500 rounded-lg">
-                    <Target className="h-4 w-4 text-white" />
-                  </div>
+                  <Target className={`h-9 w-9 ${(financialSummary?.totalIncome && financialSummary?.totalExpenses && financialSummary.totalIncome - financialSummary.totalExpenses >= 0) ? 'text-emerald-500' : 'text-red-500'}`} />
                 </div>
               </div>
 
-              <div className="bg-purple-50 dark:bg-gray-800 border border-purple-200 dark:border-purple-700 rounded-xl p-4">
+              <div className="bg-emerald-50 dark:bg-gray-800 border border-emerald-200 dark:border-emerald-700 rounded-xl p-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">Growth Rate</p>
@@ -697,9 +845,7 @@ const Analytics = () => {
                       N/A
                     </p>
                   </div>
-                  <div className="p-2 bg-purple-500 rounded-lg">
-                    <Zap className="h-4 w-4 text-white" />
-                  </div>
+                  <Zap className="h-9 w-9 text-emerald-500" />
                 </div>
               </div>
             </div>
@@ -960,7 +1106,7 @@ const Analytics = () => {
                 <StatCard
                   title="Items"
                   value={inventorySummary?.totalItems?.toString() || '0'}
-                  icon={<Package className="w-6 h-6 text-white" />}
+                  icon={<Package className="h-9 w-9" />}
                   color="bg-blue-500"
                 />
               </div>
@@ -968,15 +1114,15 @@ const Analytics = () => {
                 <StatCard
                   title="Livestock"
                   value={inventorySummary?.livestock?.toString() || '0'}
-                  icon={<Heart className="w-6 h-6 text-white" />}
-                  color="bg-indigo-500"
+                  icon={<Heart className="h-9 w-9" />}
+                  color="bg-red-500"
                 />
               </div>
               <div onClick={() => setShowProduceModal(true)} className="cursor-pointer">
                 <StatCard
                   title="Produce"
                   value={inventorySummary?.produce?.toString() || '0'}
-                  icon={<Apple className="w-6 h-6 text-white" />}
+                  icon={<Apple className="h-9 w-9" />}
                   color="bg-emerald-500"
                 />
               </div>
@@ -984,7 +1130,7 @@ const Analytics = () => {
                 <StatCard
                   title="Consumables"
                   value={inventorySummary?.consumables?.toString() || '0'}
-                  icon={<Box className="w-6 h-6 text-white" />}
+                  icon={<Box className="h-9 w-9" />}
                   color="bg-orange-500"
                 />
               </div>
@@ -1093,7 +1239,12 @@ const Analytics = () => {
 
         {/* Agricultural Analytics Widgets */}
         <div className="mb-4 py-4">
-          <h2 className="text-xl font-regular text-gray-900 dark:text-white mb-6">Farm Operations Analytics</h2>
+          <h2 className="text-xl font-regular text-gray-900 dark:text-white mb-6 flex items-center">
+            Farm Operations Analytics
+            {farmOpsLoading && (
+              <span className="ml-3 text-sm text-gray-500 animate-pulse">Loading...</span>
+            )}
+          </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             {/* Crop Management Widget */}
@@ -1103,29 +1254,29 @@ const Analytics = () => {
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
-                  <Sprout className="h-5 w-5 mr-2 text-emerald-600" />
+                  <Sprout className="h-9 w-9 mr-2 text-emerald-500" />
                   Crop Management
                 </h3>
-                <span className="text-sm text-gray-500 font-medium">N/A</span>
+                <span className="text-sm text-gray-500 font-medium">{farmOpsData.crops.length > 0 ? `${farmOpsData.crops.length} active` : 'No crops'}</span>
               </div>
               
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Planted Crops</span>
-                  <span className="font-semibold text-gray-900 dark:text-white">N/A</span>
+                  <span className="font-semibold text-gray-900 dark:text-white">{farmOpsData.crops.length || 'N/A'}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Health Status</span>
-                  <span className="font-medium text-gray-500">N/A</span>
+                  <span className="font-medium text-gray-500">{farmOpsData.crops.length > 0 ? 'Good' : 'N/A'}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Next Harvest</span>
-                  <span className="font-semibold text-gray-900 dark:text-white">N/A</span>
+                  <span className="font-semibold text-gray-900 dark:text-white">{farmOpsData.crops.length > 0 ? new Date(farmOpsData.crops[0].expectedHarvest).toLocaleDateString() : 'N/A'}</span>
                 </div>
                 <div className="mt-4 pt-3 border-t border-emerald-200 dark:border-emerald-800">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600 dark:text-gray-400">Yield Forecast</span>
-                    <span className="text-gray-500 font-medium">N/A</span>
+                    <span className="text-gray-500 font-medium">{farmOpsData.crops.length > 0 ? `${farmOpsData.crops[0].yield || 'N/A'} kg` : 'N/A'}</span>
                   </div>
                 </div>
               </div>
@@ -1138,29 +1289,29 @@ const Analytics = () => {
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
-                  <Droplets className="h-5 w-5 mr-2 text-amber-600" />
+                  <Droplets className="h-9 w-9 mr-2 text-amber-500" />
                   Soil Management
                 </h3>
-                <span className="text-sm text-gray-500 font-medium">N/A</span>
+                <span className="text-sm text-gray-500 font-medium">{farmOpsData.soilMetrics ? `Zone ${farmOpsData.soilMetrics.zone}` : 'N/A'}</span>
               </div>
               
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Moisture Level</span>
-                  <span className="font-semibold text-gray-900 dark:text-white">N/A</span>
+                  <span className="font-semibold text-gray-900 dark:text-white">{farmOpsData.soilMetrics ? `${farmOpsData.soilMetrics.moistureLevel}%` : 'N/A'}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">pH Level</span>
-                  <span className="font-semibold text-gray-900 dark:text-white">N/A</span>
+                  <span className="font-semibold text-gray-900 dark:text-white">{farmOpsData.soilMetrics ? farmOpsData.soilMetrics.phLevel : 'N/A'}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Nutrient Status</span>
-                  <span className="font-medium text-gray-500">N/A</span>
+                  <span className="font-medium text-gray-500">{farmOpsData.soilMetrics ? `N:${farmOpsData.soilMetrics.nitrogenLevel} P:${farmOpsData.soilMetrics.phosphorusLevel} K:${farmOpsData.soilMetrics.potassiumLevel}` : 'N/A'}</span>
                 </div>
                 <div className="mt-4 pt-3 border-t border-amber-200 dark:border-amber-800">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600 dark:text-gray-400">Last Treatment</span>
-                    <span className="text-gray-500 font-medium">N/A</span>
+                    <span className="text-gray-500 font-medium">{farmOpsData.soilMetrics ? farmOpsData.soilMetrics.recommendations : 'N/A'}</span>
                   </div>
                 </div>
               </div>
@@ -1173,10 +1324,10 @@ const Analytics = () => {
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
-                  <Sun className="h-5 w-5 mr-2 text-blue-600" />
+                  <Sun className="h-9 w-9 mr-2 text-blue-500" />
                   Weather Impact
                 </h3>
-                <span className="text-sm text-gray-500 font-medium">N/A</span>
+                <span className="text-sm text-gray-500 font-medium">{farmOpsData.weather ? `${farmOpsData.weather.temperature}°C` : 'N/A'}</span>
               </div>
               
               <div className="space-y-3">
@@ -1184,27 +1335,27 @@ const Analytics = () => {
                   <span className="text-sm text-gray-600 dark:text-gray-400">Temperature</span>
                   <div className="flex items-center">
                     <Thermometer className="h-4 w-4 mr-1 text-gray-500" />
-                    <span className="font-semibold text-gray-900 dark:text-white">N/A</span>
+                    <span className="font-semibold text-gray-900 dark:text-white">{farmOpsData.weather ? `${farmOpsData.weather.temperature}°C` : 'N/A'}</span>
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Rainfall</span>
                   <div className="flex items-center">
                     <Droplets className="h-4 w-4 mr-1 text-gray-500" />
-                    <span className="font-semibold text-gray-900 dark:text-white">N/A</span>
+                    <span className="font-semibold text-gray-900 dark:text-white">{farmOpsData.weather ? `${farmOpsData.weather.rainfall}mm` : 'N/A'}</span>
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Wind Speed</span>
                   <div className="flex items-center">
                     <Wind className="h-4 w-4 mr-1 text-gray-500" />
-                    <span className="font-semibold text-gray-900 dark:text-white">N/A</span>
+                    <span className="font-semibold text-gray-900 dark:text-white">{farmOpsData.weather ? `${farmOpsData.weather.windSpeed}km/h` : 'N/A'}</span>
                   </div>
                 </div>
                 <div className="mt-4 pt-3 border-t border-blue-200 dark:border-blue-800">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600 dark:text-gray-400">Growth Conditions</span>
-                    <span className="text-gray-500 font-medium">N/A</span>
+                    <span className="text-gray-500 font-medium">{farmOpsData.weather ? farmOpsData.weather.forecast : 'N/A'}</span>
                   </div>
                 </div>
               </div>
@@ -1219,30 +1370,28 @@ const Analytics = () => {
               className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-6 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
             >
               <div className="flex items-center justify-between mb-4">
-                <div className="p-2 bg-blue-100 dark:bg-blue-900/20 rounded-lg">
-                  <Droplets className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                </div>
+                <Droplets className="h-9 w-9 text-blue-500" />
                 <span className="text-xs text-gray-500 dark:text-gray-400">Auto-updated</span>
               </div>
               <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Irrigation Status</h4>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Zone A</span>
-                  <span className="text-sm font-medium text-gray-500">N/A</span>
+                  <span className="text-sm font-medium text-gray-500">{farmOpsData.irrigation ? farmOpsData.irrigation.zone : 'N/A'}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Zone B</span>
-                  <span className="text-sm font-medium text-gray-500">N/A</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Next Schedule</span>
+                  <span className="text-sm font-medium text-gray-500">{farmOpsData.irrigation ? farmOpsData.irrigation.nextSchedule : 'N/A'}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Zone C</span>
-                  <span className="text-sm font-medium text-gray-500">N/A</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Duration</span>
+                  <span className="text-sm font-medium text-gray-500">{farmOpsData.irrigation ? `${farmOpsData.irrigation.duration} min` : 'N/A'}</span>
                 </div>
               </div>
               <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-gray-500 dark:text-gray-400">Water Usage Today</span>
-                  <span className="text-sm font-semibold text-gray-900 dark:text-white">N/A</span>
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white">{farmOpsData.irrigation ? `${farmOpsData.irrigation.waterAmount}L` : 'N/A'}</span>
                 </div>
               </div>
             </div>
@@ -1253,30 +1402,28 @@ const Analytics = () => {
               className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-6 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
             >
               <div className="flex items-center justify-between mb-4">
-                <div className="p-2 bg-red-100 dark:bg-red-900/20 rounded-lg">
-                  <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400" />
-                </div>
-                <span className="text-xs text-gray-500 dark:text-gray-400">Last check: N/A</span>
+                <AlertCircle className="h-9 w-9 text-red-500" />
+                <span className="text-xs text-gray-500 dark:text-gray-400">Last check: {farmOpsData.pestControl ? new Date(farmOpsData.pestControl.lastCheck).toLocaleDateString() : 'N/A'}</span>
               </div>
               <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Pest Control</h4>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Threat Level</span>
-                  <span className="text-sm font-medium text-gray-500">N/A</span>
+                  <span className="text-sm font-medium text-gray-500">{farmOpsData.pestControl ? farmOpsData.pestControl.threatLevel : 'N/A'}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Active Treatments</span>
-                  <span className="text-sm font-semibold text-gray-900 dark:text-white">N/A</span>
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white">{farmOpsData.pestControl ? farmOpsData.pestControl.activeTreatments : 'N/A'}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Next Spray</span>
-                  <span className="text-sm font-medium text-gray-500">N/A</span>
+                  <span className="text-sm font-medium text-gray-500">{farmOpsData.pestControl ? farmOpsData.pestControl.nextSpray : 'N/A'}</span>
                 </div>
               </div>
               <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-gray-500 dark:text-gray-400">Treatment Efficacy</span>
-                  <span className="text-sm font-semibold text-gray-500">N/A</span>
+                  <span className="text-sm font-semibold text-gray-500">{farmOpsData.pestControl ? `${farmOpsData.pestControl.treatmentEfficacy}%` : 'N/A'}</span>
                 </div>
               </div>
             </div>
@@ -1287,30 +1434,28 @@ const Analytics = () => {
               className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-6 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
             >
               <div className="flex items-center justify-between mb-4">
-                <div className="p-2 bg-purple-100 dark:bg-purple-900/20 rounded-lg">
-                  <Clock className="h-5 w-5 text-purple-600 dark:text-purple-400" />
-                </div>
+                <Clock className="h-9 w-9 text-purple-500" />
                 <span className="text-xs text-gray-500 dark:text-gray-400">Live</span>
               </div>
               <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Equipment Status</h4>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Operational</span>
-                  <span className="text-sm font-medium text-gray-500">N/A</span>
+                  <span className="text-sm font-medium text-gray-500">{farmOpsData.equipmentStatus ? farmOpsData.equipmentStatus.operational : 'N/A'}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Maintenance</span>
-                  <span className="text-sm font-medium text-gray-500">N/A</span>
+                  <span className="text-sm font-medium text-gray-500">{farmOpsData.equipmentStatus ? farmOpsData.equipmentStatus.MAINTENANCE : 'N/A'}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Utilization</span>
-                  <span className="text-sm font-semibold text-gray-900 dark:text-white">N/A</span>
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white">{farmOpsData.equipmentStatus ? `${farmOpsData.equipmentStatus.utilization}%` : 'N/A'}</span>
                 </div>
               </div>
               <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-gray-500 dark:text-gray-400">Next Service</span>
-                  <span className="text-sm font-medium text-gray-500">N/A</span>
+                  <span className="text-sm font-medium text-gray-500">{farmOpsData.equipmentStatus ? farmOpsData.equipmentStatus.nextService : 'N/A'}</span>
                 </div>
               </div>
             </div>
@@ -1321,30 +1466,28 @@ const Analytics = () => {
               className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-6 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105"
             >
               <div className="flex items-center justify-between mb-4">
-                <div className="p-2 bg-emerald-100 dark:bg-emerald-900/20 rounded-lg">
-                  <MapPin className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                </div>
+                <MapPin className="h-9 w-9 text-emerald-500" />
                 <span className="text-xs text-gray-500 dark:text-gray-400">Real-time</span>
               </div>
               <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Field Activity</h4>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Active Workers</span>
-                  <span className="text-sm font-semibold text-gray-900 dark:text-white">N/A</span>
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white">{farmOpsData.fieldActivity ? farmOpsData.fieldActivity.activeWorkers : 'N/A'}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Tasks Today</span>
-                  <span className="text-sm font-medium text-gray-500">N/A</span>
+                  <span className="text-sm font-medium text-gray-500">{farmOpsData.fieldActivity ? farmOpsData.fieldActivity.tasksTotal : 'N/A'}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Efficiency</span>
-                  <span className="text-sm font-medium text-gray-500">N/A</span>
+                  <span className="text-sm font-medium text-gray-500">{farmOpsData.fieldActivity ? farmOpsData.fieldActivity.efficiency : 'N/A'}</span>
                 </div>
               </div>
               <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-gray-500 dark:text-gray-400">Productivity</span>
-                  <span className="text-sm font-semibold text-gray-500">N/A</span>
+                  <span className="text-sm font-semibold text-gray-500">{farmOpsData.fieldActivity ? farmOpsData.fieldActivity.productivity : 'N/A'}</span>
                 </div>
               </div>
             </div>
@@ -1356,7 +1499,7 @@ const Analytics = () => {
         {/* Crop Management Modal */}
         {showCropModal && (
           <div className="fixed inset-0 bg-black bg-opacity-60  flex items-center justify-center z-50 p-4">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[67vh] overflow-hidden flex flex-col">
               <div className="bg-gradient-to-r from-emerald-600 to-emerald-600 text-white p-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
@@ -1379,10 +1522,19 @@ const Analytics = () => {
                   <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-xl p-4">
                     <h3 className="font-semibold text-gray-900 dark:text-white mb-3">Active Crops</h3>
                     <div className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-600 dark:text-gray-400">No crops configured</span>
-                        <span className="text-sm font-medium text-gray-500">N/A</span>
-                      </div>
+                      {farmOpsData.crops.length > 0 ? (
+                        farmOpsData.crops.map((crop: any, index: number) => (
+                          <div key={index} className="flex justify-between items-center">
+                            <span className="text-sm text-gray-600 dark:text-gray-400">{crop.name}</span>
+                            <span className="text-sm font-medium text-emerald-600">{crop.status || 'Active'}</span>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600 dark:text-gray-400">No crops configured</span>
+                          <span className="text-sm font-medium text-gray-500">N/A</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                   
@@ -1442,7 +1594,11 @@ const Analytics = () => {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Zone Assignment</label>
-                      <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white">
+                      <select
+                        value={cropData.zoneAssignment}
+                        onChange={(e) => setCropData({...cropData, zoneAssignment: e.target.value})}
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
+                      >
                         <option value="">Select Zone</option>
                         <option value="zone-a">Zone A</option>
                         <option value="zone-b">Zone B</option>
@@ -1468,42 +1624,7 @@ const Analytics = () => {
                       Cancel
                     </button>
                     <button 
-                      onClick={() => {
-                        // Validate form data
-                        if (!cropData.newCrop.trim() || !cropData.plantingDate || !cropData.expectedHarvest || !cropData.zoneAssignment) {
-                          alert('Please fill in all required fields: Crop Type, Planting Date, Expected Harvest, and Zone Assignment');
-                          return;
-                        }
-
-                        // Create new crop object
-                        const newCrop = {
-                          id: crops.length + 1,
-                          name: cropData.newCrop,
-                          zone: cropData.zoneAssignment,
-                          plantingDate: cropData.plantingDate,
-                          expectedHarvest: cropData.expectedHarvest,
-                          status: 'Planned',
-                          notes: cropData.notes
-                        };
-
-                        // Add to crops array
-                        setCrops([...crops, newCrop]);
-                        
-                        // Clear form
-                        setCropData({
-                          newCrop: '',
-                          plantingDate: '',
-                          expectedHarvest: '',
-                          zoneAssignment: '',
-                          notes: ''
-                        });
-
-                        // Close modal
-                        setShowCropModal(false);
-                        
-                        console.log('✅ Crop added:', newCrop);
-                        alert(`Crop "${cropData.newCrop}" has been successfully added to the system!`);
-                      }}
+                      onClick={handleAddCrop}
                       className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
                     >
                       Add Crop
@@ -1545,7 +1666,7 @@ const Analytics = () => {
         {/* Soil Management Modal */}
         {showSoilModal && (
           <div className="fixed inset-0 bg-black bg-opacity-60  flex items-center justify-center z-50 p-4">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[67vh] overflow-hidden flex flex-col">
               <div className="bg-gradient-to-r from-amber-600 to-orange-600 text-white p-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
@@ -1616,11 +1737,15 @@ const Analytics = () => {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Zone</label>
-                      <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white">
+                      <select
+                        value={soilData.zone}
+                        onChange={(e) => setSoilData({...soilData, zone: e.target.value})}
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white"
+                      >
                         <option value="">Select Zone</option>
-                        <option value="zone-a">Zone A</option>
-                        <option value="zone-b">Zone B</option>
-                        <option value="zone-c">Zone C</option>
+                        <option value="A">Zone A</option>
+                        <option value="B">Zone B</option>
+                        <option value="C">Zone C</option>
                       </select>
                     </div>
                   </div>
@@ -1707,11 +1832,7 @@ const Analytics = () => {
                       Cancel
                     </button>
                     <button 
-                      onClick={() => {
-                        // Add soil analysis logic here
-                        console.log('Adding soil analysis:', soilData);
-                        setShowSoilModal(false);
-                      }}
+                      onClick={handleUpdateSoilAnalysis}
                       className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors"
                     >
                       Save Analysis
@@ -1745,7 +1866,7 @@ const Analytics = () => {
         {/* Weather Impact Modal */}
         {showWeatherModal && (
           <div className="fixed inset-0 bg-black bg-opacity-60  flex items-center justify-center z-50 p-4">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[67vh] overflow-hidden flex flex-col">
               <div className="bg-gradient-to-r from-blue-600 to-sky-600 text-white p-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
@@ -1828,7 +1949,7 @@ const Analytics = () => {
         {/* Irrigation Status Modal */}
         {showIrrigationModal && (
           <div className="fixed inset-0 bg-black bg-opacity-60  flex items-center justify-center z-50 p-4">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[67vh] overflow-hidden flex flex-col">
               <div className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
@@ -2015,7 +2136,7 @@ const Analytics = () => {
         {/* Pest Control Modal */}
         {showPestModal && (
           <div className="fixed inset-0 bg-black bg-opacity-60  flex items-center justify-center z-50 p-4">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[67vh] overflow-hidden flex flex-col">
               <div className="bg-gradient-to-r from-red-600 to-orange-600 text-white p-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
@@ -2217,7 +2338,7 @@ const Analytics = () => {
         {/* Equipment Status Modal */}
         {showEquipmentModal && (
           <div className="fixed inset-0 bg-black bg-opacity-60  flex items-center justify-center z-50 p-4">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[67vh] overflow-hidden flex flex-col">
               <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
@@ -2288,6 +2409,83 @@ const Analytics = () => {
                     </div>
                   </div>
                 </div>
+                
+                {/* Schedule Maintenance Form */}
+                <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 mt-6">
+                  <h3 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                    <Clock className="h-5 w-5 mr-2 text-purple-600" />
+                    Schedule Maintenance
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Equipment Name</label>
+                      <input
+                        type="text"
+                        value={equipmentData.equipmentName}
+                        onChange={(e) => setEquipmentData({...equipmentData, equipmentName: e.target.value})}
+                        placeholder="e.g., Tractor, Pump"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Maintenance Type</label>
+                      <select
+                        value={equipmentData.maintenanceType}
+                        onChange={(e) => setEquipmentData({...equipmentData, maintenanceType: e.target.value})}
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white"
+                      >
+                        <option value="">Select Type</option>
+                        <option value="routine">Routine Check</option>
+                        <option value="repair">Repair</option>
+                        <option value="replacement">Parts Replacement</option>
+                        <option value="inspection">Inspection</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Scheduled Date</label>
+                      <input
+                        type="date"
+                        value={equipmentData.scheduledDate}
+                        onChange={(e) => setEquipmentData({...equipmentData, scheduledDate: e.target.value})}
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Technician</label>
+                      <input
+                        type="text"
+                        value={equipmentData.technician}
+                        onChange={(e) => setEquipmentData({...equipmentData, technician: e.target.value})}
+                        placeholder="Assigned technician"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white"
+                      />
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Notes</label>
+                    <textarea
+                      value={equipmentData.notes}
+                      onChange={(e) => setEquipmentData({...equipmentData, notes: e.target.value})}
+                      placeholder="Maintenance notes..."
+                      rows={2}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white"
+                    />
+                  </div>
+                  <div className="mt-4 flex justify-end space-x-3">
+                    <button 
+                      onClick={() => setShowEquipmentModal(false)}
+                      className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button 
+                      onClick={handleScheduleMaintenance}
+                      className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                    >
+                      Schedule Maintenance
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -2296,7 +2494,7 @@ const Analytics = () => {
         {/* Field Activity Modal */}
         {showFieldModal && (
           <div className="fixed inset-0 bg-black bg-opacity-60  flex items-center justify-center z-50 p-4">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[67vh] overflow-hidden flex flex-col">
               <div className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white p-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
@@ -2364,6 +2562,95 @@ const Analytics = () => {
                         </div>
                       </div>
                     ))}
+                  </div>
+                </div>
+                
+                {/* Assign Task Form */}
+                <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 mt-6">
+                  <h3 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                    <MapPin className="h-5 w-5 mr-2 text-emerald-600" />
+                    Assign New Task
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Worker Name</label>
+                      <input
+                        type="text"
+                        value={fieldActivityData.workerName}
+                        onChange={(e) => setFieldActivityData({...fieldActivityData, workerName: e.target.value})}
+                        placeholder="e.g., John D."
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Assigned Task</label>
+                      <input
+                        type="text"
+                        value={fieldActivityData.assignedTask}
+                        onChange={(e) => setFieldActivityData({...fieldActivityData, assignedTask: e.target.value})}
+                        placeholder="e.g., Harvesting Zone A"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Start Time</label>
+                      <input
+                        type="datetime-local"
+                        value={fieldActivityData.startTime}
+                        onChange={(e) => setFieldActivityData({...fieldActivityData, startTime: e.target.value})}
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Estimated Duration (hours)</label>
+                      <input
+                        type="number"
+                        value={fieldActivityData.estimatedDuration}
+                        onChange={(e) => setFieldActivityData({...fieldActivityData, estimatedDuration: e.target.value})}
+                        placeholder="e.g., 4"
+                        min="0"
+                        step="0.5"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Priority</label>
+                      <select
+                        value={fieldActivityData.priority}
+                        onChange={(e) => setFieldActivityData({...fieldActivityData, priority: e.target.value})}
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
+                      >
+                        <option value="">Select Priority</option>
+                        <option value="LOW">Low</option>
+                        <option value="MEDIUM">Medium</option>
+                        <option value="HIGH">High</option>
+                        <option value="URGENT">Urgent</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Notes</label>
+                    <textarea
+                      value={fieldActivityData.notes}
+                      onChange={(e) => setFieldActivityData({...fieldActivityData, notes: e.target.value})}
+                      placeholder="Task notes..."
+                      rows={2}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-700 dark:text-white"
+                    />
+                  </div>
+                  <div className="mt-4 flex justify-end space-x-3">
+                    <button 
+                      onClick={() => setShowFieldModal(false)}
+                      className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button 
+                      onClick={handleAssignFieldTask}
+                      className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+                    >
+                      Assign Task
+                    </button>
                   </div>
                 </div>
               </div>

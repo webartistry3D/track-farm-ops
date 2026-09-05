@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
 import { formatCurrency, formatCompactCurrency } from '../utils/currency';
-import { TrendingUp, TrendingDown, ShoppingCart, Calculator } from 'lucide-react';
+import { TrendingUp, TrendingDown, ShoppingCart, Calculator, BarChart3, Wallet, Package, Building2 } from 'lucide-react';
 import { 
   DashboardSkeleton
 } from './EnhancedSkeletons';
@@ -296,11 +296,7 @@ const Dashboard = () => {
                   </span>
                 </div>
               </div>
-              <div className="flex items-center space-x-2 mt-1">
-                <div className="p-2 bg-gradient-to-br from-emerald-500 to-emerald-600 dark:from-emerald-600 dark:to-emerald-700 rounded-lg shadow-lg">
-                  <TrendingUp className="h-4 w-4 text-white" />
-                </div>
-              </div>
+              <TrendingUp className="h-9 w-9 text-emerald-500" />
             </div>
             <div className="flex items-center">
               <p className="text-3xl font-bold font-jetbrains-mono text-emerald-600 dark:text-emerald-400">
@@ -334,11 +330,7 @@ const Dashboard = () => {
                   </span>
                 </div>
               </div>
-              <div className="flex items-center space-x-2 mt-1">
-                <div className="p-2 bg-gradient-to-br from-red-500 to-red-600 dark:from-red-600 dark:to-red-700 rounded-lg shadow-lg">
-                  <ShoppingCart className="h-4 w-4 text-white" />
-                </div>
-              </div>
+              <ShoppingCart className="h-9 w-9 text-red-500" />
             </div>
             <div className="flex items-center">
               <p className="text-3xl font-bold font-jetbrains-mono text-red-600 dark:text-red-400">
@@ -372,11 +364,7 @@ const Dashboard = () => {
                   </span>
                 </div>
               </div>
-              <div className="flex items-center space-x-2 mt-1">
-                <div className="p-2 bg-gradient-to-br from-emerald-500 to-emerald-600 dark:from-emerald-600 dark:to-emerald-700 rounded-lg shadow-lg">
-                  <Calculator className="h-4 w-4 text-white" />
-                </div>
-              </div>
+              <Calculator className="h-9 w-9 text-emerald-500" />
             </div>
             <div className="flex items-center">
               <p className="text-3xl font-bold font-jetbrains-mono text-emerald-600 dark:text-emerald-400">
@@ -423,16 +411,7 @@ const Dashboard = () => {
                   </span>
                 </div>
               </div>
-              <div className="flex items-center space-x-2 mt-1">
-                <div className={`p-2 bg-gradient-to-br ${
-                  dateFilter === 'allTime' ? 
-                    'from-emerald-500 to-emerald-600 dark:from-emerald-600 dark:to-emerald-700' :
-                    netProfit >= 0 ? 'from-emerald-500 to-emerald-600 dark:from-emerald-600 dark:to-emerald-700' : 
-                    'from-red-500 to-red-600 dark:from-red-600 dark:to-red-700'
-                } rounded-lg shadow-lg`}>
-                  {netProfit >= 0 ? <TrendingUp className="h-4 w-4 text-white" /> : <TrendingDown className="h-4 w-4 text-white" />}
-                </div>
-              </div>
+              {netProfit >= 0 ? <TrendingUp className="h-9 w-9 text-emerald-500" /> : <TrendingDown className="h-9 w-9 text-red-500" />}
             </div>
             <div className="flex items-center">
               <p className={`text-3xl font-bold font-jetbrains-mono ${
@@ -581,40 +560,48 @@ const Dashboard = () => {
             <div className="grid grid-cols-2 gap-3">
               <div 
                 onClick={() => handleCardClick('income')}
-                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-lg p-9 text-center cursor-pointer hover:shadow-xl transition-shadow duration-200 hover:scale-105 transform"
+                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-lg p-6 cursor-pointer hover:shadow-xl transition-shadow duration-200 hover:scale-105 transform"
               >
-                <div className="text-xl mb-1">📊</div>
-                <div className="text-5xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
+                <div className="flex justify-end mb-2">
+                  <BarChart3 className="h-9 w-9 text-blue-500" />
+                </div>
+                <div className="text-5xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white text-center">
                   {incomeEntries.length}
                 </div>
                 <div className="text-sm font-inter text-gray-600 dark:text-gray-400">Income</div>
               </div>
               <div 
                 onClick={() => handleCardClick('expenses')}
-                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-lg p-9 text-center cursor-pointer hover:shadow-xl transition-shadow duration-200 hover:scale-105 transform"
+                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-lg p-6 cursor-pointer hover:shadow-xl transition-shadow duration-200 hover:scale-105 transform"
               >
-                <div className="text-xl mb-1">💸</div>
-                <div className="text-5xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
+                <div className="flex justify-end mb-2">
+                  <Wallet className="h-9 w-9 text-red-500" />
+                </div>
+                <div className="text-5xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white text-center">
                   {expenseEntries.length}
                 </div>
                 <div className="text-sm font-inter text-gray-600 dark:text-gray-400">Expense</div>
               </div>
               <div 
                 onClick={() => handleCardClick('inventory')}
-                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-lg p-9 text-center cursor-pointer hover:shadow-xl transition-shadow duration-200 hover:scale-105 transform"
+                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-lg p-6 cursor-pointer hover:shadow-xl transition-shadow duration-200 hover:scale-105 transform"
               >
-                <div className="text-xl mb-1">📦</div>
-                <div className="text-5xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
+                <div className="flex justify-end mb-2">
+                  <Package className="h-9 w-9 text-indigo-500" />
+                </div>
+                <div className="text-5xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white text-center">
                   {inventoryItems.length}
                 </div>
                 <div className="text-sm font-inter text-gray-600 dark:text-gray-400">Inventory</div>
               </div>
               <div 
                 onClick={() => handleCardClick('assets')}
-                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-lg p-9 text-center cursor-pointer hover:shadow-xl transition-shadow duration-200 hover:scale-105 transform"
+                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-lg p-6 cursor-pointer hover:shadow-xl transition-shadow duration-200 hover:scale-105 transform"
               >
-                <div className="text-xl mb-1">🏗️</div>
-                <div className="text-5xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white">
+                <div className="flex justify-end mb-2">
+                  <Building2 className="h-9 w-9 text-purple-500" />
+                </div>
+                <div className="text-5xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white text-center">
                   {assets.length}
                 </div>
                 <div className="text-sm font-inter text-gray-600 dark:text-gray-400">Assets</div>
