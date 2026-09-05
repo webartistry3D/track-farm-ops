@@ -15,7 +15,10 @@ const HeroBackdrop = forwardRef<HTMLDivElement>((_props, ref) => {
           style={{
             opacity: i === 0 ? 1 : 0,
             transformOrigin: scene.scaleOrigin,
-            willChange: 'opacity, transform',
+            transform: 'translateZ(0)',
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden',
+            willChange: 'opacity',
           }}
           loading={i === 0 ? 'eager' : 'lazy'}
           fetchPriority={i === 0 ? 'high' : 'low'}

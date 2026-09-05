@@ -8,12 +8,14 @@ const LandingFooter = () => (
     <section className="relative overflow-hidden bg-slate-950 py-16 text-center sm:py-20">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.26),transparent_42%)]" />
       <div className="relative mx-auto max-w-3xl px-4 sm:px-6">
-        <Reveal>
+        <Reveal once={false} className="mx-auto max-w-3xl text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-400/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-emerald-200"><Sprout className="h-4 w-4" /> Start stronger today</span>
-          <h2 className="mt-6 font-jetbrains-mono text-4xl font-bold tracking-tight text-white sm:text-5xl">Your farm has more potential. Let’s unlock it.</h2>
-          {/*<p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-slate-300">Take control of the details, spot opportunities early, and build a farm operation that gets smarter every season.</p>*/}
-          <div className="mt-8"><MagneticButton><Link to="/signup" className="group inline-flex items-center gap-2 rounded-xl bg-emerald-400 px-7 py-4 font-semibold text-emerald-950 shadow-xl shadow-emerald-950/30 transition-colors hover:bg-emerald-300">Create your free account <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" /></Link></MagneticButton></div>
-          {/*<p className="mt-5 flex items-center justify-center gap-2 text-sm text-emerald-100"><CheckCircle2 className="h-4 w-4" /> No credit card required</p>*/}
+        </Reveal>
+        <Reveal once={false} delay={0.15} className="mx-auto mt-6 max-w-3xl text-center">
+          <h2 className="font-jetbrains-mono text-4xl font-bold tracking-tight text-white sm:text-5xl">Your farm has more potential. Let's unlock it.</h2>
+        </Reveal>
+        <Reveal once={false} delay={0.3} className="mx-auto mt-8 max-w-3xl text-center">
+          <MagneticButton><Link to="/signup" className="group inline-flex items-center gap-2 rounded-xl bg-emerald-400 px-7 py-4 font-semibold text-emerald-950 shadow-xl shadow-emerald-950/30 transition-colors hover:bg-emerald-300">Create your free account <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" /></Link></MagneticButton>
         </Reveal>
       </div>
     </section>

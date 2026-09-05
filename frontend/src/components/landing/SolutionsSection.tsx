@@ -52,7 +52,7 @@ const SolutionsSection = () => {
           //description="A single, secure operating system that connects the financial, physical, and people sides of your farm."
         />
 
-        <Reveal start="top 95%" className="relative mx-auto mt-6 aspect-[16/9] w-full max-w-8xl md:mt-8 lg:max-w-[56rem]">
+        <Reveal once={false} start="top 95%" className="relative mx-auto mt-6 aspect-[16/9] w-full max-w-8xl md:mt-8 lg:max-w-[56rem]">
           <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" aria-hidden="true">
             <defs>
               <linearGradient id="hubGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -99,13 +99,15 @@ const SolutionsSection = () => {
               fill="url(#hubGradient)"
               stroke="rgba(255,255,255,0.18)"
               strokeWidth="0.4"
+              className="origin-center"
+              style={{ animation: 'hub-pulse 3s ease-in-out infinite', transformOrigin: '50px 50px' }}
             />
           </svg>
 
           <div
             className="absolute left-1/2 top-1/2 z-10 flex h-[26%] w-[26%] -translate-x-1/2 -translate-y-1/2 items-center justify-center p-4 text-center sm:p-5"
           >
-            <div>
+            <div style={{ animation: 'hub-pulse 3s ease-in-out infinite' }}>
               <p className="font-jetbrains-mono text-[clamp(0.55rem,1.8vw,0.9rem)] font-bold leading-tight text-emerald-300">
                 TrackFarmOps
               </p>

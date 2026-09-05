@@ -27,20 +27,25 @@ const BenefitsSection = () => {
       // Overlap so only icon + title of row 1 remain visible (~45% of card)
       const overlapY = -(row1Height * 0.55);
 
-      // Row 1 cards: fade in during normal scroll (no pin)
-      gsap.from(row1Cards, {
-        opacity: 0,
-        y: 60,
-        scale: 0.92,
-        duration: 0.6,
-        stagger: 0.12,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: cards,
-          start: 'top 80%',
-          once: true,
-        },
-      });
+      // Row 1 cards: slide in one after another, reverse on scroll back
+      gsap.fromTo(
+        row1Cards,
+        { opacity: 0, y: 60, scale: 0.92 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.6,
+          stagger: 0.12,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: cards,
+            start: 'top 80%',
+            end: 'bottom 50%',
+            scrub: 1,
+          },
+        }
+      );
 
       // Row 2 cards: hidden initially, animate during pin
       gsap.set(row2Cards, { opacity: 0, y: row1Height + 60, scale: 0.92, zIndex: 20 });
@@ -124,7 +129,7 @@ const BenefitsSection = () => {
 
       <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col justify-center px-4 py-20 sm:px-6 lg:px-8">
         {/* Heading */}
-        <Reveal className="mx-auto mb-12 max-w-3xl text-center md:mb-16">
+        <Reveal once={false} className="mx-auto mb-12 max-w-3xl text-center md:mb-16">
           <span className="mb-4 inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">
             Made for growth
           </span>

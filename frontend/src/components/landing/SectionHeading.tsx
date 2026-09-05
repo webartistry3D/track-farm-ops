@@ -19,7 +19,7 @@ const SectionHeading = ({
   descriptionDelay = 0,
   light = false,
 }: SectionHeadingProps) => (
-  <Reveal className="mx-auto mb-12 max-w-3xl text-center md:mb-16">
+  <Reveal once={false} className="mx-auto mb-12 max-w-3xl text-center md:mb-16">
     {eyebrow && (
       <span
         className={`mb-4 inline-flex rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] ${
@@ -31,7 +31,7 @@ const SectionHeading = ({
         {eyebrow}
       </span>
     )}
-    <Reveal delay={titleDelay}>
+    <Reveal once={false} delay={titleDelay}>
       <h2
         className={`font-jetbrains-mono text-xl font-bold tracking-tight sm:text-2xl lg:text-3xl ${
           light ? 'text-white' : 'text-slate-900'
@@ -41,7 +41,7 @@ const SectionHeading = ({
       </h2>
     </Reveal>
     {description && (
-      <Reveal delay={descriptionDelay}>
+      <Reveal once={false} delay={descriptionDelay}>
         <p className={`mx-auto mt-5 max-w-2xl text-base leading-7 sm:text-lg ${descriptionClassName ? descriptionClassName : light ? 'text-slate-300' : 'text-slate-600'}`}>
           {description}
         </p>

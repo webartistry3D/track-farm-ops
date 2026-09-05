@@ -263,6 +263,12 @@ h1, h2, h3, h4, h5, h6 {
   animation: bob 1.8s ease-in-out infinite;
 }
 
+/* Hub hexagon + TrackFarmOps text pulse */
+@keyframes hub-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.5); }
+}
+
 /* Decorative dotted grid background */
 .bg-grid {
   background-image: radial-gradient(rgba(22, 163, 74, 0.12) 1px, transparent 1px);

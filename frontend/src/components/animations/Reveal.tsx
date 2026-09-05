@@ -97,13 +97,18 @@ const Reveal = ({
         delay,
         ease: 'power3.out',
         stagger: stagger || 0,
-        scrollTrigger: {
-          trigger: el,
-          start,
-          toggleActions: once
-            ? 'play none none none'
-            : 'play reverse play reverse',
-        },
+        scrollTrigger: once
+          ? {
+              trigger: el,
+              start,
+              toggleActions: 'play none none none',
+            }
+          : {
+              trigger: el,
+              start,
+              end: 'bottom 60%',
+              scrub: 1,
+            },
       });
     }, ref);
 

@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { Star } from 'lucide-react';
-import { gsap, prefersReducedMotion } from '../../lib/gsap';
+import { gsap, ScrollTrigger, prefersReducedMotion } from '../../lib/gsap';
+import Reveal from '../animations/Reveal';
 import { testimonials } from './content';
 
 const TestimonialCard = ({
@@ -115,6 +116,8 @@ const TestimonialsSection = () => {
       });
     }, root);
 
+    ScrollTrigger.refresh();
+
     return () => ctx.revert();
   }, []);
 
@@ -144,16 +147,16 @@ const TestimonialsSection = () => {
         className="absolute -right-32 bottom-1/4 h-72 w-72 rounded-full bg-amber-200/40 blur-3xl"
       />
 
-      <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col justify-center px-4 py-20 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto flex max-h-screen max-w-7xl flex-col justify-center px-4 py-20 sm:px-6 lg:px-8">
         {/* Heading */}
-        <div className="mx-auto mb-10 max-w-3xl text-center md:mb-14">
+        <Reveal once={false} className="mx-auto mb-10 max-w-3xl text-center md:mb-14">
           <span className="mb-4 inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">
             Loved in the field
           </span>
           <h2 className="font-jetbrains-mono text-xl font-bold tracking-tight text-slate-900 sm:text-2xl lg:text-3xl">
             The numbers matter. So do the people behind them.
           </h2>
-        </div>
+        </Reveal>
 
         {/* Horizontal reel */}
         <div className="relative overflow-hidden">

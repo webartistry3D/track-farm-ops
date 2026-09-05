@@ -37,7 +37,7 @@ const HowItWorksSection = () => {
           descriptionClassName="text-white"
         />
 
-        <Reveal stagger={0.18} className="relative mx-auto mt-10 h-[440px] w-full sm:h-[520px] lg:h-[200px] lg:max-w-3xl">
+        <Reveal once={false} stagger={0.18} className="relative mx-auto mt-10 h-[440px] w-full sm:h-[520px] lg:h-[200px] lg:max-w-3xl">
           <svg
             className="absolute inset-0 h-full w-full"
             viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}

@@ -129,7 +129,7 @@ const Hero = () => {
         if (textEl) {
           const enterStart = i === 0 ? 0 : sceneStart + 0.15;
           const enterDuration = 0.15;
-          const exitStart = i === 0 ? sceneStart + 0.50 : i === 3 ? sceneStart + 0.80 : sceneStart + 0.70;
+          const exitStart = i === 0 ? sceneStart + 0.50 : i === 3 ? sceneStart + 0.80 : i === 1 ? sceneStart + 0.82 : sceneStart + 0.70;
           const exitDuration = i === 0 ? 0.30 : 0.30;
 
           if (i === 0) {
