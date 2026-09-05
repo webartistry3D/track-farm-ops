@@ -47,42 +47,6 @@ const BenefitsSection = () => {
         }
       );
 
-      // Row 2 cards: hidden initially, animate during pin
-      gsap.set(row2Cards, { opacity: 0, y: row1Height + 60, scale: 0.92, zIndex: 20 });
-
-      const tl = gsap.timeline({
-        defaults: { ease: 'none' },
-        scrollTrigger: {
-          trigger: el,
-          start: 'center center',
-          end: '+=100%',
-          pin: true,
-          scrub: 0.8,
-          anticipatePin: 1,
-          onUpdate: (self) => {
-            setActiveIndex(self.progress > 0.1 ? 1 : 0);
-          },
-        },
-      });
-
-      // Row 2 cards slide up and overlap row 1
-      row2Cards.forEach((card, i) => {
-        tl.to(
-          card,
-          { opacity: 1, y: overlapY, scale: 1, duration: 0.25, ease: 'power2.inOut' },
-          i * 0.06
-        );
-      });
-
-      // Parallax background drift
-      if (bgRef.current) {
-        tl.to(
-          bgRef.current,
-          { y: -40, duration: 1, ease: 'none' },
-          0
-        );
-      }
-
       // Orbs drift
       orbEls.forEach((orb, i) => {
         gsap.to(orb, {
@@ -94,6 +58,65 @@ const BenefitsSection = () => {
           ease: 'sine.inOut',
         });
       });
+
+      // Only use pin + overlap animation on larger screens
+      if (window.matchMedia('(min-width: 768px)').matches) {
+        // Row 2 cards: hidden initially, animate during pin
+        gsap.set(row2Cards, { opacity: 0, y: row1Height + 60, scale: 0.92, zIndex: 20 });
+
+        const tl = gsap.timeline({
+          defaults: { ease: 'none' },
+          scrollTrigger: {
+            trigger: el,
+            start: 'center center',
+            end: '+=100%',
+            pin: true,
+            scrub: 0.8,
+            anticipatePin: 1,
+            onUpdate: (self) => {
+              setActiveIndex(self.progress > 0.1 ? 1 : 0);
+            },
+          },
+        });
+
+        // Row 2 cards slide up and overlap row 1
+        row2Cards.forEach((card, i) => {
+          tl.to(
+            card,
+            { opacity: 1, y: overlapY, scale: 1, duration: 0.25, ease: 'power2.inOut' },
+            i * 0.06
+          );
+        });
+
+        // Parallax background drift
+        if (bgRef.current) {
+          tl.to(
+            bgRef.current,
+            { y: -40, duration: 1, ease: 'none' },
+            0
+          );
+        }
+      } else {
+        // Mobile: simple fade-in for row 2 cards, no pin
+        gsap.fromTo(
+          row2Cards,
+          { opacity: 0, y: 60, scale: 0.92 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.6,
+            stagger: 0.12,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: cards,
+              start: 'top 60%',
+              end: 'bottom 30%',
+              scrub: 1,
+            },
+          }
+        );
+      }
     }, root);
 
     ScrollTrigger.refresh();
@@ -107,7 +130,7 @@ const BenefitsSection = () => {
     <section
       ref={root}
       className="relative isolate overflow-hidden bg-gradient-to-b from-emerald-50 to-white"
-      style={{ minHeight: isReduced ? 'auto' : '100vh' }}
+      style={{ minHeight: isReduced ? 'auto' : window.matchMedia('(min-width: 768px)').matches ? '100vh' : 'auto' }}
     >
       {/* Parallax background */}
       <div
@@ -127,7 +150,7 @@ const BenefitsSection = () => {
         className="absolute -right-32 bottom-0 h-80 w-80 rounded-full bg-lime-200/50 blur-3xl"
       />
 
-      <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col justify-center px-4 py-20 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto flex max-w-7xl flex-col justify-center px-4 py-20 sm:px-6 lg:px-8">
         {/* Heading */}
         <Reveal once={false} className="mx-auto mb-12 max-w-3xl text-center md:mb-16">
           <span className="mb-4 inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">
@@ -147,8 +170,8 @@ const BenefitsSection = () => {
           ))}
         </div>
 
-        {/* Progress indicator */}
-        {!isReduced && (
+        {/* Progress indicator — desktop only */}
+        {!isReduced && window.matchMedia('(min-width: 768px)').matches && (
           <div className="mt-12 flex items-center justify-center gap-2">
             {[0, 1].map((i) => (
               <span

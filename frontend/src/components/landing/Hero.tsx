@@ -30,7 +30,7 @@ const Hero = () => {
         scrollTrigger: {
           trigger: el,
           start: 'top top',
-          end: `+=${sceneCount * 100}%`,
+          end: `+=${(sceneCount + 0.06) * 100}%`,
           pin: true,
           scrub: 0.8,
           anticipatePin: 1,
@@ -129,7 +129,7 @@ const Hero = () => {
         if (textEl) {
           const enterStart = i === 0 ? 0 : sceneStart + 0.15;
           const enterDuration = 0.15;
-          const exitStart = i === 0 ? sceneStart + 0.50 : i === 3 ? sceneStart + 0.80 : i === 1 ? sceneStart + 0.82 : sceneStart + 0.70;
+          const exitStart = i === 0 ? sceneStart + 0.50 : i === 3 ? sceneStart + 0.80 : i === 1 ? sceneStart + 0.88 : sceneStart + 0.70;
           const exitDuration = i === 0 ? 0.30 : 0.30;
 
           if (i === 0) {
@@ -141,7 +141,8 @@ const Hero = () => {
               .from('[data-hero-element="chips"] > div', { opacity: 0, y: 20, duration: 0.5, stagger: 0.1 }, '-=0.25')
               .from('[data-hero-element="actions"]', { opacity: 0, y: 18, duration: 0.55 }, '-=0.15')
               .from('[data-hero-element="proof"]', { opacity: 0, y: 16, duration: 0.5 }, '-=0.15')
-              .from('[data-hero-element="stats"] > div', { opacity: 0, y: 30, duration: 0.55, stagger: 0.1 }, '-=0.15');
+              .from('[data-hero-element="stats"]', { opacity: 0, y: 30, duration: 0.4 }, '-=0.1')
+              .from('[data-hero-element="stats"] > div', { opacity: 0, y: 20, duration: 0.5, stagger: 0.1 }, '-=0.25');
 
             // Scene 1 exit — earlier so text is gone before image 2 fades in
             tl.to(textEl, { opacity: 0, y: -30, duration: exitDuration, ease: 'power2.in' }, exitStart);
@@ -326,7 +327,7 @@ const Hero = () => {
 
       {/* z-40: Text/UI layers — one per scene */}
       {scenes.map((scene, i) => (
-        <HeroScene key={scene.id} scene={scene} index={i} onSeeHowItWorks={() => scrollToScene(1)} />
+        <HeroScene key={scene.id} scene={scene} index={i} />
       ))}
 
       {/* z-50: Progress rail */}

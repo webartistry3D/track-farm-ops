@@ -44,6 +44,19 @@ const TestimonialsSection = () => {
     const cardEls = track.querySelectorAll('[data-testimonial-card]');
 
     const ctx = gsap.context(() => {
+      // Orbs drift (always)
+      orbEls.forEach((orb, i) => {
+        gsap.to(orb, {
+          x: i % 2 === 0 ? 50 : -50,
+          y: i % 2 === 0 ? -20 : 30,
+          duration: 10 + i * 3,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+        });
+      });
+
+      // Pinned horizontal reel — vertical scroll drives horizontal card movement
       const tl = gsap.timeline({
         defaults: { ease: 'none' },
         scrollTrigger: {
@@ -94,26 +107,15 @@ const TestimonialsSection = () => {
         }
       });
 
-      // Parallax background drift
+      // Parallax background drift — wider drift on mobile to cover narrower viewport
       if (bgRef.current) {
+        const isMobile = window.matchMedia('(max-width: 767px)').matches;
         tl.to(
           bgRef.current,
-          { x: -60, duration: 1, ease: 'none' },
+          { x: isMobile ? -120 : -60, duration: 1, ease: 'none' },
           0
         );
       }
-
-      // Orbs drift
-      orbEls.forEach((orb, i) => {
-        gsap.to(orb, {
-          x: i % 2 === 0 ? 50 : -50,
-          y: i % 2 === 0 ? -20 : 30,
-          duration: 10 + i * 3,
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut',
-        });
-      });
     }, root);
 
     ScrollTrigger.refresh();
@@ -132,7 +134,7 @@ const TestimonialsSection = () => {
       {/* Parallax background */}
       <div
         ref={bgRef}
-        className="absolute inset-y-0 left-0 w-[110%] bg-[url('/testimonial2.png')] bg-cover bg-center opacity-60"
+        className="absolute inset-y-0 left-0 w-[130%] bg-[url('/testimonial2.png')] bg-cover bg-center opacity-60"
         aria-hidden="true"
       />
       
@@ -147,7 +149,7 @@ const TestimonialsSection = () => {
         className="absolute -right-32 bottom-1/4 h-72 w-72 rounded-full bg-amber-200/40 blur-3xl"
       />
 
-      <div className="relative z-10 mx-auto flex max-h-screen max-w-7xl flex-col justify-center px-4 py-20 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto flex max-w-7xl flex-col justify-center px-4 py-20 sm:px-6 lg:px-8">
         {/* Heading */}
         <Reveal once={false} className="mx-auto mb-10 max-w-3xl text-center md:mb-14">
           <span className="mb-4 inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">
@@ -158,7 +160,7 @@ const TestimonialsSection = () => {
           </h2>
         </Reveal>
 
-        {/* Horizontal reel */}
+        {/* Horizontal reel — vertical scroll drives horizontal movement */}
         <div className="relative overflow-hidden">
           <div ref={trackRef} className="flex w-max gap-5 px-2 py-8">
             {testimonials.map((testimonial, index) => (

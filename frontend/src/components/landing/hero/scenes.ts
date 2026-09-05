@@ -101,7 +101,7 @@ export const scenes: SceneConfig[] = [
       eyebrow: 'THE REALITY',
       eyebrowClass: 'text-xs tracking-[0.2em] text-rose-300 font-semibold',
       //title: "Running a farm shouldn't feel like guesswork.",
-      title: 'Money leaks between WhatsApp, Excel sheets and Record books.',
+      title: 'Money leaks across disconnected WhatsApp chats, spreadsheets and notebooks.',
       titleClass:
         'font-jetbrains-mono font-bold leading-[1.1] tracking-tight text-[clamp(1.75rem,5vw,3.5rem)] text-white whitespace-pre-line',
       //body: 'Money leaks between WhatsApp, exercise books and Excel. Feed disappears. A sick animal goes unnoticed until it\u2019s too late.',

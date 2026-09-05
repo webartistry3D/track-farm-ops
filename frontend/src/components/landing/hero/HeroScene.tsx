@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle2, Play, Star } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Star } from 'lucide-react';
 import CountUp from '../../animations/CountUp';
 import MagneticButton from '../../animations/MagneticButton';
 import type { SceneConfig } from './scenes';
@@ -8,10 +8,10 @@ import { problems, solutions, heroChips, heroStats, testimonials, trustedAvatars
 interface HeroSceneProps {
   scene: SceneConfig;
   index: number;
-  onSeeHowItWorks: () => void;
+  // onSeeHowItWorks: () => void;
 }
 
-const HeroScene = ({ scene, index, onSeeHowItWorks }: HeroSceneProps) => {
+const HeroScene = ({ scene, index }: HeroSceneProps) => {
   const isScene1 = index === 0;
   const isCenter = scene.layout === 'center';
   const titleLines = scene.content.title.split('\n');
@@ -19,7 +19,7 @@ const HeroScene = ({ scene, index, onSeeHowItWorks }: HeroSceneProps) => {
   return (
     <div
       data-hero-text={index}
-      className={`absolute inset-0 z-40 flex ${isScene1 ? 'items-center pt-28 sm:pt-36 lg:pt-44' : 'items-start pt-20 sm:pt-24 lg:pt-28'}`}
+      className={`absolute inset-0 z-40 flex ${isScene1 ? 'items-center pt-20 sm:pt-28 lg:pt-32' : 'items-start pt-20 sm:pt-24 lg:pt-28'}`}
       style={{ opacity: isScene1 ? 1 : 0, pointerEvents: isScene1 ? 'auto' : 'none' }}
     >
       <div className={`mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 ${isCenter ? 'flex flex-col items-center text-center' : ''}`}>
@@ -74,9 +74,9 @@ const HeroScene = ({ scene, index, onSeeHowItWorks }: HeroSceneProps) => {
             </div>
           )}
 
-          {/* Scene 1: CTAs */}
+          {/* Scene 1: CTAs + Social proof on same row */}
           {isScene1 && (
-            <div data-hero-element="actions" className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div data-hero-element="actions" className="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
               <MagneticButton>
                 <Link
                   to="/signup"
@@ -86,7 +86,7 @@ const HeroScene = ({ scene, index, onSeeHowItWorks }: HeroSceneProps) => {
                   <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>
               </MagneticButton>
-              <MagneticButton>
+              {/*<MagneticButton>
                 <button
                   type="button"
                   onClick={onSeeHowItWorks}
@@ -97,36 +97,37 @@ const HeroScene = ({ scene, index, onSeeHowItWorks }: HeroSceneProps) => {
                   </span>
                   See how it works
                 </button>
-              </MagneticButton>
+              </MagneticButton>*/}
+
+              {scene.showSocialProof && (
+                <div data-hero-element="proof" className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-200">
+                  <div className="flex -space-x-2.5">
+                    {trustedAvatars.slice(0, 5).map((avatar, i) => (
+                      <img
+                        key={`${avatar}-${i}`}
+                        src={avatar}
+                        alt="TrackFarmOps customer"
+                        className="h-8 w-8 rounded-full border-2 border-emerald-950 object-cover"
+                      />
+                    ))}
+                  </div>
+                  <span className="font-medium">Trusted by ambitious farmers nationwide</span>
+                  <span className="hidden h-5 w-px bg-white/20 sm:block" />
+                  <span className="flex items-center gap-1 font-medium">
+                    <Star className="h-4 w-4 fill-amber-300 text-amber-300" /> 4.7 average rating
+                  </span>
+                </div>
+              )}
             </div>
           )}
 
-          {/* Scene 1: Social proof */}
-          {scene.showSocialProof && (
-            <div data-hero-element="proof" className="mt-9 flex flex-wrap items-center gap-x-5 gap-y-3 text-sm text-slate-200">
-              <div className="flex -space-x-2.5">
-                {trustedAvatars.slice(0, 5).map((avatar, i) => (
-                  <img
-                    key={`${avatar}-${i}`}
-                    src={avatar}
-                    alt="TrackFarmOps customer"
-                    className="h-8 w-8 rounded-full border-2 border-emerald-950 object-cover"
-                  />
-                ))}
-              </div>
-              <span className="font-medium">Trusted by ambitious farmers nationwide</span>
-              <span className="hidden h-5 w-px bg-white/20 sm:block" />
-              <span className="flex items-center gap-1 font-medium">
-                <Star className="h-4 w-4 fill-amber-300 text-amber-300" /> 4.7 average rating
-              </span>
-            </div>
-          )}
+          {/* Scene 1: Social proof — moved into actions row above */}
 
           {/* Scene 1: Stats */}
           {scene.showStats && (
             <div
               data-hero-element="stats"
-              className="mt-16 grid grid-cols-2 overflow-hidden rounded-2xl border border-white/15 bg-slate-900/85 backdrop-blur-xl sm:grid-cols-4 lg:mt-20"
+              className="mt-10 grid grid-cols-2 overflow-hidden rounded-2xl border border-white/15 bg-slate-900/85 backdrop-blur-xl sm:grid-cols-4 lg:mt-12"
             >
               {heroStats.map((stat, i) => (
                 <div key={stat.label} className={`p-5 sm:p-6 ${i > 0 ? 'border-l border-white/10' : ''}`}>
