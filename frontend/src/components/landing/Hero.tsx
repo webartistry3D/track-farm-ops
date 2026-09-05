@@ -23,15 +23,12 @@ const Hero = () => {
 
     const isMobile = window.matchMedia('(max-width: 767px)').matches;
 
-    // Smooth iOS/Android momentum scroll during pin
-    ScrollTrigger.normalizeScroll({ type: 'touch', momentum: (self: number) => Math.min(self, 1000) });
-
     const ctx = gsap.context(() => {
       const sceneCount = scenes.length;
 
       // Master timeline: duration = sceneCount (5 units, one per scene)
       const tl = gsap.timeline({
-        defaults: { ease: 'none' },
+        defaults: { ease: 'none', force3D: !isMobile },
         scrollTrigger: {
           trigger: el,
           start: 'top top',
@@ -39,6 +36,7 @@ const Hero = () => {
           pin: true,
           scrub: isMobile ? 0.5 : 0.8,
           anticipatePin: 1,
+          invalidateOnRefresh: true,
           onUpdate: (self) => {
             triggerRef.current = self;
             const progress = self.progress;
@@ -83,16 +81,18 @@ const Hero = () => {
             }
           }
 
-          // --- Image scale (parallax) ---
-          tl.fromTo(
-            img,
-            { scale: scene.scaleFrom },
-            { scale: scene.scaleTo, duration: sceneDuration, ease: 'power1.inOut' },
-            sceneStart
-          );
+          // --- Image scale (parallax) — skip on mobile to reduce GPU thrash ---
+          if (!isMobile) {
+            tl.fromTo(
+              img,
+              { scale: scene.scaleFrom },
+              { scale: scene.scaleTo, duration: sceneDuration, ease: 'power1.inOut' },
+              sceneStart
+            );
+          }
 
-          // --- Image y drift ---
-          if (scene.yDrift !== '0vh') {
+          // --- Image y drift — skip on mobile ---
+          if (!isMobile && scene.yDrift !== '0vh') {
             tl.fromTo(
               img,
               { y: '0vh' },
@@ -262,10 +262,7 @@ const Hero = () => {
     // Refresh ScrollTrigger so downstream sections recalculate after hero pin
     ScrollTrigger.refresh();
 
-    return () => {
-      ctx.revert();
-      ScrollTrigger.normalizeScroll(false);
-    };
+    return () => ctx.revert();
   }, []);
 
   const scrollToScene = (sceneIndex: number) => {
