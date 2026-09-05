@@ -134,7 +134,7 @@ const TestimonialsSection = () => {
       {/* Parallax background */}
       <div
         ref={bgRef}
-        className="absolute inset-y-0 left-0 w-[130%] bg-[url('/testimonial2.png')] bg-cover bg-center opacity-60"
+        className="absolute inset-y-0 left-[-15%] w-[130%] bg-[url('/testimonial2.png')] bg-cover bg-center opacity-60"
         aria-hidden="true"
       />
       

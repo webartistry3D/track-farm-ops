@@ -21,6 +21,11 @@ const Hero = () => {
 
     if (prefersReducedMotion()) return;
 
+    const isMobile = window.matchMedia('(max-width: 767px)').matches;
+
+    // Smooth iOS/Android momentum scroll during pin
+    ScrollTrigger.normalizeScroll({ type: 'touch', momentum: (self: number) => Math.min(self, 1000) });
+
     const ctx = gsap.context(() => {
       const sceneCount = scenes.length;
 
@@ -30,9 +35,9 @@ const Hero = () => {
         scrollTrigger: {
           trigger: el,
           start: 'top top',
-          end: `+=${(sceneCount + 0.06) * 100}%`,
+          end: `+=${isMobile ? (sceneCount + 0.06) * 70 : (sceneCount + 0.06) * 100}%`,
           pin: true,
-          scrub: 0.8,
+          scrub: isMobile ? 0.5 : 0.8,
           anticipatePin: 1,
           onUpdate: (self) => {
             triggerRef.current = self;
@@ -243,19 +248,24 @@ const Hero = () => {
         });
       }
 
-      // --- Orbs idle animation ---
-      gsap.to('[data-hero="orb-one"]', {
-        x: 55, y: -35, scale: 1.13, duration: 9, repeat: -1, yoyo: true, ease: 'sine.inOut',
-      });
-      gsap.to('[data-hero="orb-two"]', {
-        x: -45, y: 30, scale: 0.92, duration: 11, repeat: -1, yoyo: true, ease: 'sine.inOut',
-      });
+      // --- Orbs idle animation (desktop only — reduces GPU load on mobile) ---
+      if (!isMobile) {
+        gsap.to('[data-hero="orb-one"]', {
+          x: 55, y: -35, scale: 1.13, duration: 9, repeat: -1, yoyo: true, ease: 'sine.inOut',
+        });
+        gsap.to('[data-hero="orb-two"]', {
+          x: -45, y: 30, scale: 0.92, duration: 11, repeat: -1, yoyo: true, ease: 'sine.inOut',
+        });
+      }
     }, root);
 
     // Refresh ScrollTrigger so downstream sections recalculate after hero pin
     ScrollTrigger.refresh();
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      ScrollTrigger.normalizeScroll(false);
+    };
   }, []);
 
   const scrollToScene = (sceneIndex: number) => {
@@ -313,12 +323,12 @@ const Hero = () => {
       {/* z-35: orbs */}
       <div
         data-hero="orb-one"
-        className="pointer-events-none absolute -right-32 top-24 h-80 w-80 rounded-full bg-emerald-400/20 blur-3xl"
+        className="pointer-events-none absolute -right-32 top-24 hidden h-80 w-80 rounded-full bg-emerald-400/20 blur-3xl md:block"
         style={{ zIndex: 35 }}
       />
       <div
         data-hero="orb-two"
-        className="pointer-events-none absolute -bottom-24 left-1/4 h-72 w-72 rounded-full bg-lime-300/15 blur-3xl"
+        className="pointer-events-none absolute -bottom-24 left-1/4 hidden h-72 w-72 rounded-full bg-lime-300/15 blur-3xl md:block"
         style={{ zIndex: 35 }}
       />
 

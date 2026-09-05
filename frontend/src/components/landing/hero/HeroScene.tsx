@@ -127,7 +127,7 @@ const HeroScene = ({ scene, index }: HeroSceneProps) => {
           {scene.showStats && (
             <div
               data-hero-element="stats"
-              className="mt-10 grid grid-cols-2 overflow-hidden rounded-2xl border border-white/15 bg-slate-900/85 backdrop-blur-xl sm:grid-cols-4 lg:mt-12"
+              className="mt-10 grid grid-cols-2 overflow-hidden rounded-2xl border border-white/15 bg-slate-900/95 sm:grid-cols-4 lg:mt-12"
             >
               {heroStats.map((stat, i) => (
                 <div key={stat.label} className={`p-5 sm:p-6 ${i > 0 ? 'border-l border-white/10' : ''}`}>
