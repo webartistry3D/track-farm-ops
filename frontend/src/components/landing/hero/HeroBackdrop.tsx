@@ -5,7 +5,7 @@ const HeroBackdrop = forwardRef<HTMLDivElement>((_props, ref) => {
   const isMobile = typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches;
 
   return (
-    <div ref={ref} className="absolute inset-0 overflow-hidden" style={{ zIndex: 10, contain: 'paint' }}>
+    <div ref={ref} className="absolute inset-0 overflow-hidden" style={{ zIndex: 10 }}>
       {scenes.map((scene, i) => (
         <img
           key={scene.id}

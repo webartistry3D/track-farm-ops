@@ -15,25 +15,16 @@ export const DashboardSkeleton: React.FC = () => (
         <SkeletonElement className="h-4 w-48" />
       </div>
 
-      {/* Stats Cards - 1 column on mobile, 4 columns on desktop */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
-        {[...Array(4)].map((_, i) => (
-          <CardSkeleton key={i} className="p-3 rounded-xl">
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex flex-col space-y-1 flex-1">
-                <SkeletonElement className="h-4 w-24 mb-1" />
-                <div className="flex items-center space-x-2">
-                  <SkeletonElement className="w-1 h-1 rounded-full" />
-                  <SkeletonElement className="h-3 w-28" />
-                </div>
-              </div>
-              <div className="flex items-center space-x-2 mt-1">
-                <SkeletonElement className="w-8 h-8 rounded-lg" />
-              </div>
+      {/* Stats Cards - 2 columns on mobile, 3 columns on desktop */}
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+        {[...Array(6)].map((_, i) => (
+          <CardSkeleton key={i} className="p-4 rounded-xl">
+            <div className="flex items-center justify-between mb-3">
+              <SkeletonElement className="h-10 w-10 rounded-lg" />
+              <SkeletonElement className="h-3 w-12" />
             </div>
-            <div className="flex items-center">
-              <SkeletonElement className="h-8 w-32" />
-            </div>
+            <SkeletonElement className="h-3 w-20 mb-1" />
+            <SkeletonElement className="h-7 w-28" />
           </CardSkeleton>
         ))}
       </div>

@@ -69,8 +69,8 @@ export const scenes: SceneConfig[] = [
     scaleTo: 1.06,
     scaleOrigin: '60% 40%',
     yDrift: '0vh',
-    crossfadeStart: 0.16,
-    crossfadeEnd: 0.18,
+    crossfadeStart: 0.14,
+    crossfadeEnd: 0.26,
     layout: 'left',
     orbs: { one: true, two: true },
     content: {
@@ -95,13 +95,13 @@ export const scenes: SceneConfig[] = [
     scaleOrigin: '50% 50%',
     yDrift: '-3vh',
     crossfadeStart: 0.42,
-    crossfadeEnd: 0.46,
+    crossfadeEnd: 0.56,
     layout: 'left',
     content: {
       eyebrow: 'THE REALITY',
       eyebrowClass: 'text-xs tracking-[0.2em] text-rose-300 font-semibold',
       //title: "Running a farm shouldn't feel like guesswork.",
-      title: 'Money leaks across disconnected WhatsApp chats, spreadsheets and notebooks.',
+      title: 'Money leaks through disconnected WhatsApp chats, spreadsheets and notebooks.',
       titleClass:
         'font-jetbrains-mono font-bold leading-[1.1] tracking-tight text-[clamp(1.75rem,5vw,3.5rem)] text-white whitespace-pre-line',
       //body: 'Money leaks between WhatsApp, exercise books and Excel. Feed disappears. A sick animal goes unnoticed until it\u2019s too late.',

@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
 import { formatCurrency, formatCompactCurrency } from '../utils/currency';
-import { TrendingUp, TrendingDown, ShoppingCart, Calculator, BarChart3, Wallet, Package, Building2 } from 'lucide-react';
+import { TrendingUp, ShoppingCart, BarChart3, Wallet, Package, Building2, Stethoscope, FileText, Boxes } from 'lucide-react';
 import { 
   DashboardSkeleton
 } from './EnhancedSkeletons';
@@ -17,7 +17,6 @@ const Dashboard = () => {
   const [inventoryItems, setInventoryItems] = useState<any[]>([]);
   const [todayIncome, setTodayIncome] = useState(0);
   const [todayExpenses, setTodayExpenses] = useState(0);
-  const [todayVAT, setTodayVAT] = useState(0);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState('');
@@ -25,6 +24,7 @@ const Dashboard = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const [assets, setAssets] = useState<any[]>([]);
+  const [livestock, setLivestock] = useState<any[]>([]);
   const [dateFilter, setDateFilter] = useState<'today' | 'yesterday' | 'week' | 'month' | 'thisMonth' | 'thisYear' | 'customMonth' | 'customYear' | 'allTime'>('allTime');
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
@@ -115,12 +115,14 @@ const Dashboard = () => {
           startDate = endDate = today.toISOString().split('T')[0];
       }
       
-      const [incomeResponse, expenseResponse, inventoryResponse, assetsResponse] = await Promise.all([
+      const [incomeResponse, expenseResponse, inventoryResponse, assetsResponse, livestockResponse] = await Promise.all([
         api.get(`/finance/income${startDate ? `?startDate=${startDate}&endDate=${endDate}` : ''}`),
         api.get(`/finance/expenses${startDate ? `?startDate=${startDate}&endDate=${endDate}` : ''}`),
         api.get('/inventory/items'),
-        api.get('/assets')
+        api.get('/assets'),
+        api.get('/livestock').catch(() => ({ data: [] }))
       ]);
+      const livestockData = livestockResponse.data || [];
       
       const incomeData = incomeResponse.data?.entries || [];
       const expenseData = expenseResponse.data?.entries || [];
@@ -156,6 +158,7 @@ const Dashboard = () => {
       setExpenseEntries(processedExpenses);
       setInventoryItems(processedInventory);
       setAssets(processedAssets);
+      setLivestock(livestockData);
       
       // Calculate totals - ensure amounts are treated as numbers
       const incomeTotal = incomeData.reduce((sum: number, entry: any) => {
@@ -167,18 +170,8 @@ const Dashboard = () => {
         return sum + (amount || 0);
       }, 0);
       
-      // Calculate VAT total from all income entries with VAT enabled
-      const vatTotal = incomeData.reduce((sum: number, entry: any) => {
-        if (entry.enableVAT && entry.vatAmount) {
-          const amount = typeof entry.vatAmount === 'string' ? parseFloat(entry.vatAmount) : entry.vatAmount;
-          return sum + (amount || 0);
-        }
-        return sum;
-      }, 0);
-      
       setTodayIncome(incomeTotal);
       setTodayExpenses(expenseTotal);
-      setTodayVAT(vatTotal);
       
     } catch (error) {
       console.error('Failed to fetch dashboard data:', error);
@@ -215,6 +208,12 @@ const Dashboard = () => {
           type: 'Asset'
         }));
         break;
+      case 'livestock':
+        data = livestock.map((item: any) => ({
+          ...item,
+          type: 'Livestock'
+        }));
+        break;
       case 'transactions': {
         const allTransactions = [
           ...incomeEntries.map(entry => ({ ...entry, type: 'Income' })),
@@ -237,7 +236,6 @@ const Dashboard = () => {
 
   const isOwner = user.role === 'OWNER' || user.role === 'ACCOUNTANT' || user.role === 'VETERINARIAN'|| user.role === 'INVENTORY';
   const canViewFinancials = user.role === 'OWNER' || user.role === 'ACCOUNTANT';
-  const netProfit = todayIncome - todayExpenses;
 
   /*
   INVENTORY role restriction - no access to Dashboard
@@ -271,159 +269,107 @@ const Dashboard = () => {
       </div>
 
       {canViewFinancials && (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
-          <div 
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          {/* Income */}
+          <div
             onClick={() => navigate('/income')}
-            className="group bg-emerald-50 dark:bg-gray-800 rounded-xl p-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
+            className="group bg-emerald-50 dark:bg-gray-800 border border-emerald-200 dark:border-gray-700 rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
           >
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex flex-col space-y-1">
-                <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                  {dateFilter === 'today' ? "Today's Income" : 
-                   dateFilter === 'yesterday' ? "Yesterday's Income" :
-                   dateFilter === 'week' ? "This Week's Income" : 
-                   dateFilter === 'month' ? "This Month's Income" :
-                   dateFilter === 'thisMonth' ? "This Month's Income" :
-                   dateFilter === 'thisYear' ? "This Year's Income" :
-                   dateFilter === 'allTime' ? "All Time Income" :
-                   dateFilter === 'customMonth' ? `${new Date(selectedYear, selectedMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} Income` :
-                   `${selectedYear} Income`}
-                </h3>
-                <div className="flex items-center space-x-2">
-                  <div className="w-1 h-1 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
-                  <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
-                    {incomeEntries.length > 0 ? `${incomeEntries.length} transaction${incomeEntries.length !== 1 ? 's' : ''}` : 'No income recorded'}
-                  </span>
-                </div>
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-900/30">
+                <TrendingUp className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
               </div>
-              <TrendingUp className="h-9 w-9 text-emerald-500" />
+              <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400">{incomeEntries.length} txn</span>
             </div>
-            <div className="flex items-center">
-              <p className="text-3xl font-bold font-jetbrains-mono text-emerald-600 dark:text-emerald-400">
-                {/*{formatCompactCurrency(todayIncome.toString(), { includeSymbol: true })}*/}
-                {formatCompactCurrency(todayIncome)}
-              </p>
-            </div>
+            <p className="text-xs font-medium text-emerald-700/70 dark:text-gray-400 mb-1">Income</p>
+            <p className="text-4xl font-bold font-jetbrains-mono text-emerald-600 dark:text-emerald-400">
+              {formatCompactCurrency(todayIncome)}
+            </p>
           </div>
-          
-          <div 
+
+          {/* Expense */}
+          <div
             onClick={() => navigate('/expenses')}
-            className="group bg-red-50 dark:bg-gray-800 rounded-xl p-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
+            className="group bg-red-50 dark:bg-gray-800 border border-red-200 dark:border-gray-700 rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
           >
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex flex-col space-y-1">
-                <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                  {dateFilter === 'today' ? "Today's Expenses" : 
-                   dateFilter === 'yesterday' ? "Yesterday's Expenses" :
-                   dateFilter === 'week' ? "This Week's Expenses" : 
-                   dateFilter === 'month' ? "This Month's Expenses" :
-                   dateFilter === 'thisMonth' ? "This Month's Expenses" :
-                   dateFilter === 'thisYear' ? "This Year's Expenses" :
-                   dateFilter === 'allTime' ? "All Time Expenses" :
-                   dateFilter === 'customMonth' ? `${new Date(selectedYear, selectedMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} Expenses` :
-                   `${selectedYear} Expenses`}
-                </h3>
-                <div className="flex items-center space-x-2">
-                  <div className="w-1 h-1 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
-                  <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
-                    {expenseEntries.length > 0 ? `${expenseEntries.length} transaction${expenseEntries.length !== 1 ? 's' : ''}` : 'No expenses recorded'}
-                  </span>
-                </div>
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-100 dark:bg-red-900/30">
+                <ShoppingCart className="h-5 w-5 text-red-600 dark:text-red-400" />
               </div>
-              <ShoppingCart className="h-9 w-9 text-red-500" />
+              <span className="text-xs font-medium text-red-700 dark:text-red-400">{expenseEntries.length} txn</span>
             </div>
-            <div className="flex items-center">
-              <p className="text-3xl font-bold font-jetbrains-mono text-red-600 dark:text-red-400">
-                {/*{formatCompactCurrency(todayExpenses.toString(), { includeSymbol: true })}*/}
-                {formatCompactCurrency(todayExpenses)}
-              </p>
-            </div>
+            <p className="text-xs font-medium text-red-700/70 dark:text-gray-400 mb-1">Expense</p>
+            <p className="text-4xl font-bold font-jetbrains-mono text-red-600 dark:text-red-400">
+              {formatCompactCurrency(todayExpenses)}
+            </p>
           </div>
-          
-          <div 
-            onClick={() => navigate('/income?tab=vat')}
-            className="group bg-emerald-50 dark:bg-gray-800 rounded-xl p-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
+
+          {/* Inventory */}
+          <div
+            onClick={() => navigate('/inventory')}
+            className="group bg-indigo-50 dark:bg-gray-800 border border-indigo-200 dark:border-gray-700 rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
           >
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex flex-col space-y-1">
-                <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                  {dateFilter === 'today' ? "Today's VAT" : 
-                   dateFilter === 'yesterday' ? "Yesterday's VAT" :
-                   dateFilter === 'week' ? "This Week's VAT" : 
-                   dateFilter === 'month' ? "This Month's VAT" :
-                   dateFilter === 'thisMonth' ? "This Month's VAT" :
-                   dateFilter === 'thisYear' ? "This Year's VAT" :
-                   dateFilter === 'allTime' ? "All Time VAT" :
-                   dateFilter === 'customMonth' ? `${new Date(selectedYear, selectedMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} VAT` :
-                   `${selectedYear} VAT`}
-                </h3>
-                <div className="flex items-center space-x-2">
-                  <div className="w-1 h-1 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
-                  <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
-                    Total VAT collected
-                  </span>
-                </div>
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-100 dark:bg-indigo-900/30">
+                <Boxes className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
               </div>
-              <Calculator className="h-9 w-9 text-emerald-500" />
+              <span className="text-xs text-indigo-700 dark:text-indigo-400">View all</span>
             </div>
-            <div className="flex items-center">
-              <p className="text-3xl font-bold font-jetbrains-mono text-emerald-600 dark:text-emerald-400">
-                {/*{formatCompactCurrency(todayVAT.toString(), { includeSymbol: true })}*/}
-                {formatCompactCurrency(todayVAT)}
-              </p>
-            </div>
+            <p className="text-xs font-medium text-indigo-700/70 dark:text-gray-400 mb-1">Inventory</p>
+            <p className="text-4xl font-bold font-jetbrains-mono text-indigo-600 dark:text-indigo-400">
+              {inventoryItems.length}
+            </p>
           </div>
-          
-          <div 
-            onClick={() => dateFilter === 'allTime' ? navigate('/analytics') : navigate('/income?filter=' + dateFilter)}
-            className={`group ${
-              dateFilter === 'allTime' ? 
-                'bg-emerald-50 dark:bg-gray-800' :
-                netProfit >= 0 ? 'bg-emerald-50 dark:bg-gray-800' : 
-                'bg-red-50 dark:bg-gray-800'
-            } rounded-xl p-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer`}
+
+          {/* Assets */}
+          <div
+            onClick={() => navigate('/assets')}
+            className="group bg-purple-50 dark:bg-gray-800 border border-purple-200 dark:border-gray-700 rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
           >
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex flex-col space-y-1">
-                <h3 className={`text-sm font-semibold text-gray-700 dark:text-gray-300`}>
-                  {dateFilter === 'today' ? "Today's Net Profit" : 
-                   dateFilter === 'yesterday' ? "Yesterday's Net Profit" :
-                   dateFilter === 'week' ? "This Week's Net Profit" : 
-                   dateFilter === 'month' ? "This Month's Net Profit" :
-                   dateFilter === 'thisMonth' ? "This Month's Net Profit" :
-                   dateFilter === 'thisYear' ? "This Year's Net Profit" :
-                   dateFilter === 'allTime' ? "All Time Net Profit" :
-                   dateFilter === 'customMonth' ? `${new Date(selectedYear, selectedMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} Net Profit` :
-                   `${selectedYear} Net Profit`}
-                </h3>
-                <div className="flex items-center space-x-2">
-                  <div className="w-1 h-1 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
-                  <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
-                    {dateFilter === 'today' ? "Today's profit/loss" : 
-                     dateFilter === 'yesterday' ? "Yesterday's profit/loss" :
-                     dateFilter === 'week' ? "Last 7 days profit/loss" :
-                     dateFilter === 'month' ? "Last 30 days profit/loss" :
-                     dateFilter === 'thisMonth' ? "This month's profit/loss" :
-                     dateFilter === 'thisYear' ? "This year's profit/loss" :
-                     dateFilter === 'allTime' ? "All time profit/loss" :
-                     dateFilter === 'customMonth' ? `${new Date(selectedYear, selectedMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} profit/loss` :
-                     `${selectedYear} profit/loss`}
-                  </span>
-                </div>
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30">
+                <Building2 className="h-5 w-5 text-purple-600 dark:text-purple-400" />
               </div>
-              {netProfit >= 0 ? <TrendingUp className="h-9 w-9 text-emerald-500" /> : <TrendingDown className="h-9 w-9 text-red-500" />}
+              <span className="text-xs text-purple-700 dark:text-purple-400">{assets.length} {assets.length === 1 ? 'item' : 'items'}</span>
             </div>
-            <div className="flex items-center">
-              <p className={`text-3xl font-bold font-jetbrains-mono ${
-                dateFilter === 'allTime' ? 
-                  'text-emerald-600 dark:text-emerald-400' :
-                  netProfit >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 
-                  'text-red-600 dark:text-red-400'
-              }`}>
-                {/*{formatCompactCurrency(netProfit.toString(), { includeSymbol: true })}*/}
-                {formatCompactCurrency(netProfit)}
-              </p>
+            <p className="text-xs font-medium text-purple-700/70 dark:text-gray-400 mb-1">Assets</p>
+            <p className="text-4xl font-bold font-jetbrains-mono text-purple-600 dark:text-purple-400">
+              {assets.length}
+            </p>
+          </div>
+
+          {/* Livestock Health */}
+          <div
+            onClick={() => navigate('/livestock-health')}
+            className="group bg-teal-50 dark:bg-gray-800 border border-teal-200 dark:border-gray-700 rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-100 dark:bg-teal-900/30">
+                <Stethoscope className="h-5 w-5 text-teal-600 dark:text-teal-400" />
+              </div>
+              <span className="text-xs font-medium text-teal-700 dark:text-teal-400">{livestock.length} {livestock.length === 1 ? 'record' : 'records'}</span>
             </div>
+            <p className="text-xs font-medium text-teal-700/70 dark:text-gray-400 mb-1">Livestock Health</p>
+            <p className="text-4xl font-bold font-jetbrains-mono text-teal-600 dark:text-teal-400">
+              {livestock.length}
+            </p>
+          </div>
+
+          {/* Reports */}
+          <div
+            onClick={() => navigate('/reports')}
+            className="group bg-blue-50 dark:bg-gray-800 border border-blue-200 dark:border-gray-700 rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30">
+                <FileText className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+              </div>
+              <span className="text-xs text-blue-700 dark:text-blue-400">View all</span>
+            </div>
+            <p className="text-xs font-medium text-blue-700/70 dark:text-gray-400 mb-1">Reports</p>
+            <p className="text-2xl font-bold font-jetbrains-mono text-blue-600 dark:text-blue-400">
+              {incomeEntries.length + expenseEntries.length}
+            </p>
           </div>
         </div>
       )}
@@ -565,7 +511,7 @@ const Dashboard = () => {
                 <div className="flex justify-end mb-2">
                   <BarChart3 className="h-9 w-9 text-blue-500" />
                 </div>
-                <div className="text-5xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white text-center">
+                <div className="text-4xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white text-center">
                   {incomeEntries.length}
                 </div>
                 <div className="text-sm font-inter text-gray-600 dark:text-gray-400">Income</div>
@@ -577,7 +523,7 @@ const Dashboard = () => {
                 <div className="flex justify-end mb-2">
                   <Wallet className="h-9 w-9 text-red-500" />
                 </div>
-                <div className="text-5xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white text-center">
+                <div className="text-4xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white text-center">
                   {expenseEntries.length}
                 </div>
                 <div className="text-sm font-inter text-gray-600 dark:text-gray-400">Expense</div>
@@ -589,7 +535,7 @@ const Dashboard = () => {
                 <div className="flex justify-end mb-2">
                   <Package className="h-9 w-9 text-indigo-500" />
                 </div>
-                <div className="text-5xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white text-center">
+                <div className="text-4xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white text-center">
                   {inventoryItems.length}
                 </div>
                 <div className="text-sm font-inter text-gray-600 dark:text-gray-400">Inventory</div>
@@ -601,7 +547,7 @@ const Dashboard = () => {
                 <div className="flex justify-end mb-2">
                   <Building2 className="h-9 w-9 text-purple-500" />
                 </div>
-                <div className="text-5xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white text-center">
+                <div className="text-4xl font-jetbrains-mono font-semibold text-gray-900 dark:text-white text-center">
                   {assets.length}
                 </div>
                 <div className="text-sm font-inter text-gray-600 dark:text-gray-400">Assets</div>
@@ -708,6 +654,7 @@ const Dashboard = () => {
                 {modalType === 'expenses' && 'Expense Entries'}
                 {modalType === 'inventory' && 'Inventory Items'}
                 {modalType === 'assets' && 'Assets Overview'}
+                {modalType === 'livestock' && 'Livestock Records'}
               </h3>
               <button
                 onClick={() => setModalOpen(false)}

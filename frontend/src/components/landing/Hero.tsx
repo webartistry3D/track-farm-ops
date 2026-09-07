@@ -28,7 +28,7 @@ const Hero = () => {
 
       // Master timeline: duration = sceneCount (5 units, one per scene)
       const tl = gsap.timeline({
-        defaults: { ease: 'none', force3D: !isMobile },
+        defaults: { ease: 'none'},
         scrollTrigger: {
           trigger: el,
           start: 'top top',
@@ -132,7 +132,7 @@ const Hero = () => {
         // --- Text block enter/hold/exit ---
         const textEl = el.querySelector(`[data-hero-text="${i}"]`);
         if (textEl) {
-          const enterStart = i === 0 ? 0 : sceneStart + 0.15;
+          const enterStart = i === 0 ? 0 : i === 2 ? sceneStart + 0.30 : sceneStart + 0.15;
           const enterDuration = 0.15;
           const exitStart = i === 0 ? sceneStart + 0.50 : i === 3 ? sceneStart + 0.80 : i === 1 ? sceneStart + 0.88 : sceneStart + 0.70;
           const exitDuration = i === 0 ? 0.30 : 0.30;
@@ -156,14 +156,14 @@ const Hero = () => {
             // Scenes 2-5: opacity + y driven by scroll, delayed entry so image is fully visible first
             tl.fromTo(
               textEl,
-              { opacity: 0, y: 40 },
+              { opacity: 0, y: isMobile ? 0 : 40 },
               { opacity: 1, y: 0, duration: enterDuration, ease: 'power3.out' },
               enterStart
             );
             tl.to(textEl, { pointerEvents: 'auto', duration: 0.01 }, enterStart + enterDuration);
 
             // Exit
-            tl.to(textEl, { opacity: 0, y: -30, duration: exitDuration, ease: 'power2.in' }, exitStart);
+            tl.to(textEl, { opacity: 0, y: isMobile ? 0 : -30, duration: exitDuration, ease: 'power2.in' }, exitStart);
             tl.to(textEl, { pointerEvents: 'none', duration: 0.01 }, exitStart + exitDuration);
           }
         }
@@ -174,8 +174,8 @@ const Hero = () => {
           if (progressLine) {
             tl.fromTo(
               progressLine,
-              { width: '0%' },
-              { width: '100%', duration: 0.50, ease: 'power1.inOut' },
+              { scaleX: 0 },
+              { scaleX: 1, duration: 0.50, ease: 'power1.inOut' },
               sceneStart + 0.15
             );
           }
@@ -187,7 +187,7 @@ const Hero = () => {
           if (problemItems.length) {
             tl.from(
               problemItems,
-              { opacity: 0, x: -20, duration: 0.06 * problemItems.length, stagger: 0.06, ease: 'power2.out' },
+              { opacity: 0, x: isMobile ? 0 : -20, duration: 0.06 * problemItems.length, stagger: 0.06, ease: 'power2.out' },
               sceneStart + 0.15
             );
           }
@@ -199,7 +199,7 @@ const Hero = () => {
           if (solutionPills.length) {
             tl.from(
               solutionPills,
-              { opacity: 0, scale: 0.9, duration: 0.05 * solutionPills.length, stagger: 0.05, ease: 'power2.out' },
+              { opacity: 0, scale: isMobile ? 1 : 0.9, duration: 0.05 * solutionPills.length, stagger: 0.05, ease: 'power2.out' },
               sceneStart + 0.15
             );
           }

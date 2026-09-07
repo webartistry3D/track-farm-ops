@@ -47,7 +47,7 @@ const HeroScene = ({ scene, index }: HeroSceneProps) => {
 
           {/* Progress line (Scene 2) */}
           {scene.showProgressLine && (
-            <div data-hero-element="progress-line" className="mt-3 h-px w-0 overflow-hidden">
+            <div data-hero-element="progress-line" className="mt-3 h-px w-full origin-left overflow-hidden">
               <div className={`h-full w-full ${scene.progressLineColor ?? 'bg-rose-400/60'}`} />
             </div>
           )}

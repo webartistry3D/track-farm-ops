@@ -448,12 +448,12 @@ const Assets = () => {
               // Navigate to all assets view
               console.log('Total Assets clicked');
             }}
-            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-blue-50 dark:bg-gray-800 border border-blue-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs lg:text-sm text-gray-500 dark:text-gray-400">Total Assets</p>
-                <p className="text-3xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">{assets.length}</p>
+                <p className="text-xs lg:text-sm text-blue-700/70 dark:text-gray-400">Total Assets</p>
+                <p className="text-3xl font-jetbrains-mono font-bold text-blue-600 dark:text-white">{assets.length}</p>
               </div>
               <TrendingUp className="h-9 w-9 text-blue-500" />
             </div>
@@ -464,12 +464,12 @@ const Assets = () => {
               // Navigate to active assets
               console.log('Active Assets clicked');
             }}
-            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-emerald-50 dark:bg-gray-800 border border-emerald-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs lg:text-sm text-gray-500 dark:text-gray-400">Active</p>
-                <p className="text-3xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
+                <p className="text-xs lg:text-sm text-emerald-700/70 dark:text-gray-400">Active</p>
+                <p className="text-3xl font-jetbrains-mono font-bold text-emerald-600 dark:text-white">
                   {assets.filter(a => a.status === 'active').length}
                 </p>
               </div>
@@ -482,12 +482,12 @@ const Assets = () => {
               // Navigate to maintenance assets
               console.log('Maintenance Assets clicked');
             }}
-            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-yellow-50 dark:bg-gray-800 border border-yellow-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs lg:text-sm text-gray-500 dark:text-gray-400">Maintenance</p>
-                <p className="text-3xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
+                <p className="text-xs lg:text-sm text-yellow-700/70 dark:text-gray-400">Maintenance</p>
+                <p className="text-3xl font-jetbrains-mono font-bold text-yellow-600 dark:text-white">
                   {assets.filter(a => a.status === 'under_maintenance').length}
                 </p>
               </div>
@@ -500,12 +500,12 @@ const Assets = () => {
               // Navigate to assets with issues
               console.log('Asset Issues clicked');
             }}
-            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-red-50 dark:bg-gray-800 border border-red-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs lg:text-sm text-gray-500 dark:text-gray-400">Issues</p>
-                <p className="text-3xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
+                <p className="text-xs lg:text-sm text-red-700/70 dark:text-gray-400">Issues</p>
+                <p className="text-3xl font-jetbrains-mono font-bold text-red-600 dark:text-white">
                   {assets.filter(a => a.status === 'damaged').length}
                 </p>
               </div>

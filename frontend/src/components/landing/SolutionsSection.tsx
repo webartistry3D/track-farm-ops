@@ -39,6 +39,21 @@ const SolutionsSection = () => {
 
   return (
     <section className="relative overflow-hidden bg-slate-950 py-12 sm:py-9">
+      {/* Wavy top divider — transitions from Hero into this section */}
+      <div className="pointer-events-none absolute -top-px left-0 z-10 w-full leading-[0]">
+        <svg
+          className="block w-full h-[30px] sm:h-[40px]"
+          viewBox="0 0 1200 40"
+          preserveAspectRatio="none"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 20 C 150 40, 300 0, 450 20 C 600 40, 750 0, 900 20 C 1050 40, 1200 5, 1200 20 L 1200 0 L 0 0 Z"
+            className="fill-slate-950"
+          />
+        </svg>
+      </div>
       <div className="absolute inset-0 z-0 bg-[url('/confidence.png')] bg-cover bg-fixed bg-center opacity-40" aria-hidden="true" />
       <div className="absolute inset-0 z-0 bg-slate-950/80" aria-hidden="true" />
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_50%,rgba(16,185,129,0.18),transparent_36%),radial-gradient(circle_at_85%_15%,rgba(132,204,22,0.12),transparent_28%)]" />
@@ -117,7 +132,7 @@ const SolutionsSection = () => {
             </div>
           </div>
 
-          {satellites.map((sat) => {
+          {satellites.map((sat, index) => {
             const Icon = sat.icon;
             return (
               <div
@@ -125,7 +140,10 @@ const SolutionsSection = () => {
                 className="group absolute z-10 flex h-[28%] w-[28%] -translate-x-1/2 -translate-y-1/2 cursor-pointer flex-col items-center justify-center p-2 text-center transition-all duration-500 hover:z-50 hover:scale-110 sm:h-[18%] sm:w-[18%]"
                 style={{ left: `${sat.cx}%`, top: `${sat.cy}%` }}
               >
-                <div className="mb-1.5 flex h-9 w-9 items-center justify-center rounded-full sm:mb-1.5 sm:h-10 sm:w-10">
+                <div
+                  className="mb-1.5 flex h-9 w-9 items-center justify-center rounded-full sm:mb-1.5 sm:h-10 sm:w-10"
+                  style={{ animation: `satellite-pulse 3s ease-in-out infinite ${index * 0.5}s` }}
+                >
                   <Icon className="h-12 w-12 text-emerald-300" strokeWidth={2.2} />
                 </div>
                 <p className="line-clamp-2 text-[clamp(0.45rem,1.35vw,0.7rem)] font-semibold leading-[1.15] text-slate-100">

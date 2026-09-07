@@ -945,12 +945,12 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
               // Navigate to items view or show all items
               console.log('Total Items clicked');
             }}
-            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-blue-50 dark:bg-gray-800 border border-blue-200 dark:border-gray-700 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Items</p>
-                <p className="text-4xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
+                <p className="text-sm font-medium text-blue-700/70 dark:text-gray-400">Total Items</p>
+                <p className="text-4xl font-jetbrains-mono font-bold text-blue-600 dark:text-white">
                   {totals.totalItems.toLocaleString()}
                 </p>
               </div>
@@ -963,12 +963,12 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
               // Navigate to categories view
               console.log('Total Categories clicked');
             }}
-            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-purple-50 dark:bg-gray-800 border border-purple-200 dark:border-gray-700 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Categories</p>
-                <p className="text-4xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
+                <p className="text-sm font-medium text-purple-700/70 dark:text-gray-400">Total Categories</p>
+                <p className="text-4xl font-jetbrains-mono font-bold text-purple-600 dark:text-white">
                   {categories.length}
                 </p>
               </div>
@@ -980,12 +980,12 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
               // Show high-value items or filter by value
               console.log('Total Value clicked');
             }}
-            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-emerald-50 dark:bg-gray-800 border border-emerald-200 dark:border-gray-700 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Value</p>
-                <p className="text-4xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
+                <p className="text-sm font-medium text-emerald-700/70 dark:text-gray-400">Total Value</p>
+                <p className="text-4xl font-jetbrains-mono font-bold text-emerald-600 dark:text-white">
                   {formatCompactCurrency(totals.totalValue)}
                 </p>
               </div>
@@ -1003,12 +1003,12 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
               // Navigate to livestock items
               console.log('Livestock clicked');
             }}
-            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-orange-50 dark:bg-gray-800 border border-orange-200 dark:border-gray-700 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Livestock</p>
-                <p className="text-4xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
+                <p className="text-sm font-medium text-orange-700/70 dark:text-gray-400">Livestock</p>
+                <p className="text-4xl font-jetbrains-mono font-bold text-orange-600 dark:text-white">
                   {totals.livestockItems}
                 </p>
               </div>
@@ -1021,12 +1021,12 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
               // Navigate to produce items
               console.log('Produce clicked');
             }}
-            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-green-50 dark:bg-gray-800 border border-green-200 dark:border-gray-700 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Produce</p>
-                <p className="text-4xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
+                <p className="text-sm font-medium text-green-700/70 dark:text-gray-400">Produce</p>
+                <p className="text-4xl font-jetbrains-mono font-bold text-green-600 dark:text-white">
                   {totals.produceItems}
                 </p>
               </div>
@@ -1039,12 +1039,12 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
               // Navigate to consumables items
               console.log('Consumables clicked');
             }}
-            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-indigo-50 dark:bg-gray-800 border border-indigo-200 dark:border-gray-700 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Edibles</p>
-                <p className="text-4xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
+                <p className="text-sm font-medium text-indigo-700/70 dark:text-gray-400">Edibles</p>
+                <p className="text-4xl font-jetbrains-mono font-bold text-indigo-600 dark:text-white">
                   {totals.consumablesItems}
                 </p>
               </div>
@@ -1057,12 +1057,12 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
               // Navigate to low stock items
               console.log('Low Stock Items clicked');
             }}
-            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-yellow-50 dark:bg-gray-800 border border-yellow-200 dark:border-gray-700 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Low Stock</p>
-                <p className="text-4xl font-jetbrains-mono font-bold text-gray-900 dark:text-white">
+                <p className="text-sm font-medium text-yellow-700/70 dark:text-gray-400">Low Stock</p>
+                <p className="text-4xl font-jetbrains-mono font-bold text-yellow-600 dark:text-white">
                   {totals.lowStockItems}
                 </p>
               </div>
