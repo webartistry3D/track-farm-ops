@@ -156,14 +156,14 @@ const Hero = () => {
             // Scenes 2-5: opacity + y driven by scroll, delayed entry so image is fully visible first
             tl.fromTo(
               textEl,
-              { opacity: 0, y: isMobile ? 0 : 40 },
-              { opacity: 1, y: 0, duration: enterDuration, ease: 'power3.out' },
+              { opacity: 0, y: isMobile ? 0 : 40, force3D: true },
+              { opacity: 1, y: 0, duration: enterDuration, ease: 'power3.out', force3D: true },
               enterStart
             );
             tl.to(textEl, { pointerEvents: 'auto', duration: 0.01 }, enterStart + enterDuration);
 
             // Exit
-            tl.to(textEl, { opacity: 0, y: isMobile ? 0 : -30, duration: exitDuration, ease: 'power2.in' }, exitStart);
+            tl.to(textEl, { opacity: 0, y: isMobile ? 0 : -30, duration: exitDuration, ease: 'power2.in', force3D: true }, exitStart);
             tl.to(textEl, { pointerEvents: 'none', duration: 0.01 }, exitStart + exitDuration);
           }
         }

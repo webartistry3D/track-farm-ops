@@ -20,7 +20,7 @@ const HeroScene = ({ scene, index }: HeroSceneProps) => {
     <div
       data-hero-text={index}
       className={`absolute inset-0 z-40 flex ${isScene1 ? 'items-center pt-20 sm:pt-28 lg:pt-32' : 'items-start pt-20 sm:pt-24 lg:pt-28'}`}
-      style={{ opacity: isScene1 ? 1 : 0, pointerEvents: isScene1 ? 'auto' : 'none' }}
+      style={{ opacity: isScene1 ? 1 : 0, pointerEvents: isScene1 ? 'auto' : 'none', willChange: 'opacity', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
     >
       <div className={`mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 ${isCenter ? 'flex flex-col items-center text-center' : ''}`}>
         <div className={isCenter ? 'max-w-3xl' : 'max-w-4xl'}>
