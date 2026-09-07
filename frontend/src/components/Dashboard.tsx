@@ -282,7 +282,7 @@ const Dashboard = () => {
               <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400">{incomeEntries.length} txn</span>
             </div>
             <p className="text-xs font-medium text-emerald-700/70 dark:text-gray-400 mb-1">Income</p>
-            <p className="text-4xl font-bold font-jetbrains-mono text-emerald-600 dark:text-emerald-400">
+            <p className="text-3xl font-bold font-jetbrains-mono text-emerald-600 dark:text-emerald-400">
               {formatCompactCurrency(todayIncome)}
             </p>
           </div>
@@ -299,7 +299,7 @@ const Dashboard = () => {
               <span className="text-xs font-medium text-red-700 dark:text-red-400">{expenseEntries.length} txn</span>
             </div>
             <p className="text-xs font-medium text-red-700/70 dark:text-gray-400 mb-1">Expense</p>
-            <p className="text-4xl font-bold font-jetbrains-mono text-red-600 dark:text-red-400">
+            <p className="text-3xl font-bold font-jetbrains-mono text-red-600 dark:text-red-400">
               {formatCompactCurrency(todayExpenses)}
             </p>
           </div>
@@ -316,7 +316,7 @@ const Dashboard = () => {
               <span className="text-xs text-indigo-700 dark:text-indigo-400">View all</span>
             </div>
             <p className="text-xs font-medium text-indigo-700/70 dark:text-gray-400 mb-1">Inventory</p>
-            <p className="text-4xl font-bold font-jetbrains-mono text-indigo-600 dark:text-indigo-400">
+            <p className="text-3xl font-bold font-jetbrains-mono text-indigo-600 dark:text-indigo-400">
               {inventoryItems.length}
             </p>
           </div>
@@ -333,7 +333,7 @@ const Dashboard = () => {
               <span className="text-xs text-purple-700 dark:text-purple-400">{assets.length} {assets.length === 1 ? 'item' : 'items'}</span>
             </div>
             <p className="text-xs font-medium text-purple-700/70 dark:text-gray-400 mb-1">Assets</p>
-            <p className="text-4xl font-bold font-jetbrains-mono text-purple-600 dark:text-purple-400">
+            <p className="text-3xl font-bold font-jetbrains-mono text-purple-600 dark:text-purple-400">
               {assets.length}
             </p>
           </div>
@@ -350,7 +350,7 @@ const Dashboard = () => {
               <span className="text-xs font-medium text-teal-700 dark:text-teal-400">{livestock.length} {livestock.length === 1 ? 'record' : 'records'}</span>
             </div>
             <p className="text-xs font-medium text-teal-700/70 dark:text-gray-400 mb-1">Livestock Health</p>
-            <p className="text-4xl font-bold font-jetbrains-mono text-teal-600 dark:text-teal-400">
+            <p className="text-3xl font-bold font-jetbrains-mono text-teal-600 dark:text-teal-400">
               {livestock.length}
             </p>
           </div>
@@ -367,7 +367,7 @@ const Dashboard = () => {
               <span className="text-xs text-blue-700 dark:text-blue-400">View all</span>
             </div>
             <p className="text-xs font-medium text-blue-700/70 dark:text-gray-400 mb-1">Reports</p>
-            <p className="text-2xl font-bold font-jetbrains-mono text-blue-600 dark:text-blue-400">
+            <p className="text-3xl font-bold font-jetbrains-mono text-blue-600 dark:text-blue-400">
               {incomeEntries.length + expenseEntries.length}
             </p>
           </div>
