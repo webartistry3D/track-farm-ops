@@ -226,7 +226,7 @@ const Dashboard = () => {
     
     setModalType(type);
     setModalData(data);
-    setCurrentPage(1); // Reset to first page
+    setCurrentPage(1); // Reset to first page. Ensure pagination works correctly
     setModalOpen(true);
   };
 
