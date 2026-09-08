@@ -273,7 +273,7 @@ const Dashboard = () => {
           {/* Income */}
           <div
             onClick={() => navigate('/income')}
-            className="group bg-emerald-50 dark:bg-gray-800 border border-emerald-200 dark:border-gray-700 rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+            className="group bg-emerald-50 dark:bg-gray-800 rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
           >
             <div className="flex items-center justify-between mb-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-900/30">
@@ -290,7 +290,7 @@ const Dashboard = () => {
           {/* Expense */}
           <div
             onClick={() => navigate('/expenses')}
-            className="group bg-red-50 dark:bg-gray-800 border border-red-200 dark:border-gray-700 rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+            className="group bg-red-50 dark:bg-gray-800 rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
           >
             <div className="flex items-center justify-between mb-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-100 dark:bg-red-900/30">
@@ -307,7 +307,7 @@ const Dashboard = () => {
           {/* Inventory */}
           <div
             onClick={() => navigate('/inventory')}
-            className="group bg-indigo-50 dark:bg-gray-800 border border-indigo-200 dark:border-gray-700 rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+            className="group bg-indigo-50 dark:bg-gray-800 rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
           >
             <div className="flex items-center justify-between mb-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-100 dark:bg-indigo-900/30">
@@ -324,7 +324,7 @@ const Dashboard = () => {
           {/* Assets */}
           <div
             onClick={() => navigate('/assets')}
-            className="group bg-purple-50 dark:bg-gray-800 border border-purple-200 dark:border-gray-700 rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+            className="group bg-purple-50 dark:bg-gray-800 rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
           >
             <div className="flex items-center justify-between mb-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30">
@@ -341,7 +341,7 @@ const Dashboard = () => {
           {/* Livestock Health */}
           <div
             onClick={() => navigate('/livestock-health')}
-            className="group bg-teal-50 dark:bg-gray-800 border border-teal-200 dark:border-gray-700 rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+            className="group bg-teal-50 dark:bg-gray-800 rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
           >
             <div className="flex items-center justify-between mb-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-100 dark:bg-teal-900/30">
@@ -358,7 +358,7 @@ const Dashboard = () => {
           {/* Reports */}
           <div
             onClick={() => navigate('/reports')}
-            className="group bg-blue-50 dark:bg-gray-800 border border-blue-200 dark:border-gray-700 rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+            className="group bg-blue-50 dark:bg-gray-800 rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
           >
             <div className="flex items-center justify-between mb-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30">

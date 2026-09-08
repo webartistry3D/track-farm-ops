@@ -448,7 +448,7 @@ const Assets = () => {
               // Navigate to all assets view
               console.log('Total Assets clicked');
             }}
-            className="bg-blue-50 dark:bg-gray-800 border border-blue-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-blue-50 dark:bg-gray-800 p-4 lg:p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -464,7 +464,7 @@ const Assets = () => {
               // Navigate to active assets
               console.log('Active Assets clicked');
             }}
-            className="bg-emerald-50 dark:bg-gray-800 border border-emerald-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-emerald-50 dark:bg-gray-800 p-4 lg:p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -482,7 +482,7 @@ const Assets = () => {
               // Navigate to maintenance assets
               console.log('Maintenance Assets clicked');
             }}
-            className="bg-yellow-50 dark:bg-gray-800 border border-yellow-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-yellow-50 dark:bg-gray-800 p-4 lg:p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -500,7 +500,7 @@ const Assets = () => {
               // Navigate to assets with issues
               console.log('Asset Issues clicked');
             }}
-            className="bg-red-50 dark:bg-gray-800 border border-red-200 dark:border-gray-700 p-4 lg:p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-red-50 dark:bg-gray-800 p-4 lg:p-6 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>

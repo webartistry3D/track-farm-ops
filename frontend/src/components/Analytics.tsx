@@ -632,13 +632,13 @@ const Analytics = () => {
     color: string;
   }) => {
     const getGradientColor = () => {
-      if (color === "bg-emerald-500") return "bg-emerald-50 dark:bg-gray-800 border border-emerald-200 dark:border-emerald-700";
-      if (color === "bg-red-500") return "bg-red-50 dark:bg-gray-800 border border-red-200 dark:border-red-700";
-      if (color === "bg-blue-500") return "bg-blue-50 dark:bg-gray-800 border border-blue-200 dark:border-blue-700";
-      if (color === "bg-orange-500") return "bg-orange-50 dark:bg-gray-800 border border-orange-200 dark:border-orange-700";
-      if (color === "bg-indigo-500") return "bg-indigo-50 dark:bg-gray-800 border border-indigo-200 dark:border-indigo-700";
-      if (color === "bg-purple-500") return "bg-purple-50 dark:bg-gray-800 border border-purple-200 dark:border-purple-700";
-      return "bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700";
+      if (color === "bg-emerald-500") return "bg-emerald-50 dark:bg-gray-800";
+      if (color === "bg-red-500") return "bg-red-50 dark:bg-gray-800";
+      if (color === "bg-blue-500") return "bg-blue-50 dark:bg-gray-800";
+      if (color === "bg-orange-500") return "bg-orange-50 dark:bg-gray-800";
+      if (color === "bg-indigo-500") return "bg-indigo-50 dark:bg-gray-800";
+      if (color === "bg-purple-500") return "bg-purple-50 dark:bg-gray-800";
+      return "bg-gray-50 dark:bg-gray-800";
     };
 
     const getIconColor = () => {

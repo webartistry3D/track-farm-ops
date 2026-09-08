@@ -758,7 +758,7 @@ const CCTV = () => {
         {/* Status Overview */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 py-8">
           {/* First Row: Total Cameras and Online */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 shadow-lg">
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Total</p>
@@ -767,7 +767,7 @@ const CCTV = () => {
               <Camera className="h-9 w-9 text-emerald-500" />
             </div>
           </div>
-          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 shadow-lg">
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Online</p>
@@ -780,7 +780,7 @@ const CCTV = () => {
           </div>
           
           {/* Second Row: Offline and Motion Alerts */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 shadow-lg">
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Offline</p>
@@ -791,7 +791,7 @@ const CCTV = () => {
               <EyeOff className="h-9 w-9 text-red-500" />
             </div>
           </div>
-          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 shadow-lg">
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Motion</p>

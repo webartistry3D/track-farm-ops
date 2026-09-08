@@ -945,7 +945,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
               // Navigate to items view or show all items
               console.log('Total Items clicked');
             }}
-            className="bg-blue-50 dark:bg-gray-800 border border-blue-200 dark:border-gray-700 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-blue-50 dark:bg-gray-800 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -963,7 +963,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
               // Navigate to categories view
               console.log('Total Categories clicked');
             }}
-            className="bg-purple-50 dark:bg-gray-800 border border-purple-200 dark:border-gray-700 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-purple-50 dark:bg-gray-800 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -980,7 +980,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
               // Show high-value items or filter by value
               console.log('Total Value clicked');
             }}
-            className="bg-emerald-50 dark:bg-gray-800 border border-emerald-200 dark:border-gray-700 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-emerald-50 dark:bg-gray-800 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -1003,7 +1003,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
               // Navigate to livestock items
               console.log('Livestock clicked');
             }}
-            className="bg-orange-50 dark:bg-gray-800 border border-orange-200 dark:border-gray-700 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-orange-50 dark:bg-gray-800 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -1021,7 +1021,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
               // Navigate to produce items
               console.log('Produce clicked');
             }}
-            className="bg-green-50 dark:bg-gray-800 border border-green-200 dark:border-gray-700 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-green-50 dark:bg-gray-800 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -1039,7 +1039,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
               // Navigate to consumables items
               console.log('Consumables clicked');
             }}
-            className="bg-indigo-50 dark:bg-gray-800 border border-indigo-200 dark:border-gray-700 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-indigo-50 dark:bg-gray-800 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -1057,7 +1057,7 @@ const Inventory = ({ onDeleteClick }: InventoryListProps) => {
               // Navigate to low stock items
               console.log('Low Stock Items clicked');
             }}
-            className="bg-yellow-50 dark:bg-gray-800 border border-yellow-200 dark:border-gray-700 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
+            className="bg-yellow-50 dark:bg-gray-800 shadow-lg rounded-xl p-6 cursor-pointer hover:shadow-xl transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
