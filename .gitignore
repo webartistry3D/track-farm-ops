@@ -21,8 +21,11 @@ dist-ssr
 !.env.example
 
 campaign-landing.md
+deploy-production.sh
+motion-sites.md
 trackfarmops-commercial/
 trackfarmops-landing-production/
+
 
 # Editor directories and files
 .vscode/*
