@@ -25,7 +25,9 @@ deploy-production.sh
 motion-sites.md
 trackfarmops-commercial/
 trackfarmops-landing-production/
-
+frontend/.env.production
+backend/.env
+backend/.env.production
 
 # Editor directories and files
 .vscode/*
