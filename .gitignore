@@ -16,6 +16,13 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
+.env.*
+!.env.example
+
+campaign-landing.md
+trackfarmops-commercial/
+trackfarmops-landing-production/
 
 # Editor directories and files
 .vscode/*
