@@ -28,6 +28,7 @@ trackfarmops-landing-production/
 frontend/.env.production
 backend/.env
 backend/.env.production
+docs/
 
 # Editor directories and files
 .vscode/*
