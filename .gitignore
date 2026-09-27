@@ -18,7 +18,7 @@ dist-ssr
 *.local
 .env
 .env.*
-!.env.example
+.env.example
 
 campaign-landing.md
 deploy-production.sh
@@ -29,6 +29,8 @@ frontend/.env.production
 backend/.env
 backend/.env.production
 docs/
+backend/uploads
+backend/scripts
 
 # Editor directories and files
 .vscode/*
